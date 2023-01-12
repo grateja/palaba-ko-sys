@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout-w936dp/activity_main.xml" value="0.5325301204819277" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/activity_add_edit_user.xml" value="0.2984375" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/activity_dialog_connection.xml" value="0.2984375" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/activity_main.xml" value="0.3453125" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/activity_menu.xml" value="0.56015625" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/activity_product_type_dialog.xml" value="0.3703125" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/activity_products.xml" value="0.38585858585858585" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/activity_services.xml" value="0.37421875" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/activity_test_print.xml" value="0.2984375" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/app_bar_menu.xml" value="0.56015625" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/content_menu.xml" value="0.56015625" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/ext_current_customer.xml" value="0.38984375" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/ext_empty_list.xml" value="0.5" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/fragment_dry_services.xml" value="0.5" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/fragment_job_orders.xml" value="0.5183175033921302" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/fragment_menu_account.xml" value="0.2984375" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/fragment_product.xml" value="0.2984375" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/fragment_select_customer.xml" value="0.38984375" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/fragment_wash_services.xml" value="0.37421875" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/recycler_item_available_service.xml" value="0.38984375" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/recycler_item_cashless_provider.xml" value="0.38984375" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/recycler_item_customer_full.xml" value="0.75" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/recycler_item_discount.xml" value="0.38984375" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/recycler_item_dry_service.xml" value="0.38984375" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/recycler_item_expense.xml" value="0.38984375" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/recycler_item_job_order_full.xml" value="0.75" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/recycler_item_job_order_product.xml" value="0.38984375" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/recycler_item_job_order_service.xml" value="0.38984375" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/recycler_item_menu.xml" value="0.56015625" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/recycler_item_other_service.xml" value="0.38984375" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/recycler_item_payment.xml" value="0.38984375" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/recycler_item_printer.xml" value="0.9089673913043478" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/recycler_item_product.xml" value="0.38984375" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/recycler_item_product_type.xml" value="0.38984375" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/recycler_item_remote_job_orders.xml" value="0.38984375" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/recycler_item_simple_list.xml" value="0.38984375" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/recycler_item_user_full.xml" value="0.38984375" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/recycler_item_wash_service.xml" value="0.38984375" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/recycler_item_wash_type.xml" value="0.38984375" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/recycler_machines.xml" value="0.38984375" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/layout/spinner_row.xml" value="0.38984375" />
+        <entry key="..\:/Android Projects/2022/app/src/main/res/menu/activity_main_drawer.xml" value="0.56015625" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/drawable/divider.xml" value="0.365234375" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/drawable/divider_10.xml" value="0.21510416666666668" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/drawable/ic_launcher_background.xml" value="0.32265625" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout-w400dp/activity_main.xml" value="0.21510416666666668" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout-w420dp/activity_create_job_order.xml" value="0.5" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout-w580dp/activity_create_job_order.xml" value="0.3734375" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout-w720dp/activity_create_job_order.xml" value="0.3105691056910569" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout-w720dp/activity_main.xml" value="0.34065040650406503" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout-w800dp/activity_create_job_order.xml" value="0.12" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout-w800dp/activity_main.xml" value="0.280078125" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout-w800dp/fragment_menu_services.xml" value="0.3357723577235772" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout-w936dp/activity_create_job_order.xml" value="0.2" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout-w936dp/activity_main.xml" value="0.2" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout-w936dp/fragment_menu_services.xml" value="0.3357723577235772" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout/activity_create_customer.xml" value="0.19479166666666667" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout/activity_create_job_order.xml" value="0.25" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout/activity_main.xml" value="0.2984375" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout/activity_modify_quantity.xml" value="0.17552083333333332" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout/activity_remove_item.xml" value="0.22135416666666666" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout/activity_select_customer.xml" value="0.20457604306864063" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout/activity_service_quantity.xml" value="0.16993464052287582" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout/bottom_sheet_job_order_panel.xml" value="0.19895833333333332" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout/fragment_add_edit_customer.xml" value="0.4641555285540705" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout/fragment_available_services.xml" value="0.14921875" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout/fragment_create_job_order_panel.xml" value="0.477124183006536" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout/fragment_delivery_modal.xml" value="0.3734375" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout/fragment_item_list_dialog_list_dialog.xml" value="0.19114583333333332" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout/fragment_item_list_dialog_list_dialog_item.xml" value="0.19114583333333332" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout/fragment_job_order_panel.xml" value="0.3734375" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout/fragment_menu_delivery.xml" value="0.1984375" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout/fragment_menu_discounts.xml" value="0.23229166666666667" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout/fragment_menu_other_services.xml" value="0.23229166666666667" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout/fragment_menu_products.xml" value="0.2" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout/fragment_menu_services.xml" value="0.3246527777777778" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout/fragment_modify_quantity_modal.xml" value="0.17552083333333332" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout/fragment_remove_item_modal.xml" value="0.22" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout/incl_available_services.xml" value="0.5" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout/incl_create_job_order_navigation.xml" value="0.67" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout/incl_job_order_panel.xml" value="0.4629404617253949" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout/incl_menu_services.xml" value="0.35009765625" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout/recycler_item_available_product.xml" value="0.41901408450704225" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout/recycler_item_available_service.xml" value="0.4735915492957746" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout/recycler_item_create_job_order_navigation.xml" value="0.75" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout/recycler_item_create_job_order_product.xml" value="0.5" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout/recycler_item_create_job_order_service.xml" value="0.48731884057971014" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout/recycler_item_customer_minimal.xml" value="0.67" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout/recycler_item_delivery_vehicle.xml" value="0.40229885057471265" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/layout/recycler_item_product.xml" value="0.2984375" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/menu/bottom_nav_menu_create_job_order.xml" value="0.23489583333333333" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/menu/bottom_navigation_menu.xml" value="0.19479166666666667" />
+        <entry key="..\:/Android Projects/PalabaKoSys/app/src/main/res/menu/menu.xml" value="0.3734375" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout-w936dp/activity_main.xml" value="0.33" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/activity_add_edit_cashless_provider.xml" value="0.2671875" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/activity_add_edit_customer.xml" value="0.9" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/activity_add_edit_discount.xml" value="0.2" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/activity_add_edit_dry_service.xml" value="0.33" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/activity_add_edit_expense.xml" value="0.5" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/activity_add_edit_machine.xml" value="0.5" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/activity_add_edit_other_service.xml" value="0.67" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/activity_add_edit_product.xml" value="0.5" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/activity_add_edit_user.xml" value="0.5169606512890095" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/activity_add_edit_wash_service.xml" value="0.5" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/activity_create_job_order.xml" value="0.67" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/activity_delete_cashless_provider.xml" value="0.2671875" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/activity_delete_customer.xml" value="0.5" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/activity_delete_discount.xml" value="0.17395833333333333" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/activity_delete_dry_service.xml" value="0.31023550724637683" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/activity_delete_expense.xml" value="0.3729166666666667" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/activity_delete_machine.xml" value="0.5" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/activity_delete_other_service.xml" value="0.31023550724637683" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/activity_delete_product.xml" value="0.20677083333333332" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/activity_delete_wash_service.xml" value="0.25679347826086957" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/activity_dialog_connection.xml" value="0.15260416666666668" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/activity_dialog_job_order.xml" value="0.5" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/activity_dialog_remote_activation.xml" value="0.20572916666666666" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/activity_dialog_select_discount.xml" value="0.33" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/activity_dialog_void_job_order.xml" value="0.6752577319587629" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/activity_job_order_payment.xml" value="0.48688524590163934" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/activity_login.xml" value="0.16" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/activity_machines.xml" value="0.75" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/activity_main.xml" value="0.3648989898989899" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/activity_master_password.xml" value="0.5" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/activity_preferences.xml" value="0.5" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/activity_product_type_dialog.xml" value="0.1921875" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/activity_products.xml" value="0.21927083333333333" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/activity_services.xml" value="0.22" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/activity_shop.xml" value="0.5169606512890095" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/activity_wash_services.xml" value="0.15052083333333333" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/activity_wash_type_dialog.xml" value="0.19895833333333332" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/app_bar_menu.xml" value="0.22135416666666666" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/content_menu.xml" value="0.22135416666666666" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/dialog_password_prompt.xml" value="0.5" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/ext_current_customer.xml" value="0.67" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/ext_job_order_details.xml" value="0.7874465049928673" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/ext_machines.xml" value="0.209375" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/ext_tile_menu.xml" value="0.67" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/fragment_customers.xml" value="0.33" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/fragment_dry_services.xml" value="0.20260416666666667" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/fragment_expenses.xml" value="0.3729166666666667" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/fragment_job_orders.xml" value="0.5" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/fragment_menu_account.xml" value="0.5" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/fragment_menu_cashless_prodivers.xml" value="0.2671875" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/fragment_menu_customers.xml" value="0.29765625" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/fragment_menu_discount.xml" value="0.1875" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/fragment_menu_expenses.xml" value="0.67" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/fragment_menu_points.xml" value="0.3729166666666667" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/fragment_menu_remote.xml" value="0.26358695652173914" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/fragment_menu_users.xml" value="0.28804347826086957" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/fragment_other_services.xml" value="0.1890625" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/fragment_payment_method_cash.xml" value="0.4734375" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/fragment_payment_method_cash_back.xml" value="0.3313106796116505" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/fragment_payment_method_cashless.xml" value="0.5" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/fragment_payment_method_loyalty_points.xml" value="0.4734375" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/fragment_product.xml" value="0.1921875" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/fragment_remote.xml" value="0.1984375" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/fragment_select_customer.xml" value="0.33" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/fragment_select_products.xml" value="0.27853260869565216" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/fragment_select_services.xml" value="0.25" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/fragment_tile_menu.xml" value="0.1765625" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/fragment_wash_services.xml" value="0.33" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/nav_header_menu.xml" value="0.1984375" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/recycler_item_available_service.xml" value="0.559375" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/recycler_item_available_wash.xml" value="0.75" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/recycler_item_cashless_provider.xml" value="0.2671875" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/recycler_item_customer_full.xml" value="0.67" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/recycler_item_customer_sm.xml" value="0.22135416666666666" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/recycler_item_discount.xml" value="0.75" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/recycler_item_dry_service.xml" value="0.5" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/recycler_item_expense.xml" value="0.75" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/recycler_item_job_order_full.xml" value="0.75" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/recycler_item_job_order_product.xml" value="0.5" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/recycler_item_job_order_service.xml" value="0.27291666666666664" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/recycler_item_menu.xml" value="0.46875" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/recycler_item_other_service.xml" value="0.31023550724637683" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/recycler_item_payment.xml" value="0.20572916666666666" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/recycler_item_product.xml" value="0.22" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/recycler_item_product_type.xml" value="0.1921875" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/recycler_item_remote_job_orders.xml" value="0.559375" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/recycler_item_select_discount.xml" value="0.29765625" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/recycler_item_simple_list.xml" value="0.41875" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/recycler_item_user_full.xml" value="0.28804347826086957" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/recycler_item_wash_service.xml" value="0.5" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/recycler_item_wash_type.xml" value="0.19895833333333332" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/recycler_machines.xml" value="0.75" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/layout/spinner_row.xml" value="0.75" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/menu/activity_main_drawer.xml" value="0.22135416666666666" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/menu/bottom_navigation_menu.xml" value="0.3729166666666667" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/menu/machine_menu.xml" value="0.265625" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/menu/menu.xml" value="0.22135416666666666" />
+        <entry key="..\:/AndroidProjects/app/src/main/res/xml/network_security_config.xml" value="0.20885416666666667" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

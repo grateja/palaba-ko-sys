@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="CardSpan" parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">@color/span_background</item>
+        <item name="cardCornerRadius">5dp</item>
+        <item name="contentPaddingLeft">5dp</item>
+        <item name="contentPaddingRight">5dp</item>
+    </style>
+    <style name="TextItemTitle">
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <style name="TextItemTitleActive" parent="TextItemTitle">
+        <item name="android:textColor">@color/card_selected</item>
+        <item name="android:fontFamily">sans-serif-black</item>
+    </style>
+    <style name="TextItemPrice" parent="TextAppearance.AppCompat">
+        <item name="android:textFontWeight">900</item>
+        <item name="android:fontFamily">sans-serif-black</item>
+        <item name="android:textColor">@color/teal_700</item>
+    </style>
+    <style name="TileTitle">
+        <item name="android:fontFamily">sans-serif-black</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+<!--    Not real beyond this line-->
+
+    <style name="TextPrompt" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">#F17840</item>
+    </style>
+
+    <style name="TileSubTitle">
+        <item name="android:fontFamily">sans-serif-black</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="RoundButton" parent="TextAppearance.AppCompat">
+        <item name="cornerRadius">25dp</item>
+        <item name="android:padding">12dp</item>
+        <item name="android:paddingEnd">24dp</item>
+        <item name="android:paddingStart">24dp</item>
+    </style>
+
+    <style name="RoundButtonPrimary" parent="RoundButton">
+        <item name="backgroundTint">@color/secondary_variant</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+    <style name="RoundButtonDanger" parent="RoundButton">
+        <item name="backgroundTint">@color/danger</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+    <style name="RoundButtonNeutral" parent="RoundButton">
+        <item name="backgroundTint">@color/neutral</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="CardPrimary">
+        <item name="strokeWidth">1dp</item>
+        <item name="strokeColor">@color/border_primary</item>
+        <item name="cardElevation">0dp</item>
+        <item name="cardCornerRadius">14dp</item>
+    </style>
+    <style name="JobOrderService" parent="CardPrimary">
+        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+    </style>
+
+    <style name="JobOrderMenuItem" parent="JobOrderService">
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+    </style>
+
+    <style name="CardItem" parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">@color/black</item>
+        <item name="android:layout_marginHorizontal">8dp</item>
+        <item name="android:layout_marginVertical">4dp</item>
+        <item name="cardElevation">5dp</item>
+    </style>
+    <style name="CardWrapper" parent="Widget.MaterialComponents.CardView">
+        <item name="cardCornerRadius">0dp</item>
+        <item name="contentPadding">16dp</item>
+    </style>
+
+    <style name="MachineTile">
+        <item name="cardCornerRadius">10dp</item>
+        <item name="android:layout_width">160dp</item>
+        <item name="android:layout_height">160dp</item>
+        <item name="android:layout_margin">8dp</item>
+        <item name="android:minHeight">160dp</item>
+        <item name="cardElevation">3dp</item>
+    </style>
+    <style name="CRN" parent="TextAppearance.AppCompat">
+        <item name="elevation">5dp</item>
+        <item name="fontFamily">sans-serif-black</item>
+        <item name="fontWeight">900</item>
+        <item name="cardCornerRadius">10dp</item>
+        <item name="backgroundColor">#eeee00</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="android:layout_margin">2dp</item>
+    </style>
+
+    <style name="DateText">
+
+    </style>
+</resources>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/create_joborder_navigation"
+    app:startDestination="@id/menuServicesFragment">
+
+    <fragment
+        android:id="@+id/menuServicesFragment"
+        android:name="com.csi.palabakosys.app.joborders.create.services.MenuServicesFragment"
+        android:label="fragment_menu_services"
+        tools:layout="@layout/fragment_menu_services" />
+    <fragment
+        android:id="@+id/menuProductsFragment"
+        android:name="com.csi.palabakosys.app.joborders.create.products.MenuProductsFragment"
+        android:label="fragment_menu_products"
+        tools:layout="@layout/fragment_menu_products" />
+    <fragment
+        android:id="@+id/menuDeliveryFragment"
+        android:name="com.csi.palabakosys.app.joborders.create.delivery.MenuDeliveryFragment"
+        android:label="fragment_menu_delivery"
+        tools:layout="@layout/fragment_menu_delivery" />
+    <fragment
+        android:id="@+id/menuOtherServicesFragment"
+        android:name="com.csi.palabakosys.app.joborders.create.others.MenuOtherServicesFragment"
+        android:label="fragment_other_services"
+        tools:layout="@layout/fragment_menu_other_services" />
+    <fragment
+        android:id="@+id/menuDiscountsFragment"
+        android:name="com.csi.palabakosys.app.joborders.create.discounts.MenuDiscountsFragment"
+        android:label="fragment_discounts"
+        tools:layout="@layout/fragment_menu_discounts" >
+        <action
+            android:id="@+id/action_menuDiscountsFragment_to_menuOtherServicesFragment"
+            app:destination="@id/menuOtherServicesFragment"
+            app:enterAnim="@anim/layout_animation" />
+    </fragment>
+</navigation>

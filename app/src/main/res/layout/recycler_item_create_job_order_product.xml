@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="viewModel"
+            type="com.csi.palabakosys.app.joborders.create.products.MenuProductItem" />
+    </data>
+    <com.google.android.material.card.MaterialCardView
+        style="@style/JobOrderService"
+        app:strokeColor="@color/primary_background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp">
+            <com.google.android.material.card.MaterialCardView
+                android:clipToPadding="false"
+                android:id="@+id/imageIcon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="5dp"
+                app:strokeColor="@color/border_primary"
+                app:strokeWidth="1dp"
+                app:contentPadding="2dp"
+                app:cardBackgroundColor="@color/secondary_background"
+                app:cardCornerRadius="8dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+                <ImageView
+                    android:padding="4dp"
+                    android:background="@color/transparent"
+                    app:imageResource="@{viewModel.productType.icon}"
+                    tools:src="@drawable/icon_detergent"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </com.google.android.material.card.MaterialCardView>
+            <TextView
+                android:id="@+id/textTitle"
+                style="@style/TextItemTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.name}"
+                android:layout_marginStart="8dp"
+                app:layout_constraintEnd_toStartOf="@+id/cardPrice"
+                app:layout_constraintStart_toEndOf="@id/imageIcon"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="8Kg Regular Wash" />
+
+            <ImageButton
+                android:id="@+id/buttonDelete"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:backgroundTint="@color/white"
+                android:scaleType="centerCrop"
+                android:src="@drawable/delete_icon"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardPrice"
+                style="@style/CardSpan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toStartOf="@+id/buttonDelete"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    style="@style/TextItemPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:peso="@{viewModel.price}"
+                    tools:text="P 70.00" />
+            </com.google.android.material.card.MaterialCardView>
+            <TextView
+                android:textSize="12sp"
+                android:id="@+id/textLoads"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@{viewModel.quantityStr()}"
+                app:layout_constraintEnd_toEndOf="@id/cardPrice"
+                app:layout_constraintTop_toBottomOf="@id/cardPrice"
+                tools:text="2 Loads"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+</layout>
