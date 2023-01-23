@@ -25,11 +25,6 @@ class MenuDeliveryFragment : Fragment(R.layout.fragment_menu_delivery) {
         binding.viewModel = viewModel
         binding.recyclerDeliveryVehicles.adapter = deliveryVehiclesAdapter
         subscribeEvents()
-
-        // TODO: 05/12/2022
-        // on delivery profile select, show bottom sheet;
-        // show input distance/km
-        // on ok, apply selected vehicle profile with distance
     }
 
     private fun subscribeEvents() {

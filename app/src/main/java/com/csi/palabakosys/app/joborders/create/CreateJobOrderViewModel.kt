@@ -4,9 +4,9 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.csi.palabakosys.R
 import com.csi.palabakosys.app.customers.CustomerMinimal
 import com.csi.palabakosys.app.joborders.create.delivery.DeliveryCharge
+import com.csi.palabakosys.app.joborders.create.extras.MenuExtrasItem
 import com.csi.palabakosys.app.joborders.create.products.MenuProductItem
 import com.csi.palabakosys.app.joborders.create.services.MenuServiceItem
 import com.csi.palabakosys.app.joborders.create.ui.QuantityModel
@@ -57,9 +57,11 @@ constructor() : ViewModel() {
     val available12kWashServices = MutableLiveData<List<MenuServiceItem>>()
     val available12kDryServices = MutableLiveData<List<MenuServiceItem>>()
     val availableProducts = MutableLiveData<List<MenuProductItem>>()
+    val availableOtherServices = MutableLiveData<List<MenuExtrasItem>>()
 
     val jobOrderServices: MutableList<MenuServiceItem> = mutableListOf()
     val jobOrderProducts: MutableList<MenuProductItem> = mutableListOf()
+    val jobOrderOtherServices: MutableList<MenuExtrasItem> = mutableListOf()
 
     val subtotal = MutableLiveData(0f)
 
@@ -104,6 +106,20 @@ constructor() : ViewModel() {
                 it.machineType == MachineType.TITAN_DRYER
             }
             println("Services Loaded")
+        }
+    }
+
+    fun loadOtherServices() {
+        val otherServices = listOf(
+            MenuExtrasItem("8kg-os-fold", "8KG Fold", 30f, "fold"),
+            MenuExtrasItem("12kg-os-fold", "12KG Fold", 40f, "fold"),
+        )
+        availableOtherServices.value = otherServices
+        otherServices.onEach { menuItem ->
+            jobOrderOtherServices.find { s -> s.id == menuItem.id }?.let { joItem ->
+                menuItem.selected = joItem.selected
+                menuItem.quantity = joItem.quantity
+            }
         }
     }
 

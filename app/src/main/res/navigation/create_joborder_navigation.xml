@@ -22,14 +22,14 @@
         tools:layout="@layout/fragment_menu_delivery" />
     <fragment
         android:id="@+id/menuOtherServicesFragment"
-        android:name="com.csi.palabakosys.app.joborders.create.others.MenuOtherServicesFragment"
+        android:name="com.csi.palabakosys.app.joborders.create.extras.MenuExtrasFragment"
         android:label="fragment_other_services"
-        tools:layout="@layout/fragment_menu_other_services" />
+        tools:layout="@layout/fragment_menu_extras" />
     <fragment
         android:id="@+id/menuDiscountsFragment"
-        android:name="com.csi.palabakosys.app.joborders.create.discounts.MenuDiscountsFragment"
+        android:name="com.csi.palabakosys.app.joborders.create.delicate.MenuDelicateFragment"
         android:label="fragment_discounts"
-        tools:layout="@layout/fragment_menu_discounts" >
+        tools:layout="@layout/fragment_menu_delicate" >
         <action
             android:id="@+id/action_menuDiscountsFragment_to_menuOtherServicesFragment"
             app:destination="@id/menuOtherServicesFragment"

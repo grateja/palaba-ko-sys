@@ -30,6 +30,7 @@ class CreateJobOrderActivity : AppCompatActivity() {
         title = "Create Job Order"
         binding = DataBindingUtil.setContentView(this, R.layout.activity_create_job_order)
 
+        setSupportActionBar(binding.toolbar)
         binding.bottomSheetJobOrderPanel?.let {
             jobOrderPanelBehavior = BottomSheetBehavior.from(it)
         }

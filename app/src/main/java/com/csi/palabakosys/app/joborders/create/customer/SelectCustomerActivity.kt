@@ -4,17 +4,14 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
 import com.csi.palabakosys.adapters.Adapter
 import com.csi.palabakosys.app.customers.CustomerMinimal
 import com.csi.palabakosys.app.customers.create.AddEditCustomerFragment
-import com.csi.palabakosys.app.customers.create.AddEditCustomerViewModel
 import com.csi.palabakosys.app.joborders.create.CreateJobOrderActivity
 import com.csi.palabakosys.databinding.ActivitySelectCustomerBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -60,7 +57,7 @@ class SelectCustomerActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu, menu)
+        menuInflater.inflate(R.menu.menu_search, menu)
         searchBar = menu?.findItem(R.id.menu_search)?.actionView as SearchView
         searchBar?.apply {
             maxWidth = Integer.MAX_VALUE
