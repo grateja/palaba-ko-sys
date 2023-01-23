@@ -94,7 +94,8 @@
                         android:id="@+id/fragmentJobOrderPanel"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:name="com.csi.palabakosys.app.joborders.create.ui.CreateJobOrderPanelFragment"/>
+                        android:name="com.csi.palabakosys.app.joborders.create.ui.CreateJobOrderPanelFragment"
+                        tools:layout="@layout/fragment_create_job_order_panel" />
 
 <!--                    <include-->
 <!--                        android:id="@+id/inclJobOrderPanel"-->
