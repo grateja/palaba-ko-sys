@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".app.joborders.create.JobOrderCreateActivity">
+    <data>
+        <variable
+            name="viewModel"
+            type="com.csi.palabakosys.app.joborders.create.CreateJobOrderViewModel" />
+    </data>
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+<!--            Container -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+<!--                Job Order -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:gravity="center|start"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/labelJobOrder"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:text="JobOrder#:"
+                        android:textSize="16sp" />
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/materialCardView2"
+                        style="@style/CardSpan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif"
+                            android:text="@{viewModel.jobOrderNumber}"
+                            android:textColor="#00685F"
+                            android:textFontWeight="900"
+                            android:textSize="20sp"
+                            tools:text="#00685F"/>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+
+<!--                Customer -->
+                <TextView
+                    android:id="@+id/labelCustomer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="Customer:" />
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/materialCardView"
+                    style="@style/CardSpan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif"
+                        android:text="@{viewModel.currentCustomer.name}"
+                        android:textColor="#000000"
+                        android:textFontWeight="900"
+                        android:textSize="17sp"
+                        tools:text="Chris Pratt"/>
+                </com.google.android.material.card.MaterialCardView>
+
+<!--                CRN -->
+                <TextView
+                    android:id="@+id/labelCRN"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="CRN:" />
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/CardSpan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif"
+                        android:text="@{viewModel.currentCustomer.crn}"
+                        android:textColor="#000000"
+                        android:textFontWeight="900"
+                        android:textSize="17sp"
+                        tools:text="#000001"/>
+                </com.google.android.material.card.MaterialCardView>
+
+<!--                Services -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardLegendServices"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    app:contentPadding="12dp"
+                    app:cardBackgroundColor="@color/secondary_background">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginLeft="6dp"
+                        android:layout_marginRight="6dp">
+                        <TextView
+                            style="@style/TileSubTitle"
+                            android:textColor="@color/black"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="SERVICES"/>
+                        <TextView
+                            style="@style/TileSubTitle"
+                            android:text="+"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+                <TextView
+                    android:layout_margin="8dp"
+                    android:gravity="center"
+                    android:visibility="@{!viewModel.hasServices}"
+                    android:text="(No selected services)"
+                    android:fontFamily="sans-serif-black"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/serviceItems"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:nestedScrollingEnabled="false"
+                    android:orientation="vertical"
+                    android:paddingBottom="16dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:layout_height="50dp"/>
+
+<!--                Products -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardLegendProducts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:contentPadding="12dp"
+                    app:cardBackgroundColor="@color/secondary_background">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginLeft="6dp"
+                        android:layout_marginRight="6dp">
+                        <TextView
+                            style="@style/TileSubTitle"
+                            android:textColor="@color/black"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="PRODUCTS / CHEMICALS"/>
+                        <TextView
+                            style="@style/TileSubTitle"
+                            android:text="+"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+                <TextView
+                    android:layout_margin="8dp"
+                    android:gravity="center"
+                    android:visibility="@{!viewModel.hasProducts}"
+                    android:text="(No selected products)"
+                    android:fontFamily="sans-serif-black"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/productItems"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:nestedScrollingEnabled="false"
+                    android:orientation="vertical"
+                    android:paddingBottom="16dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:layout_height="50dp"/>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

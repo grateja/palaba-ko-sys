@@ -63,29 +63,29 @@ class CreateJobOrderActivity : AppCompatActivity() {
     }
 
     private fun subscribeEvents() {
-        viewModel.dataState().observe(this, Observer {
-            if(it is DataState.PutService) {
-//                jobOrderServicesAdapter.addItem(it.serviceItem)
-            } else if(it is DataState.PutProduct) {
-//                jobOrderProductsAdapter.addItem(it.product)
-            } else if(it is DataState.RequestEditServiceQuantity) {
-//                requestModifyQuantity(QuantityModel(
-//                    it.serviceItem.id, it.serviceItem.name, it.serviceItem.quantity, QuantityModel.TYPE_SERVICE
-//                ))
-                viewModel.resetState()
-            } else if(it is DataState.RequestEditProductQuantity) {
-//                requestModifyQuantity(QuantityModel(
-//                    it.serviceItem.id, it.serviceItem.name, it.serviceItem.quantity, QuantityModel.TYPE_PRODUCT
-//                ))
-                viewModel.resetState()
-            } else if(it is DataState.RemoveService) {
-//                jobOrderServicesAdapter.removeItem(it.index)
+//        viewModel.dataState().observe(this, Observer {
+//            if(it is DataState.PutService) {
+////                jobOrderServicesAdapter.addItem(it.serviceItem)
+//            } else if(it is DataState.PutProduct) {
+////                jobOrderProductsAdapter.addItem(it.product)
+//            } else if(it is DataState.RequestEditServiceQuantity) {
+////                requestModifyQuantity(QuantityModel(
+////                    it.serviceItem.id, it.serviceItem.name, it.serviceItem.quantity, QuantityModel.TYPE_SERVICE
+////                ))
 //                viewModel.resetState()
-            } else if(it is DataState.RemoveProduct) {
-//                jobOrderProductsAdapter.removeItem(it.index)
+//            } else if(it is DataState.RequestEditProductQuantity) {
+////                requestModifyQuantity(QuantityModel(
+////                    it.serviceItem.id, it.serviceItem.name, it.serviceItem.quantity, QuantityModel.TYPE_PRODUCT
+////                ))
 //                viewModel.resetState()
-            }
-        })
+//            } else if(it is DataState.RemoveService) {
+////                jobOrderServicesAdapter.removeItem(it.index)
+////                viewModel.resetState()
+//            } else if(it is DataState.RemoveProduct) {
+////                jobOrderProductsAdapter.removeItem(it.index)
+////                viewModel.resetState()
+//            }
+//        })
         viewModel.activeNavigation.observe(this, Observer {
             Navigation.findNavController(this, R.id.nav_host_services).navigate(it)
         })
@@ -151,19 +151,19 @@ class CreateJobOrderActivity : AppCompatActivity() {
 //    }
 
     private var doubleclick = false
-    override fun onBackPressed() {
-        if(viewModel.jobOrderServices.size == 0) {
-            finish()
-        } else if(jobOrderPanelBehavior?.state == BottomSheetBehavior.STATE_EXPANDED) {
-            jobOrderPanelBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
-        } else if(doubleclick) {
-            finish()
-        } else {
-            Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT).show()
-            doubleclick = true
-        }
-        Handler(Looper.getMainLooper()).postDelayed(Runnable {
-            doubleclick = false
-        }, 2000)
-    }
+//    override fun onBackPressed() {
+//        if(viewModel.jobOrderServices.size == 0) {
+//            finish()
+//        } else if(jobOrderPanelBehavior?.state == BottomSheetBehavior.STATE_EXPANDED) {
+//            jobOrderPanelBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+//        } else if(doubleclick) {
+//            finish()
+//        } else {
+//            Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT).show()
+//            doubleclick = true
+//        }
+//        Handler(Looper.getMainLooper()).postDelayed(Runnable {
+//            doubleclick = false
+//        }, 2000)
+//    }
 }

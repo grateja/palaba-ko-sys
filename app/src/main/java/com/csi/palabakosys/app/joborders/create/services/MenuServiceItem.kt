@@ -14,7 +14,7 @@ class MenuServiceItem(
     val price: Float,
     val machineType: MachineType?,
     val washType: WashType?,
-    var quantity: Int = 0,
+    var quantity: Int = 1,
 ) : Parcelable {
     @IgnoredOnParcel
     var selected = false

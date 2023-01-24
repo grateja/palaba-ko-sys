@@ -8,13 +8,17 @@
             type="com.csi.palabakosys.app.joborders.create.services.MenuServiceItem" />
     </data>
     <com.google.android.material.card.MaterialCardView
-        style="@style/JobOrderMenuItem"
         android:id="@+id/jobOrderMenuItem"
+        app:cardElevation="3dp"
+        android:layout_margin="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
             android:layout_margin="8dp">
 
             <TextView
@@ -22,6 +26,7 @@
                 style="@style/TextItemTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="@{viewModel.name}"
                 app:layout_constraintEnd_toStartOf="@+id/cardPrice"
                 app:layout_constraintStart_toStartOf="parent"
@@ -67,20 +72,21 @@
                     style="@style/TextItemPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{`P ` + String.format(`%.2f`, viewModel.price)}"
+                    android:peso="@{viewModel.price}"
                     tools:text="P 70.00" />
             </com.google.android.material.card.MaterialCardView>
 
             <TextView
                 android:id="@+id/textLoads"
-                android:visibility="@{viewModel.selected}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="@{viewModel.selected}"
                 android:text="@{viewModel.quantityStr()}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:text="1 load" />
-
+                android:textSize="12sp"
+                android:layout_marginStart="24dp"
+                app:layout_constraintStart_toEndOf="@+id/textMinutes"
+                app:layout_constraintTop_toTopOf="@+id/textMinutes"
+                tools:text="2 Loads" />
 <!--            <com.google.android.material.card.MaterialCardView-->
 <!--                android:id="@+id/cardButtonDelete"-->
 <!--                android:layout_width="wrap_content"-->

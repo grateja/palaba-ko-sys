@@ -9,7 +9,7 @@ import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
 //import com.csi.palabakosys.app.joborders.create.RemoveItemActivity
 import com.csi.palabakosys.app.joborders.create.CreateJobOrderViewModel
-import com.csi.palabakosys.app.joborders.create.DataState
+//import com.csi.palabakosys.app.joborders.create.DataState
 import com.csi.palabakosys.databinding.FragmentMenuServicesBinding
 import com.csi.palabakosys.model.MachineType
 
@@ -69,18 +69,18 @@ class MenuServicesFragment : Fragment(R.layout.fragment_menu_services) {
             available12KGDryServices.setData(it)
         })
         viewModel.dataState().observe(viewLifecycleOwner, Observer {
-            if(it is DataState.RemoveService) {
-                available8KGDryServices.deselect(it.id)
-                available8KGWashServices.deselect(it.id)
-                available12KGDryServices.deselect(it.id)
-                available12KGWashServices.deselect(it.id)
-//                viewModel.resetState()
-            } else if(it is DataState.PutService) {
-                available8KGDryServices.select(it.serviceItem)
-                available8KGWashServices.select(it.serviceItem)
-                available12KGDryServices.select(it.serviceItem)
-                available12KGWashServices.select(it.serviceItem)
-            }
+//            if(it is DataState.RemoveService) {
+//                available8KGDryServices.deselect(it.id)
+//                available8KGWashServices.deselect(it.id)
+//                available12KGDryServices.deselect(it.id)
+//                available12KGWashServices.deselect(it.id)
+////                viewModel.resetState()
+//            } else if(it is DataState.PutService) {
+//                available8KGDryServices.select(it.serviceItem)
+//                available8KGWashServices.select(it.serviceItem)
+//                available12KGDryServices.select(it.serviceItem)
+//                available12KGWashServices.select(it.serviceItem)
+//            }
         })
 
 //        removeItemLauncher.onOk = {

@@ -26,10 +26,10 @@ class AvailableServicesAdapter : RecyclerView.Adapter<AvailableServicesAdapter.V
         notifyItemRangeChanged(0, list.size - 1)
     }
 
-    fun select(service: MenuServiceItem) {
+    fun updateItem(service: MenuServiceItem) {
         list.let {
             it.find { s -> s.id == service.id }?.apply {
-                selected = true
+                selected = service.selected
                 notifyItemChanged(it.indexOf(this))
             }
         }
@@ -66,8 +66,9 @@ class AvailableServicesAdapter : RecyclerView.Adapter<AvailableServicesAdapter.V
 //        }
 
         holder.itemView.apply {
+            val selected = r.selected
             findViewById<MaterialCardView>(R.id.jobOrderMenuItem).also {
-                if(r.selected) {
+                if(selected) {
                     it.strokeColor = context.getColor(R.color.card_selected)
                     it.setCardBackgroundColor(context.getColor(R.color.span_background_selected))
                 } else {
@@ -76,7 +77,7 @@ class AvailableServicesAdapter : RecyclerView.Adapter<AvailableServicesAdapter.V
                 }
             }
             findViewById<TextView>(R.id.textTitle).setTextAppearance(
-                if(r.selected) {
+                if(selected) {
                     R.style.TextItemTitleActive
                 } else {
                     R.style.TextItemTitle

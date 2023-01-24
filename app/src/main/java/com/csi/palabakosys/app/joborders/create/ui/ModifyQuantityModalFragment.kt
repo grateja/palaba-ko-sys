@@ -11,13 +11,20 @@ class ModifyQuantityModalFragment : ModalFragment<QuantityModel>() {
 
     private lateinit var binding: FragmentModifyQuantityModalBinding
 
+    var onItemRemove: ((QuantityModel) -> Unit)? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
         binding = FragmentModifyQuantityModalBinding.inflate(inflater, container, false)
-        binding.viewModel = arguments?.getParcelable("data")
+        val data = arguments?.getParcelable<QuantityModel>("data")
+        binding.viewModel = data
+
+        if(data?.quantity == 0) {
+            binding.buttonRemove.visibility = View.GONE
+        }
 
         binding.buttonConfirm.setOnClickListener {
             onOk?.invoke(binding.viewModel!!)
@@ -44,6 +51,11 @@ class ModifyQuantityModalFragment : ModalFragment<QuantityModel>() {
                     (text.toString().toInt().plus(1)).toString()
                 )
             }
+        }
+
+        binding.buttonRemove.setOnClickListener {
+            onItemRemove?.invoke(binding.viewModel!!)
+            dismiss()
         }
 
         return binding.root

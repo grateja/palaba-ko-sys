@@ -23,7 +23,8 @@ class JobOrderServiceItemAdapter: RecyclerView.Adapter<JobOrderServiceItemAdapte
 
     fun setData(services: MutableList<MenuServiceItem>) {
         list = services
-        notifyItemRangeChanged(0, services.size -1)
+        notifyDataSetChanged()
+//        notifyItemRangeChanged(0, services.size -1)
     }
     fun addItem(service: MenuServiceItem) {
         list.let { _list ->
@@ -68,9 +69,9 @@ class JobOrderServiceItemAdapter: RecyclerView.Adapter<JobOrderServiceItemAdapte
         holder.itemView.setOnClickListener {
             onItemClick?.invoke(r)
         }
-        holder.itemView.findViewById<ImageButton>(R.id.buttonDelete).setOnClickListener {
-            onDeleteRequest?.invoke(r)
-        }
+//        holder.itemView.findViewById<ImageButton>(R.id.buttonDelete).setOnClickListener {
+//            onDeleteRequest?.invoke(r)
+//        }
     }
 
     override fun getItemCount(): Int {

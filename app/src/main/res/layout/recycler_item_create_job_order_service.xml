@@ -8,16 +8,15 @@
             type="com.csi.palabakosys.app.joborders.create.services.MenuServiceItem" />
     </data>
     <com.google.android.material.card.MaterialCardView
-        style="@style/JobOrderService"
         app:strokeColor="@color/primary_background"
-        android:layoutAnimation="@anim/layout_animation"
+        android:layout_margin="8dp"
+        app:contentPadding="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_margin="8dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp">
-
+            android:layout_height="wrap_content">
             <TextView
                 android:id="@+id/textTitle"
                 style="@style/TextItemTitle"
@@ -63,7 +62,7 @@
                 style="@style/CardSpan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toStartOf="@id/buttonDelete"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
@@ -74,16 +73,16 @@
                     tools:text="P 70.00" />
             </com.google.android.material.card.MaterialCardView>
 
-            <ImageButton
-                android:id="@+id/buttonDelete"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:backgroundTint="@color/white"
-                android:scaleType="centerCrop"
-                android:src="@drawable/delete_icon"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+<!--            <ImageButton-->
+<!--                android:id="@+id/buttonDelete"-->
+<!--                android:layout_width="40dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:backgroundTint="@color/white"-->
+<!--                android:scaleType="centerCrop"-->
+<!--                android:src="@drawable/delete_icon"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent" />-->
 
             <TextView
                 android:id="@+id/textLoads"
@@ -93,7 +92,7 @@
                 android:text="@{viewModel.quantity + ` Loads`}"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/buttonDelete"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cardPrice"
                 tools:text="2 Loads" />
 

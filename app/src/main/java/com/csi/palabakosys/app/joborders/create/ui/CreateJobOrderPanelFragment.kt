@@ -9,7 +9,7 @@ import com.csi.palabakosys.R
 import com.csi.palabakosys.app.joborders.create.products.JobOrderProductsItemAdapter
 import com.csi.palabakosys.app.joborders.create.services.JobOrderServiceItemAdapter
 import com.csi.palabakosys.app.joborders.create.CreateJobOrderViewModel
-import com.csi.palabakosys.app.joborders.create.DataState
+//import com.csi.palabakosys.app.joborders.create.DataState
 import com.csi.palabakosys.databinding.FragmentCreateJobOrderPanelBinding
 
 class CreateJobOrderPanelFragment : Fragment(R.layout.fragment_create_job_order_panel) {
@@ -31,38 +31,38 @@ class CreateJobOrderPanelFragment : Fragment(R.layout.fragment_create_job_order_
         binding.serviceItems.adapter = jobOrderServicesAdapter
         binding.productItems.adapter = jobOrderProductsAdapter
 
-        jobOrderServicesAdapter.setData(viewModel.jobOrderServices)
+//        jobOrderServicesAdapter.setData(viewModel.jobOrderServices)
         jobOrderProductsAdapter.setData(viewModel.jobOrderProducts)
 
         subscribeEvents()
     }
     private fun subscribeEvents() {
-        viewModel.dataState().observe(viewLifecycleOwner, Observer {
-            if(it is DataState.PutService) {
-                jobOrderServicesAdapter.addItem(it.serviceItem)
-//                binding.serviceItems.scheduleLayoutAnimation()
-            } else if(it is DataState.PutProduct) {
-                jobOrderProductsAdapter.addItem(it.product)
-            } else if(it is DataState.RequestEditServiceQuantity) {
-                requestModifyQuantity(
-                    QuantityModel(
-                        it.serviceItem.id, it.serviceItem.name, it.serviceItem.quantity, QuantityModel.TYPE_SERVICE
-                    )
-                )
-                viewModel.resetState()
-            } else if(it is DataState.RequestEditProductQuantity) {
-                requestModifyQuantity(
-                    QuantityModel(
-                        it.serviceItem.id, it.serviceItem.name, it.serviceItem.quantity, QuantityModel.TYPE_PRODUCT
-                    )
-                )
-                viewModel.resetState()
-            } else if(it is DataState.RemoveService) {
-                jobOrderServicesAdapter.removeItem(it.index)
-            } else if(it is DataState.RemoveProduct) {
-                jobOrderProductsAdapter.removeItem(it.index)
-            }
-        })
+//        viewModel.dataState().observe(viewLifecycleOwner, Observer {
+//            if(it is DataState.PutService) {
+//                jobOrderServicesAdapter.addItem(it.serviceItem)
+////                binding.serviceItems.scheduleLayoutAnimation()
+//            } else if(it is DataState.PutProduct) {
+//                jobOrderProductsAdapter.addItem(it.product)
+//            } else if(it is DataState.RequestEditServiceQuantity) {
+//                requestModifyQuantity(
+//                    QuantityModel(
+//                        it.serviceItem.id, it.serviceItem.name, it.serviceItem.quantity, QuantityModel.TYPE_SERVICE
+//                    )
+//                )
+//                viewModel.resetState()
+//            } else if(it is DataState.RequestEditProductQuantity) {
+//                requestModifyQuantity(
+//                    QuantityModel(
+//                        it.serviceItem.id, it.serviceItem.name, it.serviceItem.quantity, QuantityModel.TYPE_PRODUCT
+//                    )
+//                )
+//                viewModel.resetState()
+//            } else if(it is DataState.RemoveService) {
+//                jobOrderServicesAdapter.removeItem(it.index)
+//            } else if(it is DataState.RemoveProduct) {
+//                jobOrderProductsAdapter.removeItem(it.index)
+//            }
+//        })
 
         jobOrderServicesAdapter.apply {
             onItemClick = {

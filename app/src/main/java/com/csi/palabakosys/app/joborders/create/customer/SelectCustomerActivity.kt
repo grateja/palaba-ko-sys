@@ -12,7 +12,7 @@ import com.csi.palabakosys.R
 import com.csi.palabakosys.adapters.Adapter
 import com.csi.palabakosys.app.customers.CustomerMinimal
 import com.csi.palabakosys.app.customers.create.AddEditCustomerFragment
-import com.csi.palabakosys.app.joborders.create.CreateJobOrderActivity
+import com.csi.palabakosys.app.joborders.create.JobOrderCreateActivity
 import com.csi.palabakosys.databinding.ActivitySelectCustomerBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -31,6 +31,7 @@ class SelectCustomerActivity : AppCompatActivity() {
         binding.recyclerCustomersMinimal.adapter = customersAdapter
         setSupportActionBar(binding.toolbar)
         subscribeEvents()
+        viewModel.searchMinimal("")
     }
 
     private fun subscribeEvents() {
@@ -50,7 +51,7 @@ class SelectCustomerActivity : AppCompatActivity() {
     }
 
     private fun openCreateJobOrderActivity(customer: CustomerMinimal) {
-        val intent = Intent(this, CreateJobOrderActivity::class.java).apply {
+        val intent = Intent(this, JobOrderCreateActivity::class.java).apply {
             putExtra("customer", customer)
         }
         startActivity(intent)

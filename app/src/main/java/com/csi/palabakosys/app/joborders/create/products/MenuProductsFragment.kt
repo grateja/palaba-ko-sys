@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.csi.palabakosys.R
 //import com.csi.palabakosys.app.joborders.create.RemoveItemActivity
 import com.csi.palabakosys.app.joborders.create.CreateJobOrderViewModel
-import com.csi.palabakosys.app.joborders.create.DataState
+//import com.csi.palabakosys.app.joborders.create.DataState
 import com.csi.palabakosys.databinding.FragmentMenuProductsBinding
 
 class MenuProductsFragment : Fragment(R.layout.fragment_menu_products) {
@@ -38,17 +38,17 @@ class MenuProductsFragment : Fragment(R.layout.fragment_menu_products) {
             onItemClick = { selectProduct(it) }
 //            onDelete = { requestDelete(it) }
         }
-        viewModel.dataState().observe(viewLifecycleOwner, Observer {
-            when(it) {
-                is DataState.PutProduct -> {
-                    availableProductsAdapter.select(it.product)
-                }
-                is DataState.RemoveProduct -> {
-                    availableProductsAdapter.deselect(it.id)
-                } else -> {
-                }
-            }
-        })
+//        viewModel.dataState().observe(viewLifecycleOwner, Observer {
+//            when(it) {
+//                is DataState.PutProduct -> {
+//                    availableProductsAdapter.select(it.product)
+//                }
+//                is DataState.RemoveProduct -> {
+//                    availableProductsAdapter.deselect(it.id)
+//                } else -> {
+//                }
+//            }
+//        })
 //        removeItemLauncher.onOk = {
 //            it.data?.getParcelableExtra<RemoveItemModel>("data")?.let { data ->
 //                viewModel.removeProduct(data.id)
