@@ -9,7 +9,6 @@ import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.window.layout.WindowMetricsCalculator
 import com.csi.palabakosys.R
-import com.csi.palabakosys.app.joborders.create.CreateJobOrderActivity
 import com.csi.palabakosys.app.joborders.create.customer.SelectCustomerActivity
 import com.csi.palabakosys.databinding.ActivityMainBinding
 import com.csi.palabakosys.viewmodels.MainViewModel

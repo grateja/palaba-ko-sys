@@ -30,6 +30,7 @@ class JobOrderCreateActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        title = "Create Job Order"
         binding = DataBindingUtil.setContentView(this, R.layout.activity_job_order_create)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
@@ -53,9 +54,6 @@ class JobOrderCreateActivity : AppCompatActivity() {
         productsLauncher.onOk = {
             val result = it.data?.getParcelableArrayListExtra<MenuProductItem>("products")?.toList()
             viewModel.syncProducts(result)
-
-            println("result size")
-            println(result?.size)
         }
 
         servicesAdapter.onItemClick = {

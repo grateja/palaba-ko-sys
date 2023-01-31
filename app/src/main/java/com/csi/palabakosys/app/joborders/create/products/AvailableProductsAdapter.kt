@@ -19,36 +19,25 @@ class AvailableProductsAdapter : RecyclerView.Adapter<AvailableProductsAdapter.V
     }
 
     var onItemClick: ((MenuProductItem) -> Unit) ? = null
-//    var onDelete: ((MenuProductItem) -> Unit) ? = null
 
     fun setData(services: List<MenuProductItem>) {
         list = services
         notifyItemRangeChanged(0, list.size - 1)
     }
 
-    fun select(service: MenuProductItem) {
-        list.let {
-            it.find { s -> s.id == service.id }?.apply {
-                selected = true
-                notifyItemChanged(it.indexOf(this))
-            }
-        }
-    }
+//    fun select(service: MenuProductItem) {
+//        list.let {
+//            it.find { s -> s.id == service.id }?.apply {
+//                selected = true
+//                notifyItemChanged(it.indexOf(this))
+//            }
+//        }
+//    }
 
     fun updateItem(product: MenuProductItem) {
         list.let {
             it.find { s -> s.id == product.id }?.apply {
                 selected = product.selected
-                notifyItemChanged(it.indexOf(this))
-            }
-        }
-    }
-
-    fun deselect(id: String) {
-        list.let {
-            it.find { s -> s.id == id }?.apply {
-                selected = false
-                quantity = 0
                 notifyItemChanged(it.indexOf(this))
             }
         }

@@ -44,8 +44,6 @@ class AvailableProductsViewModel
                 this.quantity = mpi.quantity
             }
         }
-        println("Preselected products")
-        println(products?.size)
     }
 
     fun putProduct(quantityModel: QuantityModel) {

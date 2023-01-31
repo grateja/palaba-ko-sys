@@ -19,7 +19,6 @@ class AvailableServicesAdapter : RecyclerView.Adapter<AvailableServicesAdapter.V
     }
 
     var onItemClick: ((MenuServiceItem) -> Unit) ? = null
-//    var onDelete: ((MenuServiceItem) -> Unit) ? = null
 
     fun setData(services: List<MenuServiceItem>) {
         list = services
@@ -35,15 +34,15 @@ class AvailableServicesAdapter : RecyclerView.Adapter<AvailableServicesAdapter.V
         }
     }
 
-    fun deselect(id: String) {
-        list.let {
-            it.find { s -> s.id == id }?.apply {
-                selected = false
-                quantity = 0
-                notifyItemChanged(it.indexOf(this))
-            }
-        }
-    }
+//    fun deselect(id: String) {
+//        list.let {
+//            it.find { s -> s.id == id }?.apply {
+//                selected = false
+//                quantity = 0
+//                notifyItemChanged(it.indexOf(this))
+//            }
+//        }
+//    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding: ViewDataBinding = DataBindingUtil.inflate(

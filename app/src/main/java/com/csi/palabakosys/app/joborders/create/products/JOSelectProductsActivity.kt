@@ -53,15 +53,6 @@ class JOSelectProductsActivity : AppCompatActivity() {
             when(it) {
                 is AvailableProductsViewModel.DataState.UpdateProduct -> {
                     productsAdapter.updateItem(it.productItem)
-//                    if(it.serviceItem.machineType == MachineType.REGULAR_WASHER) {
-//                        refreshList(rwAdapter, it.serviceItem)
-//                    } else if(it.serviceItem.machineType == MachineType.REGULAR_DRYER) {
-//                        refreshList(rdAdapter, it.serviceItem)
-//                    } else if(it.serviceItem.machineType == MachineType.TITAN_WASHER) {
-//                        refreshList(twAdapter, it.serviceItem)
-//                    } else if(it.serviceItem.machineType == MachineType.TITAN_DRYER) {
-//                        refreshList(tdAdapter, it.serviceItem)
-//                    }
                     viewModel.resetState()
                 }
                 is AvailableProductsViewModel.DataState.Submit -> {

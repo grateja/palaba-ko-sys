@@ -24,6 +24,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LMS2022">
         <activity
+            android:name=".app.joborders.create.delivery.JOSelectDeliveryActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".app.joborders.create.products.JOSelectProductsActivity"
             android:exported="false">
             <meta-data
@@ -55,10 +62,6 @@
             android:name=".app.joborders.create.customer.SelectCustomerActivity"
             android:exported="false"
             android:noHistory="true"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar" />
-        <activity
-            android:name=".app.joborders.create.CreateJobOrderActivity"
-            android:exported="false"
             android:theme="@style/Theme.MaterialComponents.Light.NoActionBar" />
         <activity
             android:name=".app.MainActivity"

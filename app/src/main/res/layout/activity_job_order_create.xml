@@ -196,6 +196,114 @@
                     android:paddingBottom="16dp"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:layout_height="50dp"/>
+                <!--                Extras -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardLegendExtras"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:contentPadding="12dp"
+                    app:cardBackgroundColor="@color/secondary_background">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginLeft="6dp"
+                        android:layout_marginRight="6dp">
+                        <TextView
+                            style="@style/TileSubTitle"
+                            android:textColor="@color/black"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="EXTRAS"/>
+                        <TextView
+                            style="@style/TileSubTitle"
+                            android:text="+"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+                <TextView
+                    android:layout_margin="8dp"
+                    android:gravity="center"
+                    android:visibility="@{!viewModel.hasExtras}"
+                    android:text="(No selected extras)"
+                    android:fontFamily="sans-serif-black"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+                <!--                Pickup and Delivery -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardLegendDelivery"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:contentPadding="12dp"
+                    app:cardBackgroundColor="@color/secondary_background">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginLeft="6dp"
+                        android:layout_marginRight="6dp">
+                        <TextView
+                            style="@style/TileSubTitle"
+                            android:textColor="@color/black"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="PICKUP / DELIVERY"/>
+                        <TextView
+                            style="@style/TileSubTitle"
+                            android:text="+"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+                <TextView
+                    android:layout_margin="8dp"
+                    android:gravity="center"
+                    android:visibility="@{!viewModel.hasDelivery}"
+                    android:text="(No Pickup/Delivery Fee)"
+                    android:fontFamily="sans-serif-black"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+                <!--                Discount -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardLegendDiscount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:contentPadding="12dp"
+                    app:cardBackgroundColor="@color/secondary_background">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginLeft="6dp"
+                        android:layout_marginRight="6dp">
+                        <TextView
+                            style="@style/TileSubTitle"
+                            android:textColor="@color/black"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="DISCOUNT"/>
+                        <TextView
+                            style="@style/TileSubTitle"
+                            android:text="+"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+                <TextView
+                    android:layout_margin="8dp"
+                    android:gravity="center"
+                    android:visibility="@{!viewModel.hasDiscount}"
+                    android:text="(No selected discount)"
+                    android:fontFamily="sans-serif-black"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

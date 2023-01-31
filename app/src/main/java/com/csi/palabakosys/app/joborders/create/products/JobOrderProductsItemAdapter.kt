@@ -55,18 +55,7 @@ class JobOrderProductsItemAdapter: RecyclerView.Adapter<JobOrderProductsItemAdap
 
     fun setData(jobOrderProducts: MutableList<MenuProductItem>) {
         list = jobOrderProducts
+//        notifyItemRangeChanged(0, jobOrderProducts.size - 1)
         notifyDataSetChanged()
-    }
-
-    fun addItem(service: MenuProductItem) {
-        list.let { _list ->
-            _list.find { s -> s.id == service.id }?.let {
-                notifyItemChanged(_list.indexOf(it))
-            }
-        }
-    }
-
-    fun removeItem(index: Int) {
-        notifyItemRemoved(index)
     }
 }

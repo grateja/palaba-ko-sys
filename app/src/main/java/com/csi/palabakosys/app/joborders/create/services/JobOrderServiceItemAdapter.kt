@@ -19,31 +19,12 @@ class JobOrderServiceItemAdapter: RecyclerView.Adapter<JobOrderServiceItemAdapte
     private var list: MutableList<MenuServiceItem> = mutableListOf()
 
     var onItemClick: ((MenuServiceItem) -> Unit) ? = null
-    var onDeleteRequest: ((MenuServiceItem) -> Unit) ? = null
+//    var onDeleteRequest: ((MenuServiceItem) -> Unit) ? = null
 
     fun setData(services: MutableList<MenuServiceItem>) {
         list = services
         notifyDataSetChanged()
 //        notifyItemRangeChanged(0, services.size -1)
-    }
-    fun addItem(service: MenuServiceItem) {
-        list.let { _list ->
-            _list.find { s -> s.id == service.id }?.let {
-                notifyItemChanged(_list.indexOf(it))
-            }
-        }
-    }
-    fun removeItem(index: Int) {
-        println("remove item size")
-        println(list.size)
-        notifyItemRemoved(index)
-//        list.let { _list ->
-//            println("find service")
-//            _list.find { s -> s.id == service.id }?.let {
-//                println("you wish")
-//                notifyItemRemoved(_list.indexOf(it))
-//            }
-//        }
     }
 
     override fun onCreateViewHolder(
