@@ -41,11 +41,6 @@ class JOSelectWashDryActivity : AppCompatActivity() {
         binding.inclMenu12KGWashers.recyclerAvailableServices.adapter = twAdapter
         binding.inclMenu12KGDryers.recyclerAvailableServices.adapter = tdAdapter
 
-        rwAdapter.onItemClick = { itemClick(it) }
-        rdAdapter.onItemClick = { itemClick(it) }
-        twAdapter.onItemClick = { itemClick(it) }
-        tdAdapter.onItemClick = { itemClick(it) }
-
         subscribeEvents()
 
         viewModel.setPreSelectedServices(intent.getParcelableArrayListExtra<MenuServiceItem>("services")?.toList())
@@ -65,8 +60,6 @@ class JOSelectWashDryActivity : AppCompatActivity() {
             onOk = {
                 if (it.type == QuantityModel.TYPE_SERVICE) {
                     viewModel.putService(it)
-                } else if (it.type == QuantityModel.TYPE_PRODUCT) {
-                    viewModel.putService(it)
                 }
             }
             onItemRemove = {
@@ -81,6 +74,11 @@ class JOSelectWashDryActivity : AppCompatActivity() {
     }
 
     private fun subscribeEvents() {
+        rwAdapter.onItemClick = { itemClick(it) }
+        rdAdapter.onItemClick = { itemClick(it) }
+        twAdapter.onItemClick = { itemClick(it) }
+        tdAdapter.onItemClick = { itemClick(it) }
+
         binding.buttonOk.setOnClickListener {
             viewModel.prepareSubmit()
         }

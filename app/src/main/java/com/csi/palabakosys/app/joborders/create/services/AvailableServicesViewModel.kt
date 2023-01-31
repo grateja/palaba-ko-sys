@@ -42,12 +42,29 @@ constructor() : ViewModel() {
         }
     }
 
+    fun setPreSelectedServices(services: List<MenuServiceItem>?) {
+        services?.forEach { msi ->
+            availableServices.value?.find { msi.id == it.id }?.apply {
+                this.selected = true
+                this.quantity = msi.quantity
+            }
+        }
+    }
+
     fun putService(quantityModel: QuantityModel) {
-        val service = availableServices.value?.find { msi -> msi.id == quantityModel.id }?.apply {
+        val service = availableServices.value?.find { it.id == quantityModel.id }?.apply {
             selected = true
             quantity = quantityModel.quantity
         }
         dataState.value = DataState.UpdateService(service!!)
+    }
+
+    fun removeService(service: QuantityModel) {
+        val item = availableServices.value?.find { it.id == service.id }?.apply {
+            this.selected = false
+            this.quantity = 0
+        }
+        dataState.value = DataState.UpdateService(item!!)
     }
 
     fun prepareSubmit() {
@@ -59,23 +76,6 @@ constructor() : ViewModel() {
 
     fun resetState() {
         dataState.value = DataState.StateLess
-    }
-
-    fun setPreSelectedServices(services: List<MenuServiceItem>?) {
-        services?.forEach { msi ->
-            availableServices.value?.find { msi.id == it.id }?.apply {
-                this.selected = true
-                this.quantity = msi.quantity
-            }
-        }
-    }
-
-    fun removeService(service: QuantityModel) {
-        val item = availableServices.value?.find { it.id == service.id }?.apply {
-            this.selected = false
-            this.quantity = 0
-        }
-        dataState.value = DataState.UpdateService(item!!)
     }
 
     sealed class DataState {

@@ -7,16 +7,13 @@ import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
+import com.csi.palabakosys.app.joborders.create.products.JOSelectProductsActivity
+import com.csi.palabakosys.app.joborders.create.products.JobOrderProductsItemAdapter
+import com.csi.palabakosys.app.joborders.create.products.MenuProductItem
 import com.csi.palabakosys.app.joborders.create.services.JOSelectWashDryActivity
 import com.csi.palabakosys.app.joborders.create.services.JobOrderServiceItemAdapter
 import com.csi.palabakosys.app.joborders.create.services.MenuServiceItem
-import com.csi.palabakosys.app.joborders.create.ui.ModifyQuantityModalFragment
-import com.csi.palabakosys.app.joborders.create.ui.QuantityModel
-import com.csi.palabakosys.app.joborders.create.ui.RemoveItemModalFragment
-import com.csi.palabakosys.app.joborders.create.ui.RemoveItemModel
 import com.csi.palabakosys.databinding.ActivityJobOrderCreateBinding
-import com.csi.palabakosys.model.MachineType
-import com.csi.palabakosys.model.WashType
 import com.csi.palabakosys.util.ActivityLauncher
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -26,10 +23,10 @@ class JobOrderCreateActivity : AppCompatActivity() {
     private val viewModel: CreateJobOrderViewModel by viewModels()
 
     private val servicesLauncher = ActivityLauncher(this)
-
-    private lateinit var removeItemModalFragment: RemoveItemModalFragment
+    private val productsLauncher = ActivityLauncher(this)
 
     private val servicesAdapter = JobOrderServiceItemAdapter()
+    private val productsAdapter = JobOrderProductsItemAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +39,7 @@ class JobOrderCreateActivity : AppCompatActivity() {
         )
 
         binding.serviceItems.adapter = servicesAdapter
+        binding.productItems.adapter = productsAdapter
 
         subscribeEvents()
     }
@@ -52,8 +50,20 @@ class JobOrderCreateActivity : AppCompatActivity() {
             viewModel.syncServices(result)
         }
 
+        productsLauncher.onOk = {
+            val result = it.data?.getParcelableArrayListExtra<MenuProductItem>("products")?.toList()
+            viewModel.syncProducts(result)
+
+            println("result size")
+            println(result?.size)
+        }
+
         servicesAdapter.onItemClick = {
             viewModel.openServices(it)
+        }
+
+        productsAdapter.onItemClick = {
+            viewModel.openProducts(it)
         }
 
         binding.cardLegendServices.setOnClickListener {
@@ -61,18 +71,25 @@ class JobOrderCreateActivity : AppCompatActivity() {
         }
 
         binding.cardLegendProducts.setOnClickListener {
-            val list = listOf(MenuServiceItem("rw", "Regular Wash", 36, 70f, MachineType.REGULAR_WASHER, WashType.WARM, 2))
-            viewModel.syncServices(list)
+            viewModel.openProducts(null)
         }
 
         viewModel.jobOrderServices.observe(this, Observer {
             servicesAdapter.setData(it)
         })
 
+        viewModel.jobOrderProducts.observe(this, Observer {
+            productsAdapter.setData(it)
+        })
+
         viewModel.dataState().observe(this, Observer {
             when(it) {
                 is CreateJobOrderViewModel.DataState.OpenServices -> {
                     openServices(it.list, it.item)
+                    viewModel.resetState()
+                }
+                is CreateJobOrderViewModel.DataState.OpenProducts -> {
+                    openProducts(it.list, it.item)
                     viewModel.resetState()
                 }
             }
@@ -87,5 +104,15 @@ class JobOrderCreateActivity : AppCompatActivity() {
             }
         }
         servicesLauncher.launch(intent)
+    }
+
+    private fun openProducts(products: List<MenuProductItem>?, itemPreset: MenuProductItem?) {
+        val intent = Intent(this, JOSelectProductsActivity::class.java).apply {
+            products?.let {
+                putParcelableArrayListExtra("products", ArrayList(it))
+                putExtra("product", itemPreset)
+            }
+        }
+        productsLauncher.launch(intent)
     }
 }

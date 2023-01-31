@@ -26,6 +26,7 @@ constructor() : ViewModel() {
     sealed class DataState {
         object StateLess: DataState()
         data class OpenServices(val list: List<MenuServiceItem>?, val item: MenuServiceItem?): DataState()
+        data class OpenProducts(val list: List<MenuProductItem>?, val item: MenuProductItem?): DataState()
     }
     private val _dataState = MutableLiveData<DataState>()
     fun dataState(): MutableLiveData<DataState> {
@@ -41,13 +42,20 @@ constructor() : ViewModel() {
     val currentCustomer = MutableLiveData<CustomerMinimal>()
     val deliveryCharge = MutableLiveData<DeliveryCharge?>()
     val jobOrderServices = MutableLiveData<MutableList<MenuServiceItem>>()
+    val jobOrderProducts = MutableLiveData<MutableList<MenuProductItem>>()
+
     val hasServices = MediatorLiveData<Boolean>().apply {
         fun update() {
             value = jobOrderServices.value?.size!! > 0
         }
         addSource(jobOrderServices) { update() }
     }
-    val hasProducts = MutableLiveData(false)
+    val hasProducts = MediatorLiveData<Boolean>().apply {
+        fun update() {
+            value = jobOrderProducts.value?.size!! > 0
+        }
+        addSource(jobOrderProducts) { update() }
+    }
     val hasDelivery = MediatorLiveData<Boolean>().apply {
         fun update() {
             value = deliveryCharge.value != null
@@ -69,7 +77,6 @@ constructor() : ViewModel() {
     val availableProducts = MutableLiveData<List<MenuProductItem>>()
     val availableOtherServices = MutableLiveData<List<MenuExtrasItem>>()
 
-    val jobOrderProducts: MutableList<MenuProductItem> = mutableListOf()
     val jobOrderOtherServices: MutableList<MenuExtrasItem> = mutableListOf()
 
     val subtotal = MutableLiveData(0f)
@@ -133,33 +140,43 @@ constructor() : ViewModel() {
     }
 
     fun loadProducts() {
-        viewModelScope.launch {
-            availableProducts.value = listOf(
-                MenuProductItem("ariel", "Ariel", 15.0f, MeasureUnit.SACHET, 1f, ProductType.DETERGENT),
-                MenuProductItem("breeze", "Breeze", 15.0f, MeasureUnit.SACHET, 1f, ProductType.DETERGENT),
-                MenuProductItem("downy", "Downy", 15.0f, MeasureUnit.MILLILITER,  80f, ProductType.FAB_CON),
-                MenuProductItem("del", "Del", 15.0f, MeasureUnit.MILLILITER,  80f, ProductType.FAB_CON),
-                MenuProductItem("plastic-s", "Plastic (S)", 3.0f, MeasureUnit.PCS,  1f, ProductType.OTHER),
-                MenuProductItem("plastic-m", "Plastic (M)", 5.0f, MeasureUnit.PCS,  1f, ProductType.OTHER),
-                MenuProductItem("plastic-l", "Plastic (L)", 7.0f, MeasureUnit.PCS,  1f, ProductType.OTHER),
-                MenuProductItem("hanger", "Hanger", 25.0f, MeasureUnit.PCS, 1f, ProductType.OTHER),
-            ).onEach { menuItem ->
-                jobOrderProducts.find { p -> p.id == menuItem.id }?.let { joItem ->
-                    menuItem.selected = joItem.selected
-                    menuItem.quantity = joItem.quantity
-                }
-            }
-            println("Products loaded")
-        }
+//        viewModelScope.launch {
+//            availableProducts.value = listOf(
+//                MenuProductItem("ariel", "Ariel", 15.0f, MeasureUnit.SACHET, 1f, ProductType.DETERGENT),
+//                MenuProductItem("breeze", "Breeze", 15.0f, MeasureUnit.SACHET, 1f, ProductType.DETERGENT),
+//                MenuProductItem("downy", "Downy", 15.0f, MeasureUnit.MILLILITER,  80f, ProductType.FAB_CON),
+//                MenuProductItem("del", "Del", 15.0f, MeasureUnit.MILLILITER,  80f, ProductType.FAB_CON),
+//                MenuProductItem("plastic-s", "Plastic (S)", 3.0f, MeasureUnit.PCS,  1f, ProductType.OTHER),
+//                MenuProductItem("plastic-m", "Plastic (M)", 5.0f, MeasureUnit.PCS,  1f, ProductType.OTHER),
+//                MenuProductItem("plastic-l", "Plastic (L)", 7.0f, MeasureUnit.PCS,  1f, ProductType.OTHER),
+//                MenuProductItem("hanger", "Hanger", 25.0f, MeasureUnit.PCS, 1f, ProductType.OTHER),
+//            ).onEach { menuItem ->
+//                jobOrderProducts.find { p -> p.id == menuItem.id }?.let { joItem ->
+//                    menuItem.selected = joItem.selected
+//                    menuItem.quantity = joItem.quantity
+//                }
+//            }
+//            println("Products loaded")
+//        }
     }
 
     fun syncServices(services: List<MenuServiceItem>?) {
         jobOrderServices.value = services?.toMutableList()
     }
 
+    fun syncProducts(products: List<MenuProductItem>?) {
+        jobOrderProducts.value = products?.toMutableList()
+    }
+
     fun openServices(itemPreset: MenuServiceItem?) {
         jobOrderServices.value.let {
             _dataState.value = DataState.OpenServices(it, itemPreset)
+        }
+    }
+
+    fun openProducts(itemPreset: MenuProductItem?) {
+        jobOrderProducts.value.let {
+            _dataState.value = DataState.OpenProducts(it, itemPreset)
         }
     }
 
@@ -204,13 +221,13 @@ constructor() : ViewModel() {
 //        }
     }
     fun applyProductQuantity(data: QuantityModel) {
-        jobOrderProducts.let {
-            it.find { s -> s.id == data.id }?.apply {
-                quantity = data.quantity
-            }?.let { product ->
-                putProduct(product)
-            }
-        }
+//        jobOrderProducts.let {
+//            it.find { s -> s.id == data.id }?.apply {
+//                quantity = data.quantity
+//            }?.let { product ->
+//                putProduct(product)
+//            }
+//        }
     }
 
     fun removeService(serviceId: String) {

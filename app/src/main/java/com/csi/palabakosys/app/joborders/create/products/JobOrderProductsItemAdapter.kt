@@ -55,6 +55,7 @@ class JobOrderProductsItemAdapter: RecyclerView.Adapter<JobOrderProductsItemAdap
 
     fun setData(jobOrderProducts: MutableList<MenuProductItem>) {
         list = jobOrderProducts
+        notifyDataSetChanged()
     }
 
     fun addItem(service: MenuProductItem) {

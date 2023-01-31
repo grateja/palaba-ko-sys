@@ -32,7 +32,7 @@ class CreateJobOrderPanelFragment : Fragment(R.layout.fragment_create_job_order_
         binding.productItems.adapter = jobOrderProductsAdapter
 
 //        jobOrderServicesAdapter.setData(viewModel.jobOrderServices)
-        jobOrderProductsAdapter.setData(viewModel.jobOrderProducts)
+//        jobOrderProductsAdapter.setData(viewModel.jobOrderProducts)
 
         subscribeEvents()
     }

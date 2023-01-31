@@ -27,7 +27,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@{viewModel.name}"
+                android:text="@{viewModel.abbr()}"
                 app:layout_constraintEnd_toStartOf="@+id/cardPrice"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

@@ -35,6 +35,15 @@ class AvailableProductsAdapter : RecyclerView.Adapter<AvailableProductsAdapter.V
         }
     }
 
+    fun updateItem(product: MenuProductItem) {
+        list.let {
+            it.find { s -> s.id == product.id }?.apply {
+                selected = product.selected
+                notifyItemChanged(it.indexOf(this))
+            }
+        }
+    }
+
     fun deselect(id: String) {
         list.let {
             it.find { s -> s.id == id }?.apply {

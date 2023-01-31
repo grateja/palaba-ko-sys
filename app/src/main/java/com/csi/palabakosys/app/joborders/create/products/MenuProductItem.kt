@@ -14,7 +14,7 @@ class MenuProductItem(
     val measureUnit: MeasureUnit,
     val unitPerServe: Float,
     val productType: ProductType,
-    var quantity: Int = 0,
+    var quantity: Int = 1,
 ) : Parcelable {
     @IgnoredOnParcel
     var selected = false
