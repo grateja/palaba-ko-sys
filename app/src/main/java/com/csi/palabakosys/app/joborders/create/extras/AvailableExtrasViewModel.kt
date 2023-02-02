@@ -1,0 +1,75 @@
+package com.csi.palabakosys.app.joborders.create.extras
+
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.csi.palabakosys.app.joborders.create.services.MenuServiceItem
+import com.csi.palabakosys.app.joborders.create.ui.QuantityModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+@HiltViewModel
+class AvailableExtrasViewModel
+
+@Inject
+constructor() : ViewModel() {
+    val availableExtras = MutableLiveData<List<MenuExtrasItem>>()
+    val dataState = MutableLiveData<DataState>()
+
+    init {
+        loadServices()
+    }
+
+    private fun loadServices() {
+        viewModelScope.launch {
+            val services = listOf(
+                MenuExtrasItem("8kg-fold", "8KG Fold", 30f, "fold"),
+                MenuExtrasItem("12kg-fold", "12KG Fold", 30f, "fold"),
+            )
+            availableExtras.value = services
+        }
+    }
+
+    fun setPreSelectedServices(services: List<MenuExtrasItem>?) {
+        services?.forEach { msi ->
+            availableExtras.value?.find { msi.id == it.id }?.apply {
+                this.selected = true
+                this.quantity = msi.quantity
+            }
+        }
+    }
+
+    fun putService(quantityModel: QuantityModel) {
+        val service = availableExtras.value?.find { it.id == quantityModel.id }?.apply {
+            selected = true
+            quantity = quantityModel.quantity
+        }
+        dataState.value = DataState.UpdateService(service!!)
+    }
+
+    fun removeService(service: QuantityModel) {
+        val item = availableExtras.value?.find { it.id == service.id }?.apply {
+            this.selected = false
+            this.quantity = 1
+        }
+        dataState.value = DataState.UpdateService(item!!)
+    }
+
+    fun prepareSubmit() {
+        val list = availableExtras.value?.filter { it.selected }
+        list?.let {
+            dataState.value = DataState.Submit(it)
+        }
+    }
+
+    fun resetState() {
+        dataState.value = DataState.StateLess
+    }
+
+    sealed class DataState {
+        object StateLess: DataState()
+        data class UpdateService(val extrasItem: MenuExtrasItem) : DataState()
+        data class Submit(val selectedItems: List<MenuExtrasItem>) : DataState()
+    }
+}

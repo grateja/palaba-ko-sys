@@ -19,27 +19,17 @@ class AvailableExtrasAdapter : RecyclerView.Adapter<AvailableExtrasAdapter.ViewH
     }
 
     var onItemClick: ((MenuExtrasItem) -> Unit) ? = null
-//    var onDelete: ((MenuServiceItem) -> Unit) ? = null
 
     fun setData(services: List<MenuExtrasItem>) {
         list = services
         notifyItemRangeChanged(0, list.size - 1)
     }
 
-    fun select(service: MenuExtrasItem) {
+    fun updateItem(service: MenuExtrasItem) {
         list.let {
             it.find { s -> s.id == service.id }?.apply {
-                selected = true
-                notifyItemChanged(it.indexOf(this))
-            }
-        }
-    }
-
-    fun deselect(id: String) {
-        list.let {
-            it.find { s -> s.id == id }?.apply {
-                selected = false
-                quantity = 0
+                selected = service.selected
+                quantity = service.quantity
                 notifyItemChanged(it.indexOf(this))
             }
         }

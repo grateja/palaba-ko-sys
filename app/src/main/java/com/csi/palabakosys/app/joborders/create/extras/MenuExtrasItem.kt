@@ -10,7 +10,7 @@ class MenuExtrasItem(
     val name: String,
     val price: Float,
     val category: String,
-    var quantity: Int = 0,
+    var quantity: Int = 1,
 ) : Parcelable {
     @IgnoredOnParcel
     var selected = false

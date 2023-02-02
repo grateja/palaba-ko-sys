@@ -9,6 +9,9 @@ import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
 import com.csi.palabakosys.app.joborders.create.delivery.DeliveryCharge
 import com.csi.palabakosys.app.joborders.create.delivery.JOSelectDeliveryActivity
+import com.csi.palabakosys.app.joborders.create.extras.JOSelectExtrasActivity
+import com.csi.palabakosys.app.joborders.create.extras.JobOrderExtrasItemAdapter
+import com.csi.palabakosys.app.joborders.create.extras.MenuExtrasItem
 import com.csi.palabakosys.app.joborders.create.products.JOSelectProductsActivity
 import com.csi.palabakosys.app.joborders.create.products.JobOrderProductsItemAdapter
 import com.csi.palabakosys.app.joborders.create.products.MenuProductItem
@@ -27,9 +30,11 @@ class JobOrderCreateActivity : AppCompatActivity() {
     private val servicesLauncher = ActivityLauncher(this)
     private val productsLauncher = ActivityLauncher(this)
     private val deliveryLauncher = ActivityLauncher(this)
+    private val extrasLauncher = ActivityLauncher(this)
 
     private val servicesAdapter = JobOrderServiceItemAdapter()
     private val productsAdapter = JobOrderProductsItemAdapter()
+    private val extrasAdapter = JobOrderExtrasItemAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +49,7 @@ class JobOrderCreateActivity : AppCompatActivity() {
 
         binding.serviceItems.adapter = servicesAdapter
         binding.productItems.adapter = productsAdapter
+        binding.extrasItems.adapter = extrasAdapter
 
         subscribeEvents()
     }
@@ -59,6 +65,11 @@ class JobOrderCreateActivity : AppCompatActivity() {
             viewModel.syncProducts(result)
         }
 
+        extrasLauncher.onOk = {
+            val result = it.data?.getParcelableArrayListExtra<MenuExtrasItem>("extras")?.toList()
+            viewModel.syncExtras(result)
+        }
+
         deliveryLauncher.onOk = {
             val result = it.data?.getParcelableExtra<DeliveryCharge>("deliveryCharge")
             viewModel.setDeliveryCharge(result)
@@ -72,12 +83,20 @@ class JobOrderCreateActivity : AppCompatActivity() {
             viewModel.openProducts(it)
         }
 
+        extrasAdapter.onItemClick = {
+            viewModel.openExtras(it)
+        }
+
         binding.cardLegendServices.setOnClickListener {
             viewModel.openServices(null)
         }
 
         binding.cardLegendProducts.setOnClickListener {
             viewModel.openProducts(null)
+        }
+
+        binding.cardLegendExtras.setOnClickListener {
+            viewModel.openExtras(null)
         }
 
         binding.cardLegendDelivery.setOnClickListener {
@@ -92,6 +111,10 @@ class JobOrderCreateActivity : AppCompatActivity() {
             productsAdapter.setData(it)
         })
 
+        viewModel.jobOrderExtras.observe(this, Observer {
+            extrasAdapter.setData(it)
+        })
+
         viewModel.dataState().observe(this, Observer {
             when(it) {
                 is CreateJobOrderViewModel.DataState.OpenServices -> {
@@ -100,6 +123,10 @@ class JobOrderCreateActivity : AppCompatActivity() {
                 }
                 is CreateJobOrderViewModel.DataState.OpenProducts -> {
                     openProducts(it.list, it.item)
+                    viewModel.resetState()
+                }
+                is CreateJobOrderViewModel.DataState.OpenExtras -> {
+                    openExtras(it.list, it.item)
                     viewModel.resetState()
                 }
                 is CreateJobOrderViewModel.DataState.OpenDelivery -> {
@@ -128,6 +155,16 @@ class JobOrderCreateActivity : AppCompatActivity() {
             }
         }
         productsLauncher.launch(intent)
+    }
+
+    private fun openExtras(extras: List<MenuExtrasItem>?, itemPreset: MenuExtrasItem?) {
+        val intent = Intent(this, JOSelectExtrasActivity::class.java).apply {
+            extras?.let {
+                putParcelableArrayListExtra("extras", ArrayList(it))
+                putExtra("extra", itemPreset)
+            }
+        }
+        extrasLauncher.launch(intent)
     }
 
     private fun openDelivery(deliveryCharge: DeliveryCharge?) {

@@ -23,19 +23,20 @@ class JobOrderExtrasItemAdapter: RecyclerView.Adapter<JobOrderExtrasItemAdapter.
 
     fun setData(services: List<MenuExtrasItem>) {
         list = services.toMutableList()
-        notifyItemRangeChanged(0, services.size -1)
+//        notifyItemRangeChanged(0, services.size -1)
+        notifyDataSetChanged()
     }
-    fun addItem(service: MenuExtrasItem) {
-        list.let { _list ->
-            _list.find { s -> s.id == service.id }?.let {
-                notifyItemChanged(_list.indexOf(it))
-            }
-        }
-    }
-    fun removeItem(index: Int) {
-        println("remove item size")
-        println(list.size)
-        notifyItemRemoved(index)
+//    fun addItem(service: MenuExtrasItem) {
+//        list.let { _list ->
+//            _list.find { s -> s.id == service.id }?.let {
+//                notifyItemChanged(_list.indexOf(it))
+//            }
+//        }
+//    }
+//    fun removeItem(index: Int) {
+//        println("remove item size")
+//        println(list.size)
+//        notifyItemRemoved(index)
 //        list.let { _list ->
 //            println("find service")
 //            _list.find { s -> s.id == service.id }?.let {
@@ -43,7 +44,7 @@ class JobOrderExtrasItemAdapter: RecyclerView.Adapter<JobOrderExtrasItemAdapter.
 //                notifyItemRemoved(_list.indexOf(it))
 //            }
 //        }
-    }
+//    }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,

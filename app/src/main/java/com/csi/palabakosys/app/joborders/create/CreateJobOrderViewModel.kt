@@ -27,7 +27,9 @@ constructor() : ViewModel() {
         object StateLess: DataState()
         data class OpenServices(val list: List<MenuServiceItem>?, val item: MenuServiceItem?): DataState()
         data class OpenProducts(val list: List<MenuProductItem>?, val item: MenuProductItem?): DataState()
+        data class OpenExtras(val list: List<MenuExtrasItem>?, val item: MenuExtrasItem?): DataState()
         data class OpenDelivery(val deliveryCharge: DeliveryCharge?): DataState()
+//        data class OpenDiscount(val discount: Discount?): DataState()
     }
     private val _dataState = MutableLiveData<DataState>()
     fun dataState(): MutableLiveData<DataState> {
@@ -103,10 +105,21 @@ constructor() : ViewModel() {
                 }
                 result
             } ?: 0f
-            value = productSubtotal + serviceSubtotal + (deliveryCharge.value?.price() ?: 0f)
+            val extrasSubtotal = jobOrderExtras.value?.let {
+                var result = 0f
+                if(it.size > 0) {
+                    result = it.map { s-> s.price * s.quantity } .reduce { sum, element ->
+                        sum + element
+                    }
+                }
+                result
+            } ?: 0f
+            value = productSubtotal + serviceSubtotal + extrasSubtotal + (deliveryCharge.value?.price() ?: 0f)
         }
         addSource(jobOrderServices) {update()}
         addSource(jobOrderProducts) {update()}
+        addSource(jobOrderExtras) {update()}
+        addSource(deliveryCharge) {update()}
     }
 
     fun syncServices(services: List<MenuServiceItem>?) {
@@ -115,6 +128,10 @@ constructor() : ViewModel() {
 
     fun syncProducts(products: List<MenuProductItem>?) {
         jobOrderProducts.value = products?.toMutableList()
+    }
+
+    fun syncExtras(extrasItems: List<MenuExtrasItem>?) {
+        jobOrderExtras.value = extrasItems?.toMutableList()
     }
 
     fun openServices(itemPreset: MenuServiceItem?) {
@@ -129,40 +146,17 @@ constructor() : ViewModel() {
         }
     }
 
+    fun openExtras(itemPreset: MenuExtrasItem?) {
+        jobOrderExtras.value.let {
+            _dataState.value = DataState.OpenExtras(it, itemPreset)
+        }
+    }
+
     fun openDelivery() {
         deliveryCharge.value.let {
             _dataState.value = DataState.OpenDelivery(it)
         }
     }
-
-    private fun computeSubtotal() {
-//        val serviceSubtotal = jobOrderServices.let {
-//            var result = 0f
-//            if(it.size > 0) {
-//                result = it.map { s -> s.price * s.quantity } .reduce { sum, element ->
-//                    sum + element
-//                }
-//            }
-//            result
-//        }
-//        val productSubtotal = jobOrderProducts.let {
-//            var result = 0f
-//            if(it.size > 0) {
-//                result = it.map { s -> s.price * s.quantity } .reduce { sum, element ->
-//                    sum + element
-//                }
-//            }
-//            result
-//        }
-//        subtotal.value = productSubtotal + serviceSubtotal + (deliveryCharge.value?.price() ?: 0f)
-//        hasServices.value = jobOrderServices.size > 0
-//        hasProducts.value = jobOrderProducts.size > 0
-    }
-
-//    fun selectDeliveryProfile(dCharge: DeliveryCharge?) {
-//        deliveryCharge.value = dCharge
-//        computeSubtotal()
-//    }
 
     fun setCustomer(customer: CustomerMinimal?) {
         currentCustomer.value = customer!!

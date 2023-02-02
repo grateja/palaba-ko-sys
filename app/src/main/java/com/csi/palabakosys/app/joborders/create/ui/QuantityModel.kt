@@ -12,7 +12,8 @@ class QuantityModel(
     val type: String
 ) : Parcelable {
     companion object {
-        val TYPE_SERVICE: String = "service"
-        val TYPE_PRODUCT: String = "product"
+        const val TYPE_EXTRAS: String = "extras"
+        const val TYPE_SERVICE: String = "service"
+        const val TYPE_PRODUCT: String = "product"
     }
 }

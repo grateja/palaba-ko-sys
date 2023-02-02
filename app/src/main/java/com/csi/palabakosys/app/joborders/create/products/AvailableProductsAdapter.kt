@@ -25,19 +25,11 @@ class AvailableProductsAdapter : RecyclerView.Adapter<AvailableProductsAdapter.V
         notifyItemRangeChanged(0, list.size - 1)
     }
 
-//    fun select(service: MenuProductItem) {
-//        list.let {
-//            it.find { s -> s.id == service.id }?.apply {
-//                selected = true
-//                notifyItemChanged(it.indexOf(this))
-//            }
-//        }
-//    }
-
     fun updateItem(product: MenuProductItem) {
         list.let {
             it.find { s -> s.id == product.id }?.apply {
                 selected = product.selected
+                quantity = product.quantity
                 notifyItemChanged(it.indexOf(this))
             }
         }
@@ -59,9 +51,6 @@ class AvailableProductsAdapter : RecyclerView.Adapter<AvailableProductsAdapter.V
         holder.itemView.setOnClickListener {
             onItemClick?.invoke(r)
         }
-//        holder.itemView.findViewById<MaterialCardView>(R.id.cardButtonDelete).setOnClickListener {
-//            onDelete?.invoke(r)
-//        }
         holder.itemView.apply {
             findViewById<MaterialCardView>(R.id.jobOrderMenuItem).also {
                 if(r.selected) {

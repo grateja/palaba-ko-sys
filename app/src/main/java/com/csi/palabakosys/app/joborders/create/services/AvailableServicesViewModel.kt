@@ -62,7 +62,7 @@ constructor() : ViewModel() {
     fun removeService(service: QuantityModel) {
         val item = availableServices.value?.find { it.id == service.id }?.apply {
             this.selected = false
-            this.quantity = 0
+            this.quantity = 1
         }
         dataState.value = DataState.UpdateService(item!!)
     }

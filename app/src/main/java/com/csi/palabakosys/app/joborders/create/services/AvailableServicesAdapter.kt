@@ -29,6 +29,7 @@ class AvailableServicesAdapter : RecyclerView.Adapter<AvailableServicesAdapter.V
         list.let {
             it.find { s -> s.id == service.id }?.apply {
                 selected = service.selected
+                quantity = service.quantity
                 notifyItemChanged(it.indexOf(this))
             }
         }

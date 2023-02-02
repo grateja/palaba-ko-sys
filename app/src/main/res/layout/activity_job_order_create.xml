@@ -224,6 +224,16 @@
                             android:layout_height="wrap_content"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/extrasItems"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:nestedScrollingEnabled="false"
+                    android:orientation="vertical"
+                    android:paddingBottom="16dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:layout_height="50dp"/>
                 <TextView
                     android:layout_margin="8dp"
                     android:gravity="center"
@@ -363,6 +373,12 @@
                     android:fontFamily="sans-serif-black"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
+                <TextView
+                    style="@style/TextItemTitle"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:peso="@{viewModel.subtotal}"/>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
