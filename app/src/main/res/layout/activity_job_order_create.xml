@@ -260,6 +260,65 @@
                             android:layout_height="wrap_content"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
+                <com.google.android.material.card.MaterialCardView
+                    android:visibility="@{viewModel.hasDelivery}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    app:contentPadding="8dp">
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/iconVehicle"
+                            app:imageResource="@{viewModel.deliveryCharge.deliveryProfile.vehicle.icon}"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            android:src="@drawable/icon_delivery_motorcycle" />
+                        <TextView
+                            android:id="@+id/textDeliveryTitle"
+                            style="@style/TextItemTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{viewModel.deliveryCharge.deliveryProfile.vehicle.value}"
+                            android:layout_marginStart="8dp"
+                            app:layout_constraintTop_toTopOf="@id/iconVehicle"
+                            app:layout_constraintStart_toEndOf="@id/iconVehicle"
+                            tools:text="Tricycle"/>
+                        <TextView
+                            android:id="@+id/textDistance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="1KM"
+                            app:layout_constraintTop_toBottomOf="@id/textDeliveryTitle"
+                            app:layout_constraintStart_toStartOf="@id/textDeliveryTitle"/>
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/textDeliveryPrice"
+                            style="@style/CardSpan"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <TextView
+                                style="@style/TextItemPrice"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:peso="@{viewModel.deliveryCharge.price()}"
+                                tools:text="P 70.00" />
+                        </com.google.android.material.card.MaterialCardView>
+                        <TextView
+                            android:id="@+id/textDeliveryOption"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{viewModel.deliveryCharge.deliveryOption.value}"
+                            tools:text="Pickup and Delivery"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/textDeliveryPrice"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
                 <TextView
                     android:layout_margin="8dp"
                     android:gravity="center"

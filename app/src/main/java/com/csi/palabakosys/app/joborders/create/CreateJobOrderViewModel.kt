@@ -27,6 +27,7 @@ constructor() : ViewModel() {
         object StateLess: DataState()
         data class OpenServices(val list: List<MenuServiceItem>?, val item: MenuServiceItem?): DataState()
         data class OpenProducts(val list: List<MenuProductItem>?, val item: MenuProductItem?): DataState()
+        data class OpenDelivery(val deliveryCharge: DeliveryCharge?): DataState()
     }
     private val _dataState = MutableLiveData<DataState>()
     fun dataState(): MutableLiveData<DataState> {
@@ -128,6 +129,12 @@ constructor() : ViewModel() {
         }
     }
 
+    fun openDelivery() {
+        deliveryCharge.value.let {
+            _dataState.value = DataState.OpenDelivery(it)
+        }
+    }
+
     private fun computeSubtotal() {
 //        val serviceSubtotal = jobOrderServices.let {
 //            var result = 0f
@@ -152,12 +159,16 @@ constructor() : ViewModel() {
 //        hasProducts.value = jobOrderProducts.size > 0
     }
 
-    fun selectDeliveryProfile(dCharge: DeliveryCharge?) {
-        deliveryCharge.value = dCharge
-        computeSubtotal()
-    }
+//    fun selectDeliveryProfile(dCharge: DeliveryCharge?) {
+//        deliveryCharge.value = dCharge
+//        computeSubtotal()
+//    }
 
     fun setCustomer(customer: CustomerMinimal?) {
         currentCustomer.value = customer!!
+    }
+
+    fun setDeliveryCharge(deliveryCharge: DeliveryCharge?) {
+        this.deliveryCharge.value = deliveryCharge
     }
 }

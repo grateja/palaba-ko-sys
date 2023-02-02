@@ -7,6 +7,8 @@ import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
+import com.csi.palabakosys.app.joborders.create.delivery.DeliveryCharge
+import com.csi.palabakosys.app.joborders.create.delivery.JOSelectDeliveryActivity
 import com.csi.palabakosys.app.joborders.create.products.JOSelectProductsActivity
 import com.csi.palabakosys.app.joborders.create.products.JobOrderProductsItemAdapter
 import com.csi.palabakosys.app.joborders.create.products.MenuProductItem
@@ -24,6 +26,7 @@ class JobOrderCreateActivity : AppCompatActivity() {
 
     private val servicesLauncher = ActivityLauncher(this)
     private val productsLauncher = ActivityLauncher(this)
+    private val deliveryLauncher = ActivityLauncher(this)
 
     private val servicesAdapter = JobOrderServiceItemAdapter()
     private val productsAdapter = JobOrderProductsItemAdapter()
@@ -56,6 +59,11 @@ class JobOrderCreateActivity : AppCompatActivity() {
             viewModel.syncProducts(result)
         }
 
+        deliveryLauncher.onOk = {
+            val result = it.data?.getParcelableExtra<DeliveryCharge>("deliveryCharge")
+            viewModel.setDeliveryCharge(result)
+        }
+
         servicesAdapter.onItemClick = {
             viewModel.openServices(it)
         }
@@ -70,6 +78,10 @@ class JobOrderCreateActivity : AppCompatActivity() {
 
         binding.cardLegendProducts.setOnClickListener {
             viewModel.openProducts(null)
+        }
+
+        binding.cardLegendDelivery.setOnClickListener {
+            viewModel.openDelivery()
         }
 
         viewModel.jobOrderServices.observe(this, Observer {
@@ -88,6 +100,10 @@ class JobOrderCreateActivity : AppCompatActivity() {
                 }
                 is CreateJobOrderViewModel.DataState.OpenProducts -> {
                     openProducts(it.list, it.item)
+                    viewModel.resetState()
+                }
+                is CreateJobOrderViewModel.DataState.OpenDelivery -> {
+                    openDelivery(it.deliveryCharge)
                     viewModel.resetState()
                 }
             }
@@ -112,5 +128,14 @@ class JobOrderCreateActivity : AppCompatActivity() {
             }
         }
         productsLauncher.launch(intent)
+    }
+
+    private fun openDelivery(deliveryCharge: DeliveryCharge?) {
+        val intent = Intent(this, JOSelectDeliveryActivity::class.java).apply {
+            deliveryCharge?.let {
+                putExtra("deliveryCharge", deliveryCharge)
+            }
+        }
+        deliveryLauncher.launch(intent)
     }
 }

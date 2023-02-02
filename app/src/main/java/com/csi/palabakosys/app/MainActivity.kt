@@ -40,7 +40,7 @@ class MainActivity : EndingActivity() {
         val widthDp = metrics.bounds.width() /
                 resources.displayMetrics.density
 
-        binding.dpWidth.text = widthDp.toString()
+        binding.dpWidth.text = widthDp.toString() + " ID:" + binding.dpWidth.id.toString()
         println(widthDp)
     }
 

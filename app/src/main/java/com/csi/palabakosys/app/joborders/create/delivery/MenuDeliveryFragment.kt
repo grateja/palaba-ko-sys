@@ -28,7 +28,7 @@ class MenuDeliveryFragment : Fragment(R.layout.fragment_menu_delivery) {
     }
 
     private fun subscribeEvents() {
-        deliveryVehiclesAdapter.setData(deliveryViewModel.deliveryProfiles)
+//        deliveryVehiclesAdapter.setData(deliveryViewModel.deliveryProfiles)
         deliveryVehiclesAdapter.onItemClick = {
             deliveryViewModel.setDeliveryProfile(it)
             showOptions()
@@ -41,7 +41,7 @@ class MenuDeliveryFragment : Fragment(R.layout.fragment_menu_delivery) {
     private fun showOptions() {
         deliveryProfileModal = DeliveryModalFragment.newInstance().apply {
             onOk = {
-                viewModel.selectDeliveryProfile(it)
+//                viewModel.selectDeliveryProfile(it)
             }
         }
         deliveryProfileModal.show(childFragmentManager, this.toString())

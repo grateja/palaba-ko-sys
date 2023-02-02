@@ -78,27 +78,32 @@
                             android:padding="0dp"
                             android:text="+" />
                     </LinearLayout>
-                    <RadioGroup
-                        android:id="@+id/radioDeliveryOption"
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerDeliveryOptions"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:checkedButton="@={viewModel.deliveryOption}">
-                        <RadioButton
-                            android:id="@+id/deliverOptionDeliveryOnly"
-                            android:text="@{ com.csi.palabakosys.model.DeliveryOption.DELIVERY_ONLY.toString() }"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-                        <RadioButton
-                            android:id="@+id/deliverOptionPickupOnly"
-                            android:text="@{ com.csi.palabakosys.model.DeliveryOption.PICKUP_ONLY.toString() }"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-                        <RadioButton
-                            android:id="@+id/deliverOptionPickupAndDelivery"
-                            android:text="@{ com.csi.palabakosys.model.DeliveryOption.PICKUP_AND_DELIVERY.toString() }"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-                    </RadioGroup>
+                        android:orientation="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+<!--                    <RadioGroup-->
+<!--                        android:id="@+id/radioDeliveryOption"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content">-->
+<!--                        <RadioButton-->
+<!--                            android:id="@+id/deliverOptionDeliveryOnly"-->
+<!--                            android:text="@{ com.csi.palabakosys.model.DeliveryOption.DELIVERY_ONLY.toString() }"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"/>-->
+<!--                        <RadioButton-->
+<!--                            android:id="@+id/deliverOptionPickupOnly"-->
+<!--                            android:text="@{ com.csi.palabakosys.model.DeliveryOption.PICKUP_ONLY.toString() }"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"/>-->
+<!--                        <RadioButton-->
+<!--                            android:id="@+id/deliverOptionPickupAndDelivery"-->
+<!--                            android:text="@{ com.csi.palabakosys.model.DeliveryOption.PICKUP_AND_DELIVERY.toString() }"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"/>-->
+<!--                    </RadioGroup>-->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
