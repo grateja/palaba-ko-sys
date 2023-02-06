@@ -8,94 +8,59 @@
             type="com.csi.palabakosys.app.joborders.create.services.MenuServiceItem" />
     </data>
     <com.google.android.material.card.MaterialCardView
-        app:strokeColor="@color/primary_background"
-        android:layout_margin="8dp"
-        app:contentPadding="8dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_margin="8dp"
+        <LinearLayout
+            android:layout_margin="12dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:text="@string/symbol_bullet"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
             <TextView
                 android:id="@+id/textTitle"
-                style="@style/TextItemTitle"
-                android:tag="change"
+                android:textColor="@color/black"
+                android:textSize="20sp"
                 android:layout_width="0dp"
+                android:layout_weight="3"
                 android:layout_height="wrap_content"
                 android:text="@{viewModel.abbr()}"
-                app:layout_constraintEnd_toStartOf="@+id/cardPrice"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 tools:text="8Kg Regular Wash" />
 
-            <ImageView
-                android:id="@+id/iconMinute"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:src="@drawable/minute_icon"
-                android:layout_marginTop="8dp"
-                app:layout_constraintStart_toStartOf="@+id/textTitle"
-                app:layout_constraintTop_toBottomOf="@+id/textTitle" />
-
-            <androidx.constraintlayout.widget.Group
-                android:id="@+id/groupMinute"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="@{viewModel.minutes != null}"
-                app:constraint_referenced_ids="textMinutes, iconMinute" />
-
             <TextView
-                android:id="@+id/textMinutes"
+                android:id="@+id/textQuantity"
+                android:textFontWeight="900"
+                android:fontFamily="sans-serif-black"
+                android:textSize="20sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="@{viewModel.minutes.toString() + ` Minutes`}"
-                android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="@+id/iconMinute"
-                app:layout_constraintStart_toEndOf="@+id/iconMinute"
-                app:layout_constraintTop_toTopOf="@+id/iconMinute"
-                tools:text="36 Minutes" />
+                android:text="@{viewModel.quantityStr()}"
+                tools:text="*1 load"/>
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardPrice"
                 style="@style/CardSpan"
+                android:layout_marginStart="8dp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:layout_height="wrap_content">
 
                 <TextView
+                    android:textSize="20sp"
                     style="@style/TextItemPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:peso="@{viewModel.price}"
                     tools:text="P 70.00" />
             </com.google.android.material.card.MaterialCardView>
-
-<!--            <ImageButton-->
-<!--                android:id="@+id/buttonDelete"-->
-<!--                android:layout_width="40dp"-->
-<!--                android:layout_height="40dp"-->
-<!--                android:backgroundTint="@color/white"-->
-<!--                android:scaleType="centerCrop"-->
-<!--                android:src="@drawable/delete_icon"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent" />-->
-
-            <TextView
-                android:id="@+id/textLoads"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@{viewModel.quantity + ` Loads`}"
-                android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cardPrice"
-                tools:text="2 Loads" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 </layout>

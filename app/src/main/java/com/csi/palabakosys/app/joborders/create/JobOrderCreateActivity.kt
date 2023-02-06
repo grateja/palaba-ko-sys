@@ -87,19 +87,19 @@ class JobOrderCreateActivity : AppCompatActivity() {
             viewModel.openExtras(it)
         }
 
-        binding.cardLegendServices.setOnClickListener {
+        binding.inclServicesLegend.cardLegend.setOnClickListener {
             viewModel.openServices(null)
         }
 
-        binding.cardLegendProducts.setOnClickListener {
+        binding.inclProductsLegend.cardLegend.setOnClickListener {
             viewModel.openProducts(null)
         }
 
-        binding.cardLegendExtras.setOnClickListener {
+        binding.inclExtrasLegend.cardLegend.setOnClickListener {
             viewModel.openExtras(null)
         }
 
-        binding.cardLegendDelivery.setOnClickListener {
+        binding.inclDeliveryLegend.cardLegend.setOnClickListener {
             viewModel.openDelivery()
         }
 

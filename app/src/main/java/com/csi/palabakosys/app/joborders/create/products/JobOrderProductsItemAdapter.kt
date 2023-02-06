@@ -44,9 +44,6 @@ class JobOrderProductsItemAdapter: RecyclerView.Adapter<JobOrderProductsItemAdap
         holder.itemView.setOnClickListener {
             onItemClick?.invoke(r)
         }
-        holder.itemView.findViewById<ImageButton>(R.id.buttonDelete).setOnClickListener {
-            onDeleteRequest?.invoke(r)
-        }
     }
 
     override fun getItemCount(): Int {

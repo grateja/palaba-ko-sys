@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="title"
+            type="String" />
+        <variable
+            name="hasItems"
+            type="Boolean" />
+        <variable
+            name="prompt"
+            type="String" />
+    </data>
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardLegend"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        app:cardBackgroundColor="@color/secondary_background">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp">
+            <TextView
+                android:id="@+id/textLegendTitle"
+                android:layout_margin="4dp"
+                android:textSize="18sp"
+                android:textColor="#848585"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@{title}"
+                tools:text="Some Title"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+            <TextView
+                style="@style/TileSubTitle"
+                android:text="+"
+                android:layout_marginEnd="8dp"
+                android:textSize="24sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-black"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="8dp"
+                android:gravity="center"
+                android:text="@{prompt}"
+                android:textColor="#BCBBBB"
+                android:visibility="@{!hasItems}"
+                app:layout_constraintStart_toStartOf="@+id/textLegendTitle"
+                app:layout_constraintTop_toBottomOf="@id/textLegendTitle"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:text="No data" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+</layout>

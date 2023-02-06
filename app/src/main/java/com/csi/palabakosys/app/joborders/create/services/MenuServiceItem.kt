@@ -26,7 +26,7 @@ class MenuServiceItem(
         }
     }
     fun quantityStr() : String {
-        return quantity.toString() + if(quantity == 1) {
+        return "*$quantity" + if(quantity == 1) {
             " load"
         } else if(quantity == 0) {
             ""

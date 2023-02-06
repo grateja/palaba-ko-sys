@@ -48,7 +48,7 @@
                             android:text="@{viewModel.jobOrderNumber}"
                             android:textColor="#00685F"
                             android:textFontWeight="900"
-                            android:textSize="20sp"
+                            android:textSize="26sp"
                             tools:text="#00685F"/>
                     </com.google.android.material.card.MaterialCardView>
                 </LinearLayout>
@@ -74,7 +74,7 @@
                         android:text="@{viewModel.currentCustomer.name}"
                         android:textColor="#000000"
                         android:textFontWeight="900"
-                        android:textSize="17sp"
+                        android:textSize="20sp"
                         tools:text="Chris Pratt"/>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -90,6 +90,7 @@
                     style="@style/CardSpan"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="18dp"
                     android:layout_marginStart="16dp">
 
                     <TextView
@@ -99,177 +100,70 @@
                         android:text="@{viewModel.currentCustomer.crn}"
                         android:textColor="#000000"
                         android:textFontWeight="900"
-                        android:textSize="17sp"
+                        android:textSize="20sp"
                         tools:text="#000001"/>
                 </com.google.android.material.card.MaterialCardView>
 
 <!--                Services -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardLegendServices"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    app:contentPadding="12dp"
-                    app:cardBackgroundColor="@color/secondary_background">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginLeft="6dp"
-                        android:layout_marginRight="6dp">
-                        <TextView
-                            style="@style/TileSubTitle"
-                            android:textColor="@color/black"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="SERVICES"/>
-                        <TextView
-                            style="@style/TileSubTitle"
-                            android:text="+"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-                <TextView
-                    android:layout_margin="8dp"
-                    android:gravity="center"
-                    android:visibility="@{!viewModel.hasServices}"
-                    android:text="(No selected services)"
-                    android:fontFamily="sans-serif-black"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                <include
+                    android:id="@+id/inclServicesLegend"
+                    layout="@layout/incl_legend_create_job_order"
+                    app:title="@{`SERVICES`}"
+                    app:hasItems="@{viewModel.hasServices}"
+                    app:prompt="@{`No Services selected`}"/>
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/serviceItems"
+                    android:layout_marginStart="12dp"
+                    android:visibility="@{viewModel.hasServices}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clipToPadding="false"
                     android:nestedScrollingEnabled="false"
                     android:orientation="vertical"
-                    android:paddingBottom="16dp"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:layout_height="50dp"/>
 
 <!--                Products -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardLegendProducts"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    app:contentPadding="12dp"
-                    app:cardBackgroundColor="@color/secondary_background">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginLeft="6dp"
-                        android:layout_marginRight="6dp">
-                        <TextView
-                            style="@style/TileSubTitle"
-                            android:textColor="@color/black"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="PRODUCTS / CHEMICALS"/>
-                        <TextView
-                            style="@style/TileSubTitle"
-                            android:text="+"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-                <TextView
-                    android:layout_margin="8dp"
-                    android:gravity="center"
-                    android:visibility="@{!viewModel.hasProducts}"
-                    android:text="(No selected products)"
-                    android:fontFamily="sans-serif-black"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                <include android:id="@+id/inclProductsLegend"
+                    layout="@layout/incl_legend_create_job_order"
+                    app:title="@{`PRODUCTS / CHEMICALS`}"
+                    app:hasItems="@{viewModel.hasProducts}"
+                    app:prompt="@{`(No selected products/chemicals)`}"/>
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/productItems"
+                    android:layout_marginStart="12sp"
+                    android:visibility="@{viewModel.hasProducts}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clipToPadding="false"
                     android:nestedScrollingEnabled="false"
                     android:orientation="vertical"
-                    android:paddingBottom="16dp"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:layout_height="50dp"/>
                 <!--                Extras -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardLegendExtras"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    app:contentPadding="12dp"
-                    app:cardBackgroundColor="@color/secondary_background">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginLeft="6dp"
-                        android:layout_marginRight="6dp">
-                        <TextView
-                            style="@style/TileSubTitle"
-                            android:textColor="@color/black"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="EXTRAS"/>
-                        <TextView
-                            style="@style/TileSubTitle"
-                            android:text="+"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                <include
+                    android:id="@+id/inclExtrasLegend"
+                    layout="@layout/incl_legend_create_job_order"
+                    app:title="@{`EXTRAS`}"
+                    app:hasItems="@{viewModel.hasExtras}"
+                    app:prompt="@{`No Services selected`}"/>
                 <androidx.recyclerview.widget.RecyclerView
+                    android:layout_marginStart="12dp"
+                    android:visibility="@{viewModel.hasExtras}"
                     android:id="@+id/extrasItems"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clipToPadding="false"
                     android:nestedScrollingEnabled="false"
                     android:orientation="vertical"
-                    android:paddingBottom="16dp"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:layout_height="50dp"/>
-                <TextView
-                    android:layout_margin="8dp"
-                    android:gravity="center"
-                    android:visibility="@{!viewModel.hasExtras}"
-                    android:text="(No selected extras)"
-                    android:fontFamily="sans-serif-black"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-                <!--                Pickup and Delivery -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardLegendDelivery"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    app:contentPadding="12dp"
-                    app:cardBackgroundColor="@color/secondary_background">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginLeft="6dp"
-                        android:layout_marginRight="6dp">
-                        <TextView
-                            style="@style/TileSubTitle"
-                            android:textColor="@color/black"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="PICKUP / DELIVERY"/>
-                        <TextView
-                            style="@style/TileSubTitle"
-                            android:text="+"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                <include
+                    android:id="@+id/inclDeliveryLegend"
+                    layout="@layout/incl_legend_create_job_order"
+                    app:title="@{`PICKUP / DELIVERY`}"
+                    app:hasItems="@{viewModel.hasDelivery}"
+                    app:prompt="@{`No Pickup/Delivery charge`}"/>
                 <com.google.android.material.card.MaterialCardView
                     android:visibility="@{viewModel.hasDelivery}"
                     android:layout_width="match_parent"
@@ -289,7 +183,8 @@
                             android:src="@drawable/icon_delivery_motorcycle" />
                         <TextView
                             android:id="@+id/textDeliveryTitle"
-                            style="@style/TextItemTitle"
+                            android:textSize="20sp"
+                            android:textColor="@color/black"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@{viewModel.deliveryCharge.deliveryProfile.vehicle.value}"
@@ -314,6 +209,7 @@
 
                             <TextView
                                 style="@style/TextItemPrice"
+                                android:textSize="20sp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:peso="@{viewModel.deliveryCharge.price()}"
@@ -329,50 +225,12 @@
                             app:layout_constraintTop_toBottomOf="@id/textDeliveryPrice"/>
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
-                <TextView
-                    android:layout_margin="8dp"
-                    android:gravity="center"
-                    android:visibility="@{!viewModel.hasDelivery}"
-                    android:text="(No Pickup/Delivery Fee)"
-                    android:fontFamily="sans-serif-black"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-                <!--                Discount -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardLegendDiscount"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    app:contentPadding="12dp"
-                    app:cardBackgroundColor="@color/secondary_background">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginLeft="6dp"
-                        android:layout_marginRight="6dp">
-                        <TextView
-                            style="@style/TileSubTitle"
-                            android:textColor="@color/black"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="DISCOUNT"/>
-                        <TextView
-                            style="@style/TileSubTitle"
-                            android:text="+"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-                <TextView
-                    android:layout_margin="8dp"
-                    android:gravity="center"
-                    android:visibility="@{!viewModel.hasDiscount}"
-                    android:text="(No selected discount)"
-                    android:fontFamily="sans-serif-black"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                <include
+                    android:id="@+id/inclDiscountLegend"
+                    layout="@layout/incl_legend_create_job_order"
+                    app:title="@{`DISCOUNTS`}"
+                    app:hasItems="@{viewModel.hasDiscount}"
+                    app:prompt="@{`No discount applied`}"/>
                 <TextView
                     style="@style/TextItemTitle"
                     android:layout_gravity="center"
