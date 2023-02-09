@@ -9,6 +9,8 @@ import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
 import com.csi.palabakosys.app.joborders.create.delivery.DeliveryCharge
 import com.csi.palabakosys.app.joborders.create.delivery.JOSelectDeliveryActivity
+import com.csi.palabakosys.app.joborders.create.discount.JOSelectDiscountActivity
+import com.csi.palabakosys.app.joborders.create.discount.MenuDiscount
 import com.csi.palabakosys.app.joborders.create.extras.JOSelectExtrasActivity
 import com.csi.palabakosys.app.joborders.create.extras.JobOrderExtrasItemAdapter
 import com.csi.palabakosys.app.joborders.create.extras.MenuExtrasItem
@@ -31,6 +33,7 @@ class JobOrderCreateActivity : AppCompatActivity() {
     private val productsLauncher = ActivityLauncher(this)
     private val deliveryLauncher = ActivityLauncher(this)
     private val extrasLauncher = ActivityLauncher(this)
+    private val discountLauncher = ActivityLauncher(this)
 
     private val servicesAdapter = JobOrderServiceItemAdapter()
     private val productsAdapter = JobOrderProductsItemAdapter()
@@ -75,6 +78,11 @@ class JobOrderCreateActivity : AppCompatActivity() {
             viewModel.setDeliveryCharge(result)
         }
 
+        discountLauncher.onOk = {
+            val result = it.data?.getParcelableExtra<MenuDiscount>("discount")
+            viewModel.applyDiscount(result)
+        }
+
         servicesAdapter.onItemClick = {
             viewModel.openServices(it)
         }
@@ -101,6 +109,10 @@ class JobOrderCreateActivity : AppCompatActivity() {
 
         binding.inclDeliveryLegend.cardLegend.setOnClickListener {
             viewModel.openDelivery()
+        }
+
+        binding.inclDiscountLegend.cardLegend.setOnClickListener {
+            viewModel.openDiscount()
         }
 
         viewModel.jobOrderServices.observe(this, Observer {
@@ -131,6 +143,10 @@ class JobOrderCreateActivity : AppCompatActivity() {
                 }
                 is CreateJobOrderViewModel.DataState.OpenDelivery -> {
                     openDelivery(it.deliveryCharge)
+                    viewModel.resetState()
+                }
+                is CreateJobOrderViewModel.DataState.OpenDiscount -> {
+                    openDiscount(it.discount)
                     viewModel.resetState()
                 }
             }
@@ -174,5 +190,14 @@ class JobOrderCreateActivity : AppCompatActivity() {
             }
         }
         deliveryLauncher.launch(intent)
+    }
+
+    private fun openDiscount(discount: MenuDiscount?) {
+        val intent = Intent(this, JOSelectDiscountActivity::class.java).apply {
+            discount?.let {
+                putExtra("discount", discount)
+            }
+        }
+        discountLauncher.launch(intent)
     }
 }

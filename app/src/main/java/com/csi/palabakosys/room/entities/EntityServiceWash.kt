@@ -6,22 +6,19 @@ import com.csi.palabakosys.model.MachineType
 import com.csi.palabakosys.model.WashType
 
 @Entity(tableName = "wash_services")
-class EntityServiceWash : BaseEntity() {
-    @ColumnInfo(name = "machine_type")
-    var machineType: MachineType? = null
-
+class EntityServiceWash(
     @ColumnInfo(name = "name")
-    var name: String? = null
-
-    @ColumnInfo(name = "price")
-    var price: Float = 0f
+    var name: String?,
 
     @ColumnInfo(name = "minutes")
-    var minutes: Int = 0
+    var minutes: Int,
+
+    @ColumnInfo(name = "price")
+    var price: Float,
+
+    @ColumnInfo(name = "machine_type")
+    var machineType: MachineType?,
 
     @ColumnInfo(name = "wash_type")
-    var washType: WashType? = null
-
-    @ColumnInfo(name = "cash_back")
-    var cashBack: Float = 0f
-}
+    var washType: WashType?,
+) : BaseEntity()

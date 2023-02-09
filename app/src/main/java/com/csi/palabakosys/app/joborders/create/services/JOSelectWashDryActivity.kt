@@ -43,7 +43,6 @@ class JOSelectWashDryActivity : AppCompatActivity() {
 
         subscribeEvents()
 
-        viewModel.setPreSelectedServices(intent.getParcelableArrayListExtra<MenuServiceItem>("services")?.toList())
         intent.getParcelableExtra<MenuServiceItem>("service")?.let {
             itemClick(it)
         }
@@ -51,7 +50,7 @@ class JOSelectWashDryActivity : AppCompatActivity() {
 
     private fun itemClick(serviceItem: MenuServiceItem) {
         requestModifyQuantity(
-            QuantityModel(serviceItem.id, serviceItem.abbr(), serviceItem.quantity, QuantityModel.TYPE_SERVICE)
+            QuantityModel(serviceItem.id.toString(), serviceItem.abbr(), serviceItem.quantity, QuantityModel.TYPE_SERVICE)
         )
     }
 
@@ -90,6 +89,7 @@ class JOSelectWashDryActivity : AppCompatActivity() {
             rdAdapter.setData(it.filter { avs -> avs.machineType == MachineType.REGULAR_DRYER })
             twAdapter.setData(it.filter { avs -> avs.machineType == MachineType.TITAN_WASHER })
             tdAdapter.setData(it.filter { avs -> avs.machineType == MachineType.TITAN_DRYER })
+            viewModel.setPreSelectedServices(intent.getParcelableArrayListExtra<MenuServiceItem>("services")?.toList())
         })
 
         viewModel.dataState.observe(this, Observer {

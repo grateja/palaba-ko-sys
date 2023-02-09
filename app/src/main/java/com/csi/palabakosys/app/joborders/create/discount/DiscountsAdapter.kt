@@ -1,4 +1,4 @@
-package com.csi.palabakosys.app.joborders.create.services
+package com.csi.palabakosys.app.joborders.create.discount
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,46 +10,48 @@ import com.csi.palabakosys.BR
 import com.csi.palabakosys.R
 import com.google.android.material.card.MaterialCardView
 
-class AvailableServicesAdapter : RecyclerView.Adapter<AvailableServicesAdapter.ViewHolder>() {
-    private var list: List<MenuServiceItem> = emptyList()
+class DiscountsAdapter : RecyclerView.Adapter<DiscountsAdapter.ViewHolder>() {
+    private var list: List<MenuDiscount> = emptyList()
     class ViewHolder(private val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(model: MenuServiceItem) {
+        fun bind(model: MenuDiscount) {
             binding.setVariable(BR.viewModel, model)
         }
     }
 
-    var onItemClick: ((MenuServiceItem) -> Unit) ? = null
+    var onItemClick: ((MenuDiscount) -> Unit) ? = null
 
-    fun setData(services: List<MenuServiceItem>) {
+    fun setData(services: List<MenuDiscount>) {
         list = services
-//        notifyItemRangeInserted(0, list.size - 1)
-        notifyDataSetChanged()
+        notifyItemRangeChanged(0, list.size - 1)
     }
 
-    fun updateItem(service: MenuServiceItem) {
-        list.let {
-            it.find { s -> s.id == service.id }?.apply {
-                selected = service.selected
-                quantity = service.quantity
-                notifyItemChanged(it.indexOf(this))
+    fun notifySelection(discount: MenuDiscount?) {
+        deselectAll()
+        discount?.let { _discount ->
+            list.let {
+                it.find { s -> s.id == _discount.id }?.apply {
+                    selected = true
+                    notifyItemChanged(it.indexOf(this))
+                }
             }
         }
     }
 
-//    fun deselect(id: String) {
-//        list.let {
-//            it.find { s -> s.id == id }?.apply {
-//                selected = false
-//                quantity = 0
-//                notifyItemChanged(it.indexOf(this))
-//            }
-//        }
-//    }
+    private fun deselectAll() {
+        list.let {
+            it.forEach { discount ->
+                if(discount.selected) {
+                    discount.selected = false
+                    notifyItemChanged(it.indexOf(discount))
+                }
+            }
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding: ViewDataBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
-            R.layout.recycler_item_available_service,
+            R.layout.recycler_item_discount,
             parent,
             false
         )
@@ -62,14 +64,9 @@ class AvailableServicesAdapter : RecyclerView.Adapter<AvailableServicesAdapter.V
         holder.itemView.setOnClickListener {
             onItemClick?.invoke(r)
         }
-//        holder.itemView.findViewById<MaterialCardView>(R.id.cardButtonDelete).setOnClickListener {
-//            onDelete?.invoke(r)
-//        }
-
         holder.itemView.apply {
-            val selected = r.selected
-            findViewById<MaterialCardView>(R.id.jobOrderMenuItem).also {
-                if(selected) {
+            findViewById<MaterialCardView>(R.id.cardDiscount).also {
+                if(r.selected) {
                     it.strokeColor = context.getColor(R.color.card_selected)
                     it.setCardBackgroundColor(context.getColor(R.color.span_background_selected))
                 } else {
@@ -78,7 +75,7 @@ class AvailableServicesAdapter : RecyclerView.Adapter<AvailableServicesAdapter.V
                 }
             }
             findViewById<TextView>(R.id.textTitle).setTextAppearance(
-                if(selected) {
+                if(r.selected) {
                     R.style.TextItemTitleActive
                 } else {
                     R.style.TextItemTitle

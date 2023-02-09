@@ -11,4 +11,7 @@ interface BaseDao<T : BaseEntity> {
 
     @Delete
     suspend fun delete(data: T)
+
+    @Insert
+    suspend fun saveAll(list: List<T>)
 }

@@ -19,7 +19,7 @@ constructor(
 ) : CreateViewModel<EntityServiceWash>(repository)
 {
     fun get(id: String?) {
-        super.get(id, EntityServiceWash())
+//        super.get(id, EntityServiceWash())
     }
 
     fun setType(type: MachineType) {

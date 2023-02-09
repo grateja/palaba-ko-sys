@@ -6,14 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.csi.palabakosys.app.customers.CustomerMinimal
 import com.csi.palabakosys.app.joborders.create.delivery.DeliveryCharge
+import com.csi.palabakosys.app.joborders.create.discount.MenuDiscount
 import com.csi.palabakosys.app.joborders.create.extras.MenuExtrasItem
 import com.csi.palabakosys.app.joborders.create.products.MenuProductItem
 import com.csi.palabakosys.app.joborders.create.services.MenuServiceItem
-import com.csi.palabakosys.app.joborders.create.ui.QuantityModel
-import com.csi.palabakosys.model.MachineType
-import com.csi.palabakosys.model.ProductType
-import com.csi.palabakosys.model.WashType
-import com.csi.palabakosys.util.MeasureUnit
+import com.csi.palabakosys.model.DiscountApplicable
+import com.csi.palabakosys.room.entities.EntityJobOrderWithItems
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,7 +27,7 @@ constructor() : ViewModel() {
         data class OpenProducts(val list: List<MenuProductItem>?, val item: MenuProductItem?): DataState()
         data class OpenExtras(val list: List<MenuExtrasItem>?, val item: MenuExtrasItem?): DataState()
         data class OpenDelivery(val deliveryCharge: DeliveryCharge?): DataState()
-//        data class OpenDiscount(val discount: Discount?): DataState()
+        data class OpenDiscount(val discount: MenuDiscount?): DataState()
     }
     private val _dataState = MutableLiveData<DataState>()
     fun dataState(): MutableLiveData<DataState> {
@@ -45,7 +43,8 @@ constructor() : ViewModel() {
     val jobOrderServices = MutableLiveData<MutableList<MenuServiceItem>>()
     val jobOrderProducts = MutableLiveData<MutableList<MenuProductItem>>()
     val jobOrderExtras = MutableLiveData<MutableList<MenuExtrasItem>>()
-//    val discount = MutableLiveData<MenuItemDiscount>()
+    val discount = MutableLiveData<MenuDiscount>()
+    val discountInPeso = MutableLiveData(0f)
 
     val hasServices = MediatorLiveData<Boolean>().apply {
         fun update() {
@@ -72,54 +71,80 @@ constructor() : ViewModel() {
         addSource(deliveryCharge) { update() }
     }
     val hasDiscount = MediatorLiveData<Boolean>().apply {
-//        fun update() {
-//            value = discount.value != null
-//        }
-//        addSource(discount) { update() }
-    }
-    val hasAny = MediatorLiveData<Boolean>().apply {
         fun update() {
-            value = hasServices.value!! || hasProducts.value!!
+            value = discount.value != null
         }
-        addSource(hasServices) { update() }
-        addSource(hasProducts) { update() }
+        addSource(discount) { update() }
     }
+//    val hasAny = MediatorLiveData<Boolean>().apply {
+//        fun update() {
+//            value = hasServices.value!! || hasProducts.value!!
+//        }
+//        addSource(hasServices) { update() }
+//        addSource(hasProducts) { update() }
+//    }
 
     val subtotal = MediatorLiveData<Float>().apply {
         fun update() {
-            val serviceSubtotal = jobOrderServices.value?.let {
-                var result = 0f
-                if(it.size > 0) {
-                    result = it.map { s -> s.price * s.quantity } .reduce { sum, element ->
-                        sum + element
-                    }
-                }
-                result
+            discountInPeso.value = discount.value?.let {
+                var total = 0f
+                total += it.getDiscount(serviceSubTotal(), DiscountApplicable.WASH_DRY_SERVICES)
+                total += it.getDiscount(productSubTotal(), DiscountApplicable.PRODUCTS_CHEMICALS)
+                total += it.getDiscount(extrasSubTotal(), DiscountApplicable.EXTRAS)
+                total += it.getDiscount(deliveryFee(), DiscountApplicable.DELIVERY)
+                total
             } ?: 0f
-            val productSubtotal = jobOrderProducts.value?.let {
-                var result = 0f
-                if(it.size > 0) {
-                    result = it.map { s -> s.price * s.quantity } .reduce { sum, element ->
-                        sum + element
-                    }
-                }
-                result
-            } ?: 0f
-            val extrasSubtotal = jobOrderExtras.value?.let {
-                var result = 0f
-                if(it.size > 0) {
-                    result = it.map { s-> s.price * s.quantity } .reduce { sum, element ->
-                        sum + element
-                    }
-                }
-                result
-            } ?: 0f
-            value = productSubtotal + serviceSubtotal + extrasSubtotal + (deliveryCharge.value?.price() ?: 0f)
+            value = productSubTotal() + serviceSubTotal() + extrasSubTotal() + deliveryFee() - discountInPeso.value!!
         }
         addSource(jobOrderServices) {update()}
         addSource(jobOrderProducts) {update()}
         addSource(jobOrderExtras) {update()}
         addSource(deliveryCharge) {update()}
+        addSource(discount) {update()}
+    }
+
+    private fun serviceSubTotal() : Float {
+        return jobOrderServices.value?.let {
+            var result = 0f
+            if(it.size > 0) {
+                result = it.map { s -> s.price * s.quantity } .reduce { sum, element ->
+                    sum + element
+                }
+            }
+            result
+        } ?: 0f
+    }
+
+    private fun productSubTotal() : Float {
+        return jobOrderProducts.value?.let {
+            var result = 0f
+            if(it.size > 0) {
+                result = it.map { s -> s.price * s.quantity } .reduce { sum, element ->
+                    sum + element
+                }
+            }
+            result
+        } ?: 0f
+    }
+
+    private fun extrasSubTotal() : Float {
+        return jobOrderExtras.value?.let {
+            var result = 0f
+            if(it.size > 0) {
+                result = it.map { s -> s.price * s.quantity } .reduce { sum, element ->
+                    sum + element
+                }
+            }
+            result
+        } ?: 0f
+    }
+
+    private fun deliveryFee() : Float {
+        return (deliveryCharge.value?.price() ?: 0f)
+    }
+
+    fun setCustomer(customer: CustomerMinimal?) {
+        currentCustomer.value = customer!!
     }
 
     fun syncServices(services: List<MenuServiceItem>?) {
@@ -132,6 +157,14 @@ constructor() : ViewModel() {
 
     fun syncExtras(extrasItems: List<MenuExtrasItem>?) {
         jobOrderExtras.value = extrasItems?.toMutableList()
+    }
+
+    fun setDeliveryCharge(deliveryCharge: DeliveryCharge?) {
+        this.deliveryCharge.value = deliveryCharge
+    }
+
+    fun applyDiscount(discount: MenuDiscount?) {
+        this.discount.value = discount
     }
 
     fun openServices(itemPreset: MenuServiceItem?) {
@@ -158,11 +191,18 @@ constructor() : ViewModel() {
         }
     }
 
-    fun setCustomer(customer: CustomerMinimal?) {
-        currentCustomer.value = customer!!
+    fun openDiscount() {
+        discount.value.let {
+            _dataState.value = DataState.OpenDiscount(it)
+        }
     }
 
-    fun setDeliveryCharge(deliveryCharge: DeliveryCharge?) {
-        this.deliveryCharge.value = deliveryCharge
+    fun save() {
+        viewModelScope.launch {
+            val jobOrderNumber = jobOrderNumber.value
+            val customerName = currentCustomer.value?.name
+            val customerId = currentCustomer.value?.id
+            val preparedBy = "Some staff"
+        }
     }
 }

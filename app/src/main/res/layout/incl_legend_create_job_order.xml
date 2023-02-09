@@ -18,6 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="1dp"
+        app:cardElevation="0dp"
         app:cardBackgroundColor="@color/secondary_background">
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -51,16 +52,17 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-black"
+                android:layout_marginStart="18dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginBottom="8dp"
+                android:fontFamily="sans-serif-black"
                 android:gravity="center"
-                android:text="@{prompt}"
+                android:text="@{@string/symbol_bullet + ` ` + prompt}"
                 android:textColor="#BCBBBB"
                 android:visibility="@{!hasItems}"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/textLegendTitle"
                 app:layout_constraintTop_toBottomOf="@id/textLegendTitle"
-                app:layout_constraintBottom_toBottomOf="parent"
                 tools:text="No data" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>

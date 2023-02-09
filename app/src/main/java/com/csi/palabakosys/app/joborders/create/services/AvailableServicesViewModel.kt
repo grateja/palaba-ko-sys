@@ -6,15 +6,20 @@ import androidx.lifecycle.viewModelScope
 import com.csi.palabakosys.app.joborders.create.ui.QuantityModel
 import com.csi.palabakosys.model.MachineType
 import com.csi.palabakosys.model.WashType
+import com.csi.palabakosys.room.entities.EntityServiceWash
+import com.csi.palabakosys.room.repository.WashServiceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class AvailableServicesViewModel
 
 @Inject
-constructor() : ViewModel() {
+constructor(
+    private val serviceRepository: WashServiceRepository
+) : ViewModel() {
     val availableServices = MutableLiveData<List<MenuServiceItem>>()
     val dataState = MutableLiveData<DataState>()
 
@@ -24,21 +29,30 @@ constructor() : ViewModel() {
 
     private fun loadServices() {
         viewModelScope.launch {
-            val services = listOf(
-                MenuServiceItem("rw-hw", "Hot Wash", 46, 90f, MachineType.REGULAR_WASHER, WashType.HOT),
-                MenuServiceItem("rw-ww", "Warm Wash", 36, 70f, MachineType.REGULAR_WASHER, WashType.WARM),
-                MenuServiceItem("rw-dw", "Delicate Wash", 21, 40f, MachineType.REGULAR_WASHER, WashType.DELICATE),
-                MenuServiceItem("rw-sw", "Super Wash", 47, 100f, MachineType.REGULAR_WASHER, WashType.SUPER_WASH),
-                MenuServiceItem("rd-rd", "Regular Dry", 40, 70f, MachineType.REGULAR_DRYER, null),
-                MenuServiceItem("rd-ad", "Additional Dry", 10, 20f, MachineType.REGULAR_DRYER, null),
-                MenuServiceItem("tw-hw", "Hot Wash", 46, 100f, MachineType.TITAN_WASHER, WashType.HOT),
-                MenuServiceItem("tw-ww", "Warm Wash", 36, 90f, MachineType.TITAN_WASHER, WashType.WARM),
-                MenuServiceItem("tw-dw", "Delicate Wash", 21, 60f, MachineType.TITAN_WASHER, WashType.DELICATE),
-                MenuServiceItem("tw-sw", "Super Wash", 47, 120f, MachineType.TITAN_WASHER, WashType.SUPER_WASH),
-                MenuServiceItem("td-rd", "Regular Dry", 40, 90f, MachineType.TITAN_DRYER, null),
-                MenuServiceItem("td-ad", "Additional Dry", 10, 25f, MachineType.TITAN_DRYER, null),
-            )
-            availableServices.value = services
+//            val services = listOf(
+//                MenuServiceItem(UUID.fromString("b5d4ce14-a701-11ed-afa1-0242ac120002") , "Hot Wash", 46, 90f, MachineType.REGULAR_WASHER, WashType.HOT),
+//                MenuServiceItem(UUID.fromString("b5d4ce14-a701-11ed-afa1-0242ac120003"), "Warm Wash", 36, 70f, MachineType.REGULAR_WASHER, WashType.WARM),
+//                MenuServiceItem(UUID.fromString("b5d4ce14-a701-11ed-afa1-0242ac120004"), "Delicate Wash", 21, 40f, MachineType.REGULAR_WASHER, WashType.DELICATE),
+//                MenuServiceItem(UUID.fromString("b5d4ce14-a701-11ed-afa1-0242ac120005"), "Super Wash", 47, 100f, MachineType.REGULAR_WASHER, WashType.SUPER_WASH),
+//                MenuServiceItem(UUID.fromString("b5d4ce14-a701-11ed-afa1-0242ac120006"), "Regular Dry", 40, 70f, MachineType.REGULAR_DRYER, null),
+//                MenuServiceItem(UUID.fromString("b5d4ce14-a701-11ed-afa1-0242ac120007"), "Additional Dry", 10, 20f, MachineType.REGULAR_DRYER, null),
+//                MenuServiceItem(UUID.fromString("b5d4ce14-a701-11ed-afa1-0242ac120008"), "Hot Wash", 46, 100f, MachineType.TITAN_WASHER, WashType.HOT),
+//                MenuServiceItem(UUID.fromString("b5d4ce14-a701-11ed-afa1-0242ac120009"), "Warm Wash", 36, 90f, MachineType.TITAN_WASHER, WashType.WARM),
+//                MenuServiceItem(UUID.fromString("b5d4ce14-a701-11ed-afa1-0242ac120010"), "Delicate Wash", 21, 60f, MachineType.TITAN_WASHER, WashType.DELICATE),
+//                MenuServiceItem(UUID.fromString("b5d4ce14-a701-11ed-afa1-0242ac120011"), "Super Wash", 47, 120f, MachineType.TITAN_WASHER, WashType.SUPER_WASH),
+//                MenuServiceItem(UUID.fromString("b5d4ce14-a701-11ed-afa1-0242ac120012"), "Regular Dry", 40, 90f, MachineType.TITAN_DRYER, null),
+//                MenuServiceItem(UUID.fromString("b5d4ce14-a701-11ed-afa1-0242ac120013"), "Additional Dry", 10, 25f, MachineType.TITAN_DRYER, null),
+//            )
+//            serviceRepository.save(
+//                EntityServiceWash().apply {
+//                    name = "Hot Wash"
+//                    minutes = 46
+//                    price = 90f
+//                    machineType = MachineType.REGULAR_WASHER
+//                    washType = WashType.HOT
+//                }
+//            )
+            availableServices.value = serviceRepository.getAll()
         }
     }
 
@@ -52,7 +66,7 @@ constructor() : ViewModel() {
     }
 
     fun putService(quantityModel: QuantityModel) {
-        val service = availableServices.value?.find { it.id == quantityModel.id }?.apply {
+        val service = availableServices.value?.find { it.id.toString() == quantityModel.id }?.apply {
             selected = true
             quantity = quantityModel.quantity
         }
@@ -60,7 +74,7 @@ constructor() : ViewModel() {
     }
 
     fun removeService(service: QuantityModel) {
-        val item = availableServices.value?.find { it.id == service.id }?.apply {
+        val item = availableServices.value?.find { it.id.toString() == service.id }?.apply {
             this.selected = false
             this.quantity = 1
         }

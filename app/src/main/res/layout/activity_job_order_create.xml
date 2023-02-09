@@ -232,6 +232,10 @@
                     app:hasItems="@{viewModel.hasDiscount}"
                     app:prompt="@{`No discount applied`}"/>
                 <TextView
+                    android:text="@{viewModel.discount.name}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
                     style="@style/TextItemTitle"
                     android:layout_gravity="center"
                     android:layout_width="wrap_content"

@@ -5,9 +5,12 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.csi.palabakosys.room.dao.*
+import com.csi.palabakosys.room.db.seeder.DatabaseSeeder
 import com.csi.palabakosys.room.entities.*
 import com.csi.palabakosys.util.*
+import kotlinx.coroutines.*
 
 @Database(entities = [
     EntityUser::class,
@@ -58,7 +61,7 @@ abstract class MainDatabase : RoomDatabase() {
     abstract fun daoRemote() : DaoRemote
 
     companion object {
-        val DATABASE_NAME: String = "main_db"
+        private const val DATABASE_NAME: String = "main_db"
 
         private var instance: MainDatabase? = null
 
@@ -66,6 +69,12 @@ abstract class MainDatabase : RoomDatabase() {
             return instance?: synchronized(this) {
                 instance ?: Room.databaseBuilder(context, MainDatabase::class.java, DATABASE_NAME)
                     .fallbackToDestructiveMigration()
+                    .addCallback(object: Callback() {
+                        override fun onCreate(db: SupportSQLiteDatabase) {
+                            super.onCreate(db)
+                            DatabaseSeeder(getInstance(context)).run()
+                        }
+                    })
                     .build()
             }
 //            return Room.databaseBuilder(context, MainDatabase::class.java, DATABASE_NAME)
