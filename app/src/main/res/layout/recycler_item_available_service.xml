@@ -42,19 +42,19 @@
                 app:layout_constraintStart_toStartOf="@+id/textTitle"
                 app:layout_constraintTop_toBottomOf="@+id/textTitle" />
 
-            <androidx.constraintlayout.widget.Group
-                android:visibility="@{viewModel.minutes != null}"
-                android:id="@+id/groupMinute"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:constraint_referenced_ids="textMinutes, iconMinute" />
+<!--            <androidx.constraintlayout.widget.Group-->
+<!--                android:visibility="@{viewModel.minutes != null}"-->
+<!--                android:id="@+id/groupMinute"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:constraint_referenced_ids="textMinutes, iconMinute" />-->
             <TextView
                 android:textSize="12sp"
                 android:id="@+id/textMinutes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="@{viewModel.minutes.toString() + ` Minutes`}"
+                android:text="@{viewModel.minutes + ` Minutes`}"
                 app:layout_constraintBottom_toBottomOf="@+id/iconMinute"
                 app:layout_constraintStart_toEndOf="@+id/iconMinute"
                 app:layout_constraintTop_toTopOf="@+id/iconMinute"

@@ -3,10 +3,11 @@ package com.csi.palabakosys.app.joborders.create.ui
 import android.os.Parcelable
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
+import java.util.UUID
 
 @Parcelize
 class QuantityModel(
-    val id: String,
+    val id: UUID,
     val name: String,
     var quantity: Int = 0,
     val type: String

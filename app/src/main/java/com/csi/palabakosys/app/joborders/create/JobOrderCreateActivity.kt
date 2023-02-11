@@ -127,6 +127,10 @@ class JobOrderCreateActivity : AppCompatActivity() {
             extrasAdapter.setData(it)
         })
 
+        binding.controls.buttonOk.setOnClickListener {
+            viewModel.save()
+        }
+
         viewModel.dataState().observe(this, Observer {
             when(it) {
                 is CreateJobOrderViewModel.DataState.OpenServices -> {
@@ -148,6 +152,10 @@ class JobOrderCreateActivity : AppCompatActivity() {
                 is CreateJobOrderViewModel.DataState.OpenDiscount -> {
                     openDiscount(it.discount)
                     viewModel.resetState()
+                }
+                is CreateJobOrderViewModel.DataState.SaveSuccess -> {
+                    viewModel.resetState()
+                    finish()
                 }
             }
         })

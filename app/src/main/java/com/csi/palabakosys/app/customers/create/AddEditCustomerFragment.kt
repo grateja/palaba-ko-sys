@@ -46,7 +46,7 @@ class AddEditCustomerFragment : ModalFragment<CustomerMinimal?>() {
         viewModel.dataState.observe(viewLifecycleOwner, Observer {
             if(it is DataState.Success) {
                 onOk?.invoke(CustomerMinimal(
-                    it.data.id.toString(),
+                    it.data.id,
                     it.data.name!!,
                     it.data.crn!!,
                     it.data.address

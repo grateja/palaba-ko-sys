@@ -2,6 +2,7 @@ package com.csi.palabakosys.room.dao
 
 import androidx.room.*
 import com.csi.palabakosys.room.entities.*
+import java.util.*
 
 @Dao
 interface DaoJobOrder {
@@ -27,15 +28,19 @@ interface DaoJobOrder {
     suspend fun save(entityJobOrderWithItems: EntityJobOrderWithItems) {
         insertJobOrder(entityJobOrderWithItems.jobOrder)
 
-        insertJobOrderProduct(entityJobOrderWithItems.products)
-        insertJobOrderService(entityJobOrderWithItems.services)
+        entityJobOrderWithItems.services?.let {
+            insertJobOrderService(it)
+        }
+        entityJobOrderWithItems.products?.let {
+            insertJobOrderProduct(it)
+        }
 
-        entityJobOrderWithItems.products.forEach {
+        entityJobOrderWithItems.products?.forEach {
             reduceProducts(it.quantity, it.productId.toString())
         }
 
-        deleteProducts(entityJobOrderWithItems.products.filter{ it.deletedAt != null })
-        deleteServices(entityJobOrderWithItems.services.filter{ it.deletedAt != null })
+//        deleteProducts(entityJobOrderWithItems.products.filter{ it.deletedAt != null })
+//        deleteServices(entityJobOrderWithItems.services.filter{ it.deletedAt != null })
     }
 
     @Transaction
@@ -71,4 +76,8 @@ interface DaoJobOrder {
 
     @Update
     suspend fun voidJobOrder(jobOrder: EntityJobOrder)
+
+    @Transaction
+    @Query("SELECT jo.*, jop.balance FROM job_orders jo LEFT JOIN job_order_payments jop ON jop.job_order_id = jo.id WHERE jo.customer_id = :customerId AND jo.deleted_at IS NULL AND void_date IS NULL LIMIT 1")
+    suspend fun getCurrentJobOrder(customerId: UUID?): EntityJobOrderWithItems?
 }

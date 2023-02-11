@@ -11,24 +11,36 @@ import com.csi.palabakosys.app.joborders.create.extras.MenuExtrasItem
 import com.csi.palabakosys.app.joborders.create.products.MenuProductItem
 import com.csi.palabakosys.app.joborders.create.services.MenuServiceItem
 import com.csi.palabakosys.model.DiscountApplicable
-import com.csi.palabakosys.room.entities.EntityJobOrderWithItems
+import com.csi.palabakosys.room.entities.*
+import com.csi.palabakosys.room.repository.JobOrderRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
 class CreateJobOrderViewModel
 
 @Inject
-constructor() : ViewModel() {
+constructor(
+    val jobOrderRepository: JobOrderRepository
+) : ViewModel() {
     sealed class DataState {
         object StateLess: DataState()
+        object SaveSuccess: DataState()
         data class OpenServices(val list: List<MenuServiceItem>?, val item: MenuServiceItem?): DataState()
         data class OpenProducts(val list: List<MenuProductItem>?, val item: MenuProductItem?): DataState()
         data class OpenExtras(val list: List<MenuExtrasItem>?, val item: MenuExtrasItem?): DataState()
         data class OpenDelivery(val deliveryCharge: DeliveryCharge?): DataState()
         data class OpenDiscount(val discount: MenuDiscount?): DataState()
     }
+
+    private fun getCurrentJobOrder(customerId: UUID?) {
+        viewModelScope.launch {
+            jobOrderRepository.getCurrentJobOrder(customerId)
+        }
+    }
+
     private val _dataState = MutableLiveData<DataState>()
     fun dataState(): MutableLiveData<DataState> {
         return _dataState
@@ -37,6 +49,7 @@ constructor() : ViewModel() {
         _dataState.value = DataState.StateLess
     }
 
+    val jobOrderId = MutableLiveData(UUID.randomUUID())
     val jobOrderNumber = MutableLiveData("#0909776")
     val currentCustomer = MutableLiveData<CustomerMinimal>()
     val deliveryCharge = MutableLiveData<DeliveryCharge?>()
@@ -76,13 +89,15 @@ constructor() : ViewModel() {
         }
         addSource(discount) { update() }
     }
-//    val hasAny = MediatorLiveData<Boolean>().apply {
-//        fun update() {
-//            value = hasServices.value!! || hasProducts.value!!
-//        }
-//        addSource(hasServices) { update() }
-//        addSource(hasProducts) { update() }
-//    }
+    val hasAny = MediatorLiveData<Boolean>().apply {
+        fun update() {
+            value = hasServices.value!! || hasProducts.value!! || hasExtras.value!! || hasDelivery.value!!
+        }
+        addSource(hasServices) { update() }
+        addSource(hasProducts) { update() }
+        addSource(hasExtras) { update() }
+        addSource(hasDelivery) { update() }
+    }
 
     val subtotal = MediatorLiveData<Float>().apply {
         fun update() {
@@ -145,6 +160,19 @@ constructor() : ViewModel() {
 
     fun setCustomer(customer: CustomerMinimal?) {
         currentCustomer.value = customer!!
+        viewModelScope.launch {
+            jobOrderRepository.getCurrentJobOrder(customer.id).let {
+                if(it != null) {
+                    jobOrderId.value = it.jobOrder.id
+                    jobOrderNumber.value = it.jobOrder.jobOrderNumber
+                    jobOrderServices.value = it.services?.map { svc ->
+                        MenuServiceItem(svc.serviceId, svc.serviceName, svc.service.minutes, svc.price, svc.service.machineType, svc.service.washType, svc.quantity, svc.id)
+                    }?.toMutableList()
+                } else {
+                    jobOrderNumber.value = jobOrderRepository.getNextJONumber()
+                }
+            }
+        }
     }
 
     fun syncServices(services: List<MenuServiceItem>?) {
@@ -203,6 +231,18 @@ constructor() : ViewModel() {
             val customerName = currentCustomer.value?.name
             val customerId = currentCustomer.value?.id
             val preparedBy = "Some staff"
+            val jobOrder = EntityJobOrder(jobOrderNumber, customerId, customerName, preparedBy).apply {
+                id = jobOrderId.value!!
+            }
+            val services = jobOrderServices.value?.map {
+                EntityJobOrderService(jobOrder.id, it.serviceId, it.name, it.price, it.quantity, EntityServiceRef(it.machineType, it.washType, it.minutes), it.id)
+            }
+            val products = jobOrderProducts.value?.map {
+                EntityJobOrderProduct(jobOrder.id, it.productType, it.id, it.name, it.price, it.quantity)
+            }
+            val jobOrderWithItem = EntityJobOrderWithItems(jobOrder, services, products)
+            jobOrderRepository.save(jobOrderWithItem)
+            _dataState.value = DataState.SaveSuccess
         }
     }
 }

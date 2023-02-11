@@ -199,10 +199,10 @@ constructor(
                 if(it == null) {
                     dataState.value = DataState.Invalidate("Job order not found or deleted")
                 } else {
-                    totalAmount.value = it.totalAmount()
-                    availableCashback.value = it.customer.cashBack
-                    customerId = it.customer.id
-                    cashBackEarned = it.cashBack()
+//                    totalAmount.value = it.totalAmount()
+//                    availableCashback.value = it.customer.cashBack
+//                    customerId = it.customer.id
+//                    cashBackEarned = it.cashBack()
 //                    model.value = it.payment
 //                    availablePoints.value = it.customer.points
 

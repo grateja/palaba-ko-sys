@@ -2,14 +2,9 @@ package com.csi.palabakosys.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.csi.palabakosys.R
-import com.csi.palabakosys.room.repository.DryServiceRepository
+//import com.csi.palabakosys.room.repository.DryServiceRepository
 import com.csi.palabakosys.room.repository.OtherServiceRepository
 import com.csi.palabakosys.room.repository.WashServiceRepository
-import com.csi.palabakosys.adapters.Adapter
-import com.csi.palabakosys.room.entities.EntityServiceDry
-import com.csi.palabakosys.room.entities.EntityServiceOther
-import com.csi.palabakosys.room.entities.EntityServiceWash
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,7 +14,7 @@ class SelectServicesViewModel
 @Inject
 constructor(
     private val washServiceRepository: WashServiceRepository,
-    private val dryServiceRepository: DryServiceRepository,
+//    private val dryServiceRepository: DryServiceRepository,
     private val otherServiceRepository: OtherServiceRepository
 ) : ViewModel() {
 //    val washAdapter = Adapter<EntityServiceWash>(R.layout.recycler_item_wash_service)
@@ -54,9 +49,9 @@ constructor(
             washServiceRepository.getAll().let {
 //                washAdapter.setData(it.map { _item -> RecyclerItem(_item) })
             }
-            dryServiceRepository.getAll().let {
+//            dryServiceRepository.getAll().let {
 //                dryAdapter.setData(it.map { _item -> RecyclerItem(_item) })
-            }
+//            }
             otherServiceRepository.getAll().let {
 //                otherAdapter.setData(it.map { _item -> RecyclerItem(_item) })
             }

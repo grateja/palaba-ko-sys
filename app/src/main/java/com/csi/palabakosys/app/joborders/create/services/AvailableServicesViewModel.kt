@@ -4,13 +4,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.csi.palabakosys.app.joborders.create.ui.QuantityModel
-import com.csi.palabakosys.model.MachineType
-import com.csi.palabakosys.model.WashType
-import com.csi.palabakosys.room.entities.EntityServiceWash
 import com.csi.palabakosys.room.repository.WashServiceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -57,8 +53,18 @@ constructor(
     }
 
     fun setPreSelectedServices(services: List<MenuServiceItem>?) {
+        println("available services")
+        println(availableServices.value)
         services?.forEach { msi ->
-            availableServices.value?.find { msi.id == it.id }?.apply {
+            println("msi id")
+            println(msi.serviceId)
+            availableServices.value?.find {
+                println("sid")
+                println(it.serviceId)
+                msi.serviceId.toString() == it.id.toString()
+            }?.apply {
+                println("this service is selected")
+                println(this.name)
                 this.selected = true
                 this.quantity = msi.quantity
             }
@@ -66,7 +72,7 @@ constructor(
     }
 
     fun putService(quantityModel: QuantityModel) {
-        val service = availableServices.value?.find { it.id.toString() == quantityModel.id }?.apply {
+        val service = availableServices.value?.find { it.serviceId == quantityModel.id }?.apply {
             selected = true
             quantity = quantityModel.quantity
         }
@@ -74,7 +80,7 @@ constructor(
     }
 
     fun removeService(service: QuantityModel) {
-        val item = availableServices.value?.find { it.id.toString() == service.id }?.apply {
+        val item = availableServices.value?.find { it.serviceId == service.id }?.apply {
             this.selected = false
             this.quantity = 1
         }

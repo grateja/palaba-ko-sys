@@ -7,24 +7,23 @@ data class EntityJobOrderWithItems (
     @Embedded var jobOrder: EntityJobOrder,
 
     @Relation(
+        parentColumn = "id",
+        entityColumn = "job_order_id"
+    )
+    var services: List<EntityJobOrderService>?,
+
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "job_order_id"
+    )
+    var products: List<EntityJobOrderProduct>?,
+) {
+    @Relation(
         parentColumn = "customer_id",
         entityColumn = "id"
     )
-    var customer: EntityCustomer,
+    var customer: EntityCustomer? = null
 
-    @Relation(
-        parentColumn = "id",
-        entityColumn = "job_order_id"
-    )
-    var services: List<EntityJobOrderService>,
-
-    @Relation(
-        parentColumn = "id",
-        entityColumn = "job_order_id"
-    )
-    var products: List<EntityJobOrderProduct>,
-
-) {
     @Relation(
         parentColumn = "id",
         entityColumn = "job_order_id"
@@ -48,17 +47,17 @@ data class EntityJobOrderWithItems (
 //        }
 //    }
 
-    fun totalAmount () : Float {
-        return services.map {
-            it.price * it.quantity
-        }.sum() + products.map {
-            it.price * it.quantity
-        }.sum()
-    }
-
-    fun cashBack() : Float {
-        return services.map {
-            it.cashBack * it.quantity
-        }.sum()
-    }
+//    fun totalAmount () : Float {
+//        return services?.map {
+//            it.price * it.quantity
+//        }?.sum() + products?.map {
+//            it.price * it.quantity
+//        }?.sum()
+//    }
+//
+//    fun cashBack() : Float {
+//        return services.map {
+//            it.cashBack * it.quantity
+//        }.sum()
+//    }
 }

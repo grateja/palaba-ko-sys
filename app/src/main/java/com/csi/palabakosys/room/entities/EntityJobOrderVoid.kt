@@ -5,11 +5,11 @@ import java.time.Instant
 
 class EntityJobOrderVoid(
     @ColumnInfo(name = "void_by")
-    var voidBy: String? = null
-) {
+    var voidBy: String?,
+
     @ColumnInfo(name = "void_remarks")
-    var remarks: String? = null
+    var remarks: String?,
 
     @ColumnInfo(name = "void_date")
-    var date: Instant? = Instant.now()
-}
+    var date: Instant? = Instant.now(),
+)

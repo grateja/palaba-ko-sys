@@ -62,4 +62,8 @@ constructor (
     suspend fun void(jobOrder: EntityJobOrder) {
         daoJobOrder.voidJobOrder(jobOrder)
     }
+
+    suspend fun getCurrentJobOrder(customerId: UUID?) : EntityJobOrderWithItems? {
+        return daoJobOrder.getCurrentJobOrder(customerId)
+    }
 }

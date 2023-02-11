@@ -10,7 +10,6 @@ import com.csi.palabakosys.room.dao.*
 import com.csi.palabakosys.room.db.seeder.DatabaseSeeder
 import com.csi.palabakosys.room.entities.*
 import com.csi.palabakosys.util.*
-import kotlinx.coroutines.*
 
 @Database(entities = [
     EntityUser::class,
@@ -18,8 +17,9 @@ import kotlinx.coroutines.*
     EntityMachine::class,
     EntityMachineRemarks::class,
     EntityMachineUsage::class,
-    EntityServiceWash::class,
-    EntityServiceDry::class,
+    EntityService::class,
+//    EntityServiceDry::class,
+    EntityExtras::class,
     EntityServiceOther::class,
     EntityProduct::class,
     EntityJobOrder::class,
@@ -31,7 +31,7 @@ import kotlinx.coroutines.*
     EntityInventoryLog::class,
     EntityDiscount::class,
     EntityCashlessProvider::class
-], version = 1)
+], version = 4)
 @TypeConverters(
     InstantConverters::class,
     UUIDConverter::class,
@@ -45,8 +45,9 @@ abstract class MainDatabase : RoomDatabase() {
     abstract fun daoMachine() : DaoMachine
     abstract fun daoMachineRemarks() : DaoMachineRemarks
     abstract fun daoMachineUsage() : DaoMachineUsage
-    abstract fun daoWashService() : DaoWashService
-    abstract fun daoDryService() : DaoDryService
+    abstract fun daoWashService() : DaoService
+//    abstract fun daoDryService() : DaoDryService
+    abstract fun daoExtras() : DaoExtras
     abstract fun daoOtherService() : DaoOtherService
     abstract fun daoProduct() : DaoProduct
     abstract fun daoJobOrder() : DaoJobOrder

@@ -5,10 +5,10 @@ import androidx.room.PrimaryKey
 import java.time.Instant
 import java.util.*
 
-abstract class BaseEntity () {
+abstract class BaseEntity (uuid: UUID? = null) {
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "id")
-    var id: UUID = UUID.randomUUID()
+    var id: UUID = uuid ?: UUID.randomUUID()
 
     @ColumnInfo(name = "created_at")
     var createdAt: Instant = Instant.now()

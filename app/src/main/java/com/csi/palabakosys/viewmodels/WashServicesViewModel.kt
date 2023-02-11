@@ -3,10 +3,8 @@ package com.csi.palabakosys.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.csi.palabakosys.R
 import com.csi.palabakosys.room.repository.WashServiceRepository
-import com.csi.palabakosys.adapters.Adapter
-import com.csi.palabakosys.room.entities.EntityServiceWash
+import com.csi.palabakosys.room.entities.EntityService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,7 +17,7 @@ constructor(
 ) : ViewModel() {
 
 //    val adapter = Adapter<EntityServiceWash>(R.layout.recycler_item_wash_service)
-    val service = MutableLiveData<EntityServiceWash>()
+    val service = MutableLiveData<EntityService>()
     val isEmpty = MutableLiveData(false);
 
     init {

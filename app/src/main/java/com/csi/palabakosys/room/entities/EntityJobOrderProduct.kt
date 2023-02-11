@@ -14,15 +14,14 @@ data class EntityJobOrderProduct(
     var productType: ProductType?,
 
     @ColumnInfo(name = "product_id")
-    var productId: UUID?
-) : BaseEntity() {
+    var productId: UUID?,
 
     @ColumnInfo(name = "product_name")
-    var productName: String? = null
+    var productName: String?,
 
     @ColumnInfo(name = "price")
-    var price: Float = 0f
+    var price: Float,
 
     @ColumnInfo(name = "quantity")
-    var quantity: Int = 1
-}
+    var quantity: Int,
+) : BaseEntity()

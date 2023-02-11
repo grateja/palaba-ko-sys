@@ -11,27 +11,35 @@ import java.util.UUID
 
 @Parcelize
 class MenuServiceItem(
-    val id: UUID,
+    @ColumnInfo(name = "service_id")
+    val serviceId: UUID,
+
     val name: String,
-    val minutes: Int?,
+
+    @ColumnInfo(name = "svc_minutes")
+    val minutes: Int,
+
     val price: Float,
 
-    @ColumnInfo(name = "machine_type")
-    val machineType: MachineType?,
+    @ColumnInfo(name = "svc_machine_type")
+    val machineType: MachineType,
 
-    @ColumnInfo(name = "wash_type")
+    @ColumnInfo(name = "svc_wash_type")
     val washType: WashType?,
+
     var quantity: Int = 1,
+
+    var id: UUID? = null,
 ) : Parcelable {
     @IgnoredOnParcel
     @Ignore
     var selected = false
     fun abbr() : String {
-        return if(machineType != null) {
-            machineType.abbr + ' ' + name
-        } else {
-            name
-        }
+//        return if(machineType != null) {
+            return machineType.abbr + ' ' + name
+//        } else {
+//            name
+//        }
     }
     fun quantityStr() : String {
         return "*$quantity" + if(quantity == 1) {

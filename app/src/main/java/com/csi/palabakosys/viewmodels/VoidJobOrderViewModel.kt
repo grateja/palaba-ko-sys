@@ -34,7 +34,7 @@ constructor(
             repository.get(jobOrderId).let {
                 if(it != null) {
                     jobOrder.value = it
-                    model.value = it.jobOrder.entityJobOrderVoid ?: EntityJobOrderVoid(appPreferenceRepository.getUser()?.name)
+//                    model.value = it.jobOrder.entityJobOrderVoid ?: EntityJobOrderVoid(appPreferenceRepository.getUser()?.name)
                 } else {
                     dataState.value = DataState.Invalidate("Job order not found or deleted!")
                 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.csi.palabakosys.app.joborders.create.services.MenuServiceItem
 import com.csi.palabakosys.app.joborders.create.ui.QuantityModel
+import com.csi.palabakosys.room.repository.ExtrasRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -13,7 +14,9 @@ import javax.inject.Inject
 class AvailableExtrasViewModel
 
 @Inject
-constructor() : ViewModel() {
+constructor(
+    private val repository: ExtrasRepository
+) : ViewModel() {
     val availableExtras = MutableLiveData<List<MenuExtrasItem>>()
     val dataState = MutableLiveData<DataState>()
 
@@ -23,11 +26,9 @@ constructor() : ViewModel() {
 
     private fun loadServices() {
         viewModelScope.launch {
-            val services = listOf(
-                MenuExtrasItem("8kg-fold", "8KG Fold", 30f, "fold"),
-                MenuExtrasItem("12kg-fold", "12KG Fold", 30f, "fold"),
-            )
-            availableExtras.value = services
+            repository.getAll("").let {
+                availableExtras.value = it
+            }
         }
     }
 

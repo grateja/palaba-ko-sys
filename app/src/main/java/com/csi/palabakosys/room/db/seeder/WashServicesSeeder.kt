@@ -2,25 +2,25 @@ package com.csi.palabakosys.room.db.seeder
 
 import com.csi.palabakosys.model.MachineType
 import com.csi.palabakosys.model.WashType
-import com.csi.palabakosys.room.dao.BaseDao
-import com.csi.palabakosys.room.dao.DaoWashService
-import com.csi.palabakosys.room.entities.EntityServiceWash
+import com.csi.palabakosys.room.dao.DaoService
+import com.csi.palabakosys.room.entities.EntityServiceRef
+import com.csi.palabakosys.room.entities.EntityService
 
-class WashServicesSeeder(dao: DaoWashService): EntitySeederImpl<EntityServiceWash>(dao) {
-    override fun items(): List<EntityServiceWash> {
+class WashServicesSeeder(dao: DaoService): EntitySeederImpl<EntityService>(dao) {
+    override fun items(): List<EntityService> {
         return listOf(
-            EntityServiceWash("Hot Wash", 46, 90f, MachineType.REGULAR_WASHER, WashType.HOT),
-            EntityServiceWash("Warm Wash", 36, 70f, MachineType.REGULAR_WASHER, WashType.WARM),
-            EntityServiceWash("Delicate Wash", 21, 40f, MachineType.REGULAR_WASHER, WashType.DELICATE),
-            EntityServiceWash("Super Wash", 47, 100f, MachineType.REGULAR_WASHER, WashType.SUPER_WASH),
-            EntityServiceWash("Regular Dry", 40, 70f, MachineType.REGULAR_DRYER, null),
-            EntityServiceWash("Additional Dry", 10, 20f, MachineType.REGULAR_DRYER, null),
-            EntityServiceWash("Hot Wash", 46, 100f, MachineType.TITAN_WASHER, WashType.HOT),
-            EntityServiceWash("Warm Wash", 36, 90f, MachineType.TITAN_WASHER, WashType.WARM),
-            EntityServiceWash("Delicate Wash", 21, 60f, MachineType.TITAN_WASHER, WashType.DELICATE),
-            EntityServiceWash("Super Wash", 47, 120f, MachineType.TITAN_WASHER, WashType.SUPER_WASH),
-            EntityServiceWash("Regular Dry", 40, 90f, MachineType.TITAN_DRYER, null),
-            EntityServiceWash("Additional Dry", 10, 25f, MachineType.TITAN_DRYER, null),
+            EntityService("Hot Wash", 90f, EntityServiceRef(MachineType.REGULAR_WASHER, WashType.HOT, 47)),
+            EntityService("Warm Wash", 80f, EntityServiceRef(MachineType.REGULAR_WASHER, WashType.WARM, 36)),
+            EntityService("Cold Wash", 70f, EntityServiceRef(MachineType.REGULAR_WASHER, WashType.COLD, 36)),
+            EntityService("Delicate Wash", 50f, EntityServiceRef(MachineType.REGULAR_WASHER, WashType.DELICATE, 21)),
+            EntityService("Regular Dry", 80f, EntityServiceRef(MachineType.REGULAR_DRYER, null, 40)),
+            EntityService("Additional Dry", 30f, EntityServiceRef(MachineType.REGULAR_DRYER, null, 10)),
+            EntityService("Hot Wash", 110f, EntityServiceRef(MachineType.TITAN_WASHER, WashType.HOT, 47)),
+            EntityService("Warm Wash", 100f, EntityServiceRef(MachineType.TITAN_WASHER, WashType.WARM, 36)),
+            EntityService("Cold Wash", 90f, EntityServiceRef(MachineType.TITAN_WASHER, WashType.COLD, 36)),
+            EntityService("Delicate Wash", 70f, EntityServiceRef(MachineType.TITAN_WASHER, WashType.DELICATE, 21)),
+            EntityService("Regular Dry", 100f, EntityServiceRef(MachineType.TITAN_DRYER, null, 40)),
+            EntityService("Additional Dry", 50f, EntityServiceRef(MachineType.TITAN_DRYER, null, 10)),
         )
     }
 }

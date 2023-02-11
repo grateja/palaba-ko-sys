@@ -5,10 +5,11 @@ import com.csi.palabakosys.model.ProductType
 import com.csi.palabakosys.util.MeasureUnit
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
+import java.util.*
 
 @Parcelize
 class MenuProductItem(
-    val id: String,
+    val id: UUID,
     val name: String,
     val price: Float,
     val measureUnit: MeasureUnit,

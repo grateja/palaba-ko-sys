@@ -1,6 +1,6 @@
 package com.csi.palabakosys.viewmodels
 
-import com.csi.palabakosys.room.entities.EntityServiceWash
+import com.csi.palabakosys.room.entities.EntityService
 import com.csi.palabakosys.room.repository.WashServiceRepository
 import com.csi.palabakosys.util.DeleteViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,4 +11,4 @@ class DeleteWashServiceViewModel
 @Inject
 constructor(
     repository: WashServiceRepository
-) : DeleteViewModel<EntityServiceWash>(repository)
+) : DeleteViewModel<EntityService>(repository)

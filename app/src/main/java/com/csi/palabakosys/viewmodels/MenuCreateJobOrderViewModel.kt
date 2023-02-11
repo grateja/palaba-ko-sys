@@ -3,10 +3,7 @@ package com.csi.palabakosys.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.csi.palabakosys.R
-import com.csi.palabakosys.adapters.Adapter
 //import com.csi.palabakosys.adapters.SelectedJobOrderProductsAdapter
-import com.csi.palabakosys.model.*
 import com.csi.palabakosys.room.repository.CustomerRepository
 import com.csi.palabakosys.room.repository.JobOrderRepository
 //import com.csi.palabakosys.adapters.SelectedJobOrderServicesAdapter
@@ -15,7 +12,6 @@ import com.csi.palabakosys.util.CRUDActionEnum
 import com.csi.palabakosys.util.DataState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -63,27 +59,27 @@ constructor(
 //                    paymentAdapter.setData(it.payments)
                     crudAction.value = CRUDActionEnum.UPDATE
                 } else {
-                    currentJobOrder.value = EntityJobOrder(nextJO)
+//                    currentJobOrder.value = EntityJobOrder(nextJO)
                     crudAction.value = CRUDActionEnum.CREATE
                 }
             }
         }
     }
 
-    fun addWashService(service: EntityServiceWash) {
+    fun addWashService(service: EntityService) {
 //        servicesAdapter.add(RecyclerItem(EntityJobOrderService(UUID.fromString(getId()), service.machineType, service.id).apply {
 //            serviceName = service.name
 //            price = service.price
 //            cashBack = service.cashBack
 //        }))
     }
-    fun addDryService(service: EntityServiceDry) {
+//    fun addDryService(service: EntityServiceDry) {
 //        servicesAdapter.add(RecyclerItem(EntityJobOrderService(UUID.fromString(getId()), service.machineType, service.id).apply {
 //            serviceName = service.name
 //            price = service.price
 //            cashBack = service.cashBack
 //        }))
-    }
+//    }
     fun addOtherService(service: EntityServiceOther) {
 //        servicesAdapter.add(RecyclerItem(EntityJobOrderService(UUID.fromString(getId()), null, service.id).apply {
 //            serviceName = service.name
