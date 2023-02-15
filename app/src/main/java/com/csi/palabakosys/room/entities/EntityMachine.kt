@@ -1,6 +1,7 @@
 package com.csi.palabakosys.room.entities
 
 import androidx.room.ColumnInfo
+import androidx.room.Embedded
 import androidx.room.Entity
 import com.csi.palabakosys.model.MachineType
 import java.time.Instant
@@ -12,29 +13,32 @@ data class EntityMachine(
     var stackOrder: Int?,
 
     @ColumnInfo(name = "machine_type")
-    var machineType: MachineType?
+    var machineType: MachineType?,
+
+    @ColumnInfo(name = "ip_end")
+    var ipEnd: Int,
+
+    @ColumnInfo(name = "machine_number")
+    var machineNumber: Int,
+
+    @Embedded
+    var activationRef: EntityActivationRef? = null
 ) : BaseEntity() {
-    @ColumnInfo(name = "ip_address")
-    var ipAddress: String? = null
-
-    @ColumnInfo(name = "name")
-    var name: String? = null
-
-    @ColumnInfo(name = "time_activated")
-    var timeActivated: Instant? = null
-
-    @ColumnInfo(name = "total_minutes")
-    var totalMinutes: Int = 0
-
-    @ColumnInfo(name = "customer_name")
-    var customerName: String? = null
-
-    @ColumnInfo(name = "customer_wash_id")
-    var customerWashId: UUID? = null
-
-    @ColumnInfo(name = "customer_dry_id")
-    var customerDryId: UUID? = null
-
-    @ColumnInfo(name = "worker_id")
-    var workerId: UUID? = null
+//    @ColumnInfo(name = "time_activated")
+//    var timeActivated: Instant? = null
+//
+//    @ColumnInfo(name = "total_minutes")
+//    var totalMinutes: Int = 0
+//
+//    @ColumnInfo(name = "customer_name")
+//    var customerName: String? = null
+//
+//    @ColumnInfo(name = "customer_wash_id")
+//    var customerWashId: UUID? = null
+//
+//    @ColumnInfo(name = "customer_dry_id")
+//    var customerDryId: UUID? = null
+//
+//    @ColumnInfo(name = "worker_id")
+//    var workerId: UUID? = null
 }

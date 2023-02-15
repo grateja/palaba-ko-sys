@@ -78,6 +78,6 @@ interface DaoJobOrder {
     suspend fun voidJobOrder(jobOrder: EntityJobOrder)
 
     @Transaction
-    @Query("SELECT jo.*, jop.balance FROM job_orders jo LEFT JOIN job_order_payments jop ON jop.job_order_id = jo.id WHERE jo.customer_id = :customerId AND jo.deleted_at IS NULL AND void_date IS NULL LIMIT 1")
+    @Query("SELECT jo.*, jop.balance FROM job_orders jo LEFT JOIN job_order_payments jop ON jop.job_order_id = jo.id WHERE DATE(jo.created_at/1000, 'unixepoch', 'localtime') = DATE('now', 'localtime') AND jo.customer_id = :customerId AND jo.deleted_at IS NULL AND void_date IS NULL LIMIT 1")
     suspend fun getCurrentJobOrder(customerId: UUID?): EntityJobOrderWithItems?
 }

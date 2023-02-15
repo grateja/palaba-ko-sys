@@ -30,7 +30,7 @@ constructor(
             if(it != null) return
             viewModelScope.launch {
                 val stackOrder = repository.getLastStackOrder(machineType) + 1
-                super.get(id, EntityMachine(stackOrder, machineType))
+//                super.get(id, EntityMachine(stackOrder, machineType))
             }
         }
     }
@@ -38,7 +38,7 @@ constructor(
     fun save() {
         model.value?.let {
             val inputValidation = InputValidation()
-            inputValidation.addRules("name", it.name.toString(), arrayOf(Rule.REQUIRED))
+//            inputValidation.addRules("name", it.name.toString(), arrayOf(Rule.REQUIRED))
             if(inputValidation.isInvalid()) {
                 validation.value = inputValidation
                 return@let
@@ -63,7 +63,7 @@ constructor(
                     .build()
 
                 val request = Request.Builder()
-                    .url("http://${it.ipAddress}/details")
+                    .url("http://192.168.210.${it.ipEnd}/details")
                     .build()
 
 //                state.value = RemoteActivationState.Connecting

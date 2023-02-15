@@ -11,6 +11,7 @@ class DatabaseSeeder(val db: MainDatabase) {
         CoroutineScope(Job() + Dispatchers.Main).launch {
             WashServicesSeeder(db.daoWashService()).seed()
             ExtrasSeeder(db.daoExtras()).seed()
+            MachinesSeeder(db.daoMachine()).seed()
         }
     }
 }

@@ -35,11 +35,11 @@ constructor(
         data class OpenDiscount(val discount: MenuDiscount?): DataState()
     }
 
-    private fun getCurrentJobOrder(customerId: UUID?) {
-        viewModelScope.launch {
-            jobOrderRepository.getCurrentJobOrder(customerId)
-        }
-    }
+//    private fun getCurrentJobOrder(customerId: UUID?) {
+//        viewModelScope.launch {
+//            jobOrderRepository.getCurrentJobOrder(customerId)
+//        }
+//    }
 
     private val _dataState = MutableLiveData<DataState>()
     fun dataState(): MutableLiveData<DataState> {
@@ -53,7 +53,7 @@ constructor(
     val jobOrderNumber = MutableLiveData("#0909776")
     val currentCustomer = MutableLiveData<CustomerMinimal>()
     val deliveryCharge = MutableLiveData<DeliveryCharge?>()
-    val jobOrderServices = MutableLiveData<MutableList<MenuServiceItem>>()
+    val jobOrderServices = MutableLiveData<List<MenuServiceItem>>()
     val jobOrderProducts = MutableLiveData<MutableList<MenuProductItem>>()
     val jobOrderExtras = MutableLiveData<MutableList<MenuExtrasItem>>()
     val discount = MutableLiveData<MenuDiscount>()
@@ -165,18 +165,26 @@ constructor(
                 if(it != null) {
                     jobOrderId.value = it.jobOrder.id
                     jobOrderNumber.value = it.jobOrder.jobOrderNumber
-                    jobOrderServices.value = it.services?.map { svc ->
-                        MenuServiceItem(svc.serviceId, svc.serviceName, svc.service.minutes, svc.price, svc.service.machineType, svc.service.washType, svc.quantity, svc.id)
-                    }?.toMutableList()
+
+                    println("JOB ORDER ID IF NULL")
+                    println(jobOrderId.value)
+
+                    it.services.let { services ->
+                        jobOrderServices.value = services?.map { joSvc ->
+                            MenuServiceItem(joSvc.id, joSvc.serviceId, joSvc.serviceName, joSvc.serviceRef.minutes, joSvc.price, joSvc.serviceRef.machineType, joSvc.serviceRef.washType, joSvc.quantity, joSvc.used)
+                        }
+                    }
                 } else {
                     jobOrderNumber.value = jobOrderRepository.getNextJONumber()
+                    println("JOB ORDER ID IF NOT NULL")
+                    println(jobOrderId.value)
                 }
             }
         }
     }
 
     fun syncServices(services: List<MenuServiceItem>?) {
-        jobOrderServices.value = services?.toMutableList()
+        jobOrderServices.value = services?.toList()
     }
 
     fun syncProducts(products: List<MenuProductItem>?) {
@@ -235,7 +243,7 @@ constructor(
                 id = jobOrderId.value!!
             }
             val services = jobOrderServices.value?.map {
-                EntityJobOrderService(jobOrder.id, it.serviceId, it.name, it.price, it.quantity, EntityServiceRef(it.machineType, it.washType, it.minutes), it.id)
+                EntityJobOrderService(jobOrder.id, it.serviceId, it.name, it.price, it.quantity, EntityServiceRef(it.machineType, it.washType, it.minutes), it.entityId)
             }
             val products = jobOrderProducts.value?.map {
                 EntityJobOrderProduct(jobOrder.id, it.productType, it.id, it.name, it.price, it.quantity)

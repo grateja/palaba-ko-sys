@@ -14,8 +14,8 @@ constructor (
 ) {
     suspend fun getByMachineType(machineType: MachineType?) : List<EntityCustomerQueueService> {
         try {
-//            return dao.getByMachineType(machineType.toString())
-            return emptyList()
+            return dao.getByMachineType(machineType.toString())
+//            return emptyList()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -24,8 +24,8 @@ constructor (
 
     suspend fun getAvailableServiceByJobOrder(jobOrderId: String?, machineType: MachineType?) : List<EntityAvailableService> {
         try {
-//            return dao.getAvailableWashes(jobOrderId, machineType.toString())
-            return emptyList()
+            return dao.getAvailableWashes(jobOrderId, machineType.toString())
+//            return emptyList()
         } catch (e: Exception) {
             e.printStackTrace()
         }

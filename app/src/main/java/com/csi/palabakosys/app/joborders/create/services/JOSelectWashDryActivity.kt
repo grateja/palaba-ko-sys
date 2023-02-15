@@ -3,6 +3,7 @@ package com.csi.palabakosys.app.joborders.create.services
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -108,6 +109,10 @@ class JOSelectWashDryActivity : AppCompatActivity() {
                 }
                 is AvailableServicesViewModel.DataState.Submit -> {
                     submit(it.selectedItems)
+                    viewModel.resetState()
+                }
+                is AvailableServicesViewModel.DataState.InvalidOperation -> {
+                    Toast.makeText(applicationContext, it.message, Toast.LENGTH_LONG).show()
                     viewModel.resetState()
                 }
             }

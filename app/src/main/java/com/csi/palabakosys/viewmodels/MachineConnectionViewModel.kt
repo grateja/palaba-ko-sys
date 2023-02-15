@@ -14,7 +14,9 @@ import javax.inject.Inject
 @HiltViewModel
 class MachineConnectionViewModel
 @Inject
-constructor() : ViewModel()
+constructor() : ViewModel(
+
+)
 {
 //    val dataState = MutableLiveData<RemoteActivationState>()
     private val client = OkHttpClient.Builder()

@@ -7,6 +7,7 @@ import com.csi.palabakosys.app.joborders.create.ui.QuantityModel
 import com.csi.palabakosys.room.repository.WashServiceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -61,18 +62,27 @@ constructor(
             availableServices.value?.find {
                 println("sid")
                 println(it.serviceId)
-                msi.serviceId.toString() == it.id.toString()
+                msi.serviceId.toString() == it.serviceId.toString()
             }?.apply {
-                println("this service is selected")
-                println(this.name)
+                this.entityId = msi.entityId
                 this.selected = true
                 this.quantity = msi.quantity
+                this.used = msi.used
             }
         }
     }
 
     fun putService(quantityModel: QuantityModel) {
         val service = availableServices.value?.find { it.serviceId == quantityModel.id }?.apply {
+            println("used")
+            println(used)
+
+            println("quantity")
+            println(quantityModel.quantity)
+            if(quantityModel.quantity < used) {
+                dataState.value = DataState.InvalidOperation("Cannot remove used service")
+                return
+            }
             selected = true
             quantity = quantityModel.quantity
         }
@@ -81,6 +91,10 @@ constructor(
 
     fun removeService(service: QuantityModel) {
         val item = availableServices.value?.find { it.serviceId == service.id }?.apply {
+            if(this.entityId != null) {
+                dataState.value = DataState.InvalidOperation("Cannot remove saved service")
+                return
+            }
             this.selected = false
             this.quantity = 1
         }
@@ -89,7 +103,7 @@ constructor(
 
     fun prepareSubmit() {
         val list = availableServices.value?.filter { it.selected }
-        list?.let {
+        list?.let { it ->
             dataState.value = DataState.Submit(it)
         }
     }
@@ -101,6 +115,7 @@ constructor(
     sealed class DataState {
         object StateLess: DataState()
         data class UpdateService(val serviceItem: MenuServiceItem) : DataState()
+        data class InvalidOperation(val message: String) : DataState()
         data class Submit(val selectedItems: List<MenuServiceItem>) : DataState()
     }
 }

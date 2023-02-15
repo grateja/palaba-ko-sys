@@ -14,6 +14,6 @@ constructor (
     suspend fun activate(
         machine: EntityMachine, jobOrderService: EntityJobOrderService, machineUsage: EntityMachineUsage
     ) {
-        daoRemote.activate(machine, jobOrderService, machineUsage)
+//        daoRemote.activate(machine, jobOrderService, machineUsage)
     }
 }

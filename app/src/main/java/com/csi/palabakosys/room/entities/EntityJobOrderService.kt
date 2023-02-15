@@ -27,18 +27,26 @@ data class EntityJobOrderService(
     var quantity: Int,
 
     @Embedded
-    var service: EntityServiceRef,
+    var serviceRef: EntityServiceRef,
 
     @Ignore
     @ColumnInfo
-    var uuid: UUID? = null
+    val uuid: UUID? = null
 ) : BaseEntity(uuid) {
-    constructor(jobOrderId: UUID?, serviceId: UUID, serviceName: String, price: Float, quantity: Int, service: EntityServiceRef) :
-            this(jobOrderId, serviceId, serviceName, price, quantity, service, null)
+    constructor(jobOrderId: UUID?, serviceId: UUID, serviceName: String, price: Float, quantity: Int, serviceRef: EntityServiceRef) :
+            this(jobOrderId, serviceId, serviceName, price, quantity, serviceRef, null)
 
     @ColumnInfo(name = "used")
     var used: Int = 0
 
     @ColumnInfo(name = "cash_back")
     var cashBack: Float = 0f
+
+//    fun pulse() : Int {
+//        return if(service.machineType == MachineType.REGULAR_DRYER || service.machineType == MachineType.TITAN_DRYER) {
+//            service.minutes / 10
+//        } else {
+//            service.washType?.pulse ?: 0
+//        }
+//    }
 }

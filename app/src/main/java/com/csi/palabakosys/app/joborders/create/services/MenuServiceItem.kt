@@ -5,13 +5,16 @@ import androidx.room.ColumnInfo
 import androidx.room.Ignore
 import com.csi.palabakosys.model.MachineType
 import com.csi.palabakosys.model.WashType
+import com.csi.palabakosys.room.entities.EntityServiceRef
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import java.util.UUID
 
 @Parcelize
 class MenuServiceItem(
-    @ColumnInfo(name = "service_id")
+    var entityId: UUID?,
+
+    @ColumnInfo(name = "id")
     val serviceId: UUID,
 
     val name: String,
@@ -28,8 +31,7 @@ class MenuServiceItem(
     val washType: WashType?,
 
     var quantity: Int = 1,
-
-    var id: UUID? = null,
+    var used: Int = 0,
 ) : Parcelable {
     @IgnoredOnParcel
     @Ignore

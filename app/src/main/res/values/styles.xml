@@ -9,6 +9,13 @@
     <style name="TextItemTitle">
         <item name="android:textColor">@color/black</item>
     </style>
+    <style name="TextItemTitle.Medium" parent="TextItemTitle">
+        <item name="android:textSize">20sp</item>
+    </style>
+    <style name="TextItemTitle.Medium.Bold" parent="TextItemTitle.Medium">
+        <item name="android:textSize">20sp</item>
+        <item name="fontFamily">sans-serif-black</item>
+    </style>
     <style name="TextItemTitleActive" parent="TextItemTitle">
         <item name="android:textColor">@color/card_selected</item>
         <item name="android:fontFamily">sans-serif-black</item>

@@ -59,8 +59,8 @@ class JobOrderCreateActivity : AppCompatActivity() {
 
     private fun subscribeEvents() {
         servicesLauncher.onOk = {
-            val result = it.data?.getParcelableArrayListExtra<MenuServiceItem>("services")?.toList()
-            viewModel.syncServices(result)
+            val selected = it.data?.getParcelableArrayListExtra<MenuServiceItem>("services")?.toList()
+            viewModel.syncServices(selected)
         }
 
         productsLauncher.onOk = {
@@ -116,7 +116,7 @@ class JobOrderCreateActivity : AppCompatActivity() {
         }
 
         viewModel.jobOrderServices.observe(this, Observer {
-            servicesAdapter.setData(it)
+            servicesAdapter.setData(it.toMutableList())
         })
 
         viewModel.jobOrderProducts.observe(this, Observer {

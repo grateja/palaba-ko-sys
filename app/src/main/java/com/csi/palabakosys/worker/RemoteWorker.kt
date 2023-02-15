@@ -5,6 +5,7 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import com.csi.palabakosys.preferences.AppPreferenceRepository
 import com.csi.palabakosys.room.entities.EntityMachine
 import com.csi.palabakosys.room.repository.MachineRepository
 import dagger.assisted.Assisted
@@ -18,8 +19,15 @@ class RemoteWorker
 constructor (
     @Assisted context: Context,
     @Assisted workerParams: WorkerParameters,
-    private val machineRepository: MachineRepository
+    private val machineRepository: MachineRepository,
+    private val appPreferences: AppPreferenceRepository
 ) : CoroutineWorker(context, workerParams) {
+    companion object {
+        const val TOKEN = "token"
+        const val PULSE = "pulse"
+        const val MACHINE_ID = "machineId"
+        const val MESSAGE = "message"
+    }
     private var message = ""
     private val client = OkHttpClient.Builder()
         .connectTimeout(30, TimeUnit.SECONDS)
@@ -28,17 +36,17 @@ constructor (
         .build()
 
     override suspend fun doWork(): Result {
-        val token = inputData.getString("token")
-        val pulse = inputData.getInt("pulse", 0)
-        val machineId = inputData.getString("machineId")
+        val token = inputData.getString(TOKEN)
+        val pulse = inputData.getInt(PULSE, 0)
+        val machineId = inputData.getString(MACHINE_ID)
 
         val machine = machineRepository.get(machineId)
 
         return if(activate(machine, pulse, token)) {
             println("Do Work Request success")
-            Result.success(workDataOf("message" to message))
+            Result.success(workDataOf(MESSAGE to message))
         } else {
-            Result.failure(workDataOf("message" to message))
+            Result.failure(workDataOf(MESSAGE to message))
         }
     }
 
@@ -63,9 +71,14 @@ constructor (
             return false
         }
 
+        val ipAddress = appPreferences.ipSettings.toString(machine.ipEnd)
+        val url = "http://${ipAddress}/activate?pulse=$pulse&token=$token"
+
         val request = Request.Builder()
-            .url("http://${machine.ipAddress}/activate?pulse=$pulse&token=$token")
+            .url(url)
             .build()
+
+        println(url)
 
         machineRepository.setWorkerId(machine, id.toString())
 

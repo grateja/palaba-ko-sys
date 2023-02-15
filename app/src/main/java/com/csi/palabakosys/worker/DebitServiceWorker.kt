@@ -37,7 +37,7 @@ constructor (
     suspend fun update(machine: EntityMachine, joService: EntityJobOrderService, machineUsage: EntityMachineUsage) : Boolean {
         return try {
             println("id from debit service")
-            machine.workerId = id
+//            machine.workerId = id
             remoteRepository.activate(machine, joService, machineUsage)
             true
         } catch (e: Exception) {

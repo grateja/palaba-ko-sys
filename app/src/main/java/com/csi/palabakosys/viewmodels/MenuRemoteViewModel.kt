@@ -60,11 +60,11 @@ constructor(
         }
     }
 
-    fun pendingResult() : LiveData<WorkInfo>? {
-        return machine.value?.workerId?.let {
-            return workManager.getWorkInfoByIdLiveData(it)
-        }
-    }
+//    fun pendingResult() : LiveData<WorkInfo>? {
+//        return machine.value?.workerId?.let {
+//            return workManager.getWorkInfoByIdLiveData(it)
+//        }
+//    }
 
     fun activate(availableService: EntityAvailableService) : LiveData<WorkInfo>? {
 //        viewModelScope.launch {

@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.window.layout.WindowMetricsCalculator
 import com.csi.palabakosys.R
 import com.csi.palabakosys.app.joborders.create.customer.SelectCustomerActivity
+import com.csi.palabakosys.app.remote.panel.RemotePanelActivity
 import com.csi.palabakosys.databinding.ActivityMainBinding
 import com.csi.palabakosys.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,6 +29,10 @@ class MainActivity : EndingActivity() {
         binding.btnTest.setOnClickListener {
             val intent = Intent(this, SelectCustomerActivity::class.java)
 //            val intent = Intent(this, CreateJobOrderActivity::class.java)
+            startActivity(intent)
+        }
+        binding.btnRemote.setOnClickListener {
+            val intent = Intent(this, RemotePanelActivity::class.java)
             startActivity(intent)
         }
         computeWindowSizeClasses()

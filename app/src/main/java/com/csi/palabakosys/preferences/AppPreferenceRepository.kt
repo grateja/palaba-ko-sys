@@ -17,6 +17,10 @@ class AppPreferenceRepository
 constructor (@ApplicationContext context: Context) {
     private val sharedPreferences = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
     val activeUser = MutableLiveData<EntityUser?>()
+    var ipSettings = IpSettings(
+        sharedPreferences.getString("networkPrefix", null) ?: "192.168",
+        sharedPreferences.getInt("subnetId", 210)
+    )
 
     val isAdmin = MutableLiveData<Boolean>()
 
