@@ -4,14 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.work.WorkInfo
 import com.csi.palabakosys.R
 import com.csi.palabakosys.adapters.Adapter
 import com.csi.palabakosys.databinding.FragmentRemoteSelectCustomerBinding
 import com.csi.palabakosys.fragments.BaseModalFragment
 import com.csi.palabakosys.room.entities.EntityAvailableService
 import com.csi.palabakosys.room.entities.EntityCustomerQueueService
+import com.csi.palabakosys.worker.RemoteWorker
 
 class RemoteSelectCustomerFragment : BaseModalFragment() {
 
@@ -48,14 +51,40 @@ class RemoteSelectCustomerFragment : BaseModalFragment() {
             viewModel.selectJobOrder(it)
         }
 
-        serviceQueuesAdapter.onItemClick = {
-            viewModel.activate(it).observe(viewLifecycleOwner, Observer {
-                println("state")
-                println(it.state)
+        serviceQueuesAdapter.onItemClick = { service ->
+            viewModel.activate(service).observe(viewLifecycleOwner, Observer {
+                checkResult(it)
             })
         }
 
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.pendingResult()?.observe(viewLifecycleOwner, Observer {
+            if(!it.state.isFinished) {
+                checkResult(it)
+                println("It's already finished")
+            }
+            println("this is hooked")
+        })
+    }
+
+    private fun checkResult(workInfo: WorkInfo) {
+        val message = workInfo.outputData.getString(RemoteWorker.MESSAGE)
+
+        if(workInfo.state == WorkInfo.State.FAILED) {
+            binding.cardCover.visibility = View.GONE
+        } else if(workInfo.state == WorkInfo.State.ENQUEUED) {
+            binding.cardCover.visibility = View.VISIBLE
+        } else if(workInfo.state == WorkInfo.State.SUCCEEDED) {
+            binding.cardCover.visibility = View.GONE
+            dismiss()
+        }
+        Toast.makeText(context, message + workInfo.state.toString(), Toast.LENGTH_LONG).show()
+        println("state")
+        println(workInfo.state)
     }
 
     companion object {

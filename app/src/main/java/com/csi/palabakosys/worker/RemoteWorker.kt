@@ -28,11 +28,12 @@ constructor (
         const val MACHINE_ID = "machineId"
         const val MESSAGE = "message"
     }
-    private var message = ""
+    private var message = "Connecting..."
     private val client = OkHttpClient.Builder()
         .connectTimeout(30, TimeUnit.SECONDS)
         .writeTimeout(30, TimeUnit.SECONDS)
         .readTimeout(30, TimeUnit.SECONDS)
+        .retryOnConnectionFailure(false)
         .build()
 
     override suspend fun doWork(): Result {
@@ -50,7 +51,7 @@ constructor (
         }
     }
 
-    private suspend fun activate(machine: EntityMachine?, pulse: Int, token: String?) : Boolean {
+    private fun activate(machine: EntityMachine?, pulse: Int, token: String?) : Boolean {
         var invalid = false
         if(machine == null) {
             message = "Invalid IP Address"
@@ -79,8 +80,8 @@ constructor (
             .build()
 
         println(url)
-
-        machineRepository.setWorkerId(machine, id.toString())
+//
+//        machineRepository.setWorkerId(machine, id.toString())
 
         return try {
             message = client.newCall(request).execute().body().toString()

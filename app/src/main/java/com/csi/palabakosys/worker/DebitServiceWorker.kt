@@ -21,17 +21,23 @@ constructor (
     @Assisted workerParams: WorkerParameters,
     private val remoteRepository: RemoteRepository
 ) : CoroutineWorker(context, workerParams) {
+    companion object {
+        const val MESSAGE = "message"
+        const val MACHINE = "machine"
+        const val JOB_ORDER_SERVICE = "jobOrderService"
+        const val MACHINE_USAGE = "machineUsage"
+    }
     var message = ""
     override suspend fun doWork(): Result {
         val gson = Gson()
-        val machine = gson.fromJson(inputData.getString("machine"), EntityMachine::class.java)
-        val joService = gson.fromJson(inputData.getString("joService"), EntityJobOrderService::class.java)
-        val machineUsage = gson.fromJson(inputData.getString("machineUsage"), EntityMachineUsage::class.java)
+        val machine = gson.fromJson(inputData.getString(MACHINE), EntityMachine::class.java)
+        val joService = gson.fromJson(inputData.getString(JOB_ORDER_SERVICE), EntityJobOrderService::class.java)
+        val machineUsage = gson.fromJson(inputData.getString(MACHINE_USAGE), EntityMachineUsage::class.java)
 
         return if(update(machine, joService, machineUsage)) {
-            Result.success(workDataOf("message" to message))
+            Result.success(workDataOf(MESSAGE to message))
         } else {
-            Result.failure(workDataOf("message" to message))
+            Result.failure(workDataOf(MESSAGE to message))
         }
     }
     suspend fun update(machine: EntityMachine, joService: EntityJobOrderService, machineUsage: EntityMachineUsage) : Boolean {
