@@ -1,6 +1,7 @@
 package com.csi.palabakosys.room.dao
 
 import androidx.room.*
+import com.csi.palabakosys.room.entities.EntityActivationRef
 import com.csi.palabakosys.room.entities.EntityJobOrderService
 import com.csi.palabakosys.room.entities.EntityMachine
 import com.csi.palabakosys.room.entities.EntityMachineUsage
@@ -10,18 +11,18 @@ import java.util.*
 @Dao
 interface DaoRemote {
     @Query("UPDATE machines SET time_activated = :timeActivated, total_minutes = :totalMinutes, customer_id = :customerId WHERE id = :machineId")
-    fun startMachine(machineId: UUID?, timeActivated: Instant?, totalMinutes: Int?, customerId: String?)
+    fun startMachine(machineId: String?, timeActivated: Instant?, totalMinutes: Int?, customerId: String?)
 
-    @Update
-    fun useService(jobOrderService: EntityJobOrderService)
+    @Query("UPDATE job_order_services SET used = used + 1 WHERE id = :jobOrderServiceId")
+    fun useService(jobOrderServiceId: String?)
 
     @Insert
     fun insertMachineUsage(machineUsage: EntityMachineUsage)
 
     @Transaction
-    suspend fun activate(machine: EntityMachine, jobOrderService: EntityJobOrderService, machineUsage: EntityMachineUsage) {
-        startMachine(machine.id, machine.activationRef?.timeActivated, machine.activationRef?.totalMinutes, machine.activationRef?.customerId)
-        useService(jobOrderService)
+    suspend fun activate(activationRef: EntityActivationRef, jobOrderServiceId: String?, machineId: String?, machineUsage: EntityMachineUsage) {
+        startMachine(machineId, activationRef.timeActivated, activationRef.totalMinutes, activationRef.customerId)
+        useService(jobOrderServiceId)
         insertMachineUsage(machineUsage)
     }
 }

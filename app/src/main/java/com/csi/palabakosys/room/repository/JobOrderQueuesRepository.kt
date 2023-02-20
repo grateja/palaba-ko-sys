@@ -22,9 +22,9 @@ constructor (
         return emptyList()
     }
 
-    suspend fun getAvailableServiceByJobOrder(jobOrderId: String?, machineType: MachineType?) : List<EntityAvailableService> {
+    suspend fun getAvailableServiceByCustomerId(customerId: String?, machineType: MachineType?) : List<EntityAvailableService> {
         try {
-            return dao.getAvailableWashes(jobOrderId, machineType.toString())
+            return dao.getAvailableWashes(customerId, machineType.toString())
 //            return emptyList()
         } catch (e: Exception) {
             e.printStackTrace()

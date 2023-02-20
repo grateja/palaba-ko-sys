@@ -10,5 +10,9 @@ data class EntityCustomerQueueService (
     @ColumnInfo(name = "job_order_number")
     val jobOrderNumber: String,
     @ColumnInfo(name = "customer_name")
-    val customerName: String
+    val customerName: String,
+    @ColumnInfo(name = "customer_id")
+    val customerId: UUID,
+    @ColumnInfo(name = "machine_type")
+    val machineType: MachineType,
 )

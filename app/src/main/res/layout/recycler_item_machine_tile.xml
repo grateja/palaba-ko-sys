@@ -3,7 +3,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.csi.palabakosys.app.remote.panel.MachineTile" />
+            type="com.csi.palabakosys.room.entities.EntityMachine" />
     </data>
     <com.google.android.material.card.MaterialCardView
         android:layout_width="100dp"

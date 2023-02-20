@@ -51,7 +51,7 @@ constructor (
         }
     }
 
-    private fun activate(machine: EntityMachine?, pulse: Int, token: String?) : Boolean {
+    private suspend fun activate(machine: EntityMachine?, pulse: Int, token: String?) : Boolean {
         var invalid = false
         if(machine == null) {
             message = "Invalid IP Address"
@@ -80,8 +80,8 @@ constructor (
             .build()
 
         println(url)
-//
-//        machineRepository.setWorkerId(machine, id.toString())
+
+        machineRepository.setWorkerId(machine, id.toString())
 
         return try {
             message = client.newCall(request).execute().body().toString()
@@ -92,7 +92,7 @@ constructor (
             message = e.message.toString()
             println("Request failed")
             println(message)
-            e.printStackTrace()
+//            e.printStackTrace()
             false
         }
     }

@@ -16,7 +16,4 @@ data class EntityActivationRef(
 
     @ColumnInfo(name = "job_order_Id")
     var jobOrderId: UUID?,
-
-    @ColumnInfo(name = "worker_id")
-    var workerId: UUID?
 )

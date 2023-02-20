@@ -63,4 +63,12 @@ constructor (@ApplicationContext context: Context) {
             sharedPreferences.getInt("printer_character", 32)
         )
     }
+
+    fun saveIpSettings(ip: IpSettings) {
+        with(sharedPreferences.edit()) {
+            putString("networkPrefix", ip.networkPrefix)
+            putInt("subnetId", ip.subnetId)
+            apply()
+        }
+    }
 }

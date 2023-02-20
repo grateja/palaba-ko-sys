@@ -3,19 +3,14 @@ package com.csi.palabakosys.viewmodels
 import androidx.lifecycle.*
 import androidx.lifecycle.Observer
 import androidx.work.*
-import com.csi.palabakosys.R
-import com.csi.palabakosys.adapters.Adapter
 //import com.csi.palabakosys.datastates.RemoteActivationState
 import com.csi.palabakosys.room.entities.*
 import com.csi.palabakosys.room.repository.JobOrderQueuesRepository
 import com.csi.palabakosys.room.repository.MachineRepository
-import com.csi.palabakosys.worker.DebitServiceWorker
-import com.csi.palabakosys.worker.RemoteWorker
 import com.google.gson.Gson
 //import com.csi.lms2022.usecases.ConnectUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.time.Instant
 import java.util.*
 import javax.inject.Inject
 
@@ -43,7 +38,7 @@ constructor(
 
     fun loadServicesByJobOrders(jobOrderId: UUID) {
         viewModelScope.launch {
-            repository.getAvailableServiceByJobOrder(jobOrderId.toString(), machine.value?.machineType).let {
+            repository.getAvailableServiceByCustomerId(jobOrderId.toString(), machine.value?.machineType).let {
 //                remoteWashServicesAdapter.setData(it.map { _item -> RecyclerItem(_item) })
             }
         }

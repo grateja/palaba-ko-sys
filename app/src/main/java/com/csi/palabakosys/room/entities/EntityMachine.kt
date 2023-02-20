@@ -24,6 +24,10 @@ data class EntityMachine(
     @Embedded
     var activationRef: EntityActivationRef? = null
 ) : BaseEntity() {
+
+    fun machineName() : String {
+        return machineType?.value + "" + machineNumber
+    }
 //    @ColumnInfo(name = "time_activated")
 //    var timeActivated: Instant? = null
 //
@@ -39,6 +43,6 @@ data class EntityMachine(
 //    @ColumnInfo(name = "customer_dry_id")
 //    var customerDryId: UUID? = null
 //
-//    @ColumnInfo(name = "worker_id")
-//    var workerId: UUID? = null
+    @ColumnInfo(name = "worker_id")
+    var workerId: UUID? = null
 }
