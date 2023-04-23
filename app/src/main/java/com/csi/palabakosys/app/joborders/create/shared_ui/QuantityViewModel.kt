@@ -1,4 +1,4 @@
-package com.csi.palabakosys.app.joborders.create.ui
+package com.csi.palabakosys.app.joborders.create.shared_ui
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

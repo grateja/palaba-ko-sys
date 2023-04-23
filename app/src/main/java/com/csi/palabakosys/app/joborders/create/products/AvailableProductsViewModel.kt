@@ -3,9 +3,7 @@ package com.csi.palabakosys.app.joborders.create.products
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.csi.palabakosys.app.joborders.create.ui.QuantityModel
-import com.csi.palabakosys.model.ProductType
-import com.csi.palabakosys.util.MeasureUnit
+import com.csi.palabakosys.app.joborders.create.shared_ui.QuantityModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

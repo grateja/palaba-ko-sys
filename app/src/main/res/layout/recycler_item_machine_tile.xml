@@ -3,14 +3,24 @@
     <data>
         <variable
             name="viewModel"
-            type="com.csi.palabakosys.room.entities.EntityMachine" />
+            type="com.csi.palabakosys.app.remote.panel.MachineTile" />
     </data>
     <com.google.android.material.card.MaterialCardView
         android:layout_width="100dp"
         android:layout_height="100dp">
-        <TextView
-            android:text="@{viewModel.machineName()}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:text="@{viewModel.entityMachine.machineName()}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:visibility="@{viewModel.connecting}"
+                android:text="Connecting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 </layout>

@@ -17,5 +17,5 @@ abstract class DaoMachine : BaseDao<EntityMachine> {
     abstract suspend fun getLastStackOrder(machineType: String) : Int?
 
     @Query("UPDATE machines SET worker_id = :workerId WHERE id = :machineId")
-    abstract suspend fun setWorkerId(machineId: String, workerId: String)
+    abstract suspend fun setWorkerId(machineId: String, workerId: String?)
 }

@@ -1,4 +1,4 @@
-package com.csi.palabakosys.app.joborders.create.ui
+package com.csi.palabakosys.app.joborders.create.shared_ui
 
 import android.os.Bundle
 import android.view.LayoutInflater

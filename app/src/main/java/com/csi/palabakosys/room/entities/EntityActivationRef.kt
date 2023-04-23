@@ -11,9 +11,9 @@ data class EntityActivationRef(
     @ColumnInfo(name = "total_minutes")
     var totalMinutes: Int?,
 
-    @ColumnInfo(name = "customer_id")
-    var customerId: String?,
-
+//    @ColumnInfo(name = "customer_id")
+//    var customerId: String?,
+//
     @ColumnInfo(name = "job_order_Id")
     var jobOrderId: UUID?,
 )

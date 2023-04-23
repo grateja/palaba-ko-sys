@@ -24,7 +24,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LMS2022">
         <activity
-            android:name=".app.remote.activate.RemoteActivateActivity"
+            android:name=".app.remote.shared_ui.RemoteActivationActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

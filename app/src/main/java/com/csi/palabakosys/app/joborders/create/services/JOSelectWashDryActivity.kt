@@ -8,8 +8,8 @@ import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
-import com.csi.palabakosys.app.joborders.create.ui.ModifyQuantityModalFragment
-import com.csi.palabakosys.app.joborders.create.ui.QuantityModel
+import com.csi.palabakosys.app.joborders.create.shared_ui.ModifyQuantityModalFragment
+import com.csi.palabakosys.app.joborders.create.shared_ui.QuantityModel
 import com.csi.palabakosys.databinding.ActivityJoSelectWashDryBinding
 import com.csi.palabakosys.model.MachineType
 import dagger.hilt.android.AndroidEntryPoint

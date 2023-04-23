@@ -7,7 +7,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.csi.palabakosys.app.remote.queues.RemoteQueuesViewModel" />
+            type="com.csi.palabakosys.app.remote.shared_ui.RemoteActivationViewModel" />
     </data>
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"

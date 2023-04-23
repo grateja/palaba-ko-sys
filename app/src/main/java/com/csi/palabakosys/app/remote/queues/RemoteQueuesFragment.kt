@@ -5,11 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
 import com.csi.palabakosys.adapters.Adapter
-import com.csi.palabakosys.app.remote.panel.RemotePanelViewModel
+import com.csi.palabakosys.app.remote.shared_ui.RemoteActivationViewModel
 import com.csi.palabakosys.databinding.FragmentRemoteQueuesBinding
 import com.csi.palabakosys.fragments.BaseModalFragment
 import com.csi.palabakosys.room.entities.EntityAvailableService
@@ -18,8 +17,8 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class RemoteQueuesFragment : BaseModalFragment() {
     private lateinit var binding: FragmentRemoteQueuesBinding
-    private val queuesViewModel: RemoteQueuesViewModel by viewModels()
-    private val viewModel: RemotePanelViewModel by activityViewModels()
+//    private val queuesViewModel: RemoteQueuesViewModel by viewModels()
+    private val viewModel: RemoteActivationViewModel by activityViewModels()
 
     private val serviceQueuesAdapter = Adapter<EntityAvailableService>(R.layout.recycler_item_queue_service)
 
@@ -30,18 +29,18 @@ class RemoteQueuesFragment : BaseModalFragment() {
         // Inflate the layout for this fragment
         binding = FragmentRemoteQueuesBinding.inflate(inflater, container, false)
         binding.recyclerAvailableServices.adapter = serviceQueuesAdapter
-        binding.viewModel = queuesViewModel
+        binding.viewModel = viewModel
 
-        viewModel.queueService.observe(viewLifecycleOwner, Observer {
+//        viewModel.customerQueue.observe(viewLifecycleOwner, Observer {
 //            queuesViewModel.getAvailableServicesByCustomerId(it.customerId, it.machineType)
-        })
+//        })
 
-        queuesViewModel.availableServices.observe(viewLifecycleOwner, Observer {
+        viewModel.availableServices.observe(viewLifecycleOwner, Observer {
             serviceQueuesAdapter.setData(it)
         })
 
         serviceQueuesAdapter.onItemClick = {
-//            viewModel.activate(it)
+            viewModel.activate(it)
         }
 
         return binding.root

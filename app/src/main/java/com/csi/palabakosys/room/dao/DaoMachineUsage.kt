@@ -9,6 +9,6 @@ abstract class DaoMachineUsage : BaseDao<EntityMachineUsage> {
     @Query("SELECT * FROM machine_usages WHERE id = :id")
     abstract suspend fun get(id: String) : EntityMachineUsage?
 
-    @Query("SELECT * FROM machine_usages WHERE customer_name LIKE '%' || :keyword || '%' ORDER BY created_at")
-    abstract suspend fun getAll(keyword: String) : List<EntityMachineUsage>
+    @Query("SELECT * FROM machine_usages WHERE machine_id = :machineId")
+    abstract suspend fun getAll(machineId: String) : List<EntityMachineUsage>
 }

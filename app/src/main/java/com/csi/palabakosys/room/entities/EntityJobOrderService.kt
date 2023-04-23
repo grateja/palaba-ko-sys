@@ -39,8 +39,8 @@ data class EntityJobOrderService(
     @ColumnInfo(name = "used")
     var used: Int = 0
 
-    @ColumnInfo(name = "cash_back")
-    var cashBack: Float = 0f
+//    @ColumnInfo(name = "cash_back")
+//    var cashBack: Float = 0f
 
 //    fun pulse() : Int {
 //        return if(service.machineType == MachineType.REGULAR_DRYER || service.machineType == MachineType.TITAN_DRYER) {

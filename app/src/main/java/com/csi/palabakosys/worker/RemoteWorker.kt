@@ -7,6 +7,7 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.csi.palabakosys.preferences.AppPreferenceRepository
 import com.csi.palabakosys.room.entities.EntityMachine
+import com.csi.palabakosys.room.repository.JobOrderQueuesRepository
 import com.csi.palabakosys.room.repository.MachineRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -20,13 +21,15 @@ constructor (
     @Assisted context: Context,
     @Assisted workerParams: WorkerParameters,
     private val machineRepository: MachineRepository,
+    private val jobOrderQueuesRepository: JobOrderQueuesRepository,
     private val appPreferences: AppPreferenceRepository
 ) : CoroutineWorker(context, workerParams) {
     companion object {
-        const val TOKEN = "token"
-        const val PULSE = "pulse"
+//        const val PULSE = "pulse"
         const val MACHINE_ID = "machineId"
+//        const val MACHINE_IP_END = "machineIpEnd"
         const val MESSAGE = "message"
+        const val JOB_ORDER_SERVICE_ID = "jobOrderServiceId"
     }
     private var message = "Connecting..."
     private val client = OkHttpClient.Builder()
@@ -37,31 +40,64 @@ constructor (
         .build()
 
     override suspend fun doWork(): Result {
-        val token = inputData.getString(TOKEN)
-        val pulse = inputData.getInt(PULSE, 0)
+        println("Work started")
+//        val pulse = inputData.getInt(PULSE, 0)
         val machineId = inputData.getString(MACHINE_ID)
+//        val machineIpEnd = inputData.getInt(MACHINE_IP_END, 0)
+        val jobOrderServiceId = inputData.getString(JOB_ORDER_SERVICE_ID)
 
         val machine = machineRepository.get(machineId)
+        if(machine == null) {
+            message = "Invalid machine"
+            println(message)
+            return Result.failure(workDataOf(MESSAGE to message))
+        }
 
-        return if(activate(machine, pulse, token)) {
+//        if(machine.workerId == id) {
+//            message = "Duplicate work detected"
+//            println(message)
+//            return Result.failure(workDataOf(MESSAGE to message))
+//        }
+
+        val service = jobOrderQueuesRepository.get(jobOrderServiceId)
+        if(service == null) {
+            message = "Invalid Service"
+            println(message)
+            return Result.failure(workDataOf(MESSAGE to message))
+        }
+
+        val token = "${service.id}-${(service.quantity - service.used)}"
+
+        return if(activate(machineId, machine.ipEnd, service.serviceRef.pulse(), token)) {
             println("Do Work Request success")
+            println(message)
             Result.success(workDataOf(MESSAGE to message))
         } else {
+            println("Do Work Request failed")
+            println(message)
+            machineRepository.setWorkerId(machineId.toString(), null)
             Result.failure(workDataOf(MESSAGE to message))
         }
     }
 
-    private suspend fun activate(machine: EntityMachine?, pulse: Int, token: String?) : Boolean {
+    private suspend fun activate(machineId: String?, machineIpEnd: Int, pulse: Int, token: String) : Boolean {
         var invalid = false
-        if(machine == null) {
+        if(machineId == null || (machineIpEnd <= 1 || machineIpEnd >= 254)) {
+            println("machine ip end")
+            println(machineIpEnd)
+
+            println("machine id")
+            println(machineId)
             message = "Invalid IP Address"
             return false
         }
 
-        if(token.isNullOrBlank()) {
-            message = "Token cannot be null"
-            invalid = true
-        } else if(pulse <= 0) {
+//        if(token.isNullOrBlank()) {
+//            message = "Token cannot be null"
+//            invalid = true
+//        } else
+
+        if(pulse <= 0) {
             message = "Pulse cannot be '0'"
             invalid = true
         }
@@ -72,8 +108,8 @@ constructor (
             return false
         }
 
-        val ipAddress = appPreferences.ipSettings.toString(machine.ipEnd)
-        val url = "http://${ipAddress}/activate?pulse=$pulse&token=$token"
+        val ipAddress = appPreferences.ipSettings.toString(machineIpEnd)
+        val url = "http://${ipAddress}/activate?pulse=$pulse&token=${token}"
 
         val request = Request.Builder()
             .url(url)
@@ -81,7 +117,7 @@ constructor (
 
         println(url)
 
-        machineRepository.setWorkerId(machine, id.toString())
+        machineRepository.setWorkerId(machineId, id.toString())
 
         return try {
             message = client.newCall(request).execute().body().toString()

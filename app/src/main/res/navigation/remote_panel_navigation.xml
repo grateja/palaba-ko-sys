@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/remote_panel_navigation"
+    app:startDestination="@id/remotePanelFragment">
+
+    <fragment
+        android:id="@+id/remotePanelFragment"
+        android:name="com.csi.palabakosys.app.remote.panel.RemotePanelFragment"
+        android:label="fragment_remote_panel"
+        tools:layout="@layout/fragment_remote_panel" />
+    <dialog
+        android:id="@+id/remote_customerFragment"
+        android:name="com.csi.palabakosys.app.remote.customer.RemoteCustomerFragment"
+        android:label="fragment_remote_customer"
+        tools:layout="@layout/fragment_remote_customer" />
+    <dialog
+        android:id="@+id/remote_queuesFragment"
+        android:name="com.csi.palabakosys.app.remote.queues.RemoteQueuesFragment"
+        android:label="fragment_remote_queues"
+        tools:layout="@layout/fragment_remote_queues" />
+</navigation>

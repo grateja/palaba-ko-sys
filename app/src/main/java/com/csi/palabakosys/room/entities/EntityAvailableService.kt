@@ -8,7 +8,7 @@ import java.util.*
 
 data class EntityAvailableService(
     val id: UUID?,
-    val available: Int?,
+    val available: Int,
     val minutes: Int,
 
     @ColumnInfo(name = "service_name")

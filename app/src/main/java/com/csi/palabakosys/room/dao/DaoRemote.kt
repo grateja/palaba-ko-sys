@@ -10,8 +10,8 @@ import java.util.*
 
 @Dao
 interface DaoRemote {
-    @Query("UPDATE machines SET time_activated = :timeActivated, total_minutes = :totalMinutes, customer_id = :customerId WHERE id = :machineId")
-    fun startMachine(machineId: String?, timeActivated: Instant?, totalMinutes: Int?, customerId: String?)
+    @Query("UPDATE machines SET time_activated = :timeActivated, total_minutes = :totalMinutes, worker_id = null WHERE id = :machineId")
+    fun startMachine(machineId: String?, timeActivated: Instant?, totalMinutes: Int?)
 
     @Query("UPDATE job_order_services SET used = used + 1 WHERE id = :jobOrderServiceId")
     fun useService(jobOrderServiceId: String?)
@@ -21,7 +21,7 @@ interface DaoRemote {
 
     @Transaction
     suspend fun activate(activationRef: EntityActivationRef, jobOrderServiceId: String?, machineId: String?, machineUsage: EntityMachineUsage) {
-        startMachine(machineId, activationRef.timeActivated, activationRef.totalMinutes, activationRef.customerId)
+        startMachine(machineId, activationRef.timeActivated, activationRef.totalMinutes)
         useService(jobOrderServiceId)
         insertMachineUsage(machineUsage)
     }

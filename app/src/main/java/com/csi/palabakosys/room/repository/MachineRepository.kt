@@ -23,7 +23,7 @@ class MachineRepository
         return daoMachine.getLastStackOrder(machineType.toString())?:1
     }
 
-    suspend fun setWorkerId(machine: EntityMachine, workerId: String) {
-        daoMachine.setWorkerId(machine.id.toString(), workerId)
+    suspend fun setWorkerId(machineId: String, workerId: String?) {
+        daoMachine.setWorkerId(machineId, workerId)
     }
 }

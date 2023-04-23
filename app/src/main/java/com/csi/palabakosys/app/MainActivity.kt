@@ -11,7 +11,7 @@ import androidx.window.layout.WindowMetricsCalculator
 import com.csi.palabakosys.R
 import com.csi.palabakosys.app.joborders.create.customer.SelectCustomerActivity
 import com.csi.palabakosys.app.preferences.ip.SettingsIPAddressActivity
-import com.csi.palabakosys.app.remote.panel.RemotePanelActivity
+import com.csi.palabakosys.app.remote.shared_ui.RemoteActivationActivity
 import com.csi.palabakosys.databinding.ActivityMainBinding
 import com.csi.palabakosys.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,7 +33,7 @@ class MainActivity : EndingActivity() {
             startActivity(intent)
         }
         binding.btnRemote.setOnClickListener {
-            val intent = Intent(this, RemotePanelActivity::class.java)
+            val intent = Intent(this, RemoteActivationActivity::class.java)
             startActivity(intent)
         }
         binding.btnIpSettings?.setOnClickListener {

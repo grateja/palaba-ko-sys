@@ -4,6 +4,7 @@ import com.csi.palabakosys.model.MachineType
 import com.csi.palabakosys.room.dao.DaoJobOrderQueues
 import com.csi.palabakosys.room.entities.EntityAvailableService
 import com.csi.palabakosys.room.entities.EntityCustomerQueueService
+import com.csi.palabakosys.room.entities.EntityJobOrderService
 import java.lang.Exception
 import javax.inject.Inject
 
@@ -30,5 +31,9 @@ constructor (
             e.printStackTrace()
         }
         return emptyList()
+    }
+
+    suspend fun get(id: String?) : EntityJobOrderService? {
+        return dao.get(id)
     }
 }
