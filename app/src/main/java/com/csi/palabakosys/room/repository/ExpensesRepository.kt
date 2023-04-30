@@ -3,7 +3,9 @@ package com.csi.palabakosys.room.repository
 import com.csi.palabakosys.room.dao.DaoExpense
 import com.csi.palabakosys.room.entities.EntityExpense
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class ExpensesRepository
 @Inject
 constructor (

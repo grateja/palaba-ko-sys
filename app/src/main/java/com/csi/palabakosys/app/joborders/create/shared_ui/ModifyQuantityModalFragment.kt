@@ -4,12 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import com.csi.palabakosys.databinding.FragmentModifyQuantityModalBinding
 import com.csi.palabakosys.fragments.ModalFragment
 
 class ModifyQuantityModalFragment : ModalFragment<QuantityModel>() {
 
     private lateinit var binding: FragmentModifyQuantityModalBinding
+    private val quantityViewModel: QuantityViewModel by viewModels()
 
     var onItemRemove: ((QuantityModel) -> Unit)? = null
 
@@ -27,8 +29,10 @@ class ModifyQuantityModalFragment : ModalFragment<QuantityModel>() {
         }
 
         binding.buttonConfirm.setOnClickListener {
-            onOk?.invoke(binding.viewModel!!)
-            dismiss()
+            if(binding.textQuantity.text.toString().toInt() > 0) {
+                onOk?.invoke(binding.viewModel!!)
+                dismiss()
+            }
         }
 
         binding.buttonCancel.setOnClickListener {

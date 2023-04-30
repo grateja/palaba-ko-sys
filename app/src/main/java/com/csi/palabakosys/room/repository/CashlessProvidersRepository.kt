@@ -3,7 +3,9 @@ package com.csi.palabakosys.room.repository
 import com.csi.palabakosys.room.dao.DaoCashlessProvider
 import com.csi.palabakosys.room.entities.EntityCashlessProvider
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class CashlessProvidersRepository
 @Inject
 constructor (

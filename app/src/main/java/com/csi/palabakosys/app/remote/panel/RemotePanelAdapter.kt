@@ -4,14 +4,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
 import com.csi.palabakosys.BR
 import com.csi.palabakosys.R
-import com.csi.palabakosys.app.remote.shared_ui.MachineStatus
 import com.csi.palabakosys.room.entities.EntityMachine
 import java.util.*
 
@@ -53,17 +48,26 @@ class RemotePanelAdapter : RecyclerView.Adapter<RemotePanelAdapter.ViewHolder>()
         notifyDataSetChanged()
     }
 
-    fun update(machine: EntityMachine, workInfo: WorkInfo?) {
-        list.find {it.entityMachine.id == machine.id}?.apply {
-            this.connecting = workInfo?.state?.isFinished != true
-//            if(workInfo?.state?.isFinished == true) {
-//                this.status.value = MachineStatus.CONNECTING
-//            } else {
-//                this.status.value = MachineStatus.IDLE
-//            }
+    fun setConnection(connecting: Boolean, machineId: UUID?, workerId: UUID?) {
+        list.find {it.entityMachine.id == machineId || it.entityMachine.workerId == workerId}?.apply {
+            this.connecting = connecting
             notifyItemChanged(list.indexOf(this))
         }
     }
+
+//    fun initiateConnection(workerId: UUID) {
+//        list.find {it.entityMachine.workerId == workerId}?.apply {
+//            this.connecting = true
+//            notifyItemChanged(list.indexOf(this))
+//        }
+//    }
+//
+//    fun finishConnection(machineId: UUID) {
+//        list.find {it.entityMachine.id == machineId}?.apply {
+//            this.connecting = false
+//            notifyItemChanged(list.indexOf(this))
+//        }
+//    }
 
 //    fun updateStatus(workers: List<WorkInfo>) {
 //        workers.forEach {

@@ -20,4 +20,9 @@
         android:name="com.csi.palabakosys.app.remote.queues.RemoteQueuesFragment"
         android:label="fragment_remote_queues"
         tools:layout="@layout/fragment_remote_queues" />
+    <dialog
+        android:id="@+id/remote_activateFragment"
+        android:name="com.csi.palabakosys.app.remote.activate.RemoteActivateFragment"
+        android:label="fragment_remote_activate"
+        tools:layout="@layout/fragment_remote_activate" />
 </navigation>

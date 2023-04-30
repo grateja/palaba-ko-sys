@@ -7,7 +7,9 @@ import com.csi.palabakosys.room.entities.EntityMachine
 import com.csi.palabakosys.room.entities.EntityMachineUsage
 import java.util.*
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class RemoteRepository
 @Inject
 constructor (

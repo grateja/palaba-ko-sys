@@ -6,7 +6,9 @@ import com.csi.palabakosys.room.dao.DaoOtherService
 import com.csi.palabakosys.room.entities.EntityExtras
 import com.csi.palabakosys.room.entities.EntityServiceOther
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class ExtrasRepository
 @Inject
 constructor (

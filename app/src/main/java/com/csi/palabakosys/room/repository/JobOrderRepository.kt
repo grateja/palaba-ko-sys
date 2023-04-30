@@ -12,7 +12,9 @@ import com.csi.palabakosys.room.entities.EntityJobOrderWithItems
 import java.lang.Exception
 import java.util.UUID
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class JobOrderRepository
 @Inject
 constructor (

@@ -54,14 +54,12 @@ class RemoteCustomerFragment : BaseModalFragment() {
     }
 
     private fun hookPending(workId: UUID?) {
-        workId.let { _workId ->
-            if(_workId != null) {
-                viewModel.pendingResult(_workId).observe(viewLifecycleOwner, Observer {
-                    updateView(it.state.isFinished)
-                })
-            } else {
-                updateView(true)
-            }
+        if(workId != null) {
+            viewModel.pendingWork(workId).observe(viewLifecycleOwner, Observer { _wi ->
+                updateView(_wi != null && _wi.state.isFinished)
+            })
+        } else {
+            updateView(true)
         }
     }
 

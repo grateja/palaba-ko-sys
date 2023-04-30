@@ -22,25 +22,25 @@ object RoomModule {
         return MainDatabase.getInstance(context)
     }
 
-//    @Singleton
+    @Singleton
     @Provides
     fun provideDaoUser(mainDatabase: MainDatabase) : DaoUser {
         return mainDatabase.daoUser()
     }
 
-//    @Singleton
+    @Singleton
     @Provides
     fun provideDaoShop(mainDatabase: MainDatabase) : DaoShop {
         return mainDatabase.daoShop()
     }
 
-//    @Singleton
+    @Singleton
     @Provides
     fun provideDaoMachine(mainDatabase: MainDatabase) : DaoMachine {
         return mainDatabase.daoMachine()
     }
 
-    //    @Singleton
+    @Singleton
     @Provides
     fun provideDaoWashService(mainDatabase: MainDatabase) : DaoService {
         return mainDatabase.daoWashService()
@@ -49,18 +49,22 @@ object RoomModule {
 //    fun provideDaoDryService(mainDatabase: MainDatabase) : DaoDryService {
 //        return mainDatabase.daoDryService()
 //    }
+    @Singleton
     @Provides
     fun provideDaoOtherService(mainDatabase: MainDatabase) : DaoOtherService {
         return mainDatabase.daoOtherService()
     }
+    @Singleton
     @Provides
     fun provideDaoExtras(mainDatabase: MainDatabase) : DaoExtras {
         return mainDatabase.daoExtras()
     }
+    @Singleton
     @Provides
     fun provideDaoProduct(mainDatabase: MainDatabase) : DaoProduct {
         return mainDatabase.daoProduct()
     }
+    @Singleton
     @Provides
     fun provideDaoJobOrder(mainDatabase: MainDatabase) : DaoJobOrder {
         return mainDatabase.daoJobOrder()
@@ -73,21 +77,25 @@ object RoomModule {
 //    fun provideDaoJobOrderProduct(mainDatabase: MainDatabase) : DaoJobOrderProduct {
 //        return mainDatabase.daoJobOrderProduct()
 //    }
+    @Singleton
     @Provides
     fun provideDaoCustomer(mainDatabase: MainDatabase) : DaoCustomer {
         return mainDatabase.daoCustomer()
     }
 
+    @Singleton
     @Provides
     fun provideDaoDiscount(mainDatabase: MainDatabase) : DaoDiscount {
         return mainDatabase.daoDiscount()
     }
 
+    @Singleton
     @Provides
     fun provideDaoCashlessProvider(mainDatabase: MainDatabase) : DaoCashlessProvider {
         return mainDatabase.daoCashlessProvider()
     }
 
+    @Singleton
     @Provides
     fun provideDaoExpense(mainDatabase: MainDatabase) : DaoExpense {
         return mainDatabase.daoExpense()
@@ -98,16 +106,19 @@ object RoomModule {
 //        return mainDatabase.daoLoyaltyPoints()
 //    }
 
+    @Singleton
     @Provides
     fun provideDaoJobOrderPayment(mainDatabase: MainDatabase) : DaoJobOrderPayment {
         return mainDatabase.daoJobOrderPayment()
     }
 
+    @Singleton
     @Provides
     fun provideDaoJobOrderQueues(mainDatabase: MainDatabase) : DaoJobOrderQueues {
         return mainDatabase.daoJobOrderQueues()
     }
 
+    @Singleton
     @Provides
     fun provideRemoteDao(mainDatabase: MainDatabase) : DaoRemote {
         return mainDatabase.daoRemote()

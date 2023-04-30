@@ -7,7 +7,9 @@ import com.csi.palabakosys.room.entities.EntityCustomerQueueService
 import com.csi.palabakosys.room.entities.EntityJobOrderService
 import java.lang.Exception
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class JobOrderQueuesRepository
 @Inject
 constructor (

@@ -14,10 +14,14 @@ class IPAddressSettingsViewModel
 constructor(private val preferenceRepository: AppPreferenceRepository)
 : ViewModel() {
     val ipSettings = MutableLiveData(preferenceRepository.ipSettings)
+    val urlSettings = MutableLiveData(preferenceRepository.urlSettings)
 
     fun save() {
         ipSettings.value?.let {
             preferenceRepository.saveIpSettings(it)
+        }
+        urlSettings.value?.let {
+            preferenceRepository.saveUrlSettings(it)
         }
     }
 }

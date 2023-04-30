@@ -22,6 +22,11 @@ constructor (@ApplicationContext context: Context) {
         sharedPreferences.getInt("subnetId", 210)
     )
 
+    var urlSettings = UrlSettings(
+        sharedPreferences.getString("endPoint", "initiate") ?: "",
+        sharedPreferences.getLong("connectionTimeout", 5)
+    )
+
     val isAdmin = MutableLiveData<Boolean>()
 
     fun setCurrentUser(user: EntityUser) {
@@ -68,6 +73,13 @@ constructor (@ApplicationContext context: Context) {
         with(sharedPreferences.edit()) {
             putString("networkPrefix", ip.networkPrefix)
             putInt("subnetId", ip.subnetId)
+            apply()
+        }
+    }
+
+    fun saveUrlSettings(urlSettings: UrlSettings) {
+        with(sharedPreferences.edit()) {
+            putString("endPoint", urlSettings.endPoint)
             apply()
         }
     }

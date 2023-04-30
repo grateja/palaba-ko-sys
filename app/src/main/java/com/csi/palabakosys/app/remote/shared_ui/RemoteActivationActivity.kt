@@ -33,10 +33,19 @@ class RemoteActivationActivity : AppCompatActivity() {
 
     private fun subscribeObservers() {
         viewModel.machine.observe(this, Observer {
-            navHostController.navigate(R.id.remote_customerFragment)
+            println("worker id")
+            println(it.workerId)
+            if(it.workerId == null) {
+                navHostController.navigate(R.id.remote_customerFragment)
+            } else {
+                navHostController.navigate(R.id.remote_activateFragment)
+            }
         })
         viewModel.customerQueue.observe(this, Observer {
             navHostController.navigate(R.id.remote_queuesFragment)
+        })
+        viewModel.service.observe(this, Observer {
+            navHostController.navigate(R.id.remote_activateFragment)
         })
 //        viewModel.dataState.observe(this, Observer {
 //            when(it){

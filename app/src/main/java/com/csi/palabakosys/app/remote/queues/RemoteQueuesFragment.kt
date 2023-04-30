@@ -40,7 +40,7 @@ class RemoteQueuesFragment : BaseModalFragment() {
         })
 
         serviceQueuesAdapter.onItemClick = {
-            viewModel.activate(it)
+            viewModel.selectService(it)
         }
 
         return binding.root

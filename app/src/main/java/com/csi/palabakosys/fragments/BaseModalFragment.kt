@@ -10,6 +10,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 open class BaseModalFragment: BottomSheetDialogFragment() {
+    protected var closeOnTouchOutside = true
     protected var dismissed = true
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -28,11 +29,14 @@ open class BaseModalFragment: BottomSheetDialogFragment() {
         }
         dismissed = false
     }
+
     override fun onStart() {
         super.onStart()
         val touchOutsideView = dialog?.window?.decorView?.findViewById<View>(com.google.android.material.R.id.touch_outside)
         touchOutsideView?.setOnClickListener {
-            it.hideKeyboard()
+            if(!it.hideKeyboard() && closeOnTouchOutside) {
+                dismiss()
+            }
         }
     }
 }

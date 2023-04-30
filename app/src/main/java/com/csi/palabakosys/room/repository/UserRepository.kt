@@ -4,7 +4,9 @@ import com.csi.palabakosys.room.dao.DaoUser
 import com.csi.palabakosys.room.entities.EntityUser
 import java.lang.Exception
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class UserRepository
 @Inject
 constructor (

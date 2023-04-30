@@ -4,7 +4,9 @@ import com.csi.palabakosys.app.customers.CustomerMinimal
 import com.csi.palabakosys.room.dao.DaoCustomer
 import com.csi.palabakosys.room.entities.EntityCustomer
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class CustomerRepository
 @Inject
 constructor (

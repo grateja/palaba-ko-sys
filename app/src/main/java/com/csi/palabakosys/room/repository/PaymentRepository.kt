@@ -4,7 +4,9 @@ import com.csi.palabakosys.room.dao.DaoJobOrderPayment
 import com.csi.palabakosys.room.entities.EntityJobOrderPayment
 import java.util.*
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class PaymentRepository
 @Inject
 constructor (

@@ -3,7 +3,9 @@ package com.csi.palabakosys.room.repository
 import com.csi.palabakosys.room.dao.DaoProduct
 import com.csi.palabakosys.room.entities.EntityProduct
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class ProductRepository
 @Inject
 constructor (

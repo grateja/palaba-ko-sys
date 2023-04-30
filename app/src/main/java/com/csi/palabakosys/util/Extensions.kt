@@ -80,7 +80,7 @@ fun setPeso(view: TextView, value: Float?) {
     }
 }
 
-fun View.hideKeyboard() {
+fun View.hideKeyboard() : Boolean {
     val imm = ContextCompat.getSystemService(context, InputMethodManager::class.java) as InputMethodManager
-    imm.hideSoftInputFromWindow(windowToken, 0)
+    return imm.hideSoftInputFromWindow(windowToken, 0)
 }

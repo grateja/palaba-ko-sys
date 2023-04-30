@@ -121,7 +121,7 @@ constructor(
     private fun serviceSubTotal() : Float {
         return jobOrderServices.value?.let {
             var result = 0f
-            if(it.size > 0) {
+            if(it.isNotEmpty()) {
                 result = it.map { s -> s.price * s.quantity } .reduce { sum, element ->
                     sum + element
                 }

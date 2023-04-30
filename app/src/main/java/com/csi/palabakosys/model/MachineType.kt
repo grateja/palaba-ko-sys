@@ -16,14 +16,14 @@ enum class MachineType(val value: String, val abbr: String, val serviceType: Ser
         R.drawable.icon_dryer
     ),
     TITAN_WASHER(
-        "10KG Washer",
-        "10KG",
+        "12KG Washer",
+        "12KG",
         ServiceType.DRY,
         R.drawable.icon_washer
     ),
     TITAN_DRYER(
-        "10KG Dryer",
-        "10KG",
+        "12KG Dryer",
+        "12KG",
         ServiceType.DRY,
         R.drawable.icon_dryer
     );

@@ -38,6 +38,13 @@
                 android:text="Remote"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+            <Button
+                android:id="@+id/btnIpSettings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="IP Settings"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </layout>
