@@ -1,24 +1,51 @@
 package com.csi.palabakosys.app.joborders.create.products
 
 import android.os.Parcelable
+import androidx.room.ColumnInfo
+import androidx.room.Ignore
 import com.csi.palabakosys.model.ProductType
 import com.csi.palabakosys.util.MeasureUnit
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
+import java.time.Instant
 import java.util.*
 
 @Parcelize
 class MenuProductItem(
-    val id: UUID,
+    var joProductItemId: UUID?,
+
+    @ColumnInfo(name = "id")
+    val productRefId: UUID,
+
     val name: String,
+
     val price: Float,
+
+    @ColumnInfo(name = "measure_unit")
     val measureUnit: MeasureUnit,
+
+    @ColumnInfo(name = "unit_per_serve")
     val unitPerServe: Float,
-    val productType: ProductType,
+
     var quantity: Int = 1,
+
+    @ColumnInfo(name = "current_stock")
+    var currentStock: Int,
+
+    @ColumnInfo(name = "product_type")
+    val productType: ProductType,
+
+    @ColumnInfo(name = "deleted_at")
+    var deletedAt: Instant? = null
 ) : Parcelable {
     @IgnoredOnParcel
+    @Ignore
     var selected = false
+
+    @IgnoredOnParcel
+    @Ignore
+    var errorMessage = ""
+
     fun serving() : String {
 
         return if(unitPerServe == 1f) { "" } else {

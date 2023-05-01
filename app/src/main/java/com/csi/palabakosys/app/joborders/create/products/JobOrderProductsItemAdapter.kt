@@ -17,9 +17,11 @@ class JobOrderProductsItemAdapter: RecyclerView.Adapter<JobOrderProductsItemAdap
     }
 
     private var list: MutableList<MenuProductItem> = mutableListOf()
+    private fun filtered(): List<MenuProductItem> {
+        return list.filter {it.deletedAt == null}
+    }
 
     var onItemClick: ((MenuProductItem) -> Unit) ? = null
-    var onDeleteRequest: ((MenuProductItem) -> Unit) ? = null
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -38,7 +40,7 @@ class JobOrderProductsItemAdapter: RecyclerView.Adapter<JobOrderProductsItemAdap
         holder: ViewHolder,
         position: Int
     ) {
-        val r = list[position]
+        val r = filtered()[position]
         holder.bind(r)
 
         holder.itemView.setOnClickListener {
@@ -47,7 +49,7 @@ class JobOrderProductsItemAdapter: RecyclerView.Adapter<JobOrderProductsItemAdap
     }
 
     override fun getItemCount(): Int {
-        return list.size
+        return filtered().size
     }
 
     fun setData(jobOrderProducts: MutableList<MenuProductItem>) {

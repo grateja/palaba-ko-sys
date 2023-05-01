@@ -14,6 +14,10 @@ class InputValidation {
         return errorList.isNotEmpty()
     }
 
+    fun getErrorList(): MutableList<ValidationError> {
+        return errorList
+    }
+
     private fun addError(validationError: ValidationError) {
         errorList.add(validationError)
         println("Add error")

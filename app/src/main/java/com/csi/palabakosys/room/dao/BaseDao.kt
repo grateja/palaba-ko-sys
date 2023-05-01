@@ -3,6 +3,7 @@ package com.csi.palabakosys.room.dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import com.csi.palabakosys.room.entities.BaseEntity
 
 interface BaseDao<T : BaseEntity> {

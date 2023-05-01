@@ -42,7 +42,9 @@ constructor(
     }
 
     fun getUser(id: String?) {
-        super.get(id, EntityUser(Role.STAFF))
+        viewModelScope.launch {
+            super.get(id, EntityUser(Role.STAFF))
+        }
     }
 
     fun saveUser(isAdmin: Boolean) {

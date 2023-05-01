@@ -8,6 +8,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.csi.palabakosys.BR
 import com.csi.palabakosys.R
+import com.csi.palabakosys.util.InputValidation
 import com.google.android.material.card.MaterialCardView
 
 class AvailableProductsAdapter : RecyclerView.Adapter<AvailableProductsAdapter.ViewHolder>() {
@@ -27,10 +28,27 @@ class AvailableProductsAdapter : RecyclerView.Adapter<AvailableProductsAdapter.V
 
     fun updateItem(product: MenuProductItem) {
         list.let {
-            it.find { s -> s.id == product.id }?.apply {
+            it.find { s -> s.productRefId == product.productRefId }?.apply {
                 selected = product.selected
                 quantity = product.quantity
                 notifyItemChanged(it.indexOf(this))
+            }
+        }
+    }
+
+    fun putError(validation: InputValidation) {
+        // clear error first
+        list.forEach {
+            if(it.errorMessage != "") {
+                it.errorMessage = ""
+                notifyItemChanged(list.indexOf(it))
+            }
+        }
+
+        validation.getErrorList().forEach { v ->
+            list.find { it.productRefId.toString() == v.key }?.let {
+                it.errorMessage = v.message
+                notifyItemChanged(list.indexOf(it))
             }
         }
     }

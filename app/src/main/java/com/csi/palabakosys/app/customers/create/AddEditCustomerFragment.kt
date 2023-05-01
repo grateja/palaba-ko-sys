@@ -19,16 +19,18 @@ class AddEditCustomerFragment : ModalFragment<CustomerMinimal?>() {
     private val viewModel: AddEditCustomerViewModel by viewModels()
     private lateinit var binding: FragmentAddEditCustomerBinding
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        super.onCreateDialog(savedInstanceState).apply {
-            setCanceledOnTouchOutside(false)
-        }
+//    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
+//        super.onCreateDialog(savedInstanceState).apply {
+//            setCanceledOnTouchOutside(false)
+//        }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        closeOnTouchOutside = false
+
         binding = FragmentAddEditCustomerBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner

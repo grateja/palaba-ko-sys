@@ -51,7 +51,7 @@ class JOSelectWashDryActivity : AppCompatActivity() {
 
     private fun itemClick(serviceItem: MenuServiceItem) {
         requestModifyQuantity(
-            QuantityModel(serviceItem.serviceId, serviceItem.abbr(), serviceItem.quantity, QuantityModel.TYPE_SERVICE)
+            QuantityModel(serviceItem.serviceRefId, serviceItem.abbr(), serviceItem.quantity, QuantityModel.TYPE_SERVICE)
         )
     }
 

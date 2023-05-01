@@ -12,6 +12,7 @@ class DatabaseSeeder(val db: MainDatabase) {
             WashServicesSeeder(db.daoWashService()).seed()
             ExtrasSeeder(db.daoExtras()).seed()
             MachinesSeeder(db.daoMachine()).seed()
+            ProductsSeeder(db.daoProduct()).seed()
         }
     }
 }

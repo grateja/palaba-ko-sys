@@ -65,6 +65,8 @@ class JobOrderCreateActivity : AppCompatActivity() {
 
         productsLauncher.onOk = {
             val result = it.data?.getParcelableArrayListExtra<MenuProductItem>("products")?.toList()
+            println("removed items")
+            println(result?.size)
             viewModel.syncProducts(result)
         }
 

@@ -19,12 +19,15 @@ constructor(
     private val repository: CustomerRepository
 ) : CreateViewModel<EntityCustomer>(repository)
 {
+    private var originalName: String? = null
     fun get(id: String?) {
         model.value.let {
             if(it != null) return
             viewModelScope.launch {
                 val crn = repository.getNextJONumber()
-                super.get(id, EntityCustomer(crn))
+                super.get(id, EntityCustomer(crn)).let { customer ->
+                    originalName = customer.name
+                }
             }
         }
     }
@@ -33,12 +36,21 @@ constructor(
         model.value?.let {
             val inputValidation = InputValidation()
             inputValidation.addRules("name", it.name.toString(), arrayOf(Rule.REQUIRED))
-            if(inputValidation.isInvalid()) {
-                validation.value = inputValidation
-                return@let
-            }
 
             viewModelScope.launch {
+                println("name")
+                println(originalName)
+                println(it.name)
+                println("----")
+                println(originalName)
+                println(it.hashCode())
+                if(originalName != it.name &&  repository.checkName(it.name)) {
+                    inputValidation.addError("name", "Name already taken. Please specify more details")
+                }
+                if(inputValidation.isInvalid()) {
+                    validation.value = inputValidation
+                    return@launch
+                }
                 repository.save(it)?.let { customer ->
                     model.value = customer
                     dataState.value = DataState.Success(customer)

@@ -1,5 +1,6 @@
 package com.csi.palabakosys.room.repository
 
+import com.csi.palabakosys.app.joborders.create.products.MenuProductItem
 import com.csi.palabakosys.room.dao.DaoProduct
 import com.csi.palabakosys.room.entities.EntityProduct
 import javax.inject.Inject
@@ -19,5 +20,9 @@ constructor (
 
     suspend fun getAll() : List<EntityProduct> {
         return daoProduct.getAll()
+    }
+
+    suspend fun menuItems() : List<MenuProductItem> {
+        return daoProduct.menuItems()
     }
 }

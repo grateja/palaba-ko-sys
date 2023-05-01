@@ -11,9 +11,6 @@ data class EntityJobOrderService(
     @ColumnInfo(name = "job_order_id")
     var jobOrderId: UUID?,
 
-//    @ColumnInfo(name = "machine_type")
-//    var machineType: MachineType?,
-//
     @ColumnInfo(name = "service_id")
     var serviceId: UUID,
 
@@ -26,6 +23,9 @@ data class EntityJobOrderService(
     @ColumnInfo(name = "quantity")
     var quantity: Int,
 
+    @ColumnInfo(name = "used")
+    var used: Int = 0,
+
     @Embedded
     var serviceRef: EntityServiceRef,
 
@@ -33,11 +33,9 @@ data class EntityJobOrderService(
     @ColumnInfo
     val uuid: UUID? = null
 ) : BaseEntity(uuid) {
-    constructor(jobOrderId: UUID?, serviceId: UUID, serviceName: String, price: Float, quantity: Int, serviceRef: EntityServiceRef) :
-            this(jobOrderId, serviceId, serviceName, price, quantity, serviceRef, null)
+    constructor(jobOrderId: UUID?, serviceId: UUID, serviceName: String, price: Float, quantity: Int, used: Int, serviceRef: EntityServiceRef) :
+            this(jobOrderId, serviceId, serviceName, price, quantity, used, serviceRef, null)
 
-    @ColumnInfo(name = "used")
-    var used: Int = 0
 
 //    @ColumnInfo(name = "cash_back")
 //    var cashBack: Float = 0f

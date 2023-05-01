@@ -37,7 +37,7 @@ class RemotePanelFragment : Fragment() {
 
 
     private fun subscribeObservers() {
-        binding.tabMachineType.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener{
+        binding.inclTab.tabMachineType.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener{
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 viewModel.setMachineType(tab?.text.toString())
             }

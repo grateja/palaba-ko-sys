@@ -18,4 +18,7 @@ abstract class DaoCustomer : BaseDao<EntityCustomer> {
 
     @Query("SELECT id, crn, name, address FROM customers WHERE name LIKE '%' || :keyword || '%' OR crn like '%' || :keyword || '%' ORDER BY name")
     abstract suspend fun getCustomersMinimal(keyword: String?): List<CustomerMinimal>
+
+    @Query("SELECT EXISTS(SELECT * FROM customers WHERE name LIKE :name)")
+    abstract suspend fun checkName(name: String?): Boolean
 }

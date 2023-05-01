@@ -18,7 +18,9 @@ constructor(
 ) : CreateViewModel<EntityProduct>(repository)
 {
     fun get(id: String?) {
-        super.get(id, EntityProduct())
+        viewModelScope.launch {
+            super.get(id, EntityProduct())
+        }
     }
 
     fun save() {

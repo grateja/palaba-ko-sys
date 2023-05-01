@@ -8,6 +8,7 @@ import com.csi.palabakosys.room.repository.IRepository
 import com.csi.palabakosys.util.CRUDActionEnum
 import com.csi.palabakosys.util.DataState
 import com.csi.palabakosys.util.InputValidation
+import com.google.gson.Gson
 import kotlinx.coroutines.launch
 
 open class CreateViewModel<T : BaseEntity> (private val iRepository: IRepository<T>) : ViewModel() {
@@ -28,13 +29,13 @@ open class CreateViewModel<T : BaseEntity> (private val iRepository: IRepository
         dataState.value = DataState.StateLess
     }
 
-    protected fun get(id: String?, initialModel: T) {
+    protected suspend fun get(id: String?, initialModel: T) : T {
         model.value.let { it ->
-            if(it != null) return
+            if(it != null) return it
             if(id == null) {
-                model.value = initialModel
+                return initialModel
             }
-            viewModelScope.launch {
+//            viewModelScope.launch {
                 iRepository.get(id).let { t->
                     if(t == null) {
                         crudActionEnum.value = CRUDActionEnum.CREATE
@@ -43,8 +44,10 @@ open class CreateViewModel<T : BaseEntity> (private val iRepository: IRepository
                         crudActionEnum.value = CRUDActionEnum.UPDATE
                         model.value = t
                     }
+
+                    return t?:initialModel
                 }
-            }
+//            }
         }
     }
 }

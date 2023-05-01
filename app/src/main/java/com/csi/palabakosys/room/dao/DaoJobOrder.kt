@@ -15,14 +15,17 @@ interface DaoJobOrder {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertJobOrderProduct(entityJobOrderProduct: List<EntityJobOrderProduct>)
 
-    @Query("UPDATE products SET current_stock = current_stock - :quantity WHERE id = :id")
-    fun reduceProducts(quantity: Int, id: String)
+//    @Query("UPDATE products SET current_stock = current_stock - :quantity WHERE id = :id")
+//    fun reduceProducts(quantity: Int, id: String)
 
     @Delete
     fun deleteProducts(products: List<EntityJobOrderProduct>)
 
     @Delete
     fun deleteServices(services: List<EntityJobOrderService>)
+
+    @Query("UPDATE products SET current_stock = current_stock - COALESCE((SELECT (:newQuantity - quantity) FROM job_order_products WHERE id = :joProductId), :newQuantity) WHERE id = :productId")
+    fun updateQuantity(productId: String?, joProductId: String?, newQuantity: Int)
 
     @Transaction
     suspend fun save(entityJobOrderWithItems: EntityJobOrderWithItems) {
@@ -32,15 +35,16 @@ interface DaoJobOrder {
             insertJobOrderService(it)
         }
         entityJobOrderWithItems.products?.let {
+            it.forEach { jop ->
+                updateQuantity(jop.productId.toString(), jop.id.toString(), jop.quantity)
+            }
             insertJobOrderProduct(it)
+//            deleteProducts(it.filter { p -> p.deletedAt != null })
         }
 
-        entityJobOrderWithItems.products?.forEach {
-            reduceProducts(it.quantity, it.productId.toString())
-        }
-
-//        deleteProducts(entityJobOrderWithItems.products.filter{ it.deletedAt != null })
-//        deleteServices(entityJobOrderWithItems.services.filter{ it.deletedAt != null })
+//        entityJobOrderWithItems.products?.forEach {
+//            reduceProducts(it.quantity, it.productId.toString())
+//        }
     }
 
     @Transaction

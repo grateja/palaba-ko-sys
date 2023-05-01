@@ -26,6 +26,10 @@ constructor (
         return (currentCRN + 1).toString().padStart(6, '0')
     }
 
+    suspend fun checkName(name: String?) : Boolean {
+        return daoCustomer.checkName(name)
+    }
+
     suspend fun getCustomersMinimal(keyword: String?): List<CustomerMinimal> {
         return daoCustomer.getCustomersMinimal(keyword)
     }

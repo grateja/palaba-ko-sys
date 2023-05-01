@@ -25,29 +25,6 @@ constructor(
 
     private fun loadServices() {
         viewModelScope.launch {
-//            val services = listOf(
-//                MenuServiceItem(UUID.fromString("b5d4ce14-a701-11ed-afa1-0242ac120002") , "Hot Wash", 46, 90f, MachineType.REGULAR_WASHER, WashType.HOT),
-//                MenuServiceItem(UUID.fromString("b5d4ce14-a701-11ed-afa1-0242ac120003"), "Warm Wash", 36, 70f, MachineType.REGULAR_WASHER, WashType.WARM),
-//                MenuServiceItem(UUID.fromString("b5d4ce14-a701-11ed-afa1-0242ac120004"), "Delicate Wash", 21, 40f, MachineType.REGULAR_WASHER, WashType.DELICATE),
-//                MenuServiceItem(UUID.fromString("b5d4ce14-a701-11ed-afa1-0242ac120005"), "Super Wash", 47, 100f, MachineType.REGULAR_WASHER, WashType.SUPER_WASH),
-//                MenuServiceItem(UUID.fromString("b5d4ce14-a701-11ed-afa1-0242ac120006"), "Regular Dry", 40, 70f, MachineType.REGULAR_DRYER, null),
-//                MenuServiceItem(UUID.fromString("b5d4ce14-a701-11ed-afa1-0242ac120007"), "Additional Dry", 10, 20f, MachineType.REGULAR_DRYER, null),
-//                MenuServiceItem(UUID.fromString("b5d4ce14-a701-11ed-afa1-0242ac120008"), "Hot Wash", 46, 100f, MachineType.TITAN_WASHER, WashType.HOT),
-//                MenuServiceItem(UUID.fromString("b5d4ce14-a701-11ed-afa1-0242ac120009"), "Warm Wash", 36, 90f, MachineType.TITAN_WASHER, WashType.WARM),
-//                MenuServiceItem(UUID.fromString("b5d4ce14-a701-11ed-afa1-0242ac120010"), "Delicate Wash", 21, 60f, MachineType.TITAN_WASHER, WashType.DELICATE),
-//                MenuServiceItem(UUID.fromString("b5d4ce14-a701-11ed-afa1-0242ac120011"), "Super Wash", 47, 120f, MachineType.TITAN_WASHER, WashType.SUPER_WASH),
-//                MenuServiceItem(UUID.fromString("b5d4ce14-a701-11ed-afa1-0242ac120012"), "Regular Dry", 40, 90f, MachineType.TITAN_DRYER, null),
-//                MenuServiceItem(UUID.fromString("b5d4ce14-a701-11ed-afa1-0242ac120013"), "Additional Dry", 10, 25f, MachineType.TITAN_DRYER, null),
-//            )
-//            serviceRepository.save(
-//                EntityServiceWash().apply {
-//                    name = "Hot Wash"
-//                    minutes = 46
-//                    price = 90f
-//                    machineType = MachineType.REGULAR_WASHER
-//                    washType = WashType.HOT
-//                }
-//            )
             availableServices.value = serviceRepository.getAll()
         }
     }
@@ -57,13 +34,13 @@ constructor(
         println(availableServices.value)
         services?.forEach { msi ->
             println("msi id")
-            println(msi.serviceId)
+            println(msi.serviceRefId)
             availableServices.value?.find {
                 println("sid")
-                println(it.serviceId)
-                msi.serviceId.toString() == it.serviceId.toString()
+                println(it.serviceRefId)
+                msi.serviceRefId.toString() == it.serviceRefId.toString()
             }?.apply {
-                this.entityId = msi.entityId
+                this.joServiceItemId = msi.joServiceItemId
                 this.selected = true
                 this.quantity = msi.quantity
                 this.used = msi.used
@@ -72,7 +49,7 @@ constructor(
     }
 
     fun putService(quantityModel: QuantityModel) {
-        val service = availableServices.value?.find { it.serviceId == quantityModel.id }?.apply {
+        val service = availableServices.value?.find { it.serviceRefId == quantityModel.id }?.apply {
             println("used")
             println(used)
 
@@ -89,8 +66,8 @@ constructor(
     }
 
     fun removeService(service: QuantityModel) {
-        val item = availableServices.value?.find { it.serviceId == service.id }?.apply {
-            if(this.entityId != null) {
+        val item = availableServices.value?.find { it.serviceRefId == service.id }?.apply {
+            if(this.joServiceItemId != null) {
                 dataState.value = DataState.InvalidOperation("Cannot remove saved service")
                 return
             }

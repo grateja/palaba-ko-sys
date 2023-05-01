@@ -36,18 +36,28 @@ class SelectCustomerActivity : AppCompatActivity() {
 
     private fun subscribeEvents() {
         binding.buttonCreateNew.setOnClickListener {
-            customerModal = AddEditCustomerFragment.getInstance(null)
-            customerModal.show(supportFragmentManager, "KEME")
-            customerModal.onOk = {
-                openCreateJobOrderActivity(it!!)
-            }
+            selectCustomer(null)
+//            customerModal = AddEditCustomerFragment.getInstance(null)
+//            customerModal.show(supportFragmentManager, "KEME")
+//            customerModal.onOk = {
+//                openCreateJobOrderActivity(it!!)
+//            }
         }
         customersAdapter.onItemClick = {
-            openCreateJobOrderActivity(it)
+            selectCustomer(it.id.toString())
+            //openCreateJobOrderActivity(it)
         }
         viewModel.customers.observe(this, Observer {
             customersAdapter.setData(it)
         })
+    }
+
+    private fun selectCustomer(customerId: String?) {
+        customerModal = AddEditCustomerFragment.getInstance(customerId)
+        customerModal.show(supportFragmentManager, "KEME")
+        customerModal.onOk = {
+            openCreateJobOrderActivity(it!!)
+        }
     }
 
     private fun openCreateJobOrderActivity(customer: CustomerMinimal) {

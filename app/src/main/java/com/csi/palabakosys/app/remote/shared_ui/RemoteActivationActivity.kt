@@ -31,31 +31,25 @@ class RemoteActivationActivity : AppCompatActivity() {
         subscribeObservers()
     }
 
+    private fun navigate(destination: Int) {
+        if(navHostController.currentDestination?.id != destination) {
+            navHostController.navigate(destination)
+        }
+    }
+
     private fun subscribeObservers() {
         viewModel.machine.observe(this, Observer {
-            println("worker id")
-            println(it.workerId)
             if(it.workerId == null) {
-                navHostController.navigate(R.id.remote_customerFragment)
+                navigate(R.id.remote_customerFragment)
             } else {
-                navHostController.navigate(R.id.remote_activateFragment)
+                navigate(R.id.remote_activateFragment)
             }
         })
         viewModel.customerQueue.observe(this, Observer {
-            navHostController.navigate(R.id.remote_queuesFragment)
+            navigate(R.id.remote_queuesFragment)
         })
         viewModel.service.observe(this, Observer {
-            navHostController.navigate(R.id.remote_activateFragment)
+            navigate(R.id.remote_activateFragment)
         })
-//        viewModel.dataState.observe(this, Observer {
-//            when(it){
-//                is RemoteActivationViewModel.DataState.ActivateRequest -> {
-//                    navHostController.popBackStack(R.id.remotePanelFragment, false)
-//                }
-//                is RemoteActivationViewModel.DataState.Invalidate -> {
-//                    Toast.makeText(applicationContext, it.message, Toast.LENGTH_LONG).show()
-//                }
-//            }
-//        })
     }
 }

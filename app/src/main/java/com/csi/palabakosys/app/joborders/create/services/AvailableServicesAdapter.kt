@@ -28,7 +28,7 @@ class AvailableServicesAdapter : RecyclerView.Adapter<AvailableServicesAdapter.V
 
     fun updateItem(service: MenuServiceItem) {
         list.let {
-            it.find { s -> s.serviceId == service.serviceId }?.apply {
+            it.find { s -> s.serviceRefId == service.serviceRefId }?.apply {
                 selected = service.selected
                 quantity = service.quantity
                 notifyItemChanged(it.indexOf(this))

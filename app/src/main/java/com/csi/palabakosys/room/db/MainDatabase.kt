@@ -31,7 +31,7 @@ import com.csi.palabakosys.util.*
     EntityInventoryLog::class,
     EntityDiscount::class,
     EntityCashlessProvider::class
-], version = 4)
+], version = 5)
 @TypeConverters(
     InstantConverters::class,
     UUIDConverter::class,

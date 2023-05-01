@@ -31,7 +31,6 @@ class JOSelectProductsActivity : AppCompatActivity() {
 
         subscribeEvents()
 
-        viewModel.setPreselectedProducts(intent.getParcelableArrayListExtra<MenuProductItem?>("products")?.toList())
         intent.getParcelableExtra<MenuProductItem>("product")?.let {
             itemClick(it)
         }
@@ -47,6 +46,7 @@ class JOSelectProductsActivity : AppCompatActivity() {
         }
         viewModel.availableProducts.observe(this, Observer {
             productsAdapter.setData(it)
+            viewModel.setPreselectedProducts(intent.getParcelableArrayListExtra<MenuProductItem?>("products")?.toList())
         })
 
         viewModel.dataState.observe(this, Observer {
@@ -59,22 +59,24 @@ class JOSelectProductsActivity : AppCompatActivity() {
                     submit(it.productItems)
                     viewModel.resetState()
                 }
+                is AvailableProductsViewModel.DataState.Invalidate -> {
+                    productsAdapter.putError(it.inputValidation)
+                    viewModel.resetState()
+                }
             }
         })
     }
 
     private fun itemClick(productItem: MenuProductItem) {
         requestModifyQuantity(
-            QuantityModel(productItem.id, productItem.name, productItem.quantity, QuantityModel.TYPE_PRODUCT)
+            QuantityModel(productItem.productRefId, productItem.name, productItem.quantity, QuantityModel.TYPE_PRODUCT)
         )
     }
 
     private fun requestModifyQuantity(quantityModel: QuantityModel) {
         modifyQuantityDialog = ModifyQuantityModalFragment.getInstance(quantityModel).apply {
             onOk = {
-                if (it.type == QuantityModel.TYPE_PRODUCT) {
-                    viewModel.putProduct(it)
-                }
+                viewModel.putProduct(it)
             }
             onItemRemove = {
                 viewModel.removeProduct(it)

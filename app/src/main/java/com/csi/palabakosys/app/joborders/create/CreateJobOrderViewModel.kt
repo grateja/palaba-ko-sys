@@ -15,6 +15,7 @@ import com.csi.palabakosys.room.entities.*
 import com.csi.palabakosys.room.repository.JobOrderRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 
@@ -67,7 +68,7 @@ constructor(
     }
     val hasProducts = MediatorLiveData<Boolean>().apply {
         fun update() {
-            value = jobOrderProducts.value?.size!! > 0
+            value = jobOrderProducts.value?.filter { it.deletedAt == null }?.size!! > 0
         }
         addSource(jobOrderProducts) { update() }
     }
@@ -174,6 +175,14 @@ constructor(
                             MenuServiceItem(joSvc.id, joSvc.serviceId, joSvc.serviceName, joSvc.serviceRef.minutes, joSvc.price, joSvc.serviceRef.machineType, joSvc.serviceRef.washType, joSvc.quantity, joSvc.used)
                         }
                     }
+                    it.products.let { products ->
+                        jobOrderProducts.value = products?.map { joPrd ->
+                            MenuProductItem(joPrd.id, joPrd.productId, joPrd.productName, joPrd.price, joPrd.measureUnit, joPrd.unitPerServe, joPrd.quantity, 0, joPrd.productType).apply {
+                                selected = true
+                                deletedAt = joPrd.deletedAt
+                            }
+                        }?.toMutableList()
+                    }
                 } else {
                     jobOrderNumber.value = jobOrderRepository.getNextJONumber()
                     println("JOB ORDER ID IF NOT NULL")
@@ -243,12 +252,15 @@ constructor(
                 id = jobOrderId.value!!
             }
             val services = jobOrderServices.value?.map {
-                EntityJobOrderService(jobOrder.id, it.serviceId, it.name, it.price, it.quantity, EntityServiceRef(it.machineType, it.washType, it.minutes), it.entityId)
+                EntityJobOrderService(jobOrder.id, it.serviceRefId, it.name, it.price, it.quantity, it.used, EntityServiceRef(it.machineType, it.washType, it.minutes), it.joServiceItemId)
             }
             val products = jobOrderProducts.value?.map {
-                EntityJobOrderProduct(jobOrder.id, it.productType, it.id, it.name, it.price, it.quantity)
+                EntityJobOrderProduct(jobOrder.id, it.productRefId, it.name, it.price, it.measureUnit, it.unitPerServe, it.quantity, it.productType, it.joProductItemId).apply {
+                    deletedAt = it.deletedAt
+                }
             }
             val jobOrderWithItem = EntityJobOrderWithItems(jobOrder, services, products)
+
             jobOrderRepository.save(jobOrderWithItem)
             _dataState.value = DataState.SaveSuccess
         }
