@@ -7,10 +7,13 @@ import com.csi.palabakosys.model.DiscountApplicable
 //import com.csi.palabakosys.model.DiscountTypeEnum
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
+import java.time.Instant
+import java.util.*
 
 @Parcelize
 data class MenuDiscount(
-    val id: String,
+    @ColumnInfo(name = "id")
+    val discountRefId: UUID?,
     val name: String,
     val percentage: Float,
 
@@ -19,6 +22,9 @@ data class MenuDiscount(
 
     @ColumnInfo(name = "applicable_to")
     val applicableToIds: String,
+
+    @ColumnInfo(name = "deleted_at")
+    var deletedAt: Instant?
 ) : Parcelable {
     @Ignore
     @IgnoredOnParcel

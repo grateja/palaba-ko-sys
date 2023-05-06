@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.csi.palabakosys.app.customers.CustomerMinimal
 import com.csi.palabakosys.app.joborders.create.delivery.DeliveryCharge
-import com.csi.palabakosys.app.joborders.create.delivery.MenuDeliveryProfile
 import com.csi.palabakosys.app.joborders.create.discount.MenuDiscount
 import com.csi.palabakosys.app.joborders.create.extras.MenuExtrasItem
 import com.csi.palabakosys.app.joborders.create.products.MenuProductItem
@@ -81,13 +80,17 @@ constructor(
     }
     val hasDelivery = MediatorLiveData<Boolean>().apply {
         fun update() {
-            value = deliveryCharge.value != null
+            value = deliveryCharge.value.let {
+                it != null && it.deletedAt == null
+            }
         }
         addSource(deliveryCharge) { update() }
     }
     val hasDiscount = MediatorLiveData<Boolean>().apply {
         fun update() {
-            value = discount.value != null
+            value = discount.value.let {
+                it != null && it.deletedAt == null
+            }
         }
         addSource(discount) { update() }
     }
@@ -202,8 +205,21 @@ constructor(
                             entity.distance,
                             entity.deliveryOption,
                             entity.price,
-//                            entity.id
-                        )
+                            entity.deletedAt
+                        ).apply {
+                            deletedAt = entity.deletedAt
+                        }
+                    }
+                    it.discount?.let { entity ->
+                        discount.value = MenuDiscount(
+                            entity.discountId,
+                            entity.name,
+                            entity.percentage,
+                            entity.applicableToIds,
+                            entity.deletedAt
+                        ).apply {
+                            selected = entity.deletedAt != null
+                        }
                     }
                 } else {
                     jobOrderNumber.value = jobOrderRepository.getNextJONumber()
@@ -227,11 +243,22 @@ constructor(
     }
 
     fun setDeliveryCharge(deliveryCharge: DeliveryCharge?) {
+        if(deliveryCharge == null) {
+            this.deliveryCharge.value = this.deliveryCharge.value?.apply {
+                 this.deletedAt = Instant.now()
+            }
+        }
         this.deliveryCharge.value = deliveryCharge
     }
 
     fun applyDiscount(discount: MenuDiscount?) {
-        this.discount.value = discount
+        if(discount == null) {
+            this.discount.value = this.discount.value?.apply {
+                this.deletedAt = Instant.now()
+            }
+        } else {
+            this.discount.value = discount
+        }
     }
 
     fun openServices(itemPreset: MenuServiceItem?) {
@@ -289,10 +316,14 @@ constructor(
                 }
             }
             val delivery = deliveryCharge.value?.let {
-                EntityJobOrderDeliveryCharge(it.deliveryProfileId, it.vehicle, it.deliveryOption, it.price, it.distance, jobOrder.id)
+                EntityJobOrderDeliveryCharge(it.deliveryProfileId, it.vehicle, it.deliveryOption, it.price, it.distance, jobOrder.id).apply {
+                    deletedAt = it.deletedAt
+                }
             }
             val discount = discount.value?.let {
-                EntityJobOrderDiscount(it.name, it.percentage, it.applicableToIds, jobOrder.id)
+                EntityJobOrderDiscount(it.discountRefId, it.name, it.percentage, it.applicableToIds, jobOrder.id).apply {
+                    deletedAt = it.deletedAt
+                }
             }
             val jobOrderWithItem = EntityJobOrderWithItems(jobOrder, services, extras, products, delivery, discount)
 

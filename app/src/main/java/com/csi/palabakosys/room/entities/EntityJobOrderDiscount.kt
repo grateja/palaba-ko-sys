@@ -6,8 +6,8 @@ import java.util.*
 
 @Entity(tableName = "job_order_discounts")
 data class EntityJobOrderDiscount(
-//    @ColumnInfo(name = "job_order_id")
-//    val jobOrderId: UUID?,
+    @ColumnInfo(name = "discount_id")
+    val discountId: UUID?,
 
     val name: String,
 

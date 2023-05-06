@@ -29,7 +29,7 @@ class DiscountsAdapter : RecyclerView.Adapter<DiscountsAdapter.ViewHolder>() {
         deselectAll()
         discount?.let { _discount ->
             list.let {
-                it.find { s -> s.id == _discount.id }?.apply {
+                it.find { s -> s.discountRefId == _discount.discountRefId }?.apply {
                     selected = true
                     notifyItemChanged(it.indexOf(this))
                 }

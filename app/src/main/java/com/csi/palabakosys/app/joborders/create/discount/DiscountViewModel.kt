@@ -3,7 +3,6 @@ package com.csi.palabakosys.app.joborders.create.discount
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.csi.palabakosys.model.DiscountApplicable
 //import com.csi.palabakosys.model.DiscountTypeEnum
 import com.csi.palabakosys.room.repository.DiscountsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,7 +26,7 @@ constructor(
                 it.selected = false
             }
         }
-        this.discount.value = discounts.value?.find { it.id == discount?.id }?.apply {
+        this.discount.value = discounts.value?.find { it.discountRefId == discount?.discountRefId }?.apply {
             selected = true
         }
     }

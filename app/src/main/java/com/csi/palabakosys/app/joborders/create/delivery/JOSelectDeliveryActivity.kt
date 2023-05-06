@@ -27,8 +27,10 @@ class JOSelectDeliveryActivity : AppCompatActivity() {
     private fun subscribeEvents() {
         viewModel.deliveryProfiles.observe(this, Observer {
             deliveryVehiclesAdapter.setData(it)
-            intent.getParcelableExtra<DeliveryCharge>("deliveryCharge")?.let {
-                viewModel.setDeliveryCharge(it)
+            intent.getParcelableExtra<DeliveryCharge>("deliveryCharge")?.let { deliveryCharge ->
+                if(deliveryCharge.deletedAt == null) {
+                    viewModel.setDeliveryCharge(deliveryCharge)
+                }
             }
         })
 
@@ -51,7 +53,7 @@ class JOSelectDeliveryActivity : AppCompatActivity() {
 
         binding.buttonRemove.setOnClickListener {
             setResult(RESULT_OK, Intent().apply {
-                putExtra("deliveryCharge", "")
+                putExtra("deliveryCharge", viewModel.prepareDeliveryCharge(true))
             })
             finish()
         }
@@ -62,7 +64,7 @@ class JOSelectDeliveryActivity : AppCompatActivity() {
             onOk = {
 //                viewModel.selectDeliveryProfile(it)
                 setResult(RESULT_OK, Intent().apply {
-                    putExtra("deliveryCharge", viewModel.prepareDeliveryCharge())
+                    putExtra("deliveryCharge", viewModel.prepareDeliveryCharge(false))
                 })
                 finish()
             }

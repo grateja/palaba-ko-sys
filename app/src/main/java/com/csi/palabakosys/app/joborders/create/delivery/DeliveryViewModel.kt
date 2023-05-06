@@ -8,6 +8,7 @@ import com.csi.palabakosys.model.DeliveryOption
 import com.csi.palabakosys.room.repository.DeliveryProfilesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.time.Instant
 import java.util.*
 import javax.inject.Inject
 
@@ -35,7 +36,7 @@ constructor(
         this.profile.value = deliveryProfiles.value?.find { it.deliveryProfileRefId == profileId }
     }
 
-    fun prepareDeliveryCharge() : DeliveryCharge? {
+    fun prepareDeliveryCharge(delete: Boolean) : DeliveryCharge? {
 //        return DeliveryCharge(profile.value!!, distance.value!!, deliveryOption.value!!)
         val option = this.deliveryOption.value
         val distance = this.distance.value
@@ -44,7 +45,8 @@ constructor(
             return null
         }
         val price = option.charge * ((profile.pricePerKm * distance) + profile.baseFare)
-        return DeliveryCharge(profile.deliveryProfileRefId, profile.vehicle, distance, option, price)
+        val deletedAt = if(delete) { Instant.now() } else { null }
+        return DeliveryCharge(profile.deliveryProfileRefId, profile.vehicle, distance, option, price, deletedAt)
     }
 
     fun setDeliveryOption(deliveryOption: DeliveryOption) {

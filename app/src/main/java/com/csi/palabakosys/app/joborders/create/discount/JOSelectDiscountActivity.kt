@@ -23,15 +23,16 @@ class JOSelectDiscountActivity : AppCompatActivity() {
 
         subscribeEvents()
         viewModel.loadDiscounts()
-
-        intent.getParcelableExtra<MenuDiscount>("discount")?.let {
-            viewModel.setDiscount(it)
-        }
     }
 
     private fun subscribeEvents() {
         viewModel.discounts.observe(this, Observer {
             adapter.setData(it)
+            intent.getParcelableExtra<MenuDiscount>("discount")?.let { discount ->
+                if(discount.deletedAt == null) {
+                    viewModel.setDiscount(discount)
+                }
+            }
         })
 
         adapter.onItemClick = {
