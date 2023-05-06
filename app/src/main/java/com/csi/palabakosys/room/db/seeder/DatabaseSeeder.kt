@@ -13,6 +13,8 @@ class DatabaseSeeder(val db: MainDatabase) {
             ExtrasSeeder(db.daoExtras()).seed()
             MachinesSeeder(db.daoMachine()).seed()
             ProductsSeeder(db.daoProduct()).seed()
+            DeliveryProfileSeeder(db.daoDeliveryProfile()).seed()
+            DiscountsSeeder(db.daoDiscount()).seed()
         }
     }
 }

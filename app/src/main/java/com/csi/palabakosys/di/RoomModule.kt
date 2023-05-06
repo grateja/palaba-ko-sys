@@ -49,11 +49,11 @@ object RoomModule {
 //    fun provideDaoDryService(mainDatabase: MainDatabase) : DaoDryService {
 //        return mainDatabase.daoDryService()
 //    }
-    @Singleton
-    @Provides
-    fun provideDaoOtherService(mainDatabase: MainDatabase) : DaoOtherService {
-        return mainDatabase.daoOtherService()
-    }
+//    @Singleton
+//    @Provides
+//    fun provideDaoOtherService(mainDatabase: MainDatabase) : DaoOtherService {
+//        return mainDatabase.daoOtherService()
+//    }
     @Singleton
     @Provides
     fun provideDaoExtras(mainDatabase: MainDatabase) : DaoExtras {
@@ -63,6 +63,11 @@ object RoomModule {
     @Provides
     fun provideDaoProduct(mainDatabase: MainDatabase) : DaoProduct {
         return mainDatabase.daoProduct()
+    }
+    @Singleton
+    @Provides
+    fun provideDaoDeliveryProfile(mainDatabase: MainDatabase) : DaoDeliveryProfile {
+        return mainDatabase.daoDeliveryProfile()
     }
     @Singleton
     @Provides

@@ -25,8 +25,12 @@ constructor(
             if(it != null) return
             viewModelScope.launch {
                 val crn = repository.getNextJONumber()
+                println("CRN")
+                println(crn)
                 super.get(id, EntityCustomer(crn)).let { customer ->
                     originalName = customer.name
+                    println("name")
+                    println(customer.name)
                 }
             }
         }

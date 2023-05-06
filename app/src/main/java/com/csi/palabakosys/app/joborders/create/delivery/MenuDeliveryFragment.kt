@@ -30,11 +30,11 @@ class MenuDeliveryFragment : Fragment(R.layout.fragment_menu_delivery) {
     private fun subscribeEvents() {
 //        deliveryVehiclesAdapter.setData(deliveryViewModel.deliveryProfiles)
         deliveryVehiclesAdapter.onItemClick = {
-            deliveryViewModel.setDeliveryProfile(it)
+            deliveryViewModel.setDeliveryProfile(it.deliveryProfileRefId)
             showOptions()
         }
         viewModel.deliveryCharge.observe(viewLifecycleOwner, Observer {
-            deliveryVehiclesAdapter.notifySelection(it?.deliveryProfile)
+            deliveryVehiclesAdapter.notifySelection(it?.deliveryProfileId)
         })
     }
 

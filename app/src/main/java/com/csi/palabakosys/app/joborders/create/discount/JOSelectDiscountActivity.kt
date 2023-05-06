@@ -8,7 +8,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
 import com.csi.palabakosys.databinding.ActivityJoSelectDiscountBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class JOSelectDiscountActivity : AppCompatActivity() {
     private lateinit var binding: ActivityJoSelectDiscountBinding
     private val viewModel: DiscountViewModel by viewModels()

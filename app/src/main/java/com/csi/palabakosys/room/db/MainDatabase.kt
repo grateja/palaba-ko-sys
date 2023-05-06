@@ -20,11 +20,15 @@ import com.csi.palabakosys.util.*
     EntityService::class,
 //    EntityServiceDry::class,
     EntityExtras::class,
-    EntityServiceOther::class,
+    EntityDeliveryProfile::class,
+//    EntityServiceOther::class,
     EntityProduct::class,
     EntityJobOrder::class,
     EntityJobOrderService::class,
     EntityJobOrderProduct::class,
+    EntityJobOrderExtras::class,
+    EntityJobOrderDeliveryCharge::class,
+    EntityJobOrderDiscount::class,
     EntityJobOrderPayment::class,
     EntityCustomer::class,
     EntityExpense::class,
@@ -38,7 +42,12 @@ import com.csi.palabakosys.util.*
     RoleConverter::class,
     WashTypeConverter::class,
     MachineTypeConverter::class,
-    PaymentMethodConverter::class)
+    PaymentMethodConverter::class,
+    DeliveryVehicleConverter::class,
+    DeliveryOptionConverter::class,
+//    DiscountApplicableConverter::class,
+//    DiscountTypeConverter::class,
+)
 abstract class MainDatabase : RoomDatabase() {
     abstract fun daoUser() : DaoUser
     abstract fun daoShop() : DaoShop
@@ -46,9 +55,10 @@ abstract class MainDatabase : RoomDatabase() {
     abstract fun daoMachineRemarks() : DaoMachineRemarks
     abstract fun daoMachineUsage() : DaoMachineUsage
     abstract fun daoWashService() : DaoService
+    abstract fun daoDeliveryProfile() : DaoDeliveryProfile
 //    abstract fun daoDryService() : DaoDryService
     abstract fun daoExtras() : DaoExtras
-    abstract fun daoOtherService() : DaoOtherService
+//    abstract fun daoOtherService() : DaoOtherService
     abstract fun daoProduct() : DaoProduct
     abstract fun daoJobOrder() : DaoJobOrder
     abstract fun daoJobOrderPayment() : DaoJobOrderPayment
@@ -69,7 +79,7 @@ abstract class MainDatabase : RoomDatabase() {
         fun getInstance(context: Context) : MainDatabase {
             return instance?: synchronized(this) {
                 instance ?: Room.databaseBuilder(context, MainDatabase::class.java, DATABASE_NAME)
-                    .fallbackToDestructiveMigration()
+//                    .fallbackToDestructiveMigration()
                     .addCallback(object: Callback() {
                         override fun onCreate(db: SupportSQLiteDatabase) {
                             super.onCreate(db)

@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.csi.palabakosys.BR
 import com.csi.palabakosys.R
 import com.google.android.material.card.MaterialCardView
+import java.util.*
 
 class DeliveryVehiclesAdapter : RecyclerView.Adapter<DeliveryVehiclesAdapter.ViewHolder>() {
     private var list: List<MenuDeliveryProfile> = emptyList()
@@ -27,11 +28,11 @@ class DeliveryVehiclesAdapter : RecyclerView.Adapter<DeliveryVehiclesAdapter.Vie
         println(list.size)
     }
 
-    fun notifySelection(service: MenuDeliveryProfile?) {
+    fun notifySelection(profileId: UUID?) {
         deselectAll()
-        service?.let { _service ->
+        profileId?.let { _profileId ->
             list.let {
-                it.find { s -> s.vehicle.id == _service.vehicle.id }?.apply {
+                it.find { s -> s.deliveryProfileRefId == _profileId }?.apply {
                     selected = true
                     notifyItemChanged(it.indexOf(this))
                 }

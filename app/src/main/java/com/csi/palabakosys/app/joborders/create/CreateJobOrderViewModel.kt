@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.csi.palabakosys.app.customers.CustomerMinimal
 import com.csi.palabakosys.app.joborders.create.delivery.DeliveryCharge
+import com.csi.palabakosys.app.joborders.create.delivery.MenuDeliveryProfile
 import com.csi.palabakosys.app.joborders.create.discount.MenuDiscount
 import com.csi.palabakosys.app.joborders.create.extras.MenuExtrasItem
 import com.csi.palabakosys.app.joborders.create.products.MenuProductItem
@@ -24,7 +25,7 @@ class CreateJobOrderViewModel
 
 @Inject
 constructor(
-    val jobOrderRepository: JobOrderRepository
+    private val jobOrderRepository: JobOrderRepository
 ) : ViewModel() {
     sealed class DataState {
         object StateLess: DataState()
@@ -55,14 +56,14 @@ constructor(
     val currentCustomer = MutableLiveData<CustomerMinimal>()
     val deliveryCharge = MutableLiveData<DeliveryCharge?>()
     val jobOrderServices = MutableLiveData<List<MenuServiceItem>>()
-    val jobOrderProducts = MutableLiveData<MutableList<MenuProductItem>>()
-    val jobOrderExtras = MutableLiveData<MutableList<MenuExtrasItem>>()
+    val jobOrderProducts = MutableLiveData<List<MenuProductItem>>()
+    val jobOrderExtras = MutableLiveData<List<MenuExtrasItem>>()
     val discount = MutableLiveData<MenuDiscount>()
     val discountInPeso = MutableLiveData(0f)
 
     val hasServices = MediatorLiveData<Boolean>().apply {
         fun update() {
-            value = jobOrderServices.value?.size!! > 0
+            value = jobOrderServices.value?.filter { it.deletedAt == null }?.size!! > 0
         }
         addSource(jobOrderServices) { update() }
     }
@@ -74,7 +75,7 @@ constructor(
     }
     val hasExtras = MediatorLiveData<Boolean>().apply {
         fun update() {
-            value = jobOrderExtras.value?.size!! > 0
+            value = jobOrderExtras.value?.filter { it.deletedAt == null }?.size!! > 0
         }
         addSource(jobOrderExtras) { update() }
     }
@@ -120,7 +121,7 @@ constructor(
     }
 
     private fun serviceSubTotal() : Float {
-        return jobOrderServices.value?.let {
+        return jobOrderServices.value?.filter { it.deletedAt == null }?.let {
             var result = 0f
             if(it.isNotEmpty()) {
                 result = it.map { s -> s.price * s.quantity } .reduce { sum, element ->
@@ -132,9 +133,9 @@ constructor(
     }
 
     private fun productSubTotal() : Float {
-        return jobOrderProducts.value?.let {
+        return jobOrderProducts.value?.filter { it.deletedAt == null }?.let {
             var result = 0f
-            if(it.size > 0) {
+            if(it.isNotEmpty()) {
                 result = it.map { s -> s.price * s.quantity } .reduce { sum, element ->
                     sum + element
                 }
@@ -144,9 +145,9 @@ constructor(
     }
 
     private fun extrasSubTotal() : Float {
-        return jobOrderExtras.value?.let {
+        return jobOrderExtras.value?.filter { it.deletedAt == null }?.let {
             var result = 0f
-            if(it.size > 0) {
+            if(it.isNotEmpty()) {
                 result = it.map { s -> s.price * s.quantity } .reduce { sum, element ->
                     sum + element
                 }
@@ -156,7 +157,7 @@ constructor(
     }
 
     private fun deliveryFee() : Float {
-        return (deliveryCharge.value?.price() ?: 0f)
+        return (deliveryCharge.value?.price ?: 0f)
     }
 
     fun setCustomer(customer: CustomerMinimal?) {
@@ -172,7 +173,18 @@ constructor(
 
                     it.services.let { services ->
                         jobOrderServices.value = services?.map { joSvc ->
-                            MenuServiceItem(joSvc.id, joSvc.serviceId, joSvc.serviceName, joSvc.serviceRef.minutes, joSvc.price, joSvc.serviceRef.machineType, joSvc.serviceRef.washType, joSvc.quantity, joSvc.used)
+                            MenuServiceItem(joSvc.id, joSvc.serviceId, joSvc.serviceName, joSvc.serviceRef.minutes, joSvc.price, joSvc.serviceRef.machineType, joSvc.serviceRef.washType, joSvc.quantity, joSvc.used).apply {
+                                selected = true
+                                deletedAt = joSvc.deletedAt
+                            }
+                        }
+                    }
+                    it.extras.let { extras ->
+                        jobOrderExtras.value = extras?.map { joExtras ->
+                            MenuExtrasItem(joExtras.id, joExtras.extrasId, joExtras.extrasName, joExtras.price, joExtras.category, joExtras.quantity).apply {
+                                selected = true
+                                deletedAt = joExtras.deletedAt
+                            }
                         }
                     }
                     it.products.let { products ->
@@ -182,6 +194,16 @@ constructor(
                                 deletedAt = joPrd.deletedAt
                             }
                         }?.toMutableList()
+                    }
+                    it.deliveryCharge?.let { entity ->
+                        deliveryCharge.value = DeliveryCharge(
+                            entity.deliveryProfileId,
+                            entity.vehicle,
+                            entity.distance,
+                            entity.deliveryOption,
+                            entity.price,
+//                            entity.id
+                        )
                     }
                 } else {
                     jobOrderNumber.value = jobOrderRepository.getNextJONumber()
@@ -252,14 +274,27 @@ constructor(
                 id = jobOrderId.value!!
             }
             val services = jobOrderServices.value?.map {
-                EntityJobOrderService(jobOrder.id, it.serviceRefId, it.name, it.price, it.quantity, it.used, EntityServiceRef(it.machineType, it.washType, it.minutes), it.joServiceItemId)
+                EntityJobOrderService(jobOrder.id, it.serviceRefId, it.name, it.price, it.quantity, it.used, EntityServiceRef(it.machineType, it.washType, it.minutes), it.joServiceItemId).apply {
+                    deletedAt = it.deletedAt
+                }
             }
             val products = jobOrderProducts.value?.map {
                 EntityJobOrderProduct(jobOrder.id, it.productRefId, it.name, it.price, it.measureUnit, it.unitPerServe, it.quantity, it.productType, it.joProductItemId).apply {
                     deletedAt = it.deletedAt
                 }
             }
-            val jobOrderWithItem = EntityJobOrderWithItems(jobOrder, services, products)
+            val extras = jobOrderExtras.value?.map {
+                EntityJobOrderExtras(jobOrder.id, it.extrasRefId, it.name, it.price, it.quantity, it.category, it.joExtrasItemId).apply {
+                    deletedAt = it.deletedAt
+                }
+            }
+            val delivery = deliveryCharge.value?.let {
+                EntityJobOrderDeliveryCharge(it.deliveryProfileId, it.vehicle, it.deliveryOption, it.price, it.distance, jobOrder.id)
+            }
+            val discount = discount.value?.let {
+                EntityJobOrderDiscount(it.name, it.percentage, it.applicableToIds, jobOrder.id)
+            }
+            val jobOrderWithItem = EntityJobOrderWithItems(jobOrder, services, extras, products, delivery, discount)
 
             jobOrderRepository.save(jobOrderWithItem)
             _dataState.value = DataState.SaveSuccess

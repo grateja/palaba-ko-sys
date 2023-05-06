@@ -28,9 +28,9 @@ constructor(
 
     fun getAll() {
         viewModelScope.launch {
-            val services = repository.getAll()
+//            val services = repository.getAll()
 //            adapter.setData(services.map { _item -> RecyclerItem(_item) })
-            isEmpty.value = services.isEmpty()
+//            isEmpty.value = services.isEmpty()
         }
     }
 }

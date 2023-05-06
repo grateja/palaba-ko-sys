@@ -7,42 +7,56 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/mainContainer"
-            app:layout_constraintTop_toTopOf="parent"
+        <include
+            android:id="@+id/tabMachineType"
+            layout="@layout/incl_tab_machines_simple"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/inclMachines"
+            app:layout_constraintTop_toBottomOf="@id/tabMachineType"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/buttonOk"
-            android:layout_width="0dp"
-            android:layout_height="0dp">
-            <LinearLayout
-                android:weightSum="100"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_margin="8dp">
-                <include
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/inclMenu8KGDryers"
-                    layout="@layout/incl_available_services" />
-                <include
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/inclMenu8KGWashers"
-                    layout="@layout/incl_available_services" />
-                <include
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/inclMenu12KGDryers"
-                    layout="@layout/incl_available_services" />
-                <include
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/inclMenu12KGWashers"
-                    layout="@layout/incl_available_services" />
-            </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
+            layout="@layout/incl_available_services" />
+<!--        <androidx.core.widget.NestedScrollView-->
+<!--            android:id="@+id/mainContainer"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/tabMachineType"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintBottom_toTopOf="@id/buttonOk"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp">-->
+<!--            <LinearLayout-->
+<!--                android:weightSum="100"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:orientation="vertical"-->
+<!--                android:layout_margin="8dp">-->
+<!--                <include-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:id="@+id/inclMenu8KGDryers"-->
+<!--                    layout="@layout/incl_available_services" />-->
+<!--                <include-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:id="@+id/inclMenu8KGWashers"-->
+<!--                    layout="@layout/incl_available_services" />-->
+<!--                <include-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:id="@+id/inclMenu12KGDryers"-->
+<!--                    layout="@layout/incl_available_services" />-->
+<!--                <include-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:id="@+id/inclMenu12KGWashers"-->
+<!--                    layout="@layout/incl_available_services" />-->
+<!--            </LinearLayout>-->
+<!--        </androidx.core.widget.NestedScrollView>-->
         <Button
             style="@style/RoundButtonNeutral"
             app:layout_constraintBottom_toBottomOf="parent"

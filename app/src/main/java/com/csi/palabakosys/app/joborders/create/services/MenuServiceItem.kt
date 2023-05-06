@@ -7,6 +7,7 @@ import com.csi.palabakosys.model.MachineType
 import com.csi.palabakosys.model.WashType
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
+import java.time.Instant
 import java.util.UUID
 
 @Parcelize
@@ -31,7 +32,11 @@ class MenuServiceItem(
 
     var quantity: Int,
     var used: Int,
+
+    @ColumnInfo(name = "deleted_at")
+    var deletedAt: Instant? = null
 ) : Parcelable {
+
     @IgnoredOnParcel
     @Ignore
     var selected = false

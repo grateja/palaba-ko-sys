@@ -22,7 +22,7 @@ class JobOrderServiceItemAdapter: RecyclerView.Adapter<JobOrderServiceItemAdapte
 //    var onDeleteRequest: ((MenuServiceItem) -> Unit) ? = null
 
     fun setData(services: MutableList<MenuServiceItem>) {
-        list = services
+        list = services.filter { it.deletedAt == null }.toMutableList()
         notifyDataSetChanged()
 //        notifyItemRangeChanged(0, services.size -1)
     }
@@ -50,7 +50,8 @@ class JobOrderServiceItemAdapter: RecyclerView.Adapter<JobOrderServiceItemAdapte
         holder.itemView.setOnClickListener {
             onItemClick?.invoke(r)
         }
-//        holder.itemView.findViewById<ImageButton>(R.id.buttonDelete).setOnClickListener {
+
+    //        holder.itemView.findViewById<ImageButton>(R.id.buttonDelete).setOnClickListener {
 //            onDeleteRequest?.invoke(r)
 //        }
     }

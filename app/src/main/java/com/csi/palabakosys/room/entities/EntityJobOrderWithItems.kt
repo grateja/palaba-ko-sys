@@ -16,7 +16,25 @@ data class EntityJobOrderWithItems (
         parentColumn = "id",
         entityColumn = "job_order_id"
     )
+    var extras: List<EntityJobOrderExtras>?,
+
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "job_order_id"
+    )
     var products: List<EntityJobOrderProduct>?,
+
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "id"
+    )
+    var deliveryCharge: EntityJobOrderDeliveryCharge? = null,
+
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "id"
+    )
+    var discount: EntityJobOrderDiscount? = null,
 ) {
     @Relation(
         parentColumn = "customer_id",
@@ -29,6 +47,7 @@ data class EntityJobOrderWithItems (
         entityColumn = "job_order_id"
     )
     var payment: EntityJobOrderPayment? = null
+
 //
 //    @Relation(
 //        parentColumn = "id",

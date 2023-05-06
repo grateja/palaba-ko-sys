@@ -33,21 +33,21 @@ open class CreateViewModel<T : BaseEntity> (private val iRepository: IRepository
         model.value.let { it ->
             if(it != null) return it
             if(id == null) {
+                model.value = initialModel
                 return initialModel
             }
-//            viewModelScope.launch {
-                iRepository.get(id).let { t->
-                    if(t == null) {
-                        crudActionEnum.value = CRUDActionEnum.CREATE
-                        model.value = initialModel
-                    } else {
-                        crudActionEnum.value = CRUDActionEnum.UPDATE
-                        model.value = t
-                    }
 
-                    return t?:initialModel
+            iRepository.get(id).let { t->
+                if(t == null) {
+                    crudActionEnum.value = CRUDActionEnum.CREATE
+                    model.value = initialModel
+                } else {
+                    crudActionEnum.value = CRUDActionEnum.UPDATE
+                    model.value = t
                 }
-//            }
+
+                return t?:initialModel
+            }
         }
     }
 }

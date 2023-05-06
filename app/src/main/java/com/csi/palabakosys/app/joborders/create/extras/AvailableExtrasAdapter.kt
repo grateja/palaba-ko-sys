@@ -27,7 +27,7 @@ class AvailableExtrasAdapter : RecyclerView.Adapter<AvailableExtrasAdapter.ViewH
 
     fun updateItem(service: MenuExtrasItem) {
         list.let {
-            it.find { s -> s.id == service.id }?.apply {
+            it.find { s -> s.extrasRefId == service.extrasRefId }?.apply {
                 selected = service.selected
                 quantity = service.quantity
                 notifyItemChanged(it.indexOf(this))

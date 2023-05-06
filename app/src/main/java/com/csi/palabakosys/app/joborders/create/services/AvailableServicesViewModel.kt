@@ -4,9 +4,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.csi.palabakosys.app.joborders.create.shared_ui.QuantityModel
+import com.csi.palabakosys.model.MachineType
 import com.csi.palabakosys.room.repository.WashServiceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.time.Instant
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,6 +20,7 @@ constructor(
 ) : ViewModel() {
     val availableServices = MutableLiveData<List<MenuServiceItem>>()
     val dataState = MutableLiveData<DataState>()
+    val selectedTab = MutableLiveData<MachineType>()
 
     init {
         loadServices()
@@ -27,6 +30,10 @@ constructor(
         viewModelScope.launch {
             availableServices.value = serviceRepository.getAll()
         }
+    }
+
+    fun getServices(machineType: MachineType) : List<MenuServiceItem> {
+        return availableServices.value?.filter {it.machineType == machineType}?: listOf()
     }
 
     fun setPreSelectedServices(services: List<MenuServiceItem>?) {
@@ -41,9 +48,10 @@ constructor(
                 msi.serviceRefId.toString() == it.serviceRefId.toString()
             }?.apply {
                 this.joServiceItemId = msi.joServiceItemId
-                this.selected = true
+                this.selected = msi.deletedAt == null
                 this.quantity = msi.quantity
                 this.used = msi.used
+                this.deletedAt = msi.deletedAt
             }
         }
     }
@@ -61,24 +69,30 @@ constructor(
             }
             selected = true
             quantity = quantityModel.quantity
+            deletedAt = null
         }
         dataState.value = DataState.UpdateService(service!!)
     }
 
     fun removeService(service: QuantityModel) {
-        val item = availableServices.value?.find { it.serviceRefId == service.id }?.apply {
+        availableServices.value?.find { it.serviceRefId == service.id }?.apply {
             if(this.joServiceItemId != null) {
-                dataState.value = DataState.InvalidOperation("Cannot remove saved service")
-                return
+                // It's already in the database
+                // Just mark deleted
+                this.deletedAt = Instant.now()
+                if(this.used > 0) {
+                    dataState.value = DataState.InvalidOperation("Cannot remove used service")
+                    return
+                }
             }
             this.selected = false
-            this.quantity = 1
+//            this.quantity = 1
+            dataState.value = DataState.UpdateService(this)
         }
-        dataState.value = DataState.UpdateService(item!!)
     }
 
     fun prepareSubmit() {
-        val list = availableServices.value?.filter { it.selected }
+        val list = availableServices.value?.filter { it.selected || it.deletedAt != null }
         list?.let { it ->
             dataState.value = DataState.Submit(it)
         }
@@ -86,6 +100,10 @@ constructor(
 
     fun resetState() {
         dataState.value = DataState.StateLess
+    }
+
+    fun setMachineType(text: String?) {
+        selectedTab.value = MachineType.fromString(text) ?: MachineType.REGULAR_WASHER
     }
 
     sealed class DataState {

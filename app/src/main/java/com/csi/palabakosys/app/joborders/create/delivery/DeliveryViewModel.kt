@@ -4,18 +4,20 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.csi.palabakosys.R
 import com.csi.palabakosys.model.DeliveryOption
-import com.csi.palabakosys.model.DeliveryVehicle
+import com.csi.palabakosys.room.repository.DeliveryProfilesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class DeliveryViewModel
 
 @Inject
-constructor() : ViewModel()
+constructor(
+    private val repository: DeliveryProfilesRepository
+) : ViewModel()
 {
     var deliveryProfiles = MutableLiveData<List<MenuDeliveryProfile>>()
     val deliveryOption = MutableLiveData(DeliveryOption.PICKUP_AND_DELIVERY)
@@ -29,12 +31,20 @@ constructor() : ViewModel()
         addSource(profile) {update()}
     }
 
-    fun setDeliveryProfile(profile: MenuDeliveryProfile) {
-        this.profile.value = profile
+    fun setDeliveryProfile(profileId: UUID) {
+        this.profile.value = deliveryProfiles.value?.find { it.deliveryProfileRefId == profileId }
     }
 
-    fun prepareDeliveryCharge() : DeliveryCharge {
-        return DeliveryCharge(profile.value!!, distance.value!!, deliveryOption.value!!)
+    fun prepareDeliveryCharge() : DeliveryCharge? {
+//        return DeliveryCharge(profile.value!!, distance.value!!, deliveryOption.value!!)
+        val option = this.deliveryOption.value
+        val distance = this.distance.value
+        val profile = this.profile.value
+        if(profile == null || distance == null || option == null) {
+            return null
+        }
+        val price = option.charge * ((profile.pricePerKm * distance) + profile.baseFare)
+        return DeliveryCharge(profile.deliveryProfileRefId, profile.vehicle, distance, option, price)
     }
 
     fun setDeliveryOption(deliveryOption: DeliveryOption) {
@@ -43,21 +53,13 @@ constructor() : ViewModel()
 
     fun setDeliveryCharge(deliveryCharge: DeliveryCharge) {
         this.setDeliveryOption(deliveryCharge.deliveryOption)
-        this.setDeliveryProfile(deliveryCharge.deliveryProfile)
+        this.setDeliveryProfile(deliveryCharge.deliveryProfileId)
         this.distance.value = deliveryCharge.distance
     }
 
     init {
         viewModelScope.launch {
-            deliveryProfiles.value = listOf(
-                MenuDeliveryProfile(DeliveryVehicle.TRIKE_PEDAL, 20f, 10f),
-                MenuDeliveryProfile(DeliveryVehicle.TRIKE_ELECTRIC, 25f, 10f),
-                MenuDeliveryProfile(DeliveryVehicle.MOTORCYCLE, 30f, 12f),
-                MenuDeliveryProfile(DeliveryVehicle.TRICYCLE, 40f, 12f),
-                MenuDeliveryProfile(DeliveryVehicle.SEDAN, 50f, 15f),
-                MenuDeliveryProfile(DeliveryVehicle.MPV, 60f, 15f),
-                MenuDeliveryProfile(DeliveryVehicle.SMALL_VAN, 70f, 17f),
-            )
+            deliveryProfiles.value = repository.getAll()
         }
     }
 }

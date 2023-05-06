@@ -7,6 +7,7 @@ import com.csi.palabakosys.app.joborders.create.shared_ui.QuantityModel
 import com.csi.palabakosys.room.repository.ExtrasRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.time.Instant
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,37 +28,51 @@ constructor(
         viewModelScope.launch {
             repository.getAll("").let {
                 availableExtras.value = it
+                it.forEach {  m ->
+                    println("extra id")
+                    println(m.extrasRefId)
+                }
             }
         }
     }
 
     fun setPreSelectedServices(services: List<MenuExtrasItem>?) {
         services?.forEach { msi ->
-            availableExtras.value?.find { msi.id == it.id }?.apply {
-                this.selected = true
+            println("msi id")
+            println(msi.extrasRefId)
+            println(availableExtras.value?.size)
+            availableExtras.value?.find { msi.extrasRefId == it.extrasRefId }?.apply {
+                println("selected")
+                this.joExtrasItemId = msi.joExtrasItemId
+                this.selected = msi.deletedAt == null
                 this.quantity = msi.quantity
+                this.deletedAt = msi.deletedAt
             }
         }
     }
 
     fun putService(quantityModel: QuantityModel) {
-        val service = availableExtras.value?.find { it.id == quantityModel.id }?.apply {
+        val service = availableExtras.value?.find { it.extrasRefId == quantityModel.id }?.apply {
             selected = true
             quantity = quantityModel.quantity
+            deletedAt = null
         }
         dataState.value = DataState.UpdateService(service!!)
     }
 
     fun removeService(service: QuantityModel) {
-        val item = availableExtras.value?.find { it.id == service.id }?.apply {
+        availableExtras.value?.find { it.extrasRefId == service.id }?.apply {
+            if(this.joExtrasItemId != null) {
+                this.deletedAt = Instant.now()
+            }
             this.selected = false
-            this.quantity = 1
+//            this.quantity = 1
+            dataState.value = DataState.UpdateService(this)
         }
-        dataState.value = DataState.UpdateService(item!!)
     }
 
     fun prepareSubmit() {
-        val list = availableExtras.value?.filter { it.selected }
+        val list = availableExtras.value?.filter { it.selected || it.deletedAt != null }
         list?.let {
             dataState.value = DataState.Submit(it)
         }

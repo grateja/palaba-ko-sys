@@ -1,5 +1,6 @@
 package com.csi.palabakosys.room.repository
 
+import com.csi.palabakosys.app.joborders.create.discount.MenuDiscount
 import com.csi.palabakosys.room.dao.DaoDiscount
 import com.csi.palabakosys.room.entities.EntityDiscount
 import javax.inject.Inject
@@ -17,7 +18,7 @@ constructor (
         return dao.get(id)
     }
 
-    suspend fun getAll(keyword: String) : List<EntityDiscount> {
+    suspend fun getAll(keyword: String) : List<MenuDiscount> {
         return dao.getAll(keyword)
     }
 }

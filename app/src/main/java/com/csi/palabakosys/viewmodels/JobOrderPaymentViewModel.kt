@@ -4,8 +4,6 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.csi.palabakosys.R
-import com.csi.palabakosys.adapters.Adapter
 //import com.csi.palabakosys.adapters.RecyclerItem
 //import com.csi.palabakosys.adapters.SimpleListAdapter
 import com.csi.palabakosys.model.PaymentMethodEnum
@@ -276,7 +274,7 @@ constructor(
                 cashlessEntity = EntityCashless(cashlessProvider.value, cashlessRefNumber.value, cashlessAmount.value)
             }
             PaymentMethodEnum.CASH_BACK -> {
-                if(availableCashback.value?:0f < amountToPay.value?:0f) {
+                if((availableCashback.value ?: 0f) < (amountToPay.value ?: 0f)) {
                     inputValidation.addError("cashBackPayment", "Not enough cash back")
                 }
                 val _amountToPay = amountToPay.value?:0f

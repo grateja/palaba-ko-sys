@@ -67,23 +67,24 @@ class AvailableServicesAdapter : RecyclerView.Adapter<AvailableServicesAdapter.V
 //        }
 
         holder.itemView.apply {
-            val selected = r.selected
-            findViewById<MaterialCardView>(R.id.jobOrderMenuItem).also {
-                if(selected) {
-                    it.strokeColor = context.getColor(R.color.card_selected)
-                    it.setCardBackgroundColor(context.getColor(R.color.span_background_selected))
-                } else {
-                    it.strokeColor = context.getColor(R.color.border_primary)
-                    it.setCardBackgroundColor(context.getColor(R.color.white))
+            r.selected.let { selected ->
+                findViewById<MaterialCardView>(R.id.jobOrderMenuItem).also {
+                    if(selected) {
+                        it.strokeColor = context.getColor(R.color.card_selected)
+                        it.setCardBackgroundColor(context.getColor(R.color.span_background_selected))
+                    } else {
+                        it.strokeColor = context.getColor(R.color.border_primary)
+                        it.setCardBackgroundColor(context.getColor(R.color.white))
+                    }
                 }
+                findViewById<TextView>(R.id.textTitle).setTextAppearance(
+                    if(selected) {
+                        R.style.TextItemTitleActive
+                    } else {
+                        R.style.TextItemTitle
+                    }
+                )
             }
-            findViewById<TextView>(R.id.textTitle).setTextAppearance(
-                if(selected) {
-                    R.style.TextItemTitleActive
-                } else {
-                    R.style.TextItemTitle
-                }
-            )
         }
     }
 

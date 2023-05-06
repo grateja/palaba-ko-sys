@@ -4,7 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.csi.palabakosys.model.DiscountApplicable
-import com.csi.palabakosys.model.DiscountTypeEnum
+//import com.csi.palabakosys.model.DiscountTypeEnum
+import com.csi.palabakosys.room.repository.DiscountsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -13,7 +14,9 @@ import javax.inject.Inject
 class DiscountViewModel
 
 @Inject
-constructor() : ViewModel()
+constructor(
+    private val repository: DiscountsRepository
+) : ViewModel()
 {
     val discounts = MutableLiveData<List<MenuDiscount>>()
     val discount = MutableLiveData<MenuDiscount?>()
@@ -31,12 +34,13 @@ constructor() : ViewModel()
 
     fun loadDiscounts() {
         viewModelScope.launch {
-            discounts.value = listOf(
-                MenuDiscount("birthday", "Birthday", 5f, DiscountTypeEnum.PERCENTAGE, listOf(DiscountApplicable.WASH_DRY_SERVICES)),
-                MenuDiscount("pwd", "PWD", 5f, DiscountTypeEnum.PERCENTAGE, listOf(DiscountApplicable.DELIVERY)),
-                MenuDiscount("senior", "Senior", 5f, DiscountTypeEnum.PERCENTAGE, listOf(DiscountApplicable.TOTAL_AMOUNT)),
-                MenuDiscount("opening", "Opening", 10f, DiscountTypeEnum.FIXED, listOf(DiscountApplicable.WASH_DRY_SERVICES, DiscountApplicable.PRODUCTS_CHEMICALS)),
-            )
+            discounts.value = repository.getAll("")
+//            discounts.value = listOf(
+//                MenuDiscount("birthday", "Birthday", 5f, DiscountTypeEnum.PERCENTAGE, listOf(DiscountApplicable.WASH_DRY_SERVICES)),
+//                MenuDiscount("pwd", "PWD", 5f, DiscountTypeEnum.PERCENTAGE, listOf(DiscountApplicable.DELIVERY)),
+//                MenuDiscount("senior", "Senior", 5f, DiscountTypeEnum.PERCENTAGE, listOf(DiscountApplicable.TOTAL_AMOUNT)),
+//                MenuDiscount("opening", "Opening", 10f, DiscountTypeEnum.FIXED, listOf(DiscountApplicable.WASH_DRY_SERVICES, DiscountApplicable.PRODUCTS_CHEMICALS)),
+//            )
         }
     }
 }

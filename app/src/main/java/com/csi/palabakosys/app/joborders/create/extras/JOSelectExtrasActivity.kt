@@ -31,6 +31,10 @@ class JOSelectExtrasActivity : AppCompatActivity() {
 
         subscribeEvents()
 
+        val extras = intent.getParcelableArrayListExtra<MenuExtrasItem?>("extras")
+        println("preset")
+        println(extras?.size)
+
         viewModel.setPreSelectedServices(intent.getParcelableArrayListExtra<MenuExtrasItem?>("extras")?.toList())
         intent.getParcelableExtra<MenuExtrasItem>("extra")?.let {
             itemClick(it)
@@ -46,6 +50,9 @@ class JOSelectExtrasActivity : AppCompatActivity() {
         }
         viewModel.availableExtras.observe(this, Observer {
             extrasAdapter.setData(it)
+            viewModel.setPreSelectedServices(
+                intent.getParcelableArrayListExtra<MenuExtrasItem?>("extras")?.toList()
+            )
         })
 
         viewModel.dataState.observe(this, Observer {
@@ -64,7 +71,7 @@ class JOSelectExtrasActivity : AppCompatActivity() {
 
     private fun itemClick(extrasItem: MenuExtrasItem) {
         requestModifyQuantity(
-            QuantityModel(extrasItem.id, extrasItem.name, extrasItem.quantity, QuantityModel.TYPE_EXTRAS)
+            QuantityModel(extrasItem.extrasRefId, extrasItem.name, extrasItem.quantity, QuantityModel.TYPE_EXTRAS)
         )
     }
 

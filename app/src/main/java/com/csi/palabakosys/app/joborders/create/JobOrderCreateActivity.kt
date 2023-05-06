@@ -122,7 +122,7 @@ class JobOrderCreateActivity : AppCompatActivity() {
         })
 
         viewModel.jobOrderProducts.observe(this, Observer {
-            productsAdapter.setData(it)
+            productsAdapter.setData(it.toMutableList())
         })
 
         viewModel.jobOrderExtras.observe(this, Observer {
@@ -131,6 +131,10 @@ class JobOrderCreateActivity : AppCompatActivity() {
 
         binding.controls.buttonOk.setOnClickListener {
             viewModel.save()
+        }
+
+        binding.controls.buttonCancel.setOnClickListener {
+            finish()
         }
 
         viewModel.dataState().observe(this, Observer {

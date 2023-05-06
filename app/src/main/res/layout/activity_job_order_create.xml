@@ -180,7 +180,7 @@
                         android:layout_height="wrap_content">
                         <androidx.appcompat.widget.AppCompatImageView
                             android:id="@+id/iconVehicle"
-                            app:imageResource="@{viewModel.deliveryCharge.deliveryProfile.vehicle.icon}"
+                            app:imageResource="@{viewModel.deliveryCharge.vehicle.icon}"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             app:layout_constraintTop_toTopOf="parent"
@@ -192,7 +192,7 @@
                             android:textColor="@color/black"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@{viewModel.deliveryCharge.deliveryProfile.vehicle.value}"
+                            android:text="@{viewModel.deliveryCharge.vehicle.value}"
                             android:layout_marginStart="8dp"
                             app:layout_constraintTop_toTopOf="@id/iconVehicle"
                             app:layout_constraintStart_toEndOf="@id/iconVehicle"
@@ -217,7 +217,7 @@
                                 android:textSize="20sp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:peso="@{viewModel.deliveryCharge.price()}"
+                                android:peso="@{viewModel.deliveryCharge.price}"
                                 tools:text="P 70.00" />
                         </com.google.android.material.card.MaterialCardView>
                         <TextView

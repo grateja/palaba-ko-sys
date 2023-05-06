@@ -1,6 +1,7 @@
 package com.csi.palabakosys.room.repository
 
 import com.csi.palabakosys.app.joborders.create.services.MenuServiceItem
+import com.csi.palabakosys.model.MachineType
 import com.csi.palabakosys.room.dao.DaoService
 import com.csi.palabakosys.room.entities.EntityService
 import javax.inject.Inject

@@ -15,6 +15,15 @@ interface DaoJobOrder {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertJobOrderProduct(entityJobOrderProduct: List<EntityJobOrderProduct>)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertJobOrderExtras(entityJobOrderExtras: List<EntityJobOrderExtras>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertDeliveryCharge(entityJobOrderDeliveryCharge: EntityJobOrderDeliveryCharge)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertDiscount(entityJobOrderDiscount: EntityJobOrderDiscount)
+
 //    @Query("UPDATE products SET current_stock = current_stock - :quantity WHERE id = :id")
 //    fun reduceProducts(quantity: Int, id: String)
 
@@ -33,6 +42,15 @@ interface DaoJobOrder {
 
         entityJobOrderWithItems.services?.let {
             insertJobOrderService(it)
+        }
+        entityJobOrderWithItems.extras?.let {
+            insertJobOrderExtras(it)
+        }
+        entityJobOrderWithItems.deliveryCharge?.let {
+            insertDeliveryCharge(it)
+        }
+        entityJobOrderWithItems.discount?.let {
+            insertDiscount(it)
         }
         entityJobOrderWithItems.products?.let {
             it.forEach { jop ->

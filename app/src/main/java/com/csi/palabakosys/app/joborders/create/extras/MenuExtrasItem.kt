@@ -1,18 +1,30 @@
 package com.csi.palabakosys.app.joborders.create.extras
 
 import android.os.Parcelable
+import androidx.room.ColumnInfo
 import androidx.room.Ignore
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
+import java.time.Instant
 import java.util.UUID
 
 @Parcelize
 class MenuExtrasItem(
-    val id: UUID,
+    var joExtrasItemId: UUID?,
+
+    @ColumnInfo(name = "id")
+    val extrasRefId: UUID,
+
     val name: String,
+
     val price: Float,
+
     val category: String?,
+
     var quantity: Int = 1,
+
+    @ColumnInfo(name = "deleted_at")
+    var deletedAt: Instant? = null,
 ) : Parcelable {
     @IgnoredOnParcel
     @Ignore

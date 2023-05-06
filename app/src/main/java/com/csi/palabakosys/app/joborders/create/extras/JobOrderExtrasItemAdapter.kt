@@ -21,8 +21,12 @@ class JobOrderExtrasItemAdapter: RecyclerView.Adapter<JobOrderExtrasItemAdapter.
     var onItemClick: ((MenuExtrasItem) -> Unit) ? = null
     var onDeleteRequest: ((MenuExtrasItem) -> Unit) ? = null
 
+//    private fun filtered() : List<MenuExtrasItem> {
+//        return list.filter { it.deletedAt == null }
+//    }
+
     fun setData(services: List<MenuExtrasItem>) {
-        list = services.toMutableList()
+        list = services.filter { it.deletedAt == null }.toMutableList()
 //        notifyItemRangeChanged(0, services.size -1)
         notifyDataSetChanged()
     }

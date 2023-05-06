@@ -65,15 +65,16 @@ class AvailableProductsViewModel
     }
 
     fun removeProduct(quantityModel: QuantityModel) {
-        val item = availableProducts.value?.find { it.productRefId == quantityModel.id }
-
-        if(item != null) {
-            item.selected = false
-            item.quantity = 0
-            item.deletedAt = Instant.now()
+        availableProducts.value?.find { it.productRefId == quantityModel.id }?.apply {
+            if(this.joProductItemId != null) {
+                // It's already in the database
+                // Just mark deleted
+                this.deletedAt = Instant.now()
+            }
+            this.selected = false
+            this.quantity = 0
+            dataState.value = DataState.UpdateProduct(this)
         }
-
-        dataState.value = DataState.UpdateProduct(item!!)
     }
 
     fun prepareSubmit() {

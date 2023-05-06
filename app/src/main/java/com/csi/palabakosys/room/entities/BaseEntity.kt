@@ -8,7 +8,7 @@ import java.util.*
 abstract class BaseEntity (uuid: UUID? = null) {
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "id")
-    var id: UUID = uuid ?: UUID.randomUUID()
+    open var id: UUID = uuid ?: UUID.randomUUID()
 
     @ColumnInfo(name = "created_at")
     var createdAt: Instant = Instant.now()

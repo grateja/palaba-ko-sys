@@ -44,6 +44,10 @@ class AddEditCustomerFragment : ModalFragment<CustomerMinimal?>() {
             viewModel.save()
         }
         val id = arguments?.getString("data")
+        viewModel.model.observe(viewLifecycleOwner, Observer {
+            println("CRN from fragment")
+            println(it?.crn)
+        })
         viewModel.get(id)
         viewModel.dataState.observe(viewLifecycleOwner, Observer {
             if(it is DataState.Success) {

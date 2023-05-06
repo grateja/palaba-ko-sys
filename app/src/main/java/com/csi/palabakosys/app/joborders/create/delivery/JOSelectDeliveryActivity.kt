@@ -8,7 +8,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
 import com.csi.palabakosys.databinding.ActivityJoSelectDeliveryBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class JOSelectDeliveryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityJoSelectDeliveryBinding
     private val viewModel: DeliveryViewModel by viewModels()
@@ -20,19 +22,18 @@ class JOSelectDeliveryActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         binding.recyclerDeliveryVehicles.adapter = deliveryVehiclesAdapter
         subscribeEvents()
-
-        intent.getParcelableExtra<DeliveryCharge>("deliveryCharge")?.let {
-            viewModel.setDeliveryCharge(it)
-        }
     }
 
     private fun subscribeEvents() {
         viewModel.deliveryProfiles.observe(this, Observer {
             deliveryVehiclesAdapter.setData(it)
+            intent.getParcelableExtra<DeliveryCharge>("deliveryCharge")?.let {
+                viewModel.setDeliveryCharge(it)
+            }
         })
 
         viewModel.profile.observe(this, Observer {
-            deliveryVehiclesAdapter.notifySelection(it)
+            deliveryVehiclesAdapter.notifySelection(it.deliveryProfileRefId)
         })
 
 //        deliveryVehiclesAdapter.onItemClick = {
@@ -40,7 +41,7 @@ class JOSelectDeliveryActivity : AppCompatActivity() {
 //        }
 //
         deliveryVehiclesAdapter.onItemClick = {
-            viewModel.setDeliveryProfile(it)
+            viewModel.setDeliveryProfile(it.deliveryProfileRefId)
             showOptions()
         }
 
