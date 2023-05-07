@@ -28,7 +28,7 @@ constructor(
 ) : ViewModel() {
     sealed class DataState {
         object StateLess: DataState()
-        object SaveSuccess: DataState()
+        data class SaveSuccess(val jobOrderId: UUID): DataState()
         data class OpenServices(val list: List<MenuServiceItem>?, val item: MenuServiceItem?): DataState()
         data class OpenProducts(val list: List<MenuProductItem>?, val item: MenuProductItem?): DataState()
         data class OpenExtras(val list: List<MenuExtrasItem>?, val item: MenuExtrasItem?): DataState()
@@ -107,6 +107,7 @@ constructor(
     val subtotal = MediatorLiveData<Float>().apply {
         fun update() {
             discountInPeso.value = discount.value?.let {
+                if(it.deletedAt != null) return@let 0f
                 var total = 0f
                 total += it.getDiscount(serviceSubTotal(), DiscountApplicable.WASH_DRY_SERVICES)
                 total += it.getDiscount(productSubTotal(), DiscountApplicable.PRODUCTS_CHEMICALS)
@@ -160,7 +161,14 @@ constructor(
     }
 
     private fun deliveryFee() : Float {
-        return (deliveryCharge.value?.price ?: 0f)
+        return deliveryCharge.value?.let {
+            return if(it.deletedAt == null) {
+                it.price
+            } else {
+                0f
+            }
+        } ?: 0f
+//        return (deliveryCharge.value?.price ?: 0f)
     }
 
     fun setCustomer(customer: CustomerMinimal?) {
@@ -328,7 +336,7 @@ constructor(
             val jobOrderWithItem = EntityJobOrderWithItems(jobOrder, services, extras, products, delivery, discount)
 
             jobOrderRepository.save(jobOrderWithItem)
-            _dataState.value = DataState.SaveSuccess
+            _dataState.value = DataState.SaveSuccess(jobOrder.id)
         }
     }
 }

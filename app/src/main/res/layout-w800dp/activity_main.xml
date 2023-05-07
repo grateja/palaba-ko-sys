@@ -45,6 +45,11 @@
                 android:text="IP Settings"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+            <Button
+                android:id="@+id/btnPrinterSettings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Printer Settings" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </layout>

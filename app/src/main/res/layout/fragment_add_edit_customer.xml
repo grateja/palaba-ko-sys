@@ -23,30 +23,35 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="16dp"
+                android:gravity="center">
 
+
+                <Button
+                    android:id="@+id/buttonSave"
+                    android:text="@string/save"
+                    style="@style/RoundButtonPrimary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
                 <TextView
-                    android:id="@+id/textFormTitle"
-                    style="@style/TileTitle"
                     android:layout_weight="1"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="Create New Customer"/>
+                    android:layout_height="wrap_content"/>
 
-                <ImageButton
-                    android:id="@+id/buttonSave"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:background="@color/transparent"
-                    android:src="@android:drawable/ic_menu_save" />
-
-                <ImageButton
+                <Button
                     android:id="@+id/buttonClose"
-                    android:background="@color/transparent"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@android:drawable/ic_menu_close_clear_cancel" />
+                    android:text="@string/close"
+                    style="@style/RoundButtonNeutral"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/textFormTitle"
+                style="@style/TileTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Create New Customer"/>
 
             <ProgressBar
                 android:id="@+id/progressBarSaving"

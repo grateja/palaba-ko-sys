@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data></data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".app.preferences.printer.SettingsPrinterActivity"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/buttonTurnOnBluetooth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bluetooth"
+            tools:layout_editor_absoluteX="39dp"
+            tools:layout_editor_absoluteY="68dp" />
+        <Button
+            android:id="@+id/buttonTurnOnLocationServices"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Turn on location services"
+            tools:layout_editor_absoluteX="39dp"
+            tools:layout_editor_absoluteY="68dp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/labelCRN"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Test print"
+            app:errorEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/textTestPrint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerBluetoothDevices"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>

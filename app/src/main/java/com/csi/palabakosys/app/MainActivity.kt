@@ -16,6 +16,7 @@ import androidx.window.layout.WindowMetricsCalculator
 import com.csi.palabakosys.R
 import com.csi.palabakosys.app.joborders.create.customer.SelectCustomerActivity
 import com.csi.palabakosys.app.preferences.ip.SettingsIPAddressActivity
+import com.csi.palabakosys.app.preferences.printer.SettingsPrinterActivity
 import com.csi.palabakosys.app.remote.shared_ui.RemoteActivationActivity
 import com.csi.palabakosys.broadcast_receiver.ConnectivityReceiver
 import com.csi.palabakosys.databinding.ActivityMainBinding
@@ -46,6 +47,10 @@ class MainActivity : EndingActivity() {
         }
         binding.btnIpSettings.setOnClickListener {
             val intent = Intent(this, SettingsIPAddressActivity::class.java)
+            startActivity(intent)
+        }
+        binding.btnPrinterSettings.setOnClickListener {
+            val intent = Intent(this, SettingsPrinterActivity::class.java)
             startActivity(intent)
         }
         computeWindowSizeClasses()

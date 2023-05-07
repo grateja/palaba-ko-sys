@@ -14,6 +14,7 @@ import com.csi.palabakosys.app.joborders.create.discount.MenuDiscount
 import com.csi.palabakosys.app.joborders.create.extras.JOSelectExtrasActivity
 import com.csi.palabakosys.app.joborders.create.extras.JobOrderExtrasItemAdapter
 import com.csi.palabakosys.app.joborders.create.extras.MenuExtrasItem
+import com.csi.palabakosys.app.joborders.create.preview.CreateJobOrderPreviewActivity
 import com.csi.palabakosys.app.joborders.create.products.JOSelectProductsActivity
 import com.csi.palabakosys.app.joborders.create.products.JobOrderProductsItemAdapter
 import com.csi.palabakosys.app.joborders.create.products.MenuProductItem
@@ -23,6 +24,8 @@ import com.csi.palabakosys.app.joborders.create.services.MenuServiceItem
 import com.csi.palabakosys.databinding.ActivityJobOrderCreateBinding
 import com.csi.palabakosys.util.ActivityLauncher
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
+import kotlin.collections.ArrayList
 
 @AndroidEntryPoint
 class JobOrderCreateActivity : AppCompatActivity() {
@@ -34,6 +37,7 @@ class JobOrderCreateActivity : AppCompatActivity() {
     private val deliveryLauncher = ActivityLauncher(this)
     private val extrasLauncher = ActivityLauncher(this)
     private val discountLauncher = ActivityLauncher(this)
+    private val previewLauncher = ActivityLauncher(this)
 
     private val servicesAdapter = JobOrderServiceItemAdapter()
     private val productsAdapter = JobOrderProductsItemAdapter()
@@ -83,6 +87,10 @@ class JobOrderCreateActivity : AppCompatActivity() {
         discountLauncher.onOk = {
             val result = it.data?.getParcelableExtra<MenuDiscount>("discount")
             viewModel.applyDiscount(result)
+        }
+
+        previewLauncher.onOk = {
+            finish()
         }
 
         servicesAdapter.onItemClick = {
@@ -161,10 +169,17 @@ class JobOrderCreateActivity : AppCompatActivity() {
                 }
                 is CreateJobOrderViewModel.DataState.SaveSuccess -> {
                     viewModel.resetState()
-                    finish()
+                    previewJobOrder(it.jobOrderId)
                 }
             }
         })
+    }
+
+    private fun previewJobOrder(jobOrderId: UUID) {
+        val intent = Intent(this, CreateJobOrderPreviewActivity::class.java).apply {
+            putExtra("jobOrderId", jobOrderId)
+        }
+        previewLauncher.launch(intent)
     }
 
     private fun openServices(services: List<MenuServiceItem>?, itemPreset: MenuServiceItem?) {
