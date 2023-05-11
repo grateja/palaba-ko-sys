@@ -245,7 +245,19 @@
                     android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:peso="@{viewModel.subtotal}"/>
+                    android:text="@{`Sub total :` +viewModel.subtotal}"/>
+                <TextView
+                    style="@style/TextItemTitle"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{`Discount :` +viewModel.discountInPeso}"/>
+                <TextView
+                    style="@style/TextItemTitle"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{`Discounted amount :` +viewModel.discountedAmount}"/>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
         <include android:id="@+id/controls"

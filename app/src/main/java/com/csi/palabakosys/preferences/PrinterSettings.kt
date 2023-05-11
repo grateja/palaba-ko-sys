@@ -1,6 +1,6 @@
-package com.csi.palabakosys.model
+package com.csi.palabakosys.preferences
 
-data class PrinterConfig(
+data class PrinterSettings(
     val name: String?,
     val address: String?,
     val dpi: Int,

@@ -20,7 +20,7 @@ class JobOrderRepository
 constructor (
     private val daoJobOrder: DaoJobOrder,
 ) {
-    suspend fun get(id: String?) : EntityJobOrderWithItems? {
+    suspend fun get(id: UUID?) : EntityJobOrderWithItems? {
         try {
             if(id == null) return null
             return daoJobOrder.get(id)
@@ -31,7 +31,7 @@ constructor (
     }
 
     suspend fun getAllWithTotalAmount(keyword: String, includeVoid :Boolean = false) : List<EntityJobOrderListItem> {
-        return daoJobOrder.getAllWithTotalAmount(keyword, includeVoid)
+        return listOf() //daoJobOrder.getAllWithTotalAmount(keyword, includeVoid)
     }
 
     suspend fun getNextJONumber() : String {
@@ -67,5 +67,9 @@ constructor (
 
     suspend fun getCurrentJobOrder(customerId: UUID?) : EntityJobOrderWithItems? {
         return daoJobOrder.getCurrentJobOrder(customerId)
+    }
+
+    suspend fun getUnpaidByCustomerId(customerId: UUID): List<EntityJobOrder> {
+        return daoJobOrder.getUnpaidByCustomerId(customerId)
     }
 }

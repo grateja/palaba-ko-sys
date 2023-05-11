@@ -21,9 +21,9 @@ class DialogJobOrderViewModel
     }
     fun get(id: String?) {
         viewModelScope.launch {
-            repository.get(id).let {
-                model.value = it
-            }
+//            repository.get(UUID.fromString(id!!).let {
+//                model.value = it
+//            }
         }
     }
 }

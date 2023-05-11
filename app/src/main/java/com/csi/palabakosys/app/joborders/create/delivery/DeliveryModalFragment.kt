@@ -6,13 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import com.csi.palabakosys.databinding.FragmentDeliveryModalBinding
+import com.csi.palabakosys.databinding.FragmentModalDeliveryBinding
 import com.csi.palabakosys.fragments.BaseModalFragment
-import com.csi.palabakosys.fragments.ModalFragment
-import com.csi.palabakosys.model.DeliveryOption
 
 class DeliveryModalFragment : BaseModalFragment() {
-    private lateinit var binding: FragmentDeliveryModalBinding
+    private lateinit var binding: FragmentModalDeliveryBinding
     private val viewModel: DeliveryViewModel by activityViewModels()
     private val deliveryOptionAdapter = DeliveryOptionAdapter()
 
@@ -22,7 +20,7 @@ class DeliveryModalFragment : BaseModalFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentDeliveryModalBinding.inflate(inflater, container, false)
+        binding = FragmentModalDeliveryBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 

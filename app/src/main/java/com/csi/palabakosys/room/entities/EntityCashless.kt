@@ -1,7 +1,10 @@
 package com.csi.palabakosys.room.entities
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class EntityCashless(
     @ColumnInfo(name = "cashless_provider")
     var provider: String?,
@@ -11,4 +14,4 @@ data class EntityCashless(
 
     @ColumnInfo(name ="cashless_amount")
     var amount: Float?
-)
+): Parcelable

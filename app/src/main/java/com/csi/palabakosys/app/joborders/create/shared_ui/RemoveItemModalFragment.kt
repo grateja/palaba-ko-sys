@@ -4,19 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.csi.palabakosys.databinding.FragmentRemoveItemModalBinding
+import com.csi.palabakosys.databinding.FragmentModalRemoveItemBinding
 import com.csi.palabakosys.fragments.ModalFragment
 
 class RemoveItemModalFragment() : ModalFragment<RemoveItemModel>() {
 
-    private lateinit var binding: FragmentRemoveItemModalBinding
+    private lateinit var binding: FragmentModalRemoveItemBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        binding = FragmentRemoveItemModalBinding.inflate(inflater, container, false)
+        binding = FragmentModalRemoveItemBinding.inflate(inflater, container, false)
         binding.viewModel = arguments?.getParcelable("data")
 
         binding.buttonConfirm.setOnClickListener {

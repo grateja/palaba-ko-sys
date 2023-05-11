@@ -5,12 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import com.csi.palabakosys.databinding.FragmentModifyQuantityModalBinding
+import com.csi.palabakosys.databinding.FragmentModalModifyQuantityBinding
 import com.csi.palabakosys.fragments.ModalFragment
 
 class ModifyQuantityModalFragment : ModalFragment<QuantityModel>() {
 
-    private lateinit var binding: FragmentModifyQuantityModalBinding
+    private lateinit var binding: FragmentModalModifyQuantityBinding
     private val quantityViewModel: QuantityViewModel by viewModels()
 
     var onItemRemove: ((QuantityModel) -> Unit)? = null
@@ -20,7 +20,7 @@ class ModifyQuantityModalFragment : ModalFragment<QuantityModel>() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        binding = FragmentModifyQuantityModalBinding.inflate(inflater, container, false)
+        binding = FragmentModalModifyQuantityBinding.inflate(inflater, container, false)
         val data = arguments?.getParcelable<QuantityModel>("data")
         binding.viewModel = data
 

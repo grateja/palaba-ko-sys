@@ -266,7 +266,7 @@ class SettingsPrinterActivity : AppCompatActivity() {
                 val device = bluetoothAdapter.getRemoteDevice(address)
                 val bluetoothConnection = BluetoothConnection(device)
                 printer = EscPosPrinter(bluetoothConnection, 203, 58f, 32)
-                printer.printFormattedText(text)
+                printer.printFormattedTextAndCut(text)
                 printer.disconnectPrinter()
             } catch (e: Exception) {
                 Handler(Looper.getMainLooper()).post {

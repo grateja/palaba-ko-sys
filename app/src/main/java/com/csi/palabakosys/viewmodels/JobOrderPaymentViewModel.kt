@@ -140,9 +140,9 @@ constructor(
                 cashlessProvider.value = ""
                 cashlessRefNumber.value = ""
             }
-            PaymentMethodEnum.CASH_BACK -> {
-                cashBackPayment.value = ""
-            }
+//            PaymentMethodEnum.CASH_BACK -> {
+//                cashBackPayment.value = ""
+//            }
             null -> { }
         }
     }
@@ -178,9 +178,9 @@ constructor(
 //                    }
 //                }
             }
-            PaymentMethodEnum.CASH_BACK -> {
-                cashBackPayment.value = amountToPay.value?.toString()
-            }
+//            PaymentMethodEnum.CASH_BACK -> {
+//                cashBackPayment.value = amountToPay.value?.toString()
+//            }
             null -> { }
         }
     }
@@ -193,7 +193,7 @@ constructor(
 //        super.get(paymentId, EntityJobOrderPayment(UUID.fromString(jobOrderId)))
         this.jobOrderId = UUID.fromString(jobOrderId)
         viewModelScope.launch {
-            jobOrderRepository.get(jobOrderId).let {
+            jobOrderRepository.get(UUID.fromString(jobOrderId)).let {
                 if(it == null) {
                     dataState.value = DataState.Invalidate("Job order not found or deleted")
                 } else {
@@ -240,24 +240,24 @@ constructor(
             return
         }
         viewModelScope.launch {
-            val payment = EntityJobOrderPayment(jobOrderId).apply {
-                cash = cashPayment.value?.toFloatOrNull()?:0f
-                entityCashless = cashlessEntity
-                cashBack = cashBackPayment.value?.toFloatOrNull()?:0f
-                paidTo = preferenceRepository.getUser()?.name
-            }
-            payment.paymentMethod = paymentMethod.value
-            payment.balance = balance.value?:0f
-            payment.change = change.value?:0f
-
-            discount.value?.let {
-                payment.discountName = it.name
-                payment.discountPercentage = it.percentage
-                payment.discountInPeso = discountInPeso.value?:0f
-            }
-            repository.save(payment, customerId, cashBackEarned).let {
-                dataState.value = DataState.Success(payment)
-            }
+//            val payment = EntityJobOrderPayment(jobOrderId).apply {
+//                cash = cashPayment.value?.toFloatOrNull()?:0f
+//                entityCashless = cashlessEntity
+//                cashBack = cashBackPayment.value?.toFloatOrNull()?:0f
+//                paidTo = preferenceRepository.getUser()?.name
+//            }
+//            payment.paymentMethod = paymentMethod.value
+//            payment.balance = balance.value?:0f
+//            payment.change = change.value?:0f
+//
+//            discount.value?.let {
+//                payment.discountName = it.name
+//                payment.discountPercentage = it.percentage
+//                payment.discountInPeso = discountInPeso.value?:0f
+//            }
+//            repository.save(payment, customerId, cashBackEarned).let {
+//                dataState.value = DataState.Success(payment)
+//            }
         }
     }
 
@@ -273,13 +273,13 @@ constructor(
                 inputValidation.addRules("cashlessAmount", cashlessAmount.value, arrayOf(Rule.REQUIRED))
                 cashlessEntity = EntityCashless(cashlessProvider.value, cashlessRefNumber.value, cashlessAmount.value)
             }
-            PaymentMethodEnum.CASH_BACK -> {
-                if((availableCashback.value ?: 0f) < (amountToPay.value ?: 0f)) {
-                    inputValidation.addError("cashBackPayment", "Not enough cash back")
-                }
-                val _amountToPay = amountToPay.value?:0f
-                cashBackEarned -= _amountToPay
-            }
+//            PaymentMethodEnum.CASH_BACK -> {
+//                if((availableCashback.value ?: 0f) < (amountToPay.value ?: 0f)) {
+//                    inputValidation.addError("cashBackPayment", "Not enough cash back")
+//                }
+//                val _amountToPay = amountToPay.value?:0f
+//                cashBackEarned -= _amountToPay
+//            }
             else -> {
                 println("No payment method selected")
                 return false

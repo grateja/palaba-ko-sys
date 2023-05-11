@@ -168,16 +168,17 @@ class JobOrderCreateActivity : AppCompatActivity() {
                     viewModel.resetState()
                 }
                 is CreateJobOrderViewModel.DataState.SaveSuccess -> {
+                    previewJobOrder(it.jobOrderId, it.customerId)
                     viewModel.resetState()
-                    previewJobOrder(it.jobOrderId)
                 }
             }
         })
     }
 
-    private fun previewJobOrder(jobOrderId: UUID) {
+    private fun previewJobOrder(jobOrderId: UUID, customerId: UUID) {
         val intent = Intent(this, CreateJobOrderPreviewActivity::class.java).apply {
-            putExtra("jobOrderId", jobOrderId)
+            putExtra("jobOrderId", jobOrderId.toString())
+            putExtra("customerId", customerId.toString())
         }
         previewLauncher.launch(intent)
     }

@@ -28,7 +28,7 @@ constructor(
 ) : ViewModel() {
     sealed class DataState {
         object StateLess: DataState()
-        data class SaveSuccess(val jobOrderId: UUID): DataState()
+        data class SaveSuccess(val jobOrderId: UUID, val customerId: UUID): DataState()
         data class OpenServices(val list: List<MenuServiceItem>?, val item: MenuServiceItem?): DataState()
         data class OpenProducts(val list: List<MenuProductItem>?, val item: MenuProductItem?): DataState()
         data class OpenExtras(val list: List<MenuExtrasItem>?, val item: MenuExtrasItem?): DataState()
@@ -58,7 +58,6 @@ constructor(
     val jobOrderProducts = MutableLiveData<List<MenuProductItem>>()
     val jobOrderExtras = MutableLiveData<List<MenuExtrasItem>>()
     val discount = MutableLiveData<MenuDiscount>()
-    val discountInPeso = MutableLiveData(0f)
 
     val hasServices = MediatorLiveData<Boolean>().apply {
         fun update() {
@@ -94,6 +93,24 @@ constructor(
         }
         addSource(discount) { update() }
     }
+    val discountInPeso = MediatorLiveData<Float>().apply {
+        fun update() {
+            value = discount.value?.let {
+                if(it.deletedAt != null) return@let 0f
+                var total = 0f
+                total += it.getDiscount(serviceSubTotal(), DiscountApplicable.WASH_DRY_SERVICES)
+                total += it.getDiscount(productSubTotal(), DiscountApplicable.PRODUCTS_CHEMICALS)
+                total += it.getDiscount(extrasSubTotal(), DiscountApplicable.EXTRAS)
+                total += it.getDiscount(deliveryFee(), DiscountApplicable.DELIVERY)
+                total
+            } ?: 0f
+        }
+        addSource(jobOrderServices) {update()}
+        addSource(jobOrderProducts) {update()}
+        addSource(jobOrderExtras) {update()}
+        addSource(deliveryCharge) {update()}
+        addSource(discount) {update()}
+    }
     val hasAny = MediatorLiveData<Boolean>().apply {
         fun update() {
             value = hasServices.value!! || hasProducts.value!! || hasExtras.value!! || hasDelivery.value!!
@@ -106,22 +123,33 @@ constructor(
 
     val subtotal = MediatorLiveData<Float>().apply {
         fun update() {
-            discountInPeso.value = discount.value?.let {
-                if(it.deletedAt != null) return@let 0f
-                var total = 0f
-                total += it.getDiscount(serviceSubTotal(), DiscountApplicable.WASH_DRY_SERVICES)
-                total += it.getDiscount(productSubTotal(), DiscountApplicable.PRODUCTS_CHEMICALS)
-                total += it.getDiscount(extrasSubTotal(), DiscountApplicable.EXTRAS)
-                total += it.getDiscount(deliveryFee(), DiscountApplicable.DELIVERY)
-                total
-            } ?: 0f
-            value = productSubTotal() + serviceSubTotal() + extrasSubTotal() + deliveryFee() - discountInPeso.value!!
+//            discountInPeso.value = discount.value?.let {
+//                if(it.deletedAt != null) return@let 0f
+//                var total = 0f
+//                total += it.getDiscount(serviceSubTotal(), DiscountApplicable.WASH_DRY_SERVICES)
+//                total += it.getDiscount(productSubTotal(), DiscountApplicable.PRODUCTS_CHEMICALS)
+//                total += it.getDiscount(extrasSubTotal(), DiscountApplicable.EXTRAS)
+//                total += it.getDiscount(deliveryFee(), DiscountApplicable.DELIVERY)
+//                total
+//            } ?: 0f
+            value = productSubTotal() + serviceSubTotal() + extrasSubTotal() + deliveryFee() // - discountInPeso.value!!
         }
         addSource(jobOrderServices) {update()}
         addSource(jobOrderProducts) {update()}
         addSource(jobOrderExtras) {update()}
         addSource(deliveryCharge) {update()}
-        addSource(discount) {update()}
+//        addSource(discount) {update()}
+    }
+
+    val discountedAmount = MediatorLiveData<Float>().apply {
+        fun update() {
+            val _subtotal = subtotal.value ?: 0f
+            val _discount = discountInPeso.value ?: 0f
+            value = _subtotal - _discount
+        }
+
+        addSource(subtotal) {update()}
+        addSource(discountInPeso) {update()}
     }
 
     private fun serviceSubTotal() : Float {
@@ -305,7 +333,12 @@ constructor(
             val customerName = currentCustomer.value?.name
             val customerId = currentCustomer.value?.id
             val preparedBy = "Some staff"
-            val jobOrder = EntityJobOrder(jobOrderNumber, customerId, customerName, preparedBy).apply {
+
+            val _subtotal = subtotal.value ?: 0f
+            val _discount = discountInPeso.value ?: 0f
+            val _discountedAmount = _subtotal - _discount
+
+            val jobOrder = EntityJobOrder(jobOrderNumber, customerId, customerName, preparedBy, _subtotal, _discount, _discountedAmount).apply {
                 id = jobOrderId.value!!
             }
             val services = jobOrderServices.value?.map {
@@ -336,7 +369,7 @@ constructor(
             val jobOrderWithItem = EntityJobOrderWithItems(jobOrder, services, extras, products, delivery, discount)
 
             jobOrderRepository.save(jobOrderWithItem)
-            _dataState.value = DataState.SaveSuccess(jobOrder.id)
+            _dataState.value = DataState.SaveSuccess(jobOrder.id, customerId!!)
         }
     }
 }

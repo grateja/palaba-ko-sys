@@ -2,7 +2,6 @@ package com.csi.palabakosys.room.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.csi.palabakosys.model.MachineType
 import com.csi.palabakosys.room.entities.EntityMachine
 import java.util.*
 
@@ -12,7 +11,7 @@ abstract class DaoMachine : BaseDao<EntityMachine> {
     abstract suspend fun getAll(machineType: String): List<EntityMachine>
 
     @Query("SELECT * FROM machines WHERE id = :id")
-    abstract suspend fun get(id: String) : EntityMachine?
+    abstract suspend fun get(id: String?) : EntityMachine?
 
     @Query("SELECT stack_order FROM machines WHERE machine_type = :machineType ORDER BY stack_order DESC")
     abstract suspend fun getLastStackOrder(machineType: String) : Int?

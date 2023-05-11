@@ -2,7 +2,6 @@ package com.csi.palabakosys.preferences
 
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
-import com.csi.palabakosys.model.PrinterConfig
 import com.csi.palabakosys.model.Role
 import com.csi.palabakosys.room.entities.EntityUser
 import com.google.gson.Gson
@@ -48,19 +47,19 @@ constructor (@ApplicationContext context: Context) {
         isAdmin.value = false
     }
 
-    fun setCurrentPrinter(printerConfig: PrinterConfig) {
+    fun setCurrentPrinter(printerSettings: PrinterSettings) {
         with(sharedPreferences.edit()) {
-            putString("printer_name", printerConfig.name)
-            putString("printer_address", printerConfig.address)
-            putInt("printer_dpi", printerConfig.dpi)
-            putFloat("printer_width", printerConfig.width)
-            putInt("printer_character", printerConfig.character)
+            putString("printer_name", printerSettings.name)
+            putString("printer_address", printerSettings.address)
+            putInt("printer_dpi", printerSettings.dpi)
+            putFloat("printer_width", printerSettings.width)
+            putInt("printer_character", printerSettings.character)
             apply()
         }
     }
 
-    fun printer(): PrinterConfig {
-        return PrinterConfig(
+    fun printerSettings(): PrinterSettings {
+        return PrinterSettings(
             sharedPreferences.getString("printer_name", ""),
             sharedPreferences.getString("printer_address", ""),
             sharedPreferences.getInt("printer_dpi", 203),

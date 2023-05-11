@@ -2,8 +2,7 @@ package com.csi.palabakosys.model
 
 enum class PaymentMethodEnum(val value: String) {
     CASH("Cash"),
-    CASHLESS("Cashless"),
-    CASH_BACK("Cashback");
+    CASHLESS("Cashless");
 
     override fun toString(): String {
         return value

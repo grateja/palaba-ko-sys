@@ -12,6 +12,7 @@ import com.csi.palabakosys.util.DataState
 import com.csi.palabakosys.util.InputValidation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,7 +32,7 @@ constructor(
     }
     fun get(jobOrderId: String) {
         viewModelScope.launch {
-            repository.get(jobOrderId).let {
+            repository.get(UUID.fromString(jobOrderId)).let {
                 if(it != null) {
                     jobOrder.value = it
 //                    model.value = it.jobOrder.entityJobOrderVoid ?: EntityJobOrderVoid(appPreferenceRepository.getUser()?.name)

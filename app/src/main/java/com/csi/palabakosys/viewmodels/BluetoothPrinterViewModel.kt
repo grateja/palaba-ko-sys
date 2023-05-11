@@ -4,8 +4,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.csi.palabakosys.R
-import com.csi.palabakosys.adapters.Adapter
 import com.csi.palabakosys.preferences.AppPreferenceRepository
 import com.csi.palabakosys.util.PrinterHelper
 import com.dantsu.escposprinter.EscPosPrinter
@@ -38,7 +36,7 @@ constructor(
         viewModelScope.launch {
             withContext(Dispatchers.Default) {
 //                val connection = BluetoothConnection(adapter.getSelectedItem()?.getItem()?.device)
-                appPreferenceRepository.printer().let {
+                appPreferenceRepository.printerSettings().let {
                     try {
                         println("Setting printer")
                         val _printer = EscPosPrinter(connection, it.dpi, it.width, it.character)

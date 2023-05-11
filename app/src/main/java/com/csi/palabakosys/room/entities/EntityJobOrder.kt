@@ -15,7 +15,19 @@ open class EntityJobOrder(
     var customerName: String?,
 
     @ColumnInfo(name = "prepared_by")
-    var preparedBy: String?
+    var preparedBy: String?,
+
+    @ColumnInfo(name = "subtotal")
+    var subtotal: Float,
+
+    @ColumnInfo(name = "discount_in_peso")
+    var discountInPeso: Float,
+
+    @ColumnInfo(name = "discounted_amount")
+    var discountedAmount: Float,
+
+    @ColumnInfo(name = "payment_id")
+    var paymentId: UUID? = null,
 ) : BaseEntity() {
     @Embedded
     var entityJobOrderVoid: EntityJobOrderVoid? = null

@@ -43,10 +43,14 @@ data class EntityJobOrderWithItems (
     var customer: EntityCustomer? = null
 
     @Relation(
-        parentColumn = "id",
-        entityColumn = "job_order_id"
+        parentColumn = "payment_id",
+        entityColumn = "id"
     )
     var payment: EntityJobOrderPayment? = null
+
+    fun totalAmount() {
+
+    }
 
 //
 //    @Relation(

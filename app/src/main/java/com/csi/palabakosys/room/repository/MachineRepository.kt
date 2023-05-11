@@ -1,9 +1,11 @@
 package com.csi.palabakosys.room.repository
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
 import com.csi.palabakosys.model.MachineType
 import com.csi.palabakosys.room.dao.DaoMachine
 import com.csi.palabakosys.room.entities.EntityMachine
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -14,7 +16,6 @@ class MachineRepository
 ) : BaseRepository<EntityMachine>(daoMachine) {
     override suspend fun get(id: String?) : EntityMachine? {
         if(id == null) return null
-
         return daoMachine.get(id)
     }
 
