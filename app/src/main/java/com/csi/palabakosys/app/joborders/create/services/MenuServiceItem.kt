@@ -3,8 +3,8 @@ package com.csi.palabakosys.app.joborders.create.services
 import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Ignore
-import com.csi.palabakosys.model.MachineType
-import com.csi.palabakosys.model.WashType
+import com.csi.palabakosys.model.EnumMachineType
+import com.csi.palabakosys.model.EnumWashType
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import java.time.Instant
@@ -25,10 +25,10 @@ class MenuServiceItem(
     val price: Float,
 
     @ColumnInfo(name = "svc_machine_type")
-    val machineType: MachineType,
+    val machineType: EnumMachineType,
 
     @ColumnInfo(name = "svc_wash_type")
-    val washType: WashType?,
+    val washType: EnumWashType?,
 
     var quantity: Int,
     var used: Int,

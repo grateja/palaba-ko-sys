@@ -7,6 +7,8 @@ import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
+import com.csi.palabakosys.app.auth.AuthActionDialogActivity
+import com.csi.palabakosys.app.auth.LoginCredentials
 import com.csi.palabakosys.app.joborders.create.delivery.DeliveryCharge
 import com.csi.palabakosys.app.joborders.create.delivery.JOSelectDeliveryActivity
 import com.csi.palabakosys.app.joborders.create.discount.JOSelectDiscountActivity
@@ -38,6 +40,7 @@ class JobOrderCreateActivity : AppCompatActivity() {
     private val extrasLauncher = ActivityLauncher(this)
     private val discountLauncher = ActivityLauncher(this)
     private val previewLauncher = ActivityLauncher(this)
+    private val authLauncher = ActivityLauncher(this)
 
     private val servicesAdapter = JobOrderServiceItemAdapter()
     private val productsAdapter = JobOrderProductsItemAdapter()
@@ -89,6 +92,14 @@ class JobOrderCreateActivity : AppCompatActivity() {
             viewModel.applyDiscount(result)
         }
 
+        authLauncher.onOk = {
+//            val email = it.data?.getStringExtra(AuthActionDialogActivity.EMAIL_EXTRA)
+//            val password = it.data?.getStringExtra(AuthActionDialogActivity.PASSWORD_EXTRA)
+            val result = it.data?.getParcelableExtra<LoginCredentials>(AuthActionDialogActivity.RESULT)?.let {
+                viewModel.save(it.userId)
+            }
+        }
+
         previewLauncher.onOk = {
             finish()
         }
@@ -138,7 +149,8 @@ class JobOrderCreateActivity : AppCompatActivity() {
         })
 
         binding.controls.buttonOk.setOnClickListener {
-            viewModel.save()
+            prepareSubmit()
+            //viewModel.save()
         }
 
         binding.controls.buttonCancel.setOnClickListener {
@@ -173,6 +185,13 @@ class JobOrderCreateActivity : AppCompatActivity() {
                 }
             }
         })
+    }
+
+    private fun prepareSubmit() {
+        val intent = Intent(this, AuthActionDialogActivity::class.java).apply {
+            putExtra(AuthActionDialogActivity.MESSAGE, "Authentication Required")
+        }
+        authLauncher.launch(intent)
     }
 
     private fun previewJobOrder(jobOrderId: UUID, customerId: UUID) {

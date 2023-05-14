@@ -1,7 +1,7 @@
 package com.csi.palabakosys.room.entities
 
 import androidx.room.ColumnInfo
-import com.csi.palabakosys.model.MachineType
+import com.csi.palabakosys.model.EnumMachineType
 import java.util.*
 
 data class EntityCustomerQueueService (
@@ -14,5 +14,5 @@ data class EntityCustomerQueueService (
     @ColumnInfo(name = "customer_id")
     val customerId: UUID,
     @ColumnInfo(name = "machine_type")
-    val machineType: MachineType,
+    val machineType: EnumMachineType,
 )

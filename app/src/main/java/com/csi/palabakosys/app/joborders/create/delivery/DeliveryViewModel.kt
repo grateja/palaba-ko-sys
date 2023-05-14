@@ -1,11 +1,11 @@
 package com.csi.palabakosys.app.joborders.create.delivery
 
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.csi.palabakosys.model.DeliveryOption
+import androidx.lifecycle.*
+import com.csi.palabakosys.model.EnumDeliveryOption
+import com.csi.palabakosys.model.Rule
 import com.csi.palabakosys.room.repository.DeliveryProfilesRepository
+import com.csi.palabakosys.util.DataState
+import com.csi.palabakosys.util.InputValidation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.time.Instant
@@ -21,9 +21,12 @@ constructor(
 ) : ViewModel()
 {
     var deliveryProfiles = MutableLiveData<List<MenuDeliveryProfile>>()
-    val deliveryOption = MutableLiveData(DeliveryOption.PICKUP_AND_DELIVERY)
-    val distance = MutableLiveData(1f)
+    val deliveryOption = MutableLiveData(EnumDeliveryOption.PICKUP_AND_DELIVERY)
+    val distance = MutableLiveData("1")
     val profile = MutableLiveData<MenuDeliveryProfile>()
+
+    private val _dataState = MutableLiveData<DataState<DeliveryCharge>>()
+    val dataState: LiveData<DataState<DeliveryCharge>> = _dataState
 
     val label = MediatorLiveData<String>().apply {
         fun update() {
@@ -32,31 +35,55 @@ constructor(
         addSource(profile) {update()}
     }
 
+    fun resetState() {
+        _dataState.value = DataState.StateLess
+    }
+
     fun setDeliveryProfile(profileId: UUID) {
         this.profile.value = deliveryProfiles.value?.find { it.deliveryProfileRefId == profileId }
     }
 
-    fun prepareDeliveryCharge(delete: Boolean) : DeliveryCharge? {
-//        return DeliveryCharge(profile.value!!, distance.value!!, deliveryOption.value!!)
+    fun prepareDeliveryCharge(delete: Boolean) {
+        val inputValidation = InputValidation()
+
         val option = this.deliveryOption.value
-        val distance = this.distance.value
         val profile = this.profile.value
-        if(profile == null || distance == null || option == null) {
-            return null
+
+        inputValidation.addRules("distance", distance.value,
+            arrayOf(
+                Rule.Required,
+                Rule.IsNumeric(distance.value))
+        )
+
+        if(profile == null) {
+            inputValidation.addError("profile", "Please select delivery profile")
         }
-        val price = option.charge * ((profile.pricePerKm * distance) + profile.baseFare)
+
+        if(option == null) {
+            inputValidation.addError("option", "Please select delivery option")
+        }
+
+        if(inputValidation.isInvalid()) {
+            _dataState.value = DataState.InvalidInput(inputValidation)
+            return
+        }
+
+        val distance = this.distance.value?.toFloat()
+        val price = option!!.charge * ((profile!!.pricePerKm * distance!!) + profile.baseFare)
         val deletedAt = if(delete) { Instant.now() } else { null }
-        return DeliveryCharge(profile.deliveryProfileRefId, profile.vehicle, distance, option, price, deletedAt)
+
+        val deliveryCharge = DeliveryCharge(profile.deliveryProfileRefId, profile.vehicle, distance, option, price, deletedAt)
+        this._dataState.value = DataState.Save(deliveryCharge)
     }
 
-    fun setDeliveryOption(deliveryOption: DeliveryOption) {
+    fun setDeliveryOption(deliveryOption: EnumDeliveryOption) {
         this.deliveryOption.value = deliveryOption
     }
 
     fun setDeliveryCharge(deliveryCharge: DeliveryCharge) {
         this.setDeliveryOption(deliveryCharge.deliveryOption)
         this.setDeliveryProfile(deliveryCharge.deliveryProfileId)
-        this.distance.value = deliveryCharge.distance
+        this.distance.value = deliveryCharge.distance.toString()
     }
 
     init {

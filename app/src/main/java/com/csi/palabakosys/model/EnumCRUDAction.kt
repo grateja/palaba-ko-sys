@@ -1,6 +1,6 @@
 package com.csi.palabakosys.model
 
-enum class ActionEnum(private val value: String) {
+enum class EnumCRUDAction(private val value: String) {
     INSERT("insert"),
     UPDATE("update"),
     DELETE("delete"),
@@ -12,10 +12,9 @@ enum class ActionEnum(private val value: String) {
     }
 
     companion object {
-        fun fromString(key: String) : ActionEnum? {
-            val list = values()
-            return list.find {
-                it.toString() == key
+        fun fromString(key: String) : EnumCRUDAction? {
+            return values().find {
+                it.name.uppercase() == key.uppercase()
             }
         }
     }

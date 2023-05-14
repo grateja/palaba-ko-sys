@@ -3,8 +3,7 @@ package com.csi.palabakosys.room.entities
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
-import com.csi.palabakosys.model.MachineType
-import java.time.Instant
+import com.csi.palabakosys.model.EnumMachineType
 import java.util.*
 
 @Entity(tableName = "machines")
@@ -13,7 +12,7 @@ data class EntityMachine(
     var stackOrder: Int?,
 
     @ColumnInfo(name = "machine_type")
-    var machineType: MachineType?,
+    var machineType: EnumMachineType?,
 
     @ColumnInfo(name = "ip_end")
     var ipEnd: Int,

@@ -4,7 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.csi.palabakosys.model.PaymentMethodEnum
+import com.csi.palabakosys.app.preferences.user.AuthRepository
+import com.csi.palabakosys.model.EnumPaymentMethod
 import com.csi.palabakosys.room.entities.EntityCashless
 import com.csi.palabakosys.room.entities.EntityJobOrder
 import com.csi.palabakosys.room.entities.EntityJobOrderPayment
@@ -22,6 +23,7 @@ class JobOrderPaymentViewModel
 constructor(
     private val jobOrderRepository: JobOrderRepository,
     private val paymentRepository: PaymentRepository,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
     sealed class DataState {
         object StateLess : DataState()
@@ -37,7 +39,7 @@ constructor(
     private val _amountDue = MutableLiveData(0f)
     val amountDue: LiveData<Float> = _amountDue
 
-    val paymentMethod = MutableLiveData(PaymentMethodEnum.CASH)
+    val paymentMethod = MutableLiveData(EnumPaymentMethod.CASH)
     val cashReceived = MutableLiveData("")
     val orNumber = MutableLiveData("")
     val cashless = MutableLiveData<EntityCashless?>()
@@ -72,15 +74,14 @@ constructor(
         }
     }
 
-    fun save() {
+    fun save(userId: UUID) {
         viewModelScope.launch {
-            val paidTo = "some staff"
             val payment = EntityJobOrderPayment(
                 paymentId,
                 paymentMethod.value!!,
                 _amountDue.value!!,
                 cashReceived.value!!.toFloat(),
-                paidTo,
+                userId,
                 orNumber.value!!,
                 cashless.value
             )

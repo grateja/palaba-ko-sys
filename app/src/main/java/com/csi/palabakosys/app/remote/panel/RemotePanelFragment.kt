@@ -6,18 +6,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import com.csi.palabakosys.app.machines.MachinesViewModel
 import com.csi.palabakosys.app.remote.shared_ui.RemoteActivationViewModel
 import com.csi.palabakosys.databinding.FragmentRemotePanelBinding
-import com.csi.palabakosys.model.MachineType
 import com.google.android.material.tabs.TabLayout
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.UUID
 
+@AndroidEntryPoint
 class RemotePanelFragment : Fragment() {
     private lateinit var binding: FragmentRemotePanelBinding
-    private val viewModel: RemoteActivationViewModel by activityViewModels()
+    private val remoteViewModel: RemoteActivationViewModel by activityViewModels()
+    private val viewModel: MachinesViewModel by activityViewModels()
     private val adapter = RemotePanelAdapter()
 
     override fun onCreateView(
@@ -26,7 +29,7 @@ class RemotePanelFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentRemotePanelBinding.inflate(inflater, container, false)
-        binding.viewModel = viewModel
+        binding.viewModel = remoteViewModel
         binding.lifecycleOwner = viewLifecycleOwner
         binding.recyclerMachineTiles.adapter = adapter
         subscribeObservers()
@@ -48,14 +51,14 @@ class RemotePanelFragment : Fragment() {
             override fun onTabReselected(tab: TabLayout.Tab?) {
             }
         })
-        viewModel.selectedTab.observe(viewLifecycleOwner, Observer {
-            viewModel.loadMachines(it)
-        })
+//        remoteViewModel.selectedTab.observe(viewLifecycleOwner, Observer {
+//            remoteViewModel.loadMachines(it)
+//        })
         viewModel.machines.observe(viewLifecycleOwner, Observer {
             adapter.setData(it)
             it.filter { m -> m.workerId != null }.forEach { mf ->
                 mf.workerId?.let { uuid ->
-                    viewModel.pendingWork(uuid).observe(viewLifecycleOwner, Observer { wi ->
+                    remoteViewModel.pendingWork(uuid).observe(viewLifecycleOwner, Observer { wi ->
                         if(wi != null) {
                             adapter.setConnection(!wi.state.isFinished, null, wi.id)
                         }
@@ -63,7 +66,7 @@ class RemotePanelFragment : Fragment() {
                 }
             }
         })
-        viewModel.dataState.observe(viewLifecycleOwner, Observer {
+        remoteViewModel.dataState.observe(viewLifecycleOwner, Observer {
             when(it) {
                 is RemoteActivationViewModel.DataState.InitiateConnection -> {
                     adapter.setConnection(true, it.machineId, it.workerId)
@@ -83,7 +86,7 @@ class RemotePanelFragment : Fragment() {
 
     private fun subscribeEvents() {
         adapter.onItemClick = {
-            viewModel.selectMachine(it.entityMachine)
+            remoteViewModel.selectMachine(it.entityMachine)
         }
     }
 }

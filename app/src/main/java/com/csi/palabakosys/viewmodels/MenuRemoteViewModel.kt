@@ -38,19 +38,19 @@ constructor(
 
     fun loadServicesByJobOrders(jobOrderId: UUID) {
         viewModelScope.launch {
-            repository.getAvailableServiceByCustomerId(jobOrderId.toString(), machine.value?.machineType).let {
+//            repository.getAvailableServiceByCustomerId(jobOrderId, machine.value?.machineType).let {
 //                remoteWashServicesAdapter.setData(it.map { _item -> RecyclerItem(_item) })
-            }
+//            }
         }
     }
 
-    fun get(machineId: String?) {
+    fun get(machineId: UUID?) {
         viewModelScope.launch {
             machineRepo.get(machineId)?.let { _machine ->
                 machine.value = _machine
-                repository.getByMachineType(_machine.machineType).let {
+//                repository.getByMachineType(_machine.machineType).let {
 //                    remoteJobOrderAdapter.setData(it.map { _item -> RecyclerItem(_item) })
-                }
+//                }
             }
         }
     }

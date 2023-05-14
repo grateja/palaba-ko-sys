@@ -3,6 +3,7 @@ package com.csi.palabakosys.room.repository
 import com.csi.palabakosys.app.customers.CustomerMinimal
 import com.csi.palabakosys.room.dao.DaoCustomer
 import com.csi.palabakosys.room.entities.EntityCustomer
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -12,7 +13,7 @@ class CustomerRepository
 constructor (
     private val daoCustomer: DaoCustomer,
 ) : BaseRepository<EntityCustomer>(daoCustomer) {
-    override suspend fun get(id: String?) : EntityCustomer? {
+    override suspend fun get(id: UUID?) : EntityCustomer? {
         if(id == null) return null
         return daoCustomer.get(id)
     }
@@ -32,5 +33,9 @@ constructor (
 
     suspend fun getCustomersMinimal(keyword: String?): List<CustomerMinimal> {
         return daoCustomer.getCustomersMinimal(keyword)
+    }
+
+    suspend fun getCustomerMinimalByCRN(crn: String?): CustomerMinimal? {
+        return daoCustomer.getCustomerMinimalByCRN(crn)
     }
 }

@@ -51,32 +51,32 @@ constructor (
 
     override suspend fun doWork(): Result {
         println("Work started")
-        val machineId = inputData.getString(MACHINE_ID)
-        val jobOrderServiceId = inputData.getString(JOB_ORDER_SERVICE_ID)
+        val machineId = UUID.fromString(inputData.getString(MACHINE_ID))
+        val jobOrderServiceId = UUID.fromString(inputData.getString(JOB_ORDER_SERVICE_ID))
 
         val machine = machineRepository.get(machineId)
         if(machine == null) {
             outputData.putString(MESSAGE, "Invalid machine ID")
             return Result.failure(outputData.build())
         } else {
-            machineRepository.setWorkerId(machine.id.toString(), id.toString())
+            machineRepository.setWorkerId(machine.id, id)
             outputData.putString(MACHINE_ID, machine.id.toString())
         }
 
         val jobOrderService = queuesRepository.get(jobOrderServiceId)
         if(jobOrderService == null) {
-            machineRepository.setWorkerId(machine.id.toString(), null)
+            machineRepository.setWorkerId(machine.id, null)
             return Result.failure(outputData.putString(MESSAGE, "Service not found").build())
         }
 
         return if(activate(machine, jobOrderService)) {
-            val machineUsage = EntityMachineUsage(UUID.fromString(machineId), UUID.fromString(jobOrderServiceId))
+            val machineUsage = EntityMachineUsage(machineId, jobOrderServiceId)
             val activationRef = EntityActivationRef(Instant.now(), jobOrderService.serviceRef.minutes,  jobOrderService.jobOrderId)
 
             remoteRepository.activate(activationRef, jobOrderServiceId, machineId, machineUsage)
             Result.success(outputData.putString(MESSAGE, "Success").build())
         } else {
-            machineRepository.setWorkerId(machine.id.toString(), null)
+            machineRepository.setWorkerId(machine.id, null)
             Result.failure(outputData.build())
         }
     }

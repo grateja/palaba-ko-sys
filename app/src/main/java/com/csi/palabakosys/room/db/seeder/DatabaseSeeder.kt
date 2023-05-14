@@ -15,6 +15,7 @@ class DatabaseSeeder(val db: MainDatabase) {
             ProductsSeeder(db.daoProduct()).seed()
             DeliveryProfileSeeder(db.daoDeliveryProfile()).seed()
             DiscountsSeeder(db.daoDiscount()).seed()
+            UsersSeeder(db.daoUser()).seed()
         }
     }
 }

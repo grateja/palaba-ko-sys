@@ -5,7 +5,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.csi.palabakosys.model.MachineType" />
+            type="com.csi.palabakosys.model.EnumMachineType" />
     </data>
     <LinearLayout
         android:layout_width="match_parent"

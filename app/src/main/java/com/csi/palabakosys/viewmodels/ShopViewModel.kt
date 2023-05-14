@@ -43,7 +43,7 @@ constructor(
     fun save() {
         mutableShop.value?.let {
             val inputValidation = InputValidation()
-            inputValidation.addRules("name", it.name.toString(), arrayOf(Rule.REQUIRED))
+            inputValidation.addRules("name", it.name.toString(), arrayOf(Rule.Required))
             if(inputValidation.isInvalid()) {
                 validation.value = inputValidation
                 return@let
@@ -51,7 +51,7 @@ constructor(
             viewModelScope.launch {
                 shopRepository.save(it)
                 mutableShop.value = it
-                _dataState.value = DataState.Success(it)
+                _dataState.value = DataState.Save(it)
             }
         }
     }

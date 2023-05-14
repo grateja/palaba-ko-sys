@@ -5,12 +5,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.csi.palabakosys.room.repository.IRepository
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 open class DeleteViewModel<T>(private val iRepository: IRepository<T>) : ViewModel() {
     val model = MutableLiveData<T>()
     val dataState = MutableLiveData<DataState<T>>()
 
-    fun get(id: String?) {
+    fun get(id: UUID?) {
         model.value.let { it ->
             if(it != null) return
             viewModelScope.launch {
@@ -28,7 +29,7 @@ open class DeleteViewModel<T>(private val iRepository: IRepository<T>) : ViewMod
             try {
                 model.value?.let {
                     if(iRepository.delete(it)) {
-                        dataState.value = DataState.Success(it)
+                        dataState.value = DataState.Save(it)
                     }
                 }
             } catch (e: Exception) {

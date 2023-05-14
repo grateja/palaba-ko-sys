@@ -23,6 +23,7 @@ constructor(
     fun setDiscount(discount: MenuDiscount?) {
         discounts.value?.onEach {
             if(it.selected) {
+                // deselect all the discounts first
                 it.selected = false
             }
         }

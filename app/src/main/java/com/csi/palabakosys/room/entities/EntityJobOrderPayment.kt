@@ -1,7 +1,7 @@
 package com.csi.palabakosys.room.entities
 
 import androidx.room.*
-import com.csi.palabakosys.model.PaymentMethodEnum
+import com.csi.palabakosys.model.EnumPaymentMethod
 import java.util.*
 
 @Entity(tableName = "job_order_payments")
@@ -10,7 +10,7 @@ data class EntityJobOrderPayment(
     override var id: UUID,
 
     @ColumnInfo(name = "payment_method")
-    var paymentMethod: PaymentMethodEnum,
+    var paymentMethod: EnumPaymentMethod,
 
     @ColumnInfo(name = "amount_due")
     var amountDue: Float = 0f,
@@ -18,8 +18,8 @@ data class EntityJobOrderPayment(
     @ColumnInfo(name = "cash_received")
     var cashReceived: Float,
 
-    @ColumnInfo(name = "paid_to")
-    var paidTo: String,
+    @ColumnInfo(name = "userId")
+    var userId: UUID,
 
     @ColumnInfo(name = "or_number")
     var orNumber: String? = null,

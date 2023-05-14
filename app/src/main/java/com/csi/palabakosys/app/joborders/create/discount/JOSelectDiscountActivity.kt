@@ -22,10 +22,12 @@ class JOSelectDiscountActivity : AppCompatActivity() {
         binding.recyclerDiscounts.adapter = adapter
 
         subscribeEvents()
+        subscribeListeners()
+
         viewModel.loadDiscounts()
     }
 
-    private fun subscribeEvents() {
+    private fun subscribeListeners() {
         viewModel.discounts.observe(this, Observer {
             adapter.setData(it)
             intent.getParcelableExtra<MenuDiscount>("discount")?.let { discount ->
@@ -34,7 +36,9 @@ class JOSelectDiscountActivity : AppCompatActivity() {
                 }
             }
         })
+    }
 
+    private fun subscribeEvents() {
         adapter.onItemClick = {
             setResult(RESULT_OK, Intent().putExtra("discount", it))
             finish()

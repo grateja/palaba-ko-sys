@@ -70,7 +70,7 @@ interface DaoJobOrder {
     suspend fun get(id: UUID) : EntityJobOrderWithItems?
 
     @Query("DELETE FROM job_orders WHERE id = :id")
-    suspend fun delete(id: String)
+    suspend fun delete(id: UUID)
 
 //    @Query("SELECT *, " +
 //            "(IFNULL((SELECT SUM(price) FROM job_order_services WHERE job_order_id = job_orders.id), 0) + " +

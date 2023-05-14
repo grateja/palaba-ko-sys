@@ -6,10 +6,10 @@ import java.util.*
 
 class EntityJobOrderListItem (
     jobOrderNumber: String?,
-    customerId: UUID?,
-    customerName: String?,
-    preparedBy: String?,
-) : EntityJobOrder(jobOrderNumber, customerId, customerName, preparedBy, 0f, 0f, 0f) {
+    customerId: UUID,
+    customerName: String,
+    preparedBy: UUID,
+) : EntityJobOrder(jobOrderNumber, customerId, preparedBy, 0f, 0f, 0f) {
     @ColumnInfo(name = "total_amount")
     var totalAmount: Float = 0f
 

@@ -1,11 +1,10 @@
 package com.csi.palabakosys.room.repository
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
-import com.csi.palabakosys.model.MachineType
+import com.csi.palabakosys.model.EnumMachineType
 import com.csi.palabakosys.room.dao.DaoMachine
 import com.csi.palabakosys.room.entities.EntityMachine
-import java.util.*
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -14,20 +13,24 @@ class MachineRepository
 @Inject constructor (
     private val daoMachine: DaoMachine,
 ) : BaseRepository<EntityMachine>(daoMachine) {
-    override suspend fun get(id: String?) : EntityMachine? {
+    override suspend fun get(id: UUID?) : EntityMachine? {
         if(id == null) return null
         return daoMachine.get(id)
     }
 
-    suspend fun getAll(machineType: MachineType): List<EntityMachine> {
-        return daoMachine.getAll(machineType.toString())
+    suspend fun getAll(machineType: EnumMachineType): List<EntityMachine> {
+        return daoMachine.getAll(machineType)
     }
 
-    suspend fun getLastStackOrder(machineType: MachineType?) : Int {
-        return daoMachine.getLastStackOrder(machineType.toString())?:1
+    suspend fun getLastStackOrder(machineType: EnumMachineType) : Int {
+        return daoMachine.getLastStackOrder(machineType)?:1
     }
 
-    suspend fun setWorkerId(machineId: String, workerId: String?) {
+    suspend fun setWorkerId(machineId: UUID, workerId: UUID?) {
         daoMachine.setWorkerId(machineId, workerId)
     }
+
+    fun getAllAsLiveData() : LiveData<List<EntityMachine>> = daoMachine.getAllAsLiveData()
+
+    fun getMachineLiveData(id: UUID) : LiveData<EntityMachine> = daoMachine.getMachineLiveData(id)
 }

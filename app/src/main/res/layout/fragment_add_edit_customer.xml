@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="24dp"
-            app:behavior_peekHeight="500dp"
+            app:behavior_peekHeight="1000dp"
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
             android:orientation="vertical">
             <LinearLayout
@@ -66,7 +66,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="CRN"
-                app:errorEnabled="true">
+                app:errorEnabled="true"
+                app:errorText="@{viewModel.validation.get(`crn`)}">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/textCRN"
@@ -74,6 +75,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number"
+                    android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`crn`)}"
                     android:maxLines="1" />
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout

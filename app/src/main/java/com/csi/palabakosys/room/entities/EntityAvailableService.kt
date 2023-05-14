@@ -2,8 +2,8 @@ package com.csi.palabakosys.room.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Relation
-import com.csi.palabakosys.model.MachineType
-import com.csi.palabakosys.model.WashType
+import com.csi.palabakosys.model.EnumMachineType
+import com.csi.palabakosys.model.EnumWashType
 import java.util.*
 
 data class EntityAvailableService(
@@ -21,10 +21,10 @@ data class EntityAvailableService(
     val jobOrderId: UUID?,
 
     @ColumnInfo(name = "wash_type")
-    val washType: WashType?,
+    val washType: EnumWashType?,
 
     @ColumnInfo(name = "machine_type")
-    val machineType: MachineType?,
+    val machineType: EnumMachineType?,
 
     @Relation(
         parentColumn = "id",

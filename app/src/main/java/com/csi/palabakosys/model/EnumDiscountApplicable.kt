@@ -1,6 +1,6 @@
 package com.csi.palabakosys.model
 
-enum class DiscountApplicable(val value: String, val id: Int) {
+enum class EnumDiscountApplicable(val value: String, val id: Int) {
     TOTAL_AMOUNT("Total Amount", 1),
     WASH_DRY_SERVICES("Wash & Dry Services", 2),
     PRODUCTS_CHEMICALS("Products & Chemicals", 3),
@@ -12,28 +12,25 @@ enum class DiscountApplicable(val value: String, val id: Int) {
     }
 
     companion object {
-        private fun fromId(id: Int?) : DiscountApplicable? {
+        private fun fromId(id: Int?) : EnumDiscountApplicable? {
             return values().find {
                 it.id == id
             }
         }
 
-        private fun fromIds(ids: List<Int>) : List<DiscountApplicable> {
+        private fun fromIds(ids: List<Int>) : List<EnumDiscountApplicable> {
             return ids.map {
                 fromId(it)!!
             }
-//            return values().filter { d ->
-//                ids.any {d.id == it} ?: false
-//            }
         }
 
-        fun fromIds(ids: String?) : List<DiscountApplicable> {
+        fun fromIds(ids: String?) : List<EnumDiscountApplicable> {
             return ids?.split(",")?.map{ it.toInt() }?.let {
                 fromIds(it)
             } ?: listOf()
         }
 
-        fun toIds(discounts: List<DiscountApplicable>) : String {
+        fun toIds(discounts: List<EnumDiscountApplicable>) : String {
             return discounts.joinToString(",") { it.id.toString() }
         }
     }

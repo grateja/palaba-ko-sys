@@ -1,6 +1,5 @@
 package com.csi.palabakosys.app.customers.create
 
-import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,17 +11,13 @@ import com.csi.palabakosys.databinding.FragmentAddEditCustomerBinding
 import com.csi.palabakosys.fragments.ModalFragment
 import com.csi.palabakosys.util.DataState
 import com.csi.palabakosys.util.hideKeyboard
+import com.csi.palabakosys.util.toUUID
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class AddEditCustomerFragment : ModalFragment<CustomerMinimal?>() {
     private val viewModel: AddEditCustomerViewModel by viewModels()
     private lateinit var binding: FragmentAddEditCustomerBinding
-
-//    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-//        super.onCreateDialog(savedInstanceState).apply {
-//            setCanceledOnTouchOutside(false)
-//        }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,6 +30,16 @@ class AddEditCustomerFragment : ModalFragment<CustomerMinimal?>() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
+        subscribeEvents()
+        subscribeListeners()
+
+        arguments?.getString("data").let {
+            viewModel.get(it.toUUID())
+        }
+        return binding.root
+    }
+
+    private fun subscribeEvents() {
         binding.buttonClose.setOnClickListener {
             dismiss()
         }
@@ -43,14 +48,11 @@ class AddEditCustomerFragment : ModalFragment<CustomerMinimal?>() {
             it.hideKeyboard()
             viewModel.save()
         }
-        val id = arguments?.getString("data")
-        viewModel.model.observe(viewLifecycleOwner, Observer {
-            println("CRN from fragment")
-            println(it?.crn)
-        })
-        viewModel.get(id)
+    }
+
+    private fun subscribeListeners() {
         viewModel.dataState.observe(viewLifecycleOwner, Observer {
-            if(it is DataState.Success) {
+            if(it is DataState.Save) {
                 onOk?.invoke(CustomerMinimal(
                     it.data.id,
                     it.data.name!!,
@@ -64,7 +66,6 @@ class AddEditCustomerFragment : ModalFragment<CustomerMinimal?>() {
             }
             binding.progressBarSaving.visibility = View.INVISIBLE
         })
-        return binding.root
     }
 
     companion object {

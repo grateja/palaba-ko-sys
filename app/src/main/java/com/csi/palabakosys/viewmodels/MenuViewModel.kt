@@ -14,6 +14,6 @@ constructor(
     private val appPreferenceRepository: AppPreferenceRepository
 ) : ViewModel()
 {
-    val activeUser: MutableLiveData<EntityUser?>
-        get() = appPreferenceRepository.activeUser
+//    val activeUser: MutableLiveData<EntityUser?>
+//        get() = appPreferenceRepository.activeUser
 }

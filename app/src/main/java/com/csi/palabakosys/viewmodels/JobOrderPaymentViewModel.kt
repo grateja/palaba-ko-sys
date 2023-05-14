@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 //import com.csi.palabakosys.adapters.RecyclerItem
 //import com.csi.palabakosys.adapters.SimpleListAdapter
-import com.csi.palabakosys.model.PaymentMethodEnum
+import com.csi.palabakosys.model.EnumPaymentMethod
 import com.csi.palabakosys.model.Rule
 import com.csi.palabakosys.preferences.AppPreferenceRepository
 import com.csi.palabakosys.room.entities.*
@@ -50,7 +50,7 @@ constructor(
     val cashlessRefNumber = MutableLiveData("")
 
     val availableCashback = MutableLiveData(0f)
-    val paymentMethod = MutableLiveData(PaymentMethodEnum.CASH)
+    val paymentMethod = MutableLiveData(EnumPaymentMethod.CASH)
 
     val amountToPay = MediatorLiveData<Float>().apply {
         fun update() {
@@ -64,7 +64,7 @@ constructor(
     }
     val cashlessAmount = MediatorLiveData<Float>().apply {
         fun update() {
-            if(paymentMethod.value == PaymentMethodEnum.CASHLESS) {
+            if(paymentMethod.value == EnumPaymentMethod.CASHLESS) {
                 value = amountToPay.value?:0f
             } else {
                 value = 0f
@@ -131,12 +131,12 @@ constructor(
 //    val serviceAdapter = SimpleListAdapter()
 //    val productAdapter = SimpleListAdapter()
 
-    fun clearInput(paymentMethod: PaymentMethodEnum?) {
+    fun clearInput(paymentMethod: EnumPaymentMethod?) {
         when(paymentMethod) {
-            PaymentMethodEnum.CASH -> {
+            EnumPaymentMethod.CASH -> {
                 cashPayment.value = "0"
             }
-            PaymentMethodEnum.CASHLESS -> {
+            EnumPaymentMethod.CASHLESS -> {
                 cashlessProvider.value = ""
                 cashlessRefNumber.value = ""
             }
@@ -154,16 +154,16 @@ constructor(
         validation.value = validation.value?.removeError(key)
     }
 
-    fun setInput(paymentMethod: PaymentMethodEnum?) {
+    fun setInput(paymentMethod: EnumPaymentMethod?) {
         when(paymentMethod) {
-            PaymentMethodEnum.CASH -> {
+            EnumPaymentMethod.CASH -> {
                 cashPayment.value = "0"//amountToPay.value?.toString()
 //                if(crudActionEnum.value == CRUDActionEnum.CREATE) {
 //                } else if(crudActionEnum.value == CRUDActionEnum.UPDATE) {
 //                    cash.value = model.value?.cash?.toString()
 //                }
             }
-            PaymentMethodEnum.CASHLESS -> {
+            EnumPaymentMethod.CASHLESS -> {
                 cashlessProvider.value = ""
                 cashlessRefNumber.value = ""
 //                model.value?.entityCashless.let {
@@ -264,13 +264,13 @@ constructor(
     fun isInvalid() : Boolean {
         val inputValidation = InputValidation()
         when(paymentMethod.value) {
-            PaymentMethodEnum.CASH -> {
-                inputValidation.addRules("cashPayment", cashPayment.value, arrayOf(Rule.REQUIRED, Rule.MIN(amountToPay.value, "Not enough cash")))
+            EnumPaymentMethod.CASH -> {
+                inputValidation.addRules("cashPayment", cashPayment.value, arrayOf(Rule.Required, Rule.Min(amountToPay.value, "Not enough cash")))
             }
-            PaymentMethodEnum.CASHLESS -> {
-                inputValidation.addRules("cashlessProvider", cashlessProvider.value, arrayOf(Rule.REQUIRED))
-                inputValidation.addRules("cashlessRefNumber", cashlessRefNumber.value, arrayOf(Rule.REQUIRED))
-                inputValidation.addRules("cashlessAmount", cashlessAmount.value, arrayOf(Rule.REQUIRED))
+            EnumPaymentMethod.CASHLESS -> {
+                inputValidation.addRules("cashlessProvider", cashlessProvider.value, arrayOf(Rule.Required))
+                inputValidation.addRules("cashlessRefNumber", cashlessRefNumber.value, arrayOf(Rule.Required))
+                inputValidation.addRules("cashlessAmount", cashlessAmount.value, arrayOf(Rule.Required))
                 cashlessEntity = EntityCashless(cashlessProvider.value, cashlessRefNumber.value, cashlessAmount.value)
             }
 //            PaymentMethodEnum.CASH_BACK -> {

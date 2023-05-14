@@ -16,7 +16,7 @@ constructor (
     private val daoRemote: DaoRemote
 ) {
     suspend fun activate(
-        activationRef: EntityActivationRef, jobOrderServiceId: String?, machineId: String?, machineUsage: EntityMachineUsage
+        activationRef: EntityActivationRef, jobOrderServiceId: UUID, machineId: UUID, machineUsage: EntityMachineUsage
     ) {
         daoRemote.activate(activationRef, jobOrderServiceId, machineId, machineUsage)
     }

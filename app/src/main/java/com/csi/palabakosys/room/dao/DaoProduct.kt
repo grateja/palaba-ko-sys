@@ -3,11 +3,12 @@ package com.csi.palabakosys.room.dao
 import androidx.room.*
 import com.csi.palabakosys.app.joborders.create.products.MenuProductItem
 import com.csi.palabakosys.room.entities.EntityProduct
+import java.util.UUID
 
 @Dao
 abstract class DaoProduct : BaseDao<EntityProduct> {
     @Query("SELECT * FROM products WHERE id = :id")
-    abstract suspend fun get(id: String) : EntityProduct?
+    abstract suspend fun get(id: UUID) : EntityProduct?
 
     @Query("SELECT * FROM products")
     abstract suspend fun getAll() : List<EntityProduct>

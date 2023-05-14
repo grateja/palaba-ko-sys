@@ -10,7 +10,8 @@ import com.csi.palabakosys.app.joborders.create.discount.MenuDiscount
 import com.csi.palabakosys.app.joborders.create.extras.MenuExtrasItem
 import com.csi.palabakosys.app.joborders.create.products.MenuProductItem
 import com.csi.palabakosys.app.joborders.create.services.MenuServiceItem
-import com.csi.palabakosys.model.DiscountApplicable
+import com.csi.palabakosys.app.preferences.user.AuthRepository
+import com.csi.palabakosys.model.EnumDiscountApplicable
 import com.csi.palabakosys.room.entities.*
 import com.csi.palabakosys.room.repository.JobOrderRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,7 +25,8 @@ class CreateJobOrderViewModel
 
 @Inject
 constructor(
-    private val jobOrderRepository: JobOrderRepository
+    private val jobOrderRepository: JobOrderRepository,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
     sealed class DataState {
         object StateLess: DataState()
@@ -98,10 +100,10 @@ constructor(
             value = discount.value?.let {
                 if(it.deletedAt != null) return@let 0f
                 var total = 0f
-                total += it.getDiscount(serviceSubTotal(), DiscountApplicable.WASH_DRY_SERVICES)
-                total += it.getDiscount(productSubTotal(), DiscountApplicable.PRODUCTS_CHEMICALS)
-                total += it.getDiscount(extrasSubTotal(), DiscountApplicable.EXTRAS)
-                total += it.getDiscount(deliveryFee(), DiscountApplicable.DELIVERY)
+                total += it.getDiscount(serviceSubTotal(), EnumDiscountApplicable.WASH_DRY_SERVICES)
+                total += it.getDiscount(productSubTotal(), EnumDiscountApplicable.PRODUCTS_CHEMICALS)
+                total += it.getDiscount(extrasSubTotal(), EnumDiscountApplicable.EXTRAS)
+                total += it.getDiscount(deliveryFee(), EnumDiscountApplicable.DELIVERY)
                 total
             } ?: 0f
         }
@@ -327,18 +329,19 @@ constructor(
         }
     }
 
-    fun save() {
+    fun save(userId: UUID) {
         viewModelScope.launch {
             val jobOrderNumber = jobOrderNumber.value
-            val customerName = currentCustomer.value?.name
-            val customerId = currentCustomer.value?.id
-            val preparedBy = "Some staff"
+//            val customerName = currentCustomer.value?.name
+            val customerId = currentCustomer.value?.id ?: return@launch
+
+            // validation starts here
 
             val _subtotal = subtotal.value ?: 0f
             val _discount = discountInPeso.value ?: 0f
             val _discountedAmount = _subtotal - _discount
 
-            val jobOrder = EntityJobOrder(jobOrderNumber, customerId, customerName, preparedBy, _subtotal, _discount, _discountedAmount).apply {
+            val jobOrder = EntityJobOrder(jobOrderNumber, customerId, userId, _subtotal, _discount, _discountedAmount).apply {
                 id = jobOrderId.value!!
             }
             val services = jobOrderServices.value?.map {

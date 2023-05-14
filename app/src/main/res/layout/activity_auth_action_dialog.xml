@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".app.auth.AuthActionDialogActivity">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.csi.palabakosys.app.auth.AuthDialogViewModel" />
+    </data>
+    <com.google.android.material.card.MaterialCardView
+        app:contentPadding="20dp"
+        android:layout_width="380dp"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+<!--            <TextView-->
+<!--                style="@style/TileTitle"-->
+<!--                android:text="Authentication Required"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"/>-->
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/email"
+                app:errorEnabled="true"
+                app:errorText="@{viewModel.validation.get(`email`)}">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:text="@={viewModel.email}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"
+                    android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`email`)}"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/password"
+                app:errorEnabled="true"
+                app:errorText="@{viewModel.validation.get(`password`)}">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:text="@={viewModel.password}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`password`)}"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/buttonCancel"
+                    style="@style/RoundButtonNeutral"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cancel"/>
+                <View
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"/>
+                <Button
+                    android:id="@+id/buttonOk"
+                    style="@style/RoundButtonPrimary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ok"/>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+</layout>

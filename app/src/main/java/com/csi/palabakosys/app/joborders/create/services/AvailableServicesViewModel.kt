@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.csi.palabakosys.app.joborders.create.shared_ui.QuantityModel
-import com.csi.palabakosys.model.MachineType
+import com.csi.palabakosys.model.EnumMachineType
 import com.csi.palabakosys.room.repository.WashServiceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -20,7 +20,7 @@ constructor(
 ) : ViewModel() {
     val availableServices = MutableLiveData<List<MenuServiceItem>>()
     val dataState = MutableLiveData<DataState>()
-    val selectedTab = MutableLiveData<MachineType>()
+    val selectedTab = MutableLiveData<EnumMachineType>()
 
     init {
         loadServices()
@@ -32,7 +32,7 @@ constructor(
         }
     }
 
-    fun getServices(machineType: MachineType) : List<MenuServiceItem> {
+    fun getServices(machineType: EnumMachineType) : List<MenuServiceItem> {
         return availableServices.value?.filter {it.machineType == machineType}?: listOf()
     }
 
@@ -103,7 +103,9 @@ constructor(
     }
 
     fun setMachineType(text: String?) {
-        selectedTab.value = MachineType.fromString(text) ?: MachineType.REGULAR_WASHER
+        println("machine type")
+        println(text)
+        selectedTab.value = EnumMachineType.fromName(text) ?: EnumMachineType.REGULAR_WASHER
     }
 
     sealed class DataState {

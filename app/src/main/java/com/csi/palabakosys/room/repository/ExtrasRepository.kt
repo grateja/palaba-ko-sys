@@ -4,6 +4,7 @@ import com.csi.palabakosys.app.joborders.create.extras.MenuExtrasItem
 import com.csi.palabakosys.room.dao.DaoExtras
 //import com.csi.palabakosys.room.dao.DaoOtherService
 import com.csi.palabakosys.room.entities.EntityExtras
+import java.util.UUID
 //import com.csi.palabakosys.room.entities.EntityServiceOther
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -14,7 +15,7 @@ class ExtrasRepository
 constructor (
     private val daoExtras: DaoExtras,
 ) : BaseRepository<EntityExtras>(daoExtras) {
-    override suspend fun get(id: String?) : EntityExtras? {
+    override suspend fun get(id: UUID?) : EntityExtras? {
         if(id == null) return null
         return daoExtras.get(id)
     }

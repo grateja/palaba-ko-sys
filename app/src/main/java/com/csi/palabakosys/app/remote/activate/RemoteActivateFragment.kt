@@ -51,7 +51,8 @@ class RemoteActivateFragment : BaseModalFragment() {
     }
 
     fun close() {
-        requireActivity().findNavController(R.id.navHostRemote).navigate(R.id.remotePanelFragment)
+//        requireActivity().findNavController(R.id.navHostRemote).navigate(R.id.remotePanelFragment)
+        requireActivity().findNavController(R.id.navHostRemote).popBackStack(R.id.remotePanelFragment, true)
     }
 
     private fun updateView(wi: WorkInfo?) {

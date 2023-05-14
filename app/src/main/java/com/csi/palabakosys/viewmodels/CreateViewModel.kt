@@ -5,11 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.csi.palabakosys.room.entities.BaseEntity
 import com.csi.palabakosys.room.repository.IRepository
-import com.csi.palabakosys.util.CRUDActionEnum
-import com.csi.palabakosys.util.DataState
-import com.csi.palabakosys.util.InputValidation
+import com.csi.palabakosys.util.*
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 open class CreateViewModel<T : BaseEntity> (private val iRepository: IRepository<T>) : ViewModel() {
     val validation = MutableLiveData(InputValidation())
@@ -29,7 +28,7 @@ open class CreateViewModel<T : BaseEntity> (private val iRepository: IRepository
         dataState.value = DataState.StateLess
     }
 
-    protected suspend fun get(id: String?, initialModel: T) : T {
+    protected suspend fun get(id: UUID?, initialModel: T) : T {
         model.value.let { it ->
             if(it != null) return it
             if(id == null) {

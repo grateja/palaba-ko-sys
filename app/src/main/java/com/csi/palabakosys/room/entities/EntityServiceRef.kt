@@ -1,25 +1,21 @@
 package com.csi.palabakosys.room.entities
 
-import android.os.Parcelable
 import androidx.room.ColumnInfo
-import androidx.room.Ignore
-import com.csi.palabakosys.model.MachineType
-import com.csi.palabakosys.model.WashType
-import kotlinx.parcelize.Parcelize
-import java.util.*
+import com.csi.palabakosys.model.EnumMachineType
+import com.csi.palabakosys.model.EnumWashType
 
 class EntityServiceRef(
     @ColumnInfo(name = "svc_machine_type")
-    var machineType: MachineType,
+    var machineType: EnumMachineType,
 
     @ColumnInfo(name = "svc_wash_type")
-    var washType: WashType?,
+    var washType: EnumWashType?,
 
     @ColumnInfo(name = "svc_minutes")
     var minutes: Int,
 ) {
     fun pulse() : Int {
-        return if(machineType == MachineType.REGULAR_DRYER || machineType == MachineType.TITAN_DRYER) {
+        return if(machineType == EnumMachineType.REGULAR_DRYER || machineType == EnumMachineType.TITAN_DRYER) {
             minutes / 10
         } else {
             washType?.pulse ?: 0

@@ -25,17 +25,17 @@ constructor(
     val jobOrder = MutableLiveData<EntityJobOrderListItem>()
 //    val adapter = Adapter<EntityJobOrderListItem>(R.layout.recycler_item_job_order_full)
     val isEmpty = MutableLiveData<Boolean>()
-    private val activeUser: MutableLiveData<EntityUser?>
-        get() = appPreference.activeUser
+//    private val activeUser: MutableLiveData<EntityUser?>
+//        get() = appPreference.activeUser
 
-    val isAdmin = MediatorLiveData<Boolean>().apply {
-        fun update() {
-            activeUser.value?.let {
-                value = it.role == Role.ADMIN
-            }
-        }
-        addSource(activeUser) {update()}
-    }
+//    val isAdmin = MediatorLiveData<Boolean>().apply {
+//        fun update() {
+//            activeUser.value?.let {
+//                value = it.role == Role.ADMIN
+//            }
+//        }
+//        addSource(activeUser) {update()}
+//    }
 
     init {
 //        adapter.onItemClick = {

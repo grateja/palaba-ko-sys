@@ -3,7 +3,7 @@ package com.csi.palabakosys.app.joborders.create.discount
 import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Ignore
-import com.csi.palabakosys.model.DiscountApplicable
+import com.csi.palabakosys.model.EnumDiscountApplicable
 //import com.csi.palabakosys.model.DiscountTypeEnum
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
@@ -30,8 +30,8 @@ data class MenuDiscount(
     @IgnoredOnParcel
     var selected: Boolean = false
 
-    private fun applicableTo() : List<DiscountApplicable> {
-        return DiscountApplicable.fromIds(applicableToIds)
+    private fun applicableTo() : List<EnumDiscountApplicable> {
+        return EnumDiscountApplicable.fromIds(applicableToIds)
     }
 
     fun applicableToStr() : String {
@@ -53,8 +53,8 @@ data class MenuDiscount(
 //        }
     }
 
-    fun getDiscount(amount: Float, applicable: DiscountApplicable) : Float {
-        if(!applicableTo().any{ it == applicable || it == DiscountApplicable.TOTAL_AMOUNT}) return 0f
+    fun getDiscount(amount: Float, applicable: EnumDiscountApplicable) : Float {
+        if(!applicableTo().any{ it == applicable || it == EnumDiscountApplicable.TOTAL_AMOUNT}) return 0f
 
         return compute(amount)
     }

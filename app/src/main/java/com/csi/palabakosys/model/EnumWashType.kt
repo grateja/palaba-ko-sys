@@ -1,31 +1,36 @@
 package com.csi.palabakosys.model
 
-enum class WashType(val value: String, val pulse: Int, val description: String, var defaultMinutes: Int, var selected: Boolean = false) {
+enum class EnumWashType(val id: Int, val value: String, val pulse: Int, val description: String, var defaultMinutes: Int, var selected: Boolean = false) {
     DELICATE(
+        1,
         "Delicate Wash",
         1,
         "~21 Minutes to ~24 Minutes",
         21
     ),
     WARM(
+        2,
         "Warm Wash",
         2,
         "",
         36
     ),
     COLD(
+        3,
         "Cold Wash",
         2,
         "",
         36
     ),
     HOT(
+        4,
         "Hot Wash",
         3,
         "",
         46
     ),
     SUPER_WASH(
+        5,
         "Super Wash",
         4,
         "",
@@ -37,10 +42,15 @@ enum class WashType(val value: String, val pulse: Int, val description: String, 
     }
 
     companion object {
-        fun fromString(key: String?) : WashType? {
-            val list = values()
-            return list.find {
-                it.toString() == key
+        fun fromId(id: Int?) : EnumWashType? {
+            return values().find {
+                it.id == id
+            }
+        }
+
+        fun fromName(name: String?) : EnumWashType? {
+            return values().find {
+                it.value.uppercase() == name?.uppercase()
             }
         }
     }

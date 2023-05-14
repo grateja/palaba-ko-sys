@@ -46,7 +46,7 @@ constructor(
     fun save() {
         viewModelScope.launch {
             val inputValidation = InputValidation()
-            inputValidation.addRules("remarks", model.value?.remarks, arrayOf(Rule.REQUIRED))
+            inputValidation.addRules("remarks", model.value?.remarks, arrayOf(Rule.Required))
             if(inputValidation.isInvalid()) {
                 validation.value = inputValidation
                 return@launch
@@ -55,7 +55,7 @@ constructor(
             jobOrder.value?.let {
                 it.jobOrder.entityJobOrderVoid = model.value
                 repository.void(it.jobOrder)
-                dataState.value = DataState.Success(it.jobOrder.entityJobOrderVoid)
+                dataState.value = DataState.Save(it.jobOrder.entityJobOrderVoid)
             }
         }
     }

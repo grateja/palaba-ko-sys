@@ -8,6 +8,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.csi.palabakosys.databinding.FragmentModalDeliveryBinding
 import com.csi.palabakosys.fragments.BaseModalFragment
+import com.csi.palabakosys.util.DataState
 
 class DeliveryModalFragment : BaseModalFragment() {
     private lateinit var binding: FragmentModalDeliveryBinding
@@ -31,8 +32,15 @@ class DeliveryModalFragment : BaseModalFragment() {
         binding.recyclerDeliveryOptions.adapter = deliveryOptionAdapter
 
         binding.buttonConfirm.setOnClickListener {
+            try {
+                val distance = binding.textQuantity.text.toString()
+                if(distance.toFloat() == 0f) {
+                    binding.textQuantity.setText("1")
+                }
+            } catch (e: Exception) {
+                binding.textQuantity.setText("1")
+            }
             onOk?.invoke()
-            dismiss()
         }
 
         binding.buttonCancel.setOnClickListener {

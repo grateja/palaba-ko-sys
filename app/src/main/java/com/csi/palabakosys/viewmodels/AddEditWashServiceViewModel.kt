@@ -1,7 +1,7 @@
 package com.csi.palabakosys.viewmodels
 
 import androidx.lifecycle.viewModelScope
-import com.csi.palabakosys.model.MachineType
+import com.csi.palabakosys.model.EnumMachineType
 import com.csi.palabakosys.model.Rule
 import com.csi.palabakosys.room.entities.EntityService
 import com.csi.palabakosys.room.repository.WashServiceRepository
@@ -22,7 +22,7 @@ constructor(
 //        super.get(id, EntityServiceWash())
     }
 
-    fun setType(type: MachineType) {
+    fun setType(type: EnumMachineType) {
 //        model.value?.machineType = type
 //        println(model.value?.machineType)
     }
@@ -30,7 +30,7 @@ constructor(
     fun save() {
         model.value?.let {
             val inputValidation = InputValidation()
-            inputValidation.addRules("name", it.name.toString(), arrayOf(Rule.REQUIRED))
+            inputValidation.addRules("name", it.name.toString(), arrayOf(Rule.Required))
 //            inputValidation.addRules("washType", it.washType.toString(), arrayOf(Rule.REQUIRED))
             if(inputValidation.isInvalid()) {
                 validation.value = inputValidation
@@ -40,7 +40,7 @@ constructor(
             viewModelScope.launch {
                 repository.save(it)?.let { service ->
                     model.value = service
-                    dataState.value = DataState.Success(service)
+                    dataState.value = DataState.Save(service)
                 }
             }
         }

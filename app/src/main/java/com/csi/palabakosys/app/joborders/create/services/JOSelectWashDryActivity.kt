@@ -11,7 +11,7 @@ import com.csi.palabakosys.R
 import com.csi.palabakosys.app.joborders.create.shared_ui.ModifyQuantityModalFragment
 import com.csi.palabakosys.app.joborders.create.shared_ui.QuantityModel
 import com.csi.palabakosys.databinding.ActivityJoSelectWashDryBinding
-import com.csi.palabakosys.model.MachineType
+import com.csi.palabakosys.model.EnumMachineType
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -57,11 +57,11 @@ class JOSelectWashDryActivity : AppCompatActivity() {
             if(it != null) {
                 itemClick(it)
             } else {
-                viewModel.setMachineType(MachineType.REGULAR_WASHER.toString())
+                viewModel.setMachineType(EnumMachineType.REGULAR_WASHER.toString())
             }
 
-            val index = MachineType.values().indexOf(
-                it?.machineType ?: MachineType.REGULAR_WASHER
+            val index = EnumMachineType.values().indexOf(
+                it?.machineType ?: EnumMachineType.REGULAR_WASHER
             )
 
 //            if(tab.selectedTabPosition == 1 && index == 0) {

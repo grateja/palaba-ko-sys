@@ -15,6 +15,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.window.layout.WindowMetricsCalculator
 import com.csi.palabakosys.R
 import com.csi.palabakosys.app.joborders.create.customer.SelectCustomerActivity
+import com.csi.palabakosys.app.machines.MachinesActivity
 import com.csi.palabakosys.app.preferences.ip.SettingsIPAddressActivity
 import com.csi.palabakosys.app.preferences.printer.SettingsPrinterActivity
 import com.csi.palabakosys.app.remote.shared_ui.RemoteActivationActivity
@@ -53,6 +54,11 @@ class MainActivity : EndingActivity() {
             val intent = Intent(this, SettingsPrinterActivity::class.java)
             startActivity(intent)
         }
+        binding.btnMachines.setOnClickListener {
+            val intent = Intent(this, MachinesActivity::class.java)
+            startActivity(intent)
+        }
+
         computeWindowSizeClasses()
         val connectivityManager = getSystemService(ConnectivityManager::class.java) as ConnectivityManager
         val networkRequest = NetworkRequest.Builder()

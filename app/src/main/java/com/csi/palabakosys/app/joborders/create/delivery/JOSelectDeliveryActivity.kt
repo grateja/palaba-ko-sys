@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
 import com.csi.palabakosys.databinding.ActivityJoSelectDeliveryBinding
+import com.csi.palabakosys.util.DataState
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -22,9 +23,23 @@ class JOSelectDeliveryActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         binding.recyclerDeliveryVehicles.adapter = deliveryVehiclesAdapter
         subscribeEvents()
+        subscribeListeners()
     }
 
-    private fun subscribeEvents() {
+    private fun subscribeListeners() {
+        viewModel.dataState.observe(this, Observer {
+            when(it) {
+                is DataState.Save -> {
+                    setResult(RESULT_OK, Intent().apply {
+                        putExtra("deliveryCharge", it.data)
+                    })
+                    viewModel.resetState()
+                    finish()
+                }
+                else -> {}
+            }
+        })
+
         viewModel.deliveryProfiles.observe(this, Observer {
             deliveryVehiclesAdapter.setData(it)
             intent.getParcelableExtra<DeliveryCharge>("deliveryCharge")?.let { deliveryCharge ->
@@ -37,11 +52,9 @@ class JOSelectDeliveryActivity : AppCompatActivity() {
         viewModel.profile.observe(this, Observer {
             deliveryVehiclesAdapter.notifySelection(it.deliveryProfileRefId)
         })
+    }
 
-//        deliveryVehiclesAdapter.onItemClick = {
-//            viewModel.setDeliveryProfile(it)
-//        }
-//
+    private fun subscribeEvents() {
         deliveryVehiclesAdapter.onItemClick = {
             viewModel.setDeliveryProfile(it.deliveryProfileRefId)
             showOptions()
@@ -52,21 +65,14 @@ class JOSelectDeliveryActivity : AppCompatActivity() {
         }
 
         binding.buttonRemove.setOnClickListener {
-            setResult(RESULT_OK, Intent().apply {
-                putExtra("deliveryCharge", viewModel.prepareDeliveryCharge(true))
-            })
-            finish()
+            viewModel.prepareDeliveryCharge(true)
         }
     }
 
     private fun showOptions() {
         deliveryProfileModal = DeliveryModalFragment.newInstance().apply {
             onOk = {
-//                viewModel.selectDeliveryProfile(it)
-                setResult(RESULT_OK, Intent().apply {
-                    putExtra("deliveryCharge", viewModel.prepareDeliveryCharge(false))
-                })
-                finish()
+                viewModel.prepareDeliveryCharge(false)
             }
         }
         deliveryProfileModal.show(supportFragmentManager, this.toString())

@@ -2,7 +2,7 @@ package com.csi.palabakosys.app.remote.shared_ui
 
 import androidx.lifecycle.*
 import androidx.work.*
-import com.csi.palabakosys.model.MachineType
+import com.csi.palabakosys.model.EnumMachineType
 import com.csi.palabakosys.room.entities.*
 import com.csi.palabakosys.room.repository.JobOrderQueuesRepository
 import com.csi.palabakosys.room.repository.MachineRepository
@@ -22,10 +22,10 @@ constructor(
     private val workManager: WorkManager
 ) : ViewModel() {
     val dataState = MutableLiveData<DataState>()
-    val machines = MutableLiveData<List<EntityMachine>>()
+//    val machines = MutableLiveData<List<EntityMachine>>()
     val machine = MutableLiveData<EntityMachine>()
     val service = MutableLiveData<EntityAvailableService>()
-    val selectedTab = MutableLiveData(MachineType.REGULAR_WASHER)
+//    val selectedTab = MutableLiveData(EnumMachineType.REGULAR_WASHER)
 
     val customerQueues = MutableLiveData<List<EntityCustomerQueueService>>()
     val customerQueue = MutableLiveData<EntityCustomerQueueService>()
@@ -36,18 +36,18 @@ constructor(
         dataState.value = DataState.StateLess
     }
 
-    fun loadMachines(machineType: MachineType) {
-        viewModelScope.launch {
-            machineRepository.getAll(machineType).let {
-                machines.value = it
-            }
-        }
-    }
+//    fun loadMachines(machineType: EnumMachineType) {
+//        viewModelScope.launch {
+//            machineRepository.getAll(machineType).let {
+//                machines.value = it
+//            }
+//        }
+//    }
 
     fun selectMachine(machineTile: EntityMachine?) {
         viewModelScope.launch {
             if(machineTile != null) {
-                machineRepository.get(machineTile.id.toString())?.let {
+                machineRepository.get(machineTile.id)?.let {
                     machine.value = it
                 }
             }
@@ -56,9 +56,9 @@ constructor(
 
     fun getCustomersByMachineType() {
         viewModelScope.launch {
-            machine.value?.let { _machine ->
-                queuesRepository.getByMachineType(_machine.machineType).let {
-                    customerQueues.value = it
+            machine.value?.machineType?.let {
+                queuesRepository.getByMachineType(it).let { list ->
+                    customerQueues.value = list
                 }
             }
         }
@@ -77,7 +77,7 @@ constructor(
 
     private fun getQueuesByCustomer(queueService: EntityCustomerQueueService) {
         viewModelScope.launch {
-            queuesRepository.getAvailableServiceByCustomerId(queueService.customerId.toString(), queueService.machineType).let {
+            queuesRepository.getAvailableServiceByCustomerId(queueService.customerId, queueService.machineType).let {
                 availableServices.value = it
             }
         }
@@ -112,9 +112,11 @@ constructor(
         return workManager.getWorkInfoByIdLiveData(workerId)
     }
 
-    fun setMachineType(text: String?) {
-        selectedTab.value = MachineType.fromString(text)
-    }
+//    fun setMachineType(text: String?) {
+//        println("machine type")
+//        println(text)
+//        selectedTab.value = EnumMachineType.fromName(text)
+//    }
 
     sealed class DataState {
         object StateLess: DataState()

@@ -63,9 +63,9 @@
                                 android:id="@+id/textQuantity"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="@={viewModel.distance + ``}"
+                                android:text="@={viewModel.distance}"
                                 android:hint="Quantity"
-                                android:inputType="number"
+                                android:inputType="numberDecimal"
                                 android:maxLines="1" />
                         </com.google.android.material.textfield.TextInputLayout>
                         <Button

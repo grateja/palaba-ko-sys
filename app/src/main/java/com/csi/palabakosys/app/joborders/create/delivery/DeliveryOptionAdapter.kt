@@ -2,26 +2,24 @@ package com.csi.palabakosys.app.joborders.create.delivery
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.csi.palabakosys.BR
 import com.csi.palabakosys.R
-import com.csi.palabakosys.adapters.Adapter
-import com.csi.palabakosys.model.DeliveryOption
+import com.csi.palabakosys.model.EnumDeliveryOption
 import com.google.android.material.card.MaterialCardView
 
 class DeliveryOptionAdapter : RecyclerView.Adapter<DeliveryOptionAdapter.ViewHolder>() {
-    private var list = DeliveryOption.values()
-    private var selectedDeliveryOption: DeliveryOption? = null
+    private var list = EnumDeliveryOption.values()
+    private var selectedDeliveryOption: EnumDeliveryOption? = null
     class ViewHolder(private val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(model: DeliveryOption) {
+        fun bind(model: EnumDeliveryOption) {
             binding.setVariable(BR.viewModel, model)
         }
     }
 
-    var onSelect: ((DeliveryOption) -> Unit) ? = null
+    var onSelect: ((EnumDeliveryOption) -> Unit) ? = null
 
 //    fun setData(services: List<MenuDeliveryProfile>) {
 //        list = services
@@ -53,7 +51,7 @@ class DeliveryOptionAdapter : RecyclerView.Adapter<DeliveryOptionAdapter.ViewHol
         }
     }
 
-    fun selectDeliveryOption(deliveryOption: DeliveryOption?) {
+    fun selectDeliveryOption(deliveryOption: EnumDeliveryOption?) {
         val preSelect = list.find { it.value == deliveryOption?.value && !it.selected }
         preSelect?.let { _preSelect ->
             list.forEach {

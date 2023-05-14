@@ -26,6 +26,10 @@
                 android:text="Connecting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
+            <TextView
+                android:text="@{viewModel.entityMachine.workerId + ``}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 </layout>

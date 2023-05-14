@@ -1,8 +1,10 @@
 package com.csi.palabakosys.room.repository
 
+import androidx.lifecycle.LiveData
 import com.csi.palabakosys.room.dao.DaoUser
 import com.csi.palabakosys.room.entities.EntityUser
 import java.lang.Exception
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -12,7 +14,7 @@ class UserRepository
 constructor (
     private val daoUser: DaoUser,
 ) : BaseRepository<EntityUser>(daoUser) {
-    override suspend fun get(id: String?) : EntityUser? {
+    override suspend fun get(id: UUID?) : EntityUser? {
         if(id == null) return null
         return daoUser.get(id)
     }
@@ -25,6 +27,10 @@ constructor (
         return daoUser.getByEmail(email)
     }
 
+    suspend fun getByEmailAndPassword(email: String, password: String) : EntityUser? {
+        return daoUser.getByEmailAndPassword(email, password)
+    }
+
     suspend fun getAll() : List<EntityUser> {
         try {
             return daoUser.getAll()
@@ -32,5 +38,9 @@ constructor (
             e.printStackTrace()
         }
         return emptyList()
+    }
+
+    fun getCurrentUserByEmail(email: String?): LiveData<EntityUser?> {
+        return daoUser.getByEmailLiveData(email)
     }
 }

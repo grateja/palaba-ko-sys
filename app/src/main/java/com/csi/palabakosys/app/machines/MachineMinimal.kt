@@ -1,7 +1,7 @@
 package com.csi.palabakosys.app.machines
 
 import android.os.Parcelable
-import com.csi.palabakosys.model.MachineType
+import com.csi.palabakosys.model.EnumMachineType
 import kotlinx.parcelize.Parcelize
 import java.util.*
 
@@ -9,5 +9,5 @@ import java.util.*
 data class MachineMinimal(
     val id: UUID,
     val name: String,
-    val machineType: MachineType
+    val machineType: EnumMachineType
 ) : Parcelable

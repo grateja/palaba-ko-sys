@@ -2,16 +2,18 @@ package com.csi.palabakosys.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.csi.palabakosys.model.MachineType
-import com.csi.palabakosys.model.Rule
+import com.csi.palabakosys.model.EnumMachineType
 import com.csi.palabakosys.room.entities.EntityMachine
 import com.csi.palabakosys.room.repository.MachineRepository
 import com.csi.palabakosys.util.DataState
 import com.csi.palabakosys.util.InputValidation
+import com.csi.palabakosys.util.isUUID
+import com.csi.palabakosys.util.toUUID
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import okhttp3.*
 import java.io.IOException
+import java.util.UUID
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -25,12 +27,12 @@ constructor(
     val connecting = MutableLiveData(false)
 //    val state = MutableLiveData<RemoteActivationState>()
 
-    fun get(id: String?, machineType: MachineType?) {
+    fun get(id: String?, machineType: EnumMachineType) {
         model.value.let {
             if(it != null) return
             viewModelScope.launch {
                 val stackOrder = repository.getLastStackOrder(machineType) + 1
-//                super.get(id, EntityMachine(stackOrder, machineType))
+                super.get(id.toUUID(), EntityMachine(stackOrder, machineType, 0, stackOrder))
             }
         }
     }
@@ -46,7 +48,7 @@ constructor(
             viewModelScope.launch {
                 repository.save(it)?.let { product ->
                     model.value = product
-                    dataState.value = DataState.Success(product)
+                    dataState.value = DataState.Save(product)
                 }
             }
         }

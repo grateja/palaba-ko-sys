@@ -3,7 +3,7 @@ package com.csi.palabakosys.app.joborders.create.products
 import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Ignore
-import com.csi.palabakosys.model.ProductType
+import com.csi.palabakosys.model.EnumProductType
 import com.csi.palabakosys.util.MeasureUnit
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
@@ -33,7 +33,7 @@ class MenuProductItem(
     var currentStock: Int,
 
     @ColumnInfo(name = "product_type")
-    val productType: ProductType,
+    val productType: EnumProductType,
 
     @ColumnInfo(name = "deleted_at")
     var deletedAt: Instant? = null

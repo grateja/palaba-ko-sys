@@ -1,6 +1,5 @@
 package com.csi.palabakosys.app.customers.create
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.csi.palabakosys.model.Rule
 import com.csi.palabakosys.room.entities.EntityCustomer
@@ -10,6 +9,7 @@ import com.csi.palabakosys.util.InputValidation
 import com.csi.palabakosys.viewmodels.CreateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,17 +20,15 @@ constructor(
 ) : CreateViewModel<EntityCustomer>(repository)
 {
     private var originalName: String? = null
-    fun get(id: String?) {
+    private var originalCRN: String? = null
+    fun get(id: UUID?) {
         model.value.let {
             if(it != null) return
             viewModelScope.launch {
                 val crn = repository.getNextJONumber()
-                println("CRN")
-                println(crn)
                 super.get(id, EntityCustomer(crn)).let { customer ->
                     originalName = customer.name
-                    println("name")
-                    println(customer.name)
+                    originalCRN = customer.crn
                 }
             }
         }
@@ -39,17 +37,16 @@ constructor(
     fun save() {
         model.value?.let {
             val inputValidation = InputValidation()
-            inputValidation.addRules("name", it.name.toString(), arrayOf(Rule.REQUIRED))
+            inputValidation.addRules("name", it.name.toString(), arrayOf(Rule.Required))
 
             viewModelScope.launch {
-                println("name")
-                println(originalName)
-                println(it.name)
-                println("----")
-                println(originalName)
-                println(it.hashCode())
                 if(originalName != it.name &&  repository.checkName(it.name)) {
                     inputValidation.addError("name", "Name already taken. Please specify more details")
+                }
+                if(originalCRN != it.crn) {
+                    repository.getCustomerMinimalByCRN(it.crn)?.let { customer ->
+                        inputValidation.addError("crn", "CRN Conflict with ${customer.name} : ${customer.crn}")
+                    }
                 }
                 if(inputValidation.isInvalid()) {
                     validation.value = inputValidation
@@ -57,7 +54,7 @@ constructor(
                 }
                 repository.save(it)?.let { customer ->
                     model.value = customer
-                    dataState.value = DataState.Success(customer)
+                    dataState.value = DataState.Save(customer)
                 }
             }
         }

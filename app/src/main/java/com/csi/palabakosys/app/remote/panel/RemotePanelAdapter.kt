@@ -7,6 +7,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.csi.palabakosys.BR
 import com.csi.palabakosys.R
+import com.csi.palabakosys.model.EnumMachineType
 import com.csi.palabakosys.room.entities.EntityMachine
 import java.util.*
 

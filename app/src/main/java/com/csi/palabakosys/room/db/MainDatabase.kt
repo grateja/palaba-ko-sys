@@ -10,6 +10,7 @@ import com.csi.palabakosys.room.dao.*
 import com.csi.palabakosys.room.db.seeder.DatabaseSeeder
 import com.csi.palabakosys.room.entities.*
 import com.csi.palabakosys.util.*
+import com.csi.palabakosys.util.converters.*
 
 @Database(entities = [
     EntityUser::class,
@@ -45,7 +46,10 @@ import com.csi.palabakosys.util.*
     PaymentMethodConverter::class,
     DeliveryVehicleConverter::class,
     DeliveryOptionConverter::class,
-//    DiscountApplicableConverter::class,
+    ProductTypeConverter::class,
+    ServiceTypeConverter::class,
+    DiscountApplicableConverter::class,
+    ActionPermissionConverter::class,
 //    DiscountTypeConverter::class,
 )
 abstract class MainDatabase : RoomDatabase() {

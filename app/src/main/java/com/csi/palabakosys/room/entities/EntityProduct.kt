@@ -2,7 +2,7 @@ package com.csi.palabakosys.room.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import com.csi.palabakosys.model.ProductType
+import com.csi.palabakosys.model.EnumProductType
 import com.csi.palabakosys.util.MeasureUnit
 
 @Entity(tableName = "products")
@@ -23,9 +23,9 @@ class EntityProduct(
     val unitPerServe: Float,
 
     @ColumnInfo(name = "product_type")
-    var productType: ProductType?
+    var productType: EnumProductType?
 ) : BaseEntity() {
-    constructor() : this(null, 0f, 0, MeasureUnit.PCS, 0f, ProductType.OTHER)
+    constructor() : this(null, 0f, 0, MeasureUnit.PCS, 0f, EnumProductType.OTHER)
 //    @ColumnInfo(name = "name")
 //    var name: String? = null
 //

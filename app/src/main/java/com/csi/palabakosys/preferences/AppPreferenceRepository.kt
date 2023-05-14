@@ -1,7 +1,9 @@
 package com.csi.palabakosys.preferences
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.csi.palabakosys.app.preferences.user.CurrentUser
 import com.csi.palabakosys.model.Role
 import com.csi.palabakosys.room.entities.EntityUser
 import com.google.gson.Gson
@@ -15,7 +17,10 @@ class AppPreferenceRepository
 @Inject
 constructor (@ApplicationContext context: Context) {
     private val sharedPreferences = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
-    val activeUser = MutableLiveData<EntityUser?>()
+
+    private val _activeUser = MutableLiveData<EntityUser?>()
+    val activeUser: LiveData<EntityUser?> = _activeUser
+
     var ipSettings = IpSettings(
         sharedPreferences.getString("networkPrefix", null) ?: "192.168",
         sharedPreferences.getInt("subnetId", 210)
@@ -29,21 +34,17 @@ constructor (@ApplicationContext context: Context) {
     val isAdmin = MutableLiveData<Boolean>()
 
     fun setCurrentUser(user: EntityUser) {
-        activeUser.value = user
+        _activeUser.value = user
         isAdmin.value = user.role != Role.ADMIN
         println(Gson().toJson(user))
     }
 
-    fun getUser() : EntityUser? {
-        return activeUser.value
-    }
-
     fun getId() : UUID? {
-        return activeUser.value?.id
+        return _activeUser.value?.id
     }
 
     fun logout() {
-        activeUser.value = null
+        _activeUser.value = null
         isAdmin.value = false
     }
 

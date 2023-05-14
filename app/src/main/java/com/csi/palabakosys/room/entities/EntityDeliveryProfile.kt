@@ -2,11 +2,11 @@ package com.csi.palabakosys.room.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import com.csi.palabakosys.model.DeliveryVehicle
+import com.csi.palabakosys.model.EnumDeliveryVehicle
 
 @Entity(tableName = "delivery_profiles")
 data class EntityDeliveryProfile(
-    val vehicle: DeliveryVehicle,
+    val vehicle: EnumDeliveryVehicle,
 
     @ColumnInfo(name = "base_fare")
     val baseFare: Float,

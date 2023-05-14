@@ -3,11 +3,9 @@ package com.csi.palabakosys.app.joborders.create.delivery
 import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Ignore
-import com.csi.palabakosys.model.DeliveryOption
-import com.csi.palabakosys.model.DeliveryVehicle
+import com.csi.palabakosys.model.EnumDeliveryVehicle
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
-import java.time.Instant
 import java.util.*
 
 @Parcelize
@@ -17,7 +15,7 @@ class MenuDeliveryProfile(
     @ColumnInfo(name = "id")
     val deliveryProfileRefId: UUID,
 
-    val vehicle: DeliveryVehicle,
+    val vehicle: EnumDeliveryVehicle,
 
     @ColumnInfo(name = "base_fare")
     val baseFare: Float,

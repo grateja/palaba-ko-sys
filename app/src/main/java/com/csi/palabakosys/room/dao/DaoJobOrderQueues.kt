@@ -2,19 +2,21 @@ package com.csi.palabakosys.room.dao
 
 import androidx.room.Dao
 import androidx.room.Query
+import com.csi.palabakosys.model.EnumMachineType
 import com.csi.palabakosys.room.entities.EntityAvailableService
 import com.csi.palabakosys.room.entities.EntityCustomerQueueService
 import com.csi.palabakosys.room.entities.EntityJobOrderService
+import java.util.*
 
 @Dao
 interface DaoJobOrderQueues {
 //    @Query("SELECT job_order_id, job_order_number, customer_id, jos.svc_machine_type as machine_type, customer_name FROM job_orders jo JOIN job_order_services jos ON job_order_id = jo.id LEFT JOIN services w ON w.id = service_id WHERE jos.svc_machine_type = :machineType AND jos.quantity > used GROUP BY customer_name, job_order_number, job_order_id")
-    @Query("SELECT job_order_id, job_order_number, customer_id, jos.svc_machine_type as machine_type, customer_name FROM job_orders jo JOIN job_order_services jos ON job_order_id = jo.id LEFT JOIN services w ON w.id = service_id WHERE jos.svc_machine_type = :machineType AND jos.quantity > used GROUP BY customer_name")
-    suspend fun getByMachineType(machineType: String?) : List<EntityCustomerQueueService>
+    @Query("SELECT job_order_id, job_order_number, customer_id, jos.svc_machine_type as machine_type, cu.name as customer_name FROM job_orders jo JOIN customers cu ON jo.customer_id = cu.id JOIN job_order_services jos ON job_order_id = jo.id LEFT JOIN services w ON w.id = service_id WHERE jos.svc_machine_type = :machineType AND jos.quantity > used GROUP BY customer_name")
+    suspend fun getByMachineType(machineType: EnumMachineType) : List<EntityCustomerQueueService>
 
     @Query("SELECT jo.id, SUM(jo.quantity - used) as available, service_name, svc_minutes as minutes, service_id, job_order_id, svc_wash_type, svc_machine_type FROM job_order_services jo JOIN job_orders on job_orders.id = job_order_id WHERE customer_id = :customerId AND jo.svc_machine_type = :machineType AND (quantity - used) > 0  GROUP BY service_name")
-    suspend fun getAvailableWashes(customerId: String?, machineType: String?) : List<EntityAvailableService>
+    suspend fun getAvailableWashes(customerId: UUID, machineType: EnumMachineType) : List<EntityAvailableService>
 
     @Query("SELECT * FROM job_order_services WHERE id = :id")
-    suspend fun get(id: String?): EntityJobOrderService?
+    suspend fun get(id: UUID): EntityJobOrderService?
 }

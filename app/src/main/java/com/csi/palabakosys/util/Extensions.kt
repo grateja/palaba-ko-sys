@@ -6,8 +6,8 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
-import com.csi.palabakosys.model.ProductType
-import com.csi.palabakosys.model.WashType
+import com.csi.palabakosys.model.EnumProductType
+import com.csi.palabakosys.model.EnumWashType
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import java.text.NumberFormat
@@ -27,23 +27,23 @@ fun setVisibility(view: View, isVisible: Boolean) {
 }
 
 @BindingAdapter("android:text")
-fun setText(view: TextInputEditText, washType: WashType?) {
+fun setText(view: TextInputEditText, washType: EnumWashType?) {
     view.setText(washType?.toString())
 }
 
 @InverseBindingAdapter(attribute = "android:text", event = "android:textAttrChanged")
-fun getWashTypeEnum(view: TextInputEditText) : WashType? {
-    return WashType.fromString(view.text.toString())
+fun getWashTypeEnum(view: TextInputEditText) : EnumWashType? {
+    return EnumWashType.fromName(view.text.toString())
 }
 
 @BindingAdapter("android:text")
-fun setText(view: TextInputEditText, productType: ProductType?) {
+fun setText(view: TextInputEditText, productType: EnumProductType?) {
     view.setText(productType?.toString())
 }
 
 @InverseBindingAdapter(attribute = "android:text", event = "android:textAttrChanged")
-fun getProductType(view: TextInputEditText) : ProductType? {
-    return ProductType.fromString(view.text.toString())
+fun getProductType(view: TextInputEditText) : EnumProductType? {
+    return EnumProductType.fromName(view.text.toString())
 }
 
 @BindingAdapter("android:text")
@@ -83,4 +83,20 @@ fun setPeso(view: TextView, value: Float?) {
 fun View.hideKeyboard() : Boolean {
     val imm = ContextCompat.getSystemService(context, InputMethodManager::class.java) as InputMethodManager
     return imm.hideSoftInputFromWindow(windowToken, 0)
+}
+
+fun String?.isUUID(): Boolean {
+    return try {
+        UUID.fromString(this)
+        true
+    } catch (e: IllegalArgumentException) {
+        false
+    }
+}
+
+fun String?.toUUID() : UUID? {
+    if(this?.isUUID() == true) {
+        return UUID.fromString(this)
+    }
+    return null
 }

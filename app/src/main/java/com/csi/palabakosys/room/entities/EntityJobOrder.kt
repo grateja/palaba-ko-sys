@@ -9,13 +9,13 @@ open class EntityJobOrder(
     var jobOrderNumber: String?,
 
     @ColumnInfo(name = "customer_id")
-    var customerId: UUID?,
+    var customerId: UUID,
 
-    @ColumnInfo(name = "customer_name")
-    var customerName: String?,
+//    @ColumnInfo(name = "customer_name")
+//    var customerName: String?,
 
-    @ColumnInfo(name = "prepared_by")
-    var preparedBy: String?,
+    @ColumnInfo(name = "user_id")
+    var userId: UUID,
 
     @ColumnInfo(name = "subtotal")
     var subtotal: Float,
