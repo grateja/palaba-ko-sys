@@ -1,16 +1,22 @@
 package com.csi.palabakosys.app
 
+import android.Manifest
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.window.layout.WindowMetricsCalculator
 import com.csi.palabakosys.R
@@ -21,6 +27,8 @@ import com.csi.palabakosys.app.preferences.printer.SettingsPrinterActivity
 import com.csi.palabakosys.app.remote.shared_ui.RemoteActivationActivity
 import com.csi.palabakosys.broadcast_receiver.ConnectivityReceiver
 import com.csi.palabakosys.databinding.ActivityMainBinding
+import com.csi.palabakosys.model.EnumMachineType
+import com.csi.palabakosys.services.MachineActivationService
 import com.csi.palabakosys.viewmodels.MainViewModel
 import com.google.gson.JsonObject
 import dagger.hilt.android.AndroidEntryPoint
@@ -55,8 +63,20 @@ class MainActivity : EndingActivity() {
             startActivity(intent)
         }
         binding.btnMachines.setOnClickListener {
-            val intent = Intent(this, MachinesActivity::class.java)
-            startActivity(intent)
+//            val intent = Intent(this, MachinesActivity::class.java)
+//            startActivity(intent)
+//            if(ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+            val intent = Intent(applicationContext, MachineActivationService::class.java).apply {
+                putExtra("machineType", EnumMachineType.REGULAR_DRYER.name)
+            }
+            ContextCompat.startForegroundService(applicationContext, intent)
+//                startForegroundService(intent)
+//            } else {
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//                    permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+//                }
+//            }
+
         }
 
         computeWindowSizeClasses()
@@ -68,6 +88,15 @@ class MainActivity : EndingActivity() {
             .build()
         connectivityManager.requestNetwork(networkRequest, networkCallback)
     }
+
+    private val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+        if(it) {
+            Toast.makeText(applicationContext, "Press teh button again", Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(applicationContext, "Fuck you", Toast.LENGTH_LONG).show()
+        }
+    }
+
 
     private val networkCallback = object : ConnectivityManager.NetworkCallback() {
         // network is available for use

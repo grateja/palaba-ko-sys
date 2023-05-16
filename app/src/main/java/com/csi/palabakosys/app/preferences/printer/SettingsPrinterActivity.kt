@@ -72,9 +72,10 @@ class SettingsPrinterActivity : AppCompatActivity() {
         }
         checkPermissions()
 
-        val filter = IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED)
-            filter.addAction(BluetoothDevice.ACTION_FOUND)
-            filter.addAction(LocationManager.MODE_CHANGED_ACTION)
+        val filter = IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED).apply {
+            addAction(BluetoothDevice.ACTION_FOUND)
+            addAction(LocationManager.MODE_CHANGED_ACTION)
+        }
 
         registerReceiver(
             bluetoothStateChangeBroadcastReceiver,
@@ -179,6 +180,10 @@ class SettingsPrinterActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             permissions.add(Manifest.permission.BLUETOOTH_CONNECT)
             permissions.add(Manifest.permission.BLUETOOTH_SCAN)
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permissions.add(Manifest.permission.POST_NOTIFICATIONS)
+            println("tiramisu")
         }
         permissionLauncher.launch(permissions.toTypedArray())
     }
