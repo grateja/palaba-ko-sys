@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.IBinder
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.csi.palabakosys.R
 import com.csi.palabakosys.app.MainActivity
 import com.csi.palabakosys.model.EnumMachineType
@@ -35,13 +36,20 @@ class MachineActivationService : Service() {
 
 //        notificationManager.notify(NOTIFICATION_ID, getNotification())
 
+        val context = this
+
         runBlocking {
             println("get machines")
-            val machineType = EnumMachineType.fromName(intent?.getStringExtra("machineType")) ?: EnumMachineType.TITAN_DRYER
+            val machineType = EnumMachineType.fromId(intent?.getIntExtra("machineType", 4)) ?: EnumMachineType.TITAN_DRYER
             machineRepository.getAll(machineType).let {
                 it.forEach {
-                    println("machine")
+//                    println("machine")
+//                    println(it.machineName())
                     println(it.machineName())
+                    val i = Intent("TestService").apply {
+                        putExtra("data", it.machineName())
+                    }
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(i)
                 }
             }
         }

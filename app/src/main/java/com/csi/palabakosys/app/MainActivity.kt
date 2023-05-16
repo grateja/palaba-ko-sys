@@ -1,6 +1,8 @@
 package com.csi.palabakosys.app
 
 import android.Manifest
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
@@ -18,6 +20,7 @@ import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.window.layout.WindowMetricsCalculator
 import com.csi.palabakosys.R
 import com.csi.palabakosys.app.joborders.create.customer.SelectCustomerActivity
@@ -67,7 +70,7 @@ class MainActivity : EndingActivity() {
 //            startActivity(intent)
 //            if(ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
             val intent = Intent(applicationContext, MachineActivationService::class.java).apply {
-                putExtra("machineType", EnumMachineType.REGULAR_DRYER.name)
+                putExtra("machineType", EnumMachineType.REGULAR_DRYER.id)
             }
             ContextCompat.startForegroundService(applicationContext, intent)
 //                startForegroundService(intent)
@@ -87,6 +90,30 @@ class MainActivity : EndingActivity() {
             .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
             .build()
         connectivityManager.requestNetwork(networkRequest, networkCallback)
+    }
+
+    private val receiver = object: BroadcastReceiver() {
+        override fun onReceive(p0: Context?, p1: Intent?) {
+            println("receiver received")
+            println(p1?.action)
+            if(p1?.action == "TestService") {
+                val data = p1.getStringExtra("data")
+                println("data from broadcast receiver")
+                println(data)
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val intentFilter = IntentFilter("TestService")
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, intentFilter)
+//        registerReceiver(receiver, intentFilter)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver)
     }
 
     private val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
