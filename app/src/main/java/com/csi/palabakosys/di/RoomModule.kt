@@ -1,6 +1,7 @@
 package com.csi.palabakosys.di
 
 import android.content.Context
+import com.csi.palabakosys.preferences.AppPreferenceRepository
 import com.csi.palabakosys.room.dao.*
 import com.csi.palabakosys.room.db.MainDatabase
 import dagger.Module
@@ -128,4 +129,10 @@ object RoomModule {
     fun provideRemoteDao(mainDatabase: MainDatabase) : DaoRemote {
         return mainDatabase.daoRemote()
     }
+
+//    @Singleton
+//    @Provides
+//    fun appPreferenceRepository(@ApplicationContext context: Context) : AppPreferenceRepository {
+//        return AppPreferenceRepository(context)
+//    }
 }

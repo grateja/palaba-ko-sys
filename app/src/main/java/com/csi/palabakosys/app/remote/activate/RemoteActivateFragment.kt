@@ -1,18 +1,27 @@
 package com.csi.palabakosys.app.remote.activate
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.findNavController
 import androidx.work.WorkInfo
 import com.csi.palabakosys.R
 import com.csi.palabakosys.app.remote.shared_ui.RemoteActivationViewModel
 import com.csi.palabakosys.databinding.FragmentRemoteActivateBinding
 import com.csi.palabakosys.fragments.BaseModalFragment
+import com.csi.palabakosys.model.MachineActivationQueues
+import com.csi.palabakosys.model.MachineConnectionStatus
+import com.csi.palabakosys.services.MachineActivationService
 import com.csi.palabakosys.worker.RemoteWorker
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
@@ -22,6 +31,7 @@ class RemoteActivateFragment : BaseModalFragment() {
     private lateinit var binding: FragmentRemoteActivateBinding
     private val viewModel: RemoteActivationViewModel by activityViewModels()
     private var closeAll = false
+    private var machineId: UUID? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,60 +41,73 @@ class RemoteActivateFragment : BaseModalFragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         binding.buttonActivate.setOnClickListener {
-            binding.buttonActivate.visibility = View.GONE
-            viewModel.activate()?.observe(viewLifecycleOwner, Observer {
-                updateView(it)
-                closeAll = it != null && it.state == WorkInfo.State.SUCCEEDED || it.state == WorkInfo.State.RUNNING || it.state == WorkInfo.State.ENQUEUED
-            })
+            viewModel.activate()
         }
         binding.buttonClose.setOnClickListener {
             dismiss()
         }
+        viewModel.machine.observe(viewLifecycleOwner, Observer {
+            machineId = it.id
+            val intent = Intent(requireContext(), MachineActivationService::class.java).apply {
+                putExtra(MachineActivationService.CHECK_ONLY_EXTRA, true)
+                putExtra(MachineActivationService.MACHINE_ID_EXTRA, it.id.toString())
+            }
+            requireContext().startForegroundService(intent)
+        })
         return binding.root
+    }
+
+    private val receiver = object: BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val message = intent?.getStringExtra(MachineActivationService.MESSAGE_EXTRA)
+            val action = intent?.action
+            if(action == MachineActivationService.MACHINE_ACTIVATION) {
+                val queue = intent.getParcelableExtra<MachineActivationQueues>(MachineActivationService.PENDING_QUEUES_EXTRA)
+                if(queue?.machineId != machineId) return
+                when(queue?.status) {
+                    MachineConnectionStatus.CONNECTING -> {
+                        binding.buttonActivate.visibility = View.GONE
+                        closeAll = true
+                    }
+                    MachineConnectionStatus.SUCCESS -> {
+                        binding.buttonActivate.visibility = View.GONE
+                        closeAll = true
+                    }
+                    MachineConnectionStatus.FAILED -> {
+                        binding.buttonActivate.visibility = View.VISIBLE
+                    }
+                    else -> {}
+                }
+                Toast.makeText(requireContext(), queue?.message ?: "", Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
     override fun onDismiss(dialog: DialogInterface) {
         if(closeAll) {
             close()
         }
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(receiver)
         super.onDismiss(dialog)
     }
 
     fun close() {
-//        requireActivity().findNavController(R.id.navHostRemote).navigate(R.id.remotePanelFragment)
-        requireActivity().findNavController(R.id.navHostRemote).popBackStack(R.id.remotePanelFragment, true)
-    }
-
-    private fun updateView(wi: WorkInfo?) {
-        if(wi != null) {
-            if(wi.state == WorkInfo.State.RUNNING || wi.state == WorkInfo.State.ENQUEUED) {
-                binding.textIndicator.text = "Connecting"
-                binding.buttonActivate.visibility = View.GONE
-                closeOnTouchOutside = false
-            } else {
-                binding.textIndicator.text = wi.outputData.getString(RemoteWorker.MESSAGE)
-                binding.buttonActivate.visibility = View.VISIBLE
-                closeOnTouchOutside = true
+        try {
+            activity.let {
+                it?.findNavController(R.id.navHostRemote)
+                    ?.popBackStack(R.id.remotePanelFragment, true)
             }
-        } else {
-            binding.textIndicator.text = "Good to go"
-            binding.buttonActivate.visibility = View.VISIBLE
-            closeOnTouchOutside = true
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
     override fun onResume() {
         super.onResume()
-        viewModel.machine.observe(viewLifecycleOwner, Observer {
-            hookObserver(it.workerId)
-        })
-    }
-
-    private fun hookObserver(workerId: UUID?) {
-        workerId?.let { uuid ->
-            viewModel.pendingWork(uuid).observe(viewLifecycleOwner, Observer { _wi ->
-                updateView(_wi)
-            })
+        val intentFilter = IntentFilter().apply {
+            addAction(MachineActivationService.MACHINE_ACTIVATION)
+            addAction(MachineActivationService.INPUT_INVALID_ACTION)
         }
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(receiver, intentFilter)
     }
 }

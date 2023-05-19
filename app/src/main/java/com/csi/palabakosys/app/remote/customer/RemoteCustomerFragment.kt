@@ -38,9 +38,6 @@ class RemoteCustomerFragment : BaseModalFragment() {
         binding.buttonClose.setOnClickListener {
             dismiss()
         }
-        viewModel.machine.observe(viewLifecycleOwner, Observer {
-            hookPending(it.workerId)
-        })
 
         viewModel.customerQueues.observe(viewLifecycleOwner, Observer {
             customerQueuesAdapter.setData(it)
@@ -52,43 +49,6 @@ class RemoteCustomerFragment : BaseModalFragment() {
 
         return binding.root
     }
-
-    private fun hookPending(workId: UUID?) {
-        if(workId != null) {
-            viewModel.pendingWork(workId).observe(viewLifecycleOwner, Observer { _wi ->
-                updateView(_wi != null && _wi.state.isFinished)
-            })
-        } else {
-            updateView(true)
-        }
-    }
-
-    private fun updateView(isFinished: Boolean) {
-        if(isFinished) {
-            binding.mainContainer.visibility = View.VISIBLE
-            binding.indicatorActive.visibility = View.GONE
-            viewModel.getCustomersByMachineType()
-        } else {
-            binding.mainContainer.visibility = View.GONE
-            binding.indicatorActive.visibility = View.VISIBLE
-        }
-    }
-
-//    private fun checkResult(workInfo: WorkInfo) {
-//        val message = workInfo.outputData.getString(RemoteWorker.MESSAGE)
-//
-//        if(workInfo.state == WorkInfo.State.FAILED) {
-//            binding.cardCover.visibility = View.GONE
-//        } else if(workInfo.state == WorkInfo.State.ENQUEUED) {
-//            binding.cardCover.visibility = View.VISIBLE
-//        } else if(workInfo.state == WorkInfo.State.SUCCEEDED) {
-//            binding.cardCover.visibility = View.GONE
-//            dismiss()
-//        }
-//        Toast.makeText(context, message + workInfo.state.toString(), Toast.LENGTH_LONG).show()
-//        println("state")
-//        println(workInfo.state)
-//    }
 
     companion object {
         var instance: RemoteCustomerFragment? = null

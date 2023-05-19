@@ -18,5 +18,5 @@ interface DaoJobOrderQueues {
     suspend fun getAvailableWashes(customerId: UUID, machineType: EnumMachineType) : List<EntityAvailableService>
 
     @Query("SELECT * FROM job_order_services WHERE id = :id")
-    suspend fun get(id: UUID): EntityJobOrderService?
+    suspend fun get(id: UUID?): EntityJobOrderService?
 }

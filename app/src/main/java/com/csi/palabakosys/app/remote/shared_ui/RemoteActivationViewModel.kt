@@ -6,7 +6,6 @@ import com.csi.palabakosys.model.EnumMachineType
 import com.csi.palabakosys.room.entities.*
 import com.csi.palabakosys.room.repository.JobOrderQueuesRepository
 import com.csi.palabakosys.room.repository.MachineRepository
-import com.csi.palabakosys.worker.RemoteWorker
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.*
@@ -17,15 +16,11 @@ class RemoteActivationViewModel
 
 @Inject
 constructor(
-    private val queuesRepository: JobOrderQueuesRepository,
-    private val machineRepository: MachineRepository,
-    private val workManager: WorkManager
+    private val queuesRepository: JobOrderQueuesRepository
 ) : ViewModel() {
     val dataState = MutableLiveData<DataState>()
-//    val machines = MutableLiveData<List<EntityMachine>>()
     val machine = MutableLiveData<EntityMachine>()
     val service = MutableLiveData<EntityAvailableService>()
-//    val selectedTab = MutableLiveData(EnumMachineType.REGULAR_WASHER)
 
     val customerQueues = MutableLiveData<List<EntityCustomerQueueService>>()
     val customerQueue = MutableLiveData<EntityCustomerQueueService>()
@@ -36,43 +31,26 @@ constructor(
         dataState.value = DataState.StateLess
     }
 
-//    fun loadMachines(machineType: EnumMachineType) {
-//        viewModelScope.launch {
-//            machineRepository.getAll(machineType).let {
-//                machines.value = it
-//            }
-//        }
-//    }
+    fun selectMachine(machine: EntityMachine?) {
+        this.machine.value = machine
+        this.loadCustomerQueuesByMachineType(machine?.machineType)
+        this.dataState.value = DataState.SelectMachine
+    }
 
-    fun selectMachine(machineTile: EntityMachine?) {
+    private fun loadCustomerQueuesByMachineType(machineType: EnumMachineType?) {
         viewModelScope.launch {
-            if(machineTile != null) {
-                machineRepository.get(machineTile.id)?.let {
-                    machine.value = it
+            machineType?.let {
+                queuesRepository.getByMachineType(it).let { customers ->
+                    customerQueues.value = customers
                 }
             }
         }
     }
 
-    fun getCustomersByMachineType() {
-        viewModelScope.launch {
-            machine.value?.machineType?.let {
-                queuesRepository.getByMachineType(it).let { list ->
-                    customerQueues.value = list
-                }
-            }
-        }
-    }
-
-    fun selectCustomer(_customerQueue: EntityCustomerQueueService) {
-        viewModelScope.launch {
-            customerQueue.value = _customerQueue
-            getQueuesByCustomer(_customerQueue)
-        }
-    }
-
-    fun selectService(service: EntityAvailableService) {
-        this.service.value = service
+    fun selectCustomer(customerQueue: EntityCustomerQueueService) {
+        this.customerQueue.value = customerQueue
+        this.getQueuesByCustomer(customerQueue)
+        this.dataState.value = DataState.SelectCustomer
     }
 
     private fun getQueuesByCustomer(queueService: EntityCustomerQueueService) {
@@ -83,43 +61,24 @@ constructor(
         }
     }
 
-    fun activate() : LiveData<WorkInfo>? {
-        println("activate")
-        val machine = this.machine.value ?: return null
-        val service = this.service.value ?: return null
-
-        if(service.available <= 0) {
-            return null
-        }
-
-        val remoteWorkerInput = Data.Builder()
-            .putString(RemoteWorker.JOB_ORDER_SERVICE_ID, service.id.toString())
-            .putString(RemoteWorker.MACHINE_ID, machine.id.toString())
-            .build()
-
-        val remoteWorker = OneTimeWorkRequestBuilder<RemoteWorker>()
-            .setInputData(remoteWorkerInput)
-            .build()
-
-        workManager.enqueue(remoteWorker)
-
-        dataState.value = DataState.InitiateConnection(machine.id, remoteWorker.id)
-
-        return workManager.getWorkInfoByIdLiveData(remoteWorker.id)
+    fun selectService(service: EntityAvailableService) {
+        this.service.value = service
+        this.dataState.value = DataState.SelectService
     }
 
-    fun pendingWork(workerId: UUID) : LiveData<WorkInfo> {
-        return workManager.getWorkInfoByIdLiveData(workerId)
-    }
 
-//    fun setMachineType(text: String?) {
-//        println("machine type")
-//        println(text)
-//        selectedTab.value = EnumMachineType.fromName(text)
-//    }
+    fun activate() {
+        val machine = this.machine.value ?: return
+        val service = this.service.value ?: return
+
+        dataState.value = DataState.InitiateConnection(machine.id, service.id!!)
+    }
 
     sealed class DataState {
         object StateLess: DataState()
+        object SelectMachine: DataState()
+        object SelectCustomer: DataState()
+        object SelectService: DataState()
         class InitiateConnection(val machineId: UUID, val workerId: UUID) : DataState()
     }
 }

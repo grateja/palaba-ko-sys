@@ -24,11 +24,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:minHeight="500dp">
-                <com.google.android.material.progressindicator.CircularProgressIndicator
-                    android:id="@+id/indicatorActive"
-                    android:indeterminate="true"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"/>
+<!--                <com.google.android.material.progressindicator.CircularProgressIndicator-->
+<!--                    android:id="@+id/indicatorActive"-->
+<!--                    android:indeterminate="true"-->
+<!--                    android:layout_width="100dp"-->
+<!--                    android:layout_height="100dp"/>-->
                 <LinearLayout
                     android:id="@+id/mainContainer"
                     android:layout_width="match_parent"
@@ -59,12 +59,12 @@
                             android:layout_marginStart="10dp"
                             android:text="SELECT CUSTOMER FOR"/>
 
-                        <ImageButton
+                        <Button
                             android:id="@+id/buttonClose"
-                            android:background="@color/transparent"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:src="@android:drawable/ic_menu_close_clear_cancel" />
+                            style="@style/RoundButtonNeutral"
+                            android:text="@string/close"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
                     </LinearLayout>
                     <TextView
                         style="@style/TextItemTitle.Medium.Bold"

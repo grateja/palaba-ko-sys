@@ -17,7 +17,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class RemoteQueuesFragment : BaseModalFragment() {
     private lateinit var binding: FragmentRemoteQueuesBinding
-//    private val queuesViewModel: RemoteQueuesViewModel by viewModels()
     private val viewModel: RemoteActivationViewModel by activityViewModels()
 
     private val serviceQueuesAdapter = Adapter<EntityAvailableService>(R.layout.recycler_item_queue_service)
@@ -26,14 +25,9 @@ class RemoteQueuesFragment : BaseModalFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         binding = FragmentRemoteQueuesBinding.inflate(inflater, container, false)
         binding.recyclerAvailableServices.adapter = serviceQueuesAdapter
         binding.viewModel = viewModel
-
-//        viewModel.customerQueue.observe(viewLifecycleOwner, Observer {
-//            queuesViewModel.getAvailableServicesByCustomerId(it.customerId, it.machineType)
-//        })
 
         viewModel.availableServices.observe(viewLifecycleOwner, Observer {
             serviceQueuesAdapter.setData(it)

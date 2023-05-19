@@ -58,11 +58,12 @@
                             android:src="@android:drawable/ic_menu_close_clear_cancel" />
                     </LinearLayout>
                     <TextView
-                        style="@style/TextItemPrice"
-                        android:text="CUSTOMER:"
+                        style="@style/TileTitle"
+                        android:text="@{viewModel.customerQueue.customerName}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="10dp"/>
+                        android:layout_marginHorizontal="10dp"
+                        tools:text="Tony stark"/>
 <!--                    <TextView-->
 <!--                        style="@style/TextItemTitle.Medium.Bold"-->
 <!--                        android:layout_width="wrap_content"-->

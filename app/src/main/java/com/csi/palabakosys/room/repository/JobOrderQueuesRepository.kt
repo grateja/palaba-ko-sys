@@ -34,7 +34,7 @@ constructor (
         return emptyList()
     }
 
-    suspend fun get(id: UUID) : EntityJobOrderService? {
+    suspend fun get(id: UUID?) : EntityJobOrderService? {
         return dao.get(id)
     }
 }
