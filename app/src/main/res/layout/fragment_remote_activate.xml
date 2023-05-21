@@ -22,9 +22,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:minHeight="500dp">
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
                     <TextView
                         android:id="@+id/textCustomerName"
                         app:layout_constraintTop_toTopOf="parent"
@@ -54,7 +55,7 @@
                         app:layout_constraintTop_toBottomOf="@id/textServiceName"
                         app:layout_constraintStart_toStartOf="parent"
                         tools:text="493423409283482348230423"
-                        android:text="@{viewModel.machine.workerId.toString()}"
+                        android:text="@{viewModel.machine.serviceActivationId.toString()}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                     <Button
@@ -79,7 +80,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"/>
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
         </FrameLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

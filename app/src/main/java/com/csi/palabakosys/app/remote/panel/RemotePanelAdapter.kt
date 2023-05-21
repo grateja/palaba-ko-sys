@@ -7,7 +7,6 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.csi.palabakosys.BR
 import com.csi.palabakosys.R
-import com.csi.palabakosys.model.EnumMachineType
 import com.csi.palabakosys.room.entities.EntityMachine
 import java.util.*
 
@@ -50,7 +49,7 @@ class RemotePanelAdapter : RecyclerView.Adapter<RemotePanelAdapter.ViewHolder>()
     }
 
     fun setConnection(connecting: Boolean, machineId: UUID?, workerId: UUID?) {
-        list.find {it.entityMachine.id == machineId || it.entityMachine.workerId == workerId}?.apply {
+        list.find {it.entityMachine.id == machineId || it.entityMachine.serviceActivationId == workerId}?.apply {
             this.connecting = connecting
             notifyItemChanged(list.indexOf(this))
         }

@@ -26,9 +26,9 @@ class MachineRepository
         return daoMachine.getLastStackOrder(machineType)?:1
     }
 
-    suspend fun setWorkerId(machineId: UUID, workerId: UUID?) {
-        daoMachine.setWorkerId(machineId, workerId)
-    }
+//    suspend fun setWorkerId(machineId: UUID, workerId: UUID?) {
+//        daoMachine.setWorkerId(machineId, workerId)
+//    }
 
     fun getAllAsLiveData() : LiveData<List<EntityMachine>> = daoMachine.getAllAsLiveData()
 

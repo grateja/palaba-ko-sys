@@ -13,8 +13,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
-
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:name=".di.MyApplication"
@@ -25,10 +24,27 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LMS2022">
+        <activity
+            android:name=".app.remote.running.MachineRunningActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".app.remote.activate.RemoteActivationPreviewActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
         <service
             android:name=".services.MachineActivationService"
+            android:stopWithTask="false"
             android:enabled="true"
             android:exported="false" />
+
         <activity
             android:name=".app.machines.addedit.MachinesAddEditActivity"
             android:exported="false">
@@ -45,7 +61,7 @@
         </activity>
         <activity
             android:name=".app.auth.AuthActionDialogActivity"
-            android:exported="true"
+            android:exported="false"
             android:launchMode="singleInstance"
             android:theme="@style/Theme.MaterialComponents.Light.Dialog"
             android:windowSoftInputMode="stateHidden|adjustPan">

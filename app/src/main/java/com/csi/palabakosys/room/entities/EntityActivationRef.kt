@@ -2,11 +2,7 @@ package com.csi.palabakosys.room.entities
 
 import androidx.room.ColumnInfo
 import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneOffset
 import java.time.temporal.ChronoUnit
-import java.time.temporal.Temporal
-import java.time.temporal.TemporalUnit
 import java.util.*
 
 data class EntityActivationRef(
@@ -19,8 +15,8 @@ data class EntityActivationRef(
 //    @ColumnInfo(name = "customer_id")
 //    var customerId: String?,
 //
-    @ColumnInfo(name = "job_order_Id")
-    var jobOrderId: UUID?,
+    @ColumnInfo(name = "jo_service_id")
+    var joServiceId: UUID?,
 ) {
     fun remainingTime() : Long {
         val _totalMinutes = this.totalMinutes ?: 0

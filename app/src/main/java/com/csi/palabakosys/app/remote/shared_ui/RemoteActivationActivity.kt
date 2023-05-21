@@ -1,22 +1,26 @@
 package com.csi.palabakosys.app.remote.shared_ui
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.navigation.NavHostController
-import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import com.csi.palabakosys.R
+import com.csi.palabakosys.app.remote.activate.RemoteActivationPreviewActivity
+import com.csi.palabakosys.app.remote.running.MachineRunningActivity
 import com.csi.palabakosys.databinding.ActivityRemoteActivationBinding
-import com.csi.palabakosys.model.EnumMachineType
+import com.csi.palabakosys.model.MachineActivationQueues
+import com.csi.palabakosys.model.MachineConnectionStatus
 import com.csi.palabakosys.services.MachineActivationService
+import com.csi.palabakosys.util.ActivityLauncher
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
 
 @AndroidEntryPoint
 class RemoteActivationActivity : AppCompatActivity() {
@@ -25,14 +29,17 @@ class RemoteActivationActivity : AppCompatActivity() {
 
     private lateinit var navHost: NavHostFragment
     private lateinit var navHostController: NavHostController
+    private val launcher = ActivityLauncher(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_remote_activation)
 
         navHost = supportFragmentManager.findFragmentById(R.id.navHostRemote) as NavHostFragment
         navHostController = navHost.navController as NavHostController
         subscribeObservers()
+        subscribeEvents()
     }
 
     private fun navigate(destination: Int) {
@@ -41,33 +48,63 @@ class RemoteActivationActivity : AppCompatActivity() {
         }
     }
 
+    private fun subscribeEvents() {
+        launcher.onOk = { result ->
+            if(result.resultCode == RESULT_OK) {
+                navHostController.popBackStack(R.id.remotePanelFragment, false)
+            }
+        }
+    }
+
     private fun subscribeObservers() {
         viewModel.dataState.observe(this, Observer {
             when(it) {
                 is RemoteActivationViewModel.DataState.SelectMachine -> {
-                    navigate(R.id.remote_customerFragment)
+                    if(it.entityMachine?.activationRef?.running() == true) {
+                        val intent = Intent(this, MachineRunningActivity::class.java).apply {
+                            putExtra(MachineActivationService.MACHINE_ID_EXTRA, it.entityMachine.id.toString())
+                        }
+                        startActivity(intent)
+                    } else if(it.entityMachine?.serviceActivationId != null) {
+                        openActivationPreview(it.entityMachine.id)
+                    } else {
+                        navigate(R.id.remote_customerFragment)
+                    }
                     viewModel.resetState()
                 }
                 is RemoteActivationViewModel.DataState.SelectCustomer -> {
                     navigate(R.id.remote_queuesFragment)
                     viewModel.resetState()
                 }
-                is RemoteActivationViewModel.DataState.SelectService -> {
-                    navigate(R.id.remote_activateFragment)
-                    viewModel.resetState()
-                }
-                is RemoteActivationViewModel.DataState.InitiateConnection -> {
-//                    val machineId = it.machineId
-//                    val serviceId = it.workerId
-                    val intent = Intent(applicationContext, MachineActivationService::class.java).apply {
+//                is RemoteActivationViewModel.DataState.SelectService -> {
+//                    navigate(R.id.remote_activateFragment)
+//                    viewModel.resetState()
+//                }
+                is RemoteActivationViewModel.DataState.PrepareActivation -> {
+                    // openActivationPreview(it.machineId)
+
+                    val intent = Intent(applicationContext, RemoteActivationPreviewActivity::class.java).apply {
+                        println("fucking ids : ${it.machineId} ; ${it.serviceId} ; ${it.customerId}")
+                        putExtra(MachineActivationService.JO_SERVICE_ID_EXTRA, it.serviceId.toString())
+                        putExtra(MachineActivationService.CUSTOMER_ID_EXTRA, it.customerId.toString())
                         putExtra(MachineActivationService.MACHINE_ID_EXTRA, it.machineId.toString())
-                        putExtra(MachineActivationService.JO_SERVICE_ID_EXTRA, it.workerId.toString())
                     }
-                    ContextCompat.startForegroundService(applicationContext, intent)
+                    launcher.launch(intent)
+//                    startActivity(intent)
+//                    activationPreviewLauncher.launch(intent)
+//                    ContextCompat.startForegroundService(applicationContext, intent)
                     viewModel.resetState()
                 }
                 else -> {}
             }
         })
+    }
+
+    private fun openActivationPreview(machineId: UUID) {
+        val intent = Intent(applicationContext, RemoteActivationPreviewActivity::class.java).apply {
+            putExtra(MachineActivationService.MACHINE_ID_EXTRA, machineId.toString())
+            putExtra(MachineActivationService.CHECK_ONLY_EXTRA, true)
+        }
+        startActivity(intent)
     }
 }

@@ -10,8 +10,9 @@ open class EndingActivity : AppCompatActivity() {
     private var doubleclick = false
     override fun onBackPressed() {
         if(doubleclick) {
+//            super.onBackPressed()
             moveTaskToBack(true)
-            exitProcess(-1)
+//            finish()
         }
         doubleclick = true
         Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT).show()

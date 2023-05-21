@@ -10,21 +10,20 @@ import com.csi.palabakosys.R
 import com.csi.palabakosys.model.MachineActivationQueues
 import com.csi.palabakosys.model.MachineConnectionStatus
 import com.csi.palabakosys.preferences.AppPreferenceRepository
-import com.csi.palabakosys.room.entities.EntityActivationRef
-import com.csi.palabakosys.room.entities.EntityJobOrderService
-import com.csi.palabakosys.room.entities.EntityMachine
-import com.csi.palabakosys.room.entities.EntityMachineUsage
+import com.csi.palabakosys.room.entities.*
+import com.csi.palabakosys.room.repository.CustomerRepository
 import com.csi.palabakosys.room.repository.JobOrderQueuesRepository
 import com.csi.palabakosys.room.repository.MachineRepository
 import com.csi.palabakosys.room.repository.RemoteRepository
+import com.csi.palabakosys.util.MachineActivationBus
 import com.csi.palabakosys.util.toUUID
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.time.Instant
-import java.util.Collections
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -43,39 +42,39 @@ class MachineActivationService : Service() {
     @Inject
     lateinit var queuesRepository: JobOrderQueuesRepository
 
+    @Inject
+    lateinit var customerRepository: CustomerRepository
+
+    @Inject
+    lateinit var queues: MachineActivationBus
+
     companion object {
         const val MACHINE_ACTIVATION = "machine_activation"
-//        const val CHECK_PENDING_ACTION = "check_pending"
-
-//        const val MESSAGE_ACTION = 1
-//        const val REQUEST_STARTED_ACTION = "request_started"
-//        const val REQUEST_SUCCESS_ACTION = "request_finished"
-//        const val REQUEST_FAILED_ACTION = "request_failed"
         const val INPUT_INVALID_ACTION = "input_invalid"
+        const val DATABASE_INCONSISTENCIES_ACTION = "inconsistent_db"
 
         const val PENDING_QUEUES_EXTRA = "pending_queues"
         const val MESSAGE_EXTRA = "message_extra"
-//        const val REQUEST_STATUS_EXTRA = "request_status"
 
         const val CHECK_ONLY_EXTRA = "check_only"
         const val MACHINE_ID_EXTRA = "machine_id"
         const val JO_SERVICE_ID_EXTRA = "jo_service_id"
+        const val CUSTOMER_ID_EXTRA = "customer_id"
 
         private const val NOTIFICATION_ID = 102
         private const val CHANNEL_ID = "IAmSuperAwesome"
     }
 
-    private val queues: MutableList<MachineActivationQueues> by lazy {
-        mutableListOf()
-    }
-
     override fun onBind(intent: Intent?): IBinder? = null
+
+    override fun onCreate() {
+        super.onCreate()
+        startForeground(NOTIFICATION_ID, getNotification())
+    }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
         super.onStartCommand(intent, flags, startId)
-
-        startForeground(NOTIFICATION_ID, getNotification())
 
         val checkOnly = intent?.getBooleanExtra(CHECK_ONLY_EXTRA, false) ?: false
 
@@ -86,7 +85,7 @@ class MachineActivationService : Service() {
                     putExtra(PENDING_QUEUES_EXTRA, pending)
                 })
             } else {
-                stopSelf()
+                checkInconsistencies(intent)
             }
         } else {
             enqueue(intent)
@@ -95,53 +94,68 @@ class MachineActivationService : Service() {
         return START_NOT_STICKY
     }
 
+    private fun checkInconsistencies(intent: Intent?) {
+        val context = this
+        Thread {
+            runBlocking {
+                val machineId = intent?.getStringExtra(MACHINE_ID_EXTRA).toUUID()
+                val machine = machineRepository.get(machineId)
+                if(machine?.serviceActivationId != null) {
+                    // something is wrong
+                    sendInvalidInput("Inconsistencies with the database detected")
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(Intent(DATABASE_INCONSISTENCIES_ACTION).apply {
+                        putExtra(MACHINE_ID_EXTRA, machine.id.toString())
+                        putExtra(JO_SERVICE_ID_EXTRA, machine.serviceActivationId.toString())
+                    })
+                } else {
+                    // all good
+                    // send empty queue
+                    safeStop()
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(Intent(MACHINE_ACTIVATION))
+                }
+            }
+        }.start()
+    }
+
     private fun enqueue(intent: Intent?) {
         val machineId = intent?.getStringExtra(MACHINE_ID_EXTRA).toUUID()
         val joServiceId = intent?.getStringExtra(JO_SERVICE_ID_EXTRA).toUUID()
+        val customerId = intent?.getStringExtra(CUSTOMER_ID_EXTRA).toUUID()
 
-        if(machineId != null && joServiceId != null) {
-            val queue = MachineActivationQueues(
-                machineId, joServiceId, MachineConnectionStatus.CONNECTING, "Machine activation enqueue..."
-            )
-            LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(MACHINE_ACTIVATION).apply {
-                putExtra(PENDING_QUEUES_EXTRA, queue)
-            })
-            queues.add(queue)
-            start(machineId, joServiceId)
+        if(machineId != null && joServiceId != null && customerId != null) {
+            start(machineId, joServiceId, customerId)
+        } else {
+            sendInvalidInput("Inconsistent data detected")
         }
     }
 
     private fun checkPendingQueues(intent: Intent?) : MachineActivationQueues? {
         return intent?.getStringExtra(MACHINE_ID_EXTRA)?.let { machineId ->
-            queues.find {
-                it.machineId == machineId.toUUID() && it.status == MachineConnectionStatus.CONNECTING
-            }
+            queues.get(machineId.toUUID())
         }
     }
 
-//    private fun updateQueue(machineId: UUID, queue: MachineActivationQueues) {
-//        queues.find { it.machineId == machineId }?.let {
-//            Collections.replaceAll(queues, it, queue)
-//            LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(MACHINE_ACTIVATION).apply {
-//                putExtra(PENDING_QUEUES_EXTRA, queue)
-//            })
-//        }
-//    }
-
     private fun finishQueue(machineId: UUID, status: MachineConnectionStatus, message: String) {
-        queues.find {
-            it.machineId == machineId
-        }?.apply {
+        queues.get(machineId)?.apply {
             this.status = status
             this.message = message
         }?.let { queue ->
-            queues.remove(queue)
             LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(MACHINE_ACTIVATION).apply {
                 putExtra(PENDING_QUEUES_EXTRA, queue)
             })
-            if(queues.size == 0) {
-                stopSelf()
-            }
+            Thread {
+                runBlocking {
+                    delay(1000L)
+                    queues.remove(queue.machineId)
+                    safeStop()
+                }
+            }.start()
+        }
+    }
+
+    private fun safeStop() {
+        if(queues.size() == 0) {
+            stopSelf()
         }
     }
 
@@ -186,22 +200,40 @@ class MachineActivationService : Service() {
             .build()
     }
 
-    private fun start(machineId: UUID, jobOrderServiceId: UUID) {
+    private fun start(machineId: UUID, jobOrderServiceId: UUID, customerId: UUID) {
+        val context = this
 
         Thread {
             runBlocking {
-//                val machineId = intent?.getStringExtra(MACHINE_ID_EXTRA).toUUID()
-//                val jobOrderServiceId = intent?.getStringExtra(JO_SERVICE_ID_EXTRA).toUUID()
-
                 val machine = machineRepository.get(machineId)
                 val jobOrderService = queuesRepository.get(jobOrderServiceId)
+                val customer = customerRepository.get(customerId)
 
-                if (validate(machine, jobOrderService)) {
-                    machineRepository.setWorkerId(machine!!.id, jobOrderService!!.id)
+                if (validate(machine, jobOrderService, customer)) {
+
+                    val queue = MachineActivationQueues(
+                        machine!!.id,
+                        jobOrderService!!.id,
+                        customer!!.id,
+                        customer.name!!,
+                        jobOrderService.serviceName,
+                        machine.machineName(),
+                        MachineConnectionStatus.CONNECTING,
+                        "Machine activation enqueue..."
+                    )
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(Intent(MACHINE_ACTIVATION).apply {
+                        putExtra(PENDING_QUEUES_EXTRA, queue)
+                    })
+                    queues.add(queue)
+
+                    println("add item")
+                    println(queues.size())
+
+                    remoteRepository.preActivate(machine.id, jobOrderService.id)
 
                     if (activate(machine, jobOrderService)) {
 
-                        val machineUsage = EntityMachineUsage(machineId, jobOrderServiceId)
+                        val machineUsage = EntityMachineUsage(machineId, jobOrderServiceId, customerId)
                         val activationRef = EntityActivationRef(
                             Instant.now(),
                             jobOrderService.serviceRef.minutes,
@@ -214,8 +246,9 @@ class MachineActivationService : Service() {
                             machine.id,
                             machineUsage
                         )
+                    } else {
+                        remoteRepository.revertActivation(machine.id, jobOrderService.id)
                     }
-                    machineRepository.setWorkerId(machine.id, null)
                 }
             }
         }.start()
@@ -227,9 +260,14 @@ class MachineActivationService : Service() {
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
     }
 
-    private fun validate(machine: EntityMachine?, jobOrderService: EntityJobOrderService?) : Boolean {
+    private fun validate(machine: EntityMachine?, jobOrderService: EntityJobOrderService?, customer: EntityCustomer?) : Boolean {
         if(machine == null || (machine.ipEnd <= 1 || machine.ipEnd >= 254)) {
             sendInvalidInput("Invalid IP Address")
+            return false
+        }
+
+        if((machine.activationRef?.remainingTime() ?: 0) > 0) {
+            sendInvalidInput("Machine is already running")
             return false
         }
 
@@ -245,6 +283,11 @@ class MachineActivationService : Service() {
 
         if(jobOrderService.quantity <= jobOrderService.used) {
             sendInvalidInput(jobOrderService.serviceName + " already used")
+            return false
+        }
+
+        if(customer?.name == null) {
+            sendInvalidInput("Customer must have a name")
             return false
         }
 
@@ -274,71 +317,28 @@ class MachineActivationService : Service() {
 
 
         return try {
-//            LocalBroadcastManager.getInstance(this).sendBroadcast(
-//                Intent(REQUEST_STARTED_ACTION)
-//            )
-
             val response = client.newCall(request).execute()//.body()?.string().toString()
             val body = response.body()?.string().toString()
 
             if(response.code() == 200) {
                 if(body.toInt() < 1) {
-//                    LocalBroadcastManager.getInstance(this).sendBroadcast(
-//                        Intent(REQUEST_FAILED_ACTION).apply {
-//                            putExtra(MESSAGE_EXTRA, "Invalid response from card terminal")
-//                            putExtra(MACHINE_ID_EXTRA, machine.id.toString())
-//                        }
-//                    )
                     finishQueue(machine.id, MachineConnectionStatus.FAILED,"Invalid response from card terminal")
                     return false
                 } else {
-//                    LocalBroadcastManager.getInstance(this).sendBroadcast(
-//                        Intent(REQUEST_SUCCESS_ACTION).apply {
-//                            putExtra(MACHINE_ID_EXTRA, machine.id.toString())
-//                        }
-//                    )
                     finishQueue(machine.id, MachineConnectionStatus.SUCCESS, "${machine.machineName()} Activation success")
                     true
                 }
             } else {
-//                LocalBroadcastManager.getInstance(this).sendBroadcast(
-//                    Intent(REQUEST_FAILED_ACTION).apply {
-//                        putExtra(MESSAGE_EXTRA, "Invalid response from card terminal")
-//                        putExtra(MACHINE_ID_EXTRA, machine.id.toString())
-//                    }
-//                )
                 finishQueue(machine.id, MachineConnectionStatus.FAILED,"Invalid response from card terminal")
                 return false
             }
         } catch(e: NumberFormatException) {
-//            sendInvalidInput("Request success but got an invalid response from the terminal")
-//            LocalBroadcastManager.getInstance(this).sendBroadcast(
-//                Intent(REQUEST_FAILED_ACTION).apply {
-//                    putExtra(MESSAGE_EXTRA, "Request success but got an invalid response from the terminal")
-//                    putExtra(MACHINE_ID_EXTRA, machine.id.toString())
-//                }
-//            )
-//            sendRequestStatus(REQUEST_FAILED_ACTION, machine.id.toString(), -1)
             finishQueue(machine.id, MachineConnectionStatus.FAILED, "Request success but got an invalid response from the terminal")
             return false
         } catch (e: Exception) {
-//            LocalBroadcastManager.getInstance(this).sendBroadcast(
-//                Intent(REQUEST_FAILED_ACTION).apply {
-//                    putExtra(MESSAGE_EXTRA, e.message)
-//                    putExtra(MACHINE_ID_EXTRA, machine.id.toString())
-//                }
-//            )
             finishQueue(machine.id, MachineConnectionStatus.FAILED, e.message.toString())
             e.printStackTrace()
             false
         }
     }
-
-//    @Parcelize
-//    data class ActivationResult(
-//        val machineId: UUID,
-//        val joServiceId: UUID,
-//        val statusCode: Int,
-//        val message: String,
-//    ) : Parcelable
 }

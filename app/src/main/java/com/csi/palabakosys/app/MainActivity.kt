@@ -33,7 +33,7 @@ import com.csi.palabakosys.databinding.ActivityMainBinding
 import com.csi.palabakosys.model.EnumMachineType
 import com.csi.palabakosys.services.MachineActivationService
 import com.csi.palabakosys.viewmodels.MainViewModel
-import com.csi.palabakosys.worker.RemoteWorker
+//import com.csi.palabakosys.worker.RemoteWorker
 import com.google.gson.JsonObject
 import dagger.hilt.android.AndroidEntryPoint
 import java.net.InetAddress
@@ -67,15 +67,15 @@ class MainActivity : EndingActivity() {
             startActivity(intent)
         }
         binding.btnMachines.setOnClickListener {
-//            val intent = Intent(this, MachinesActivity::class.java)
-//            startActivity(intent)
+            val intent = Intent(this, MachinesActivity::class.java)
+            startActivity(intent)
 //            if(ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
-            val intent = Intent(applicationContext, MachineActivationService::class.java).apply {
-                putExtra("machineType", EnumMachineType.REGULAR_DRYER.id)
-                putExtra(RemoteWorker.MACHINE_ID, "ff72b605-88f8-4a3e-9818-7cb83167e336")
-                putExtra(RemoteWorker.JOB_ORDER_SERVICE_ID, "c621ceba-9d56-4703-9719-782eec6e3b87")
-            }
-            ContextCompat.startForegroundService(applicationContext, intent)
+//            val intent = Intent(applicationContext, MachineActivationService::class.java).apply {
+//                putExtra("machineType", EnumMachineType.REGULAR_DRYER.id)
+//                putExtra(RemoteWorker.MACHINE_ID, "ff72b605-88f8-4a3e-9818-7cb83167e336")
+//                putExtra(RemoteWorker.JOB_ORDER_SERVICE_ID, "c621ceba-9d56-4703-9719-782eec6e3b87")
+//            }
+//            ContextCompat.startForegroundService(applicationContext, intent)
 //            val s = startService(intent)
 //            stopService(intent)
 //                startForegroundService(intent)
@@ -166,16 +166,16 @@ class MainActivity : EndingActivity() {
         println(widthDp)
     }
 
-    private var doubleclick = false
-    override fun onBackPressed() {
-        if(doubleclick) {
-            moveTaskToBack(true)
-            exitProcess(-1)
-        }
-        doubleclick = true
-        Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT).show()
-        Handler(Looper.getMainLooper()).postDelayed(Runnable {
-            doubleclick = false
-        }, 2000)
-    }
+//    private var doubleclick = false
+//    override fun onBackPressed() {
+//        if(doubleclick) {
+//            moveTaskToBack(true)
+////            exitProcess(-1)
+//        }
+//        doubleclick = true
+//        Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT).show()
+//        Handler(Looper.getMainLooper()).postDelayed(Runnable {
+//            doubleclick = false
+//        }, 2000)
+//    }
 }

@@ -20,8 +20,8 @@ data class EntityCustomer(
     @ColumnInfo(name = "email")
     var email: String? = null
 
-    @ColumnInfo(name = "cash_back")
-    var cashBack: Float = 0f
+//    @ColumnInfo(name = "cash_back")
+//    var cashBack: Float = 0f
 
     @ColumnInfo(name = "remarks")
     var remarks: String? = null

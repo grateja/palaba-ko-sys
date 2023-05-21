@@ -1,11 +1,9 @@
 package com.csi.palabakosys.app.remote.shared_ui
 
 import androidx.lifecycle.*
-import androidx.work.*
 import com.csi.palabakosys.model.EnumMachineType
 import com.csi.palabakosys.room.entities.*
 import com.csi.palabakosys.room.repository.JobOrderQueuesRepository
-import com.csi.palabakosys.room.repository.MachineRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.*
@@ -34,7 +32,7 @@ constructor(
     fun selectMachine(machine: EntityMachine?) {
         this.machine.value = machine
         this.loadCustomerQueuesByMachineType(machine?.machineType)
-        this.dataState.value = DataState.SelectMachine
+        this.dataState.value = DataState.SelectMachine(machine)
     }
 
     private fun loadCustomerQueuesByMachineType(machineType: EnumMachineType?) {
@@ -64,21 +62,24 @@ constructor(
     fun selectService(service: EntityAvailableService) {
         this.service.value = service
         this.dataState.value = DataState.SelectService
+        this.activate()
     }
 
 
-    fun activate() {
-        val machine = this.machine.value ?: return
-        val service = this.service.value ?: return
+    private fun activate() {
+        val machineId = this.machine.value?.id ?: return
+        val serviceId = this.service.value?.id ?: return
+        val customerId = this.customerQueue.value?.customerId ?: return
 
-        dataState.value = DataState.InitiateConnection(machine.id, service.id!!)
+        dataState.value = DataState.PrepareActivation(machineId, serviceId, customerId)
     }
 
     sealed class DataState {
         object StateLess: DataState()
-        object SelectMachine: DataState()
+        class SelectMachine(val entityMachine: EntityMachine?): DataState()
         object SelectCustomer: DataState()
         object SelectService: DataState()
-        class InitiateConnection(val machineId: UUID, val workerId: UUID) : DataState()
+        class PrepareActivation(val machineId: UUID, val serviceId: UUID, val customerId: UUID) : DataState()
+//        class InitiateConnection(val queue: MachineActivationQueues) : DataState()
     }
 }

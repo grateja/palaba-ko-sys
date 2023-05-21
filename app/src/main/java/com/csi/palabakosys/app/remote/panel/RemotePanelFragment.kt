@@ -16,7 +16,7 @@ import com.csi.palabakosys.app.remote.shared_ui.RemoteActivationViewModel
 import com.csi.palabakosys.databinding.FragmentRemotePanelBinding
 import com.csi.palabakosys.model.EnumMachineType
 import com.csi.palabakosys.services.MachineActivationService
-import com.csi.palabakosys.worker.RemoteWorker
+//import com.csi.palabakosys.worker.RemoteWorker
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.UUID

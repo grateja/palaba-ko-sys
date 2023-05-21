@@ -42,6 +42,6 @@ data class EntityMachine(
 //    @ColumnInfo(name = "customer_dry_id")
 //    var customerDryId: UUID? = null
 //
-    @ColumnInfo(name = "worker_id")
-    var workerId: UUID? = null
+    @ColumnInfo(name = "service_activation_id")
+    var serviceActivationId: UUID? = null
 }
