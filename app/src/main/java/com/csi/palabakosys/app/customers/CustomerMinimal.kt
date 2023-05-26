@@ -10,4 +10,5 @@ data class CustomerMinimal(
     var name: String,
     var crn: String,
     var address: String?,
+    var unpaid: Int?,
 ) : Parcelable

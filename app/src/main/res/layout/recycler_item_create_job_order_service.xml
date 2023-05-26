@@ -18,18 +18,22 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="6dp"
-                android:text="@string/symbol_bullet"
-                android:textColor="@color/black"
-                android:textSize="20sp" />
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginEnd="6dp"-->
+<!--                android:text="@string/symbol_bullet"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:textSize="20sp" />-->
+            <ImageView
+                tools:src="@drawable/icon_washer"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                app:imageResource="@{viewModel.machineType.icon}"/>
 
             <TextView
                 android:id="@+id/textTitle"
                 android:textColor="@color/black"
-                android:textSize="20sp"
                 android:layout_width="0dp"
                 android:layout_weight="3"
                 android:layout_height="wrap_content"
@@ -40,10 +44,18 @@
                 android:id="@+id/textQuantity"
                 android:textFontWeight="900"
                 android:fontFamily="sans-serif-black"
-                android:textSize="20sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{viewModel.quantityStr()}"
+                tools:text="*1 load"/>
+
+            <TextView
+                android:id="@+id/textUsed"
+                android:textFontWeight="900"
+                android:fontFamily="sans-serif-black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.used + `used`}"
                 tools:text="*1 load"/>
 
             <com.google.android.material.card.MaterialCardView

@@ -43,6 +43,7 @@ class PaymentJoCashlessModalFragment : BaseModalFragment() {
             when(it) {
                 is CashlessPaymentViewModel.DataState.Submit -> {
                     onSubmit?.invoke(it.cashless)
+                    dismiss()
                 }
             }
         })

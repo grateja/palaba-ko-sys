@@ -1,0 +1,34 @@
+package com.csi.palabakosys.app.joborders.payment
+
+import androidx.room.ColumnInfo
+import androidx.room.Ignore
+import androidx.room.Relation
+import com.csi.palabakosys.room.entities.EntityUser
+import java.util.*
+
+data class JobOrderPaymentMinimal(
+    val id: UUID,
+    @ColumnInfo(name = "job_order_number")
+    val jobOrderNumber: String?,
+
+    @ColumnInfo(name = "subtotal")
+    val subtotal: Float,
+
+    @ColumnInfo(name = "discount_in_peso")
+    val discountInPeso: Float,
+
+    @ColumnInfo(name = "discounted_amount")
+    val discountedAmount: Float,
+
+    @ColumnInfo(name = "user_id")
+    val userId: UUID,
+
+    @Relation(
+        parentColumn = "user_id",
+        entityColumn = "id"
+    )
+    val preparedBy: EntityUser?
+) {
+    @Ignore
+    var selected: Boolean = true
+}

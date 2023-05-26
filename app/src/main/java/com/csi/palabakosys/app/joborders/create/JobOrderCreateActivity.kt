@@ -3,6 +3,9 @@ package com.csi.palabakosys.app.joborders.create
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -23,6 +26,7 @@ import com.csi.palabakosys.app.joborders.create.products.MenuProductItem
 import com.csi.palabakosys.app.joborders.create.services.JOSelectWashDryActivity
 import com.csi.palabakosys.app.joborders.create.services.JobOrderServiceItemAdapter
 import com.csi.palabakosys.app.joborders.create.services.MenuServiceItem
+import com.csi.palabakosys.app.joborders.payment.PaymentJoPreviewActivity
 import com.csi.palabakosys.databinding.ActivityJobOrderCreateBinding
 import com.csi.palabakosys.util.ActivityLauncher
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,6 +35,7 @@ import kotlin.collections.ArrayList
 
 @AndroidEntryPoint
 class JobOrderCreateActivity : AppCompatActivity() {
+    private var backPressed = false
     private lateinit var binding: ActivityJobOrderCreateBinding
     private val viewModel: CreateJobOrderViewModel by viewModels()
 
@@ -40,6 +45,7 @@ class JobOrderCreateActivity : AppCompatActivity() {
     private val extrasLauncher = ActivityLauncher(this)
     private val discountLauncher = ActivityLauncher(this)
     private val previewLauncher = ActivityLauncher(this)
+    private val paymentLauncher = ActivityLauncher(this)
     private val authLauncher = ActivityLauncher(this)
 
     private val servicesAdapter = JobOrderServiceItemAdapter()
@@ -48,7 +54,7 @@ class JobOrderCreateActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        title = "Create Job Order"
+        title = "Create Job Order "
         binding = DataBindingUtil.setContentView(this, R.layout.activity_job_order_create)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
@@ -72,8 +78,6 @@ class JobOrderCreateActivity : AppCompatActivity() {
 
         productsLauncher.onOk = {
             val result = it.data?.getParcelableArrayListExtra<MenuProductItem>("products")?.toList()
-            println("removed items")
-            println(result?.size)
             viewModel.syncProducts(result)
         }
 
@@ -93,15 +97,13 @@ class JobOrderCreateActivity : AppCompatActivity() {
         }
 
         authLauncher.onOk = {
-//            val email = it.data?.getStringExtra(AuthActionDialogActivity.EMAIL_EXTRA)
-//            val password = it.data?.getStringExtra(AuthActionDialogActivity.PASSWORD_EXTRA)
             val result = it.data?.getParcelableExtra<LoginCredentials>(AuthActionDialogActivity.RESULT)?.let {
                 viewModel.save(it.userId)
             }
         }
 
-        previewLauncher.onOk = {
-            finish()
+        paymentLauncher.onOk = {
+            viewModel.lock()
         }
 
         servicesAdapter.onItemClick = {
@@ -148,13 +150,11 @@ class JobOrderCreateActivity : AppCompatActivity() {
             extrasAdapter.setData(it)
         })
 
-        binding.controls.buttonOk.setOnClickListener {
-            prepareSubmit()
-            //viewModel.save()
+        binding.buttonSave.setOnClickListener {
+            viewModel.validate()
         }
-
-        binding.controls.buttonCancel.setOnClickListener {
-            finish()
+        binding.buttonPayment.setOnClickListener {
+            viewModel.openPayment()
         }
 
         viewModel.dataState().observe(this, Observer {
@@ -179,8 +179,33 @@ class JobOrderCreateActivity : AppCompatActivity() {
                     openDiscount(it.discount)
                     viewModel.resetState()
                 }
+                is CreateJobOrderViewModel.DataState.ProceedToSaveJO -> {
+                    prepareSubmit()
+                    viewModel.resetState()
+                }
+                is CreateJobOrderViewModel.DataState.InvalidOperation -> {
+                    Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
+                    viewModel.resetState()
+                }
                 is CreateJobOrderViewModel.DataState.SaveSuccess -> {
-                    previewJobOrder(it.jobOrderId, it.customerId)
+                    Toast.makeText(this, "Job Order saved successfully!", Toast.LENGTH_LONG).show()
+//                    previewJobOrder(it.jobOrderId, it.customerId)
+                    viewModel.resetState()
+                }
+                is CreateJobOrderViewModel.DataState.OpenPayment -> {
+                    openPayment(it.jobOrderId, it.customerId)
+                    viewModel.resetState()
+                }
+                is CreateJobOrderViewModel.DataState.RequestExit -> {
+                    if(!it.canExit && !backPressed) {
+                        Toast.makeText(this, "Press back again to revert changes", Toast.LENGTH_LONG).show()
+                        backPressed = true
+                        Handler(Looper.getMainLooper()).postDelayed(Runnable {
+                            backPressed = false
+                        }, 2000)
+                    } else {
+                        finish()
+                    }
                     viewModel.resetState()
                 }
             }
@@ -248,5 +273,18 @@ class JobOrderCreateActivity : AppCompatActivity() {
             }
         }
         discountLauncher.launch(intent)
+    }
+
+    private fun openPayment(jobOrderId: UUID, customerId: UUID) {
+        val intent = Intent(this, PaymentJoPreviewActivity::class.java).apply {
+            putExtra(PaymentJoPreviewActivity.CUSTOMER_ID, customerId.toString())
+            putExtra(PaymentJoPreviewActivity.JOB_ORDER_ID, jobOrderId.toString())
+        }
+        paymentLauncher.launch(intent)
+    }
+
+    override fun onBackPressed() {
+        // super.onBackPressed()
+        viewModel.requestExit()
     }
 }

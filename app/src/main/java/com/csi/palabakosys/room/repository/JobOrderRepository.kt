@@ -5,6 +5,7 @@ import com.csi.palabakosys.app.joborders.create.discount.MenuDiscount
 import com.csi.palabakosys.app.joborders.create.extras.MenuExtrasItem
 import com.csi.palabakosys.app.joborders.create.products.MenuProductItem
 import com.csi.palabakosys.app.joborders.create.services.MenuServiceItem
+import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentMinimal
 import com.csi.palabakosys.room.dao.DaoJobOrder
 import com.csi.palabakosys.room.entities.EntityJobOrder
 import com.csi.palabakosys.room.entities.EntityJobOrderListItem
@@ -69,7 +70,11 @@ constructor (
         return daoJobOrder.getCurrentJobOrder(customerId)
     }
 
-    suspend fun getUnpaidByCustomerId(customerId: UUID): List<EntityJobOrder> {
-        return daoJobOrder.getUnpaidByCustomerId(customerId)
+    suspend fun getAllUnpaidByCustomerId(customerId: UUID): List<JobOrderPaymentMinimal> {
+        return daoJobOrder.getAllUnpaidByCustomerId(customerId)
+    }
+
+    suspend fun getPreviousUnpaidByCustomerId(customerId: UUID): List<JobOrderPaymentMinimal> {
+        return daoJobOrder.getPreviousUnpaidByCustomerId(customerId)
     }
 }

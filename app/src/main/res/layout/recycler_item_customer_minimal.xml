@@ -17,21 +17,33 @@
             android:layout_margin="16dp">
             <TextView
                 android:id="@+id/labelName"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 style="@style/TileSubTitle"
                 android:text="@{viewModel.name}"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/labelCRN"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:text="Chris Hemsworth"/>
             <TextView
                 android:id="@+id/labelAddress"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@{viewModel.address}"
                 app:layout_constraintTop_toBottomOf="@id/labelName"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/buttonEdit"
                 tools:text="Sa dako paroon. Malayo sa kabihasnan"/>
+            <TextView
+                android:id="@+id/labelUnpaid"
+                android:visibility="@{viewModel.unpaid > 0}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.unpaid + ` unpaid JO`}"
+                app:layout_constraintTop_toBottomOf="@id/labelAddress"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/buttonEdit"
+                tools:text="10 unpaid"/>
             <TextView
                 android:id="@+id/labelCRN"
                 style="@style/CRN"
@@ -39,8 +51,17 @@
                 android:layout_height="wrap_content"
                 android:text="@{viewModel.crn}"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/buttonEdit"
                 tools:text="#0392029"/>
+            <Button
+                style="@style/RoundButtonNeutral.Small"
+                android:id="@+id/buttonEdit"
+                android:text="@string/edit"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <View

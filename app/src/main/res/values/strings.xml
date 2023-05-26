@@ -41,4 +41,7 @@
     <string name="activate">Activate</string>
     <string name="close">Close</string>
     <string name="email">Email</string>
+    <string name="edit">Edit</string>
+    <string name="payment">Payment</string>
+    <string name="print">Print</string>
 </resources>

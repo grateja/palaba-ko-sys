@@ -15,6 +15,7 @@ open class CreateViewModel<T : BaseEntity> (private val iRepository: IRepository
     val crudActionEnum = MutableLiveData(CRUDActionEnum.CREATE)
     val dataState = MutableLiveData<DataState<T>>()
     val model = MutableLiveData<T?>()
+    var promptPass = true
 
     fun getId() : String? {
         return model.value?.id?.toString() // this.modelId?.toString()
@@ -26,6 +27,10 @@ open class CreateViewModel<T : BaseEntity> (private val iRepository: IRepository
     
     fun resetState() {
         dataState.value = DataState.StateLess
+    }
+
+    fun requestExit() {
+        dataState.value = DataState.RequestExit(promptPass)
     }
 
     protected suspend fun get(id: UUID?, initialModel: T) : T {

@@ -67,14 +67,6 @@ class CreateJobOrderPreviewActivity : AppCompatActivity() {
         binding.buttonLabel.setOnClickListener {
             printLabel()
         }
-
-        binding.buttonPayment.setOnClickListener {
-            viewModel.openPayment()
-        }
-    }
-
-    private fun openPayment(uuid: UUID) {
-
     }
 
     private fun printLabel() {

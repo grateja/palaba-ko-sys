@@ -78,12 +78,12 @@ constructor(
         availableServices.value?.find { it.serviceRefId == service.id }?.apply {
             if(this.joServiceItemId != null) {
                 // It's already in the database
-                // Just mark deleted
-                this.deletedAt = Instant.now()
                 if(this.used > 0) {
                     dataState.value = DataState.InvalidOperation("Cannot remove used service")
                     return
                 }
+                // Just mark deleted
+                this.deletedAt = Instant.now()
             }
             this.selected = false
 //            this.quantity = 1

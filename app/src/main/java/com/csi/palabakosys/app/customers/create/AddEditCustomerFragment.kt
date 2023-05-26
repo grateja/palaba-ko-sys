@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.csi.palabakosys.app.customers.CustomerMinimal
@@ -24,7 +25,7 @@ class AddEditCustomerFragment : ModalFragment<CustomerMinimal?>() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        closeOnTouchOutside = false
+//        closeOnTouchOutside = false
 
         binding = FragmentAddEditCustomerBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
@@ -57,16 +58,34 @@ class AddEditCustomerFragment : ModalFragment<CustomerMinimal?>() {
                     it.data.id,
                     it.data.name!!,
                     it.data.crn!!,
-                    it.data.address
+                    it.data.address,
+                    null
                 ))
                 viewModel.resetState()
                 dismiss()
             } else if(it is DataState.InvalidInput) {
                 binding.progressBarSaving.visibility = View.INVISIBLE
+            } else if(it is DataState.RequestExit) {
+                if(it.promptPass) {
+                    dismiss()
+                } else {
+                    Toast.makeText(context, "Press back again to revert changes", Toast.LENGTH_LONG).show()
+                }
             }
             binding.progressBarSaving.visibility = View.INVISIBLE
         })
     }
+
+    override fun onStart() {
+        super.onStart()
+        val touchOutsideView = dialog?.window?.decorView?.findViewById<View>(com.google.android.material.R.id.touch_outside)
+        touchOutsideView?.setOnClickListener {
+            if(!it.hideKeyboard()) {
+                viewModel.requestExit()
+            }
+        }
+    }
+
 
     companion object {
         var instance: AddEditCustomerFragment? = null

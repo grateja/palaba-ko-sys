@@ -1,6 +1,7 @@
 package com.csi.palabakosys.room.dao
 
 import androidx.room.*
+import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentMinimal
 import com.csi.palabakosys.room.entities.*
 import java.util.*
 
@@ -105,5 +106,8 @@ interface DaoJobOrder {
     suspend fun getCurrentJobOrder(customerId: UUID?): EntityJobOrderWithItems?
 
     @Query("SELECT * FROM job_orders WHERE customer_id = :customerId AND payment_id IS NULL AND deleted_at IS NULL")
-    suspend fun getUnpaidByCustomerId(customerId: UUID): List<EntityJobOrder>
+    suspend fun getAllUnpaidByCustomerId(customerId: UUID): List<JobOrderPaymentMinimal>
+
+    @Query("SELECT * FROM job_orders WHERE customer_id = :customerId AND payment_id IS NULL AND deleted_at IS NULL AND DATE(`created_at`/1000, 'unixepoch', 'localtime') > DATE('now', 'localtime')")
+    suspend fun getPreviousUnpaidByCustomerId(customerId: UUID): List<JobOrderPaymentMinimal>
 }

@@ -8,14 +8,6 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/buttonPayment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Payment"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
             android:id="@+id/buttonClaimStub"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

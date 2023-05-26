@@ -9,4 +9,5 @@ sealed class DataState<out R> {
     data class Invalidate(val message: String) : DataState<Nothing>()
     data class InvalidInput<out T>(val inputValidation: InputValidation) : DataState<T>()
     data class Error(val exception: Exception) : DataState<Nothing>()
+    data class RequestExit(val promptPass: Boolean) : DataState<Nothing>()
 }

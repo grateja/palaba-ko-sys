@@ -1,16 +1,18 @@
 package com.csi.palabakosys.app.joborders.payment
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.csi.palabakosys.app.preferences.user.AuthRepository
 import com.csi.palabakosys.model.EnumPaymentMethod
+import com.csi.palabakosys.model.Rule
+import com.csi.palabakosys.preferences.AppPreferenceRepository
 import com.csi.palabakosys.room.entities.EntityCashless
-import com.csi.palabakosys.room.entities.EntityJobOrder
 import com.csi.palabakosys.room.entities.EntityJobOrderPayment
 import com.csi.palabakosys.room.repository.JobOrderRepository
 import com.csi.palabakosys.room.repository.PaymentRepository
+import com.csi.palabakosys.util.InputValidation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.*
@@ -23,26 +25,68 @@ class JobOrderPaymentViewModel
 constructor(
     private val jobOrderRepository: JobOrderRepository,
     private val paymentRepository: PaymentRepository,
-    private val authRepository: AuthRepository
+    private val appPreferenceRepository: AppPreferenceRepository,
 ) : ViewModel() {
     sealed class DataState {
         object StateLess : DataState()
         class OpenCashless(val cashless: EntityCashless?) : DataState()
+        object PaymentSuccess : DataState()
+        class InvalidInput(val inputValidation: InputValidation) : DataState()
+        class InvalidOperation(val message: String) : DataState()
+        object ValidationPassed: DataState()
     }
-
-    private val _dataState = MutableLiveData<DataState>()
-    val dataState: LiveData<DataState> = _dataState
-
-    val jobOrders = MutableLiveData<List<EntityJobOrder>>()
-    private lateinit var paymentId: UUID
-
-    private val _amountDue = MutableLiveData(0f)
-    val amountDue: LiveData<Float> = _amountDue
 
     val paymentMethod = MutableLiveData(EnumPaymentMethod.CASH)
     val cashReceived = MutableLiveData("")
     val orNumber = MutableLiveData("")
     val cashless = MutableLiveData<EntityCashless?>()
+
+
+    private val _inputValidation = MutableLiveData(InputValidation())
+    val inputValidation: LiveData<InputValidation> = _inputValidation
+
+    private val _dataState = MutableLiveData<DataState>()
+    val dataState: LiveData<DataState> = _dataState
+
+    private val _payableJobOrders = MutableLiveData<List<JobOrderPaymentMinimal>>()
+    val payableJobOrders: LiveData<List<JobOrderPaymentMinimal>> = _payableJobOrders
+
+    val payableAmount = MediatorLiveData<Float>().apply {
+        fun update() {
+            value = payableJobOrders.value?.sumOf { it.discountedAmount.toDouble() }?.toFloat() ?: 0f
+        }
+        addSource(payableJobOrders) {update()}
+    }
+
+    val amountToPay = MediatorLiveData<Float>().apply {
+        fun update() {
+            value = payableJobOrders.value?.filter{ it.selected }?.sumOf { it.discountedAmount.toDouble() }?.toFloat() ?: 0f
+        }
+        addSource(payableJobOrders) {update()}
+    }
+
+    val remainingBalance = MediatorLiveData<Float>().apply {
+        fun update() {
+            value = payableJobOrders.value?.filter{ !it.selected }?.sumOf { it.discountedAmount.toDouble() }?.toFloat() ?: 0f
+        }
+        addSource(payableJobOrders) {update()}
+    }
+
+    val change = MediatorLiveData<Float>().apply {
+        fun update() {
+            val cash = cashReceived.value?.toFloatOrNull() ?: 0f
+            val amountToPay = amountToPay.value ?: 0f
+            val change = cash - amountToPay
+            value = if(change >= 0 && amountToPay > 0) { change } else { 0f }
+        }
+        addSource(cashReceived){update()}
+        addSource(amountToPay){update()}
+    }
+
+//    private lateinit var paymentId: UUID
+
+//    private val _amountDue = MutableLiveData(0f)
+//    val amountDue: LiveData<Float> = _amountDue
 
     fun resetState() {
         _dataState.value = DataState.StateLess
@@ -50,42 +94,78 @@ constructor(
 
     fun getUnpaidByCustomerId(customerId: UUID) {
         viewModelScope.launch {
-            jobOrderRepository.getUnpaidByCustomerId(customerId).let { jo->
-                jobOrders.value = jo
-                paymentId = jo.firstOrNull()?.paymentId ?: UUID.randomUUID()
+            jobOrderRepository.getAllUnpaidByCustomerId(customerId).let { jo->
+                _payableJobOrders.value = jo
+//                paymentId = jo.firstOrNull()?.paymentId ?: UUID.randomUUID()
 
-                if(getPayment(paymentId) != null) {
-                    return@launch
-                }
+//                if(getPayment(paymentId) != null) {
+//                    return@launch
+//                }
 
-                _amountDue.value = jo.sumOf { it.discountedAmount.toDouble() }.toFloat()
-                cashReceived.value = _amountDue.value?.toInt().toString()
+//                _amountDue.value = jo.sumOf { it.discountedAmount.toDouble() }.toFloat()
+//                cashReceived.value = _amountDue.value?.toInt().toString()
             }
         }
     }
 
-    private suspend fun getPayment(paymentId: UUID): EntityJobOrderPayment? {
-        return paymentRepository.get(paymentId)?.let {
-            paymentMethod.value = it.paymentMethod
-            orNumber.value = it.orNumber
-            cashless.value = it.entityCashless
-            _amountDue.value = it.amountDue
-            it
+//    private suspend fun getPayment(paymentId: UUID): EntityJobOrderPayment? {
+//        return paymentRepository.get(paymentId)?.let {
+//            paymentMethod.value = it.paymentMethod
+//            orNumber.value = it.orNumber
+//            cashless.value = it.entityCashless
+//            _amountDue.value = it.amountDue
+//            it
+//        }
+//    }
+
+    fun clearError(key: String) {
+        _inputValidation.value = _inputValidation.value?.removeError(key)
+    }
+
+    fun validate() {
+        val validation = InputValidation()
+        if(appPreferenceRepository.requireORNumber()) {
+            validation.addRules("orNumber", orNumber.value, arrayOf(Rule.Required))
         }
+
+        _payableJobOrders.value?.let { list ->
+            if(!list.any {it.selected}) {
+                _dataState.value = DataState.InvalidOperation("No selected Job Order")
+                return
+            }
+        }
+
+        validation.addRules(
+            "cashReceived",
+            cashReceived.value,
+            arrayOf(
+                Rule.Required,
+                Rule.IsNumeric(cashReceived.value),
+                Rule.Min(amountToPay.value, "Cash payment not enough")
+            )
+        )
+
+        if(validation.isInvalid()) {
+            _dataState.value = DataState.InvalidInput(validation)
+        } else {
+            _dataState.value = DataState.ValidationPassed
+        }
+        _inputValidation.value = validation
     }
 
     fun save(userId: UUID) {
         viewModelScope.launch {
             val payment = EntityJobOrderPayment(
-                paymentId,
+                UUID.randomUUID(),
                 paymentMethod.value!!,
-                _amountDue.value!!,
+                amountToPay.value!!,
                 cashReceived.value!!.toFloat(),
                 userId,
-                orNumber.value!!,
+                orNumber.value,
                 cashless.value
             )
-            paymentRepository.save(payment, jobOrders.value!!.map { it.id })
+            paymentRepository.save(payment, payableJobOrders.value!!.filter{ it.selected }.map { it.id })
+            _dataState.value = DataState.PaymentSuccess
         }
     }
 
@@ -95,5 +175,11 @@ constructor(
 
     fun setCashless(cashless: EntityCashless?) {
         this.cashless.value = cashless
+    }
+
+    fun selectItem(jobOrder: JobOrderPaymentMinimal) {
+        _payableJobOrders.value = _payableJobOrders.value?.apply {
+            this.find {it.id == jobOrder.id}?.selected = jobOrder.selected
+        }
     }
 }

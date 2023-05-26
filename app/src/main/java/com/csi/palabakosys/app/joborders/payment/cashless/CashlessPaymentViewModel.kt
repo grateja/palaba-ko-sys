@@ -15,6 +15,9 @@ class CashlessPaymentViewModel : ViewModel()
     val amount = MutableLiveData("")
     val reference = MutableLiveData("")
 
+    private val _inputValidation = MutableLiveData<InputValidation>()
+    val inputValidation: LiveData<InputValidation> = _inputValidation
+
     private fun cashlessPayment() : EntityCashless {
         return EntityCashless(
             provider.value!!,
@@ -25,9 +28,9 @@ class CashlessPaymentViewModel : ViewModel()
 
     fun prepareSubmit() {
         val inputValidation = InputValidation()
-        inputValidation.addRules("provider", provider.value!!, arrayOf(Rule.Required))
-        inputValidation.addRules("amount", amount.value!!, arrayOf(Rule.Required))
-        inputValidation.addRules("reference", reference.value!!, arrayOf(Rule.Required))
+        inputValidation.addRules("provider", provider.value, arrayOf(Rule.Required))
+        inputValidation.addRules("amount", amount.value, arrayOf(Rule.Required))
+        inputValidation.addRules("reference", reference.value, arrayOf(Rule.Required))
         if(inputValidation.isInvalid()) {
             _dataState.value = DataState.InvalidOperation(inputValidation)
         } else {

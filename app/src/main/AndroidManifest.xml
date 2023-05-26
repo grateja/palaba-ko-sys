@@ -33,6 +33,9 @@
         </activity>
         <activity
             android:name=".app.remote.activate.RemoteActivationPreviewActivity"
+            android:launchMode="singleInstance"
+            android:theme="@style/Theme.MaterialComponents.Light.Dialog"
+            android:windowSoftInputMode="stateHidden|adjustPan"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -182,7 +185,6 @@
         <activity
             android:name=".app.joborders.create.customer.SelectCustomerActivity"
             android:exported="false"
-            android:noHistory="true"
             android:theme="@style/Theme.MaterialComponents.Light.NoActionBar" />
         <activity
             android:name=".app.MainActivity"

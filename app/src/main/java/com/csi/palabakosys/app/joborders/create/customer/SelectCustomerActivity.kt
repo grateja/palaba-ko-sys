@@ -9,7 +9,6 @@ import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
-import com.csi.palabakosys.adapters.Adapter
 import com.csi.palabakosys.app.customers.CustomerMinimal
 import com.csi.palabakosys.app.customers.create.AddEditCustomerFragment
 import com.csi.palabakosys.app.joborders.create.JobOrderCreateActivity
@@ -22,7 +21,7 @@ class SelectCustomerActivity : AppCompatActivity() {
     private val viewModel: SelectCustomerViewModel by viewModels()
     private lateinit var binding: ActivitySelectCustomerBinding
     private lateinit var customerModal: AddEditCustomerFragment
-    private val customersAdapter = Adapter<CustomerMinimal>(R.layout.recycler_item_customer_minimal)
+    private val customersAdapter = CustomersAdapterMinimal()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +35,7 @@ class SelectCustomerActivity : AppCompatActivity() {
 
     private fun subscribeEvents() {
         binding.buttonCreateNew.setOnClickListener {
-            selectCustomer(null)
+            editCustomer(null)
 //            customerModal = AddEditCustomerFragment.getInstance(null)
 //            customerModal.show(supportFragmentManager, "KEME")
 //            customerModal.onOk = {
@@ -44,15 +43,17 @@ class SelectCustomerActivity : AppCompatActivity() {
 //            }
         }
         customersAdapter.onItemClick = {
-            selectCustomer(it.id.toString())
-            //openCreateJobOrderActivity(it)
+            openCreateJobOrderActivity(it)
+        }
+        customersAdapter.onEdit = {
+            editCustomer(it.id.toString())
         }
         viewModel.customers.observe(this, Observer {
             customersAdapter.setData(it)
         })
     }
 
-    private fun selectCustomer(customerId: String?) {
+    private fun editCustomer(customerId: String?) {
         customerModal = AddEditCustomerFragment.getInstance(customerId)
         customerModal.show(supportFragmentManager, "KEME")
         customerModal.onOk = {

@@ -16,8 +16,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class AuthActionDialogActivity : AppCompatActivity() {
     companion object {
-//        const val EMAIL_EXTRA = "email"
-//        const val PASSWORD_EXTRA = "password"
         const val MESSAGE = "message"
 
         @SuppressLint("Returns Login Credentials if Authentication succeeded")
@@ -42,6 +40,9 @@ class AuthActionDialogActivity : AppCompatActivity() {
     private fun subscribeEvents() {
         binding.buttonOk.setOnClickListener {
             viewModel.validate()
+        }
+        binding.buttonCancel.setOnClickListener {
+            finish()
         }
     }
 

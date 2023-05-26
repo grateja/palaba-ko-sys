@@ -12,18 +12,43 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerJobOrderPaymentMinimal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{`Payable amount: ` + viewModel.payableAmount}"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{`Amount to pay: ` + viewModel.amountToPay}"/>
+        <TextView
+            android:visibility="@{viewModel.remainingBalance > 0}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{`Remaining balance: ` + viewModel.remainingBalance}"/>
+        <TextView
+            android:visibility="@{viewModel.change > 0}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{`Change: ` + viewModel.change}"/>
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Cash received"
-            app:errorEnabled="true">
+            app:errorEnabled="true"
+            app:errorText="@{viewModel.inputValidation.get(`cashReceived`)}">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:text="@={viewModel.cashReceived}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number"
+                android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`cashReceived`)}"
                 android:maxLines="1" />
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
@@ -31,13 +56,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="OR Number"
-            app:errorEnabled="true">
+            app:errorEnabled="true"
+            app:errorText="@{viewModel.inputValidation.get(`orNumber`)}">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:text="@={viewModel.orNumber}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
+                android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`orNumber`)}"
                 android:maxLines="1" />
         </com.google.android.material.textfield.TextInputLayout>
         <Button

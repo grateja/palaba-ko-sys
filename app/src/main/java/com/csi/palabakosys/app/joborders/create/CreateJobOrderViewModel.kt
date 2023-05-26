@@ -1,16 +1,13 @@
 package com.csi.palabakosys.app.joborders.create
 
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.csi.palabakosys.app.customers.CustomerMinimal
 import com.csi.palabakosys.app.joborders.create.delivery.DeliveryCharge
 import com.csi.palabakosys.app.joborders.create.discount.MenuDiscount
 import com.csi.palabakosys.app.joborders.create.extras.MenuExtrasItem
 import com.csi.palabakosys.app.joborders.create.products.MenuProductItem
 import com.csi.palabakosys.app.joborders.create.services.MenuServiceItem
-import com.csi.palabakosys.app.preferences.user.AuthRepository
+import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentMinimal
 import com.csi.palabakosys.model.EnumDiscountApplicable
 import com.csi.palabakosys.room.entities.*
 import com.csi.palabakosys.room.repository.JobOrderRepository
@@ -25,8 +22,7 @@ class CreateJobOrderViewModel
 
 @Inject
 constructor(
-    private val jobOrderRepository: JobOrderRepository,
-    private val authRepository: AuthRepository
+    private val jobOrderRepository: JobOrderRepository
 ) : ViewModel() {
     sealed class DataState {
         object StateLess: DataState()
@@ -36,13 +32,18 @@ constructor(
         data class OpenExtras(val list: List<MenuExtrasItem>?, val item: MenuExtrasItem?): DataState()
         data class OpenDelivery(val deliveryCharge: DeliveryCharge?): DataState()
         data class OpenDiscount(val discount: MenuDiscount?): DataState()
+        data class OpenPayment(val customerId: UUID, val jobOrderId: UUID) : DataState()
+        data class InvalidOperation(val message: String): DataState()
+        data class RequestExit(val canExit: Boolean) : DataState()
+        object ProceedToSaveJO: DataState()
     }
 
-//    private fun getCurrentJobOrder(customerId: UUID?) {
-//        viewModelScope.launch {
-//            jobOrderRepository.getCurrentJobOrder(customerId)
-//        }
-//    }
+//    var modified = false
+    private val _locked = MutableLiveData(false)
+    val locked: LiveData<Boolean> = _locked
+
+    private val _saved = MutableLiveData(false)
+    val saved: LiveData<Boolean> = _saved
 
     private val _dataState = MutableLiveData<DataState>()
     fun dataState(): MutableLiveData<DataState> {
@@ -60,6 +61,7 @@ constructor(
     val jobOrderProducts = MutableLiveData<List<MenuProductItem>>()
     val jobOrderExtras = MutableLiveData<List<MenuExtrasItem>>()
     val discount = MutableLiveData<MenuDiscount>()
+    val unpaidJobOrders = MutableLiveData<List<JobOrderPaymentMinimal>>()
 
     val hasServices = MediatorLiveData<Boolean>().apply {
         fun update() {
@@ -115,7 +117,7 @@ constructor(
     }
     val hasAny = MediatorLiveData<Boolean>().apply {
         fun update() {
-            value = hasServices.value!! || hasProducts.value!! || hasExtras.value!! || hasDelivery.value!!
+            value = hasServices.value == true || hasProducts.value == true || hasExtras.value == true || hasDelivery.value == true
         }
         addSource(hasServices) { update() }
         addSource(hasProducts) { update() }
@@ -145,13 +147,20 @@ constructor(
 
     val discountedAmount = MediatorLiveData<Float>().apply {
         fun update() {
-            val _subtotal = subtotal.value ?: 0f
-            val _discount = discountInPeso.value ?: 0f
-            value = _subtotal - _discount
+            val subtotal = subtotal.value ?: 0f
+            val discount = discountInPeso.value ?: 0f
+            value = subtotal - discount
         }
 
         addSource(subtotal) {update()}
         addSource(discountInPeso) {update()}
+    }
+
+    val previousBalance = MediatorLiveData<Float>().apply {
+        fun update() {
+            value = unpaidJobOrders.value ?. sumOf { it.discountedAmount.toDouble() }?.toFloat()
+        }
+        addSource(unpaidJobOrders) {update()}
     }
 
     private fun serviceSubTotal() : Float {
@@ -204,6 +213,7 @@ constructor(
     fun setCustomer(customer: CustomerMinimal?) {
         currentCustomer.value = customer!!
         viewModelScope.launch {
+            unpaidJobOrders.value = jobOrderRepository.getPreviousUnpaidByCustomerId(customer.id)
             jobOrderRepository.getCurrentJobOrder(customer.id).let {
                 if(it != null) {
                     jobOrderId.value = it.jobOrder.id
@@ -259,6 +269,7 @@ constructor(
                             selected = entity.deletedAt != null
                         }
                     }
+                    _saved.value = true
                 } else {
                     jobOrderNumber.value = jobOrderRepository.getNextJONumber()
                     println("JOB ORDER ID IF NOT NULL")
@@ -270,14 +281,17 @@ constructor(
 
     fun syncServices(services: List<MenuServiceItem>?) {
         jobOrderServices.value = services?.toList()
+        _saved.value = false
     }
 
     fun syncProducts(products: List<MenuProductItem>?) {
         jobOrderProducts.value = products?.toMutableList()
+        _saved.value = false
     }
 
     fun syncExtras(extrasItems: List<MenuExtrasItem>?) {
         jobOrderExtras.value = extrasItems?.toMutableList()
+        _saved.value = false
     }
 
     fun setDeliveryCharge(deliveryCharge: DeliveryCharge?) {
@@ -287,6 +301,7 @@ constructor(
             }
         }
         this.deliveryCharge.value = deliveryCharge
+        _saved.value = false
     }
 
     fun applyDiscount(discount: MenuDiscount?) {
@@ -297,51 +312,86 @@ constructor(
         } else {
             this.discount.value = discount
         }
+        _saved.value = false
+    }
+
+    private fun isPaymentSaved() : Boolean {
+        return if(_locked.value == true) {
+            _dataState.value = DataState.InvalidOperation("Cannot modify paid Job Order")
+            true
+        } else false
     }
 
     fun openServices(itemPreset: MenuServiceItem?) {
+        if(isPaymentSaved()) return
         jobOrderServices.value.let {
             _dataState.value = DataState.OpenServices(it, itemPreset)
         }
     }
 
     fun openProducts(itemPreset: MenuProductItem?) {
+        if(isPaymentSaved()) return
         jobOrderProducts.value.let {
             _dataState.value = DataState.OpenProducts(it, itemPreset)
         }
     }
 
     fun openExtras(itemPreset: MenuExtrasItem?) {
+        if(isPaymentSaved()) return
         jobOrderExtras.value.let {
             _dataState.value = DataState.OpenExtras(it, itemPreset)
         }
     }
 
     fun openDelivery() {
+        if(isPaymentSaved()) return
         deliveryCharge.value.let {
             _dataState.value = DataState.OpenDelivery(it)
         }
     }
 
     fun openDiscount() {
+        if(isPaymentSaved()) return
         discount.value.let {
             _dataState.value = DataState.OpenDiscount(it)
         }
     }
 
+    fun openPayment() {
+        if(hasAny.value != true) {
+            _dataState.value = DataState.InvalidOperation("Your Job Order is empty!")
+            return
+        }
+        _dataState.value = DataState.OpenPayment(currentCustomer.value!!.id, jobOrderId.value!!)
+    }
+
+    fun validate() {
+        if(hasAny.value != true) {
+            _dataState.value = DataState.InvalidOperation("Your Job Order is empty!")
+            return
+        }
+
+        _dataState.value = DataState.ProceedToSaveJO
+    }
+
+    fun requestExit() {
+        val hasAny = hasAny.value ?: false
+        val saved = saved.value ?: false
+        _dataState.value = DataState.RequestExit(canExit = (!saved && !hasAny) || saved)
+    }
+
     fun save(userId: UUID) {
+        if(isPaymentSaved()) return
         viewModelScope.launch {
+
             val jobOrderNumber = jobOrderNumber.value
-//            val customerName = currentCustomer.value?.name
             val customerId = currentCustomer.value?.id ?: return@launch
 
-            // validation starts here
+            val subtotal = subtotal.value ?: 0f
+            val discountInPeso = discountInPeso.value ?: 0f
+            val discountedAmount = subtotal - discountInPeso
 
-            val _subtotal = subtotal.value ?: 0f
-            val _discount = discountInPeso.value ?: 0f
-            val _discountedAmount = _subtotal - _discount
-
-            val jobOrder = EntityJobOrder(jobOrderNumber, customerId, userId, _subtotal, _discount, _discountedAmount).apply {
+            val jobOrder = EntityJobOrder(jobOrderNumber, customerId, userId, subtotal, discountInPeso, discountedAmount).apply {
                 id = jobOrderId.value!!
             }
             val services = jobOrderServices.value?.map {
@@ -372,7 +422,12 @@ constructor(
             val jobOrderWithItem = EntityJobOrderWithItems(jobOrder, services, extras, products, delivery, discount)
 
             jobOrderRepository.save(jobOrderWithItem)
-            _dataState.value = DataState.SaveSuccess(jobOrder.id, customerId!!)
+            _dataState.value = DataState.SaveSuccess(jobOrder.id, customerId)
+            _saved.value = true
         }
+    }
+
+    fun lock() {
+        _locked.value = true
     }
 }

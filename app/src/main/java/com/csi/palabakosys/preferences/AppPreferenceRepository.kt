@@ -84,4 +84,8 @@ constructor (@ApplicationContext context: Context) {
             apply()
         }
     }
+
+    fun requireORNumber(): Boolean {
+        return sharedPreferences.getBoolean("requireORNumber", false)
+    }
 }

@@ -63,6 +63,11 @@
         <item name="backgroundTint">@color/neutral</item>
         <item name="android:textColor">@color/black</item>
     </style>
+    <style name="RoundButtonNeutral.Small" parent="RoundButton">
+        <item name="backgroundTint">@color/neutral</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:padding">0dp</item>
+    </style>
 
     <style name="CardPrimary">
         <item name="strokeWidth">1dp</item>
