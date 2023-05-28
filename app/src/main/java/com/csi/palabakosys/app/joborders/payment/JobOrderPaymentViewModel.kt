@@ -9,7 +9,9 @@ import com.csi.palabakosys.model.EnumPaymentMethod
 import com.csi.palabakosys.model.Rule
 import com.csi.palabakosys.preferences.AppPreferenceRepository
 import com.csi.palabakosys.room.entities.EntityCashless
+import com.csi.palabakosys.room.entities.EntityCashlessProvider
 import com.csi.palabakosys.room.entities.EntityJobOrderPayment
+import com.csi.palabakosys.room.entities.EntityJobOrderPaymentFull
 import com.csi.palabakosys.room.repository.JobOrderRepository
 import com.csi.palabakosys.room.repository.PaymentRepository
 import com.csi.palabakosys.util.InputValidation
@@ -30,7 +32,7 @@ constructor(
     sealed class DataState {
         object StateLess : DataState()
         class OpenCashless(val cashless: EntityCashless?) : DataState()
-        object PaymentSuccess : DataState()
+        class PaymentSuccess(val payment: EntityJobOrderPayment) : DataState()
         class InvalidInput(val inputValidation: InputValidation) : DataState()
         class InvalidOperation(val message: String) : DataState()
         object ValidationPassed: DataState()
@@ -38,9 +40,15 @@ constructor(
 
     val paymentMethod = MutableLiveData(EnumPaymentMethod.CASH)
     val cashReceived = MutableLiveData("")
+    val cashlessAmount = MutableLiveData("")
+    val cashlessRefNumber = MutableLiveData("")
+    val cashlessProvider = MutableLiveData("")
     val orNumber = MutableLiveData("")
-    val cashless = MutableLiveData<EntityCashless?>()
+    val cashlessProviders = paymentRepository.getCashlessProviders()
+//    val cashless = MutableLiveData<EntityCashless?>()
 
+    private val _payment = MutableLiveData<EntityJobOrderPaymentFull>()
+    val payment: LiveData<EntityJobOrderPaymentFull> = _payment
 
     private val _inputValidation = MutableLiveData(InputValidation())
     val inputValidation: LiveData<InputValidation> = _inputValidation
@@ -92,7 +100,15 @@ constructor(
         _dataState.value = DataState.StateLess
     }
 
-    fun getUnpaidByCustomerId(customerId: UUID) {
+    fun getPayment(paymentId: UUID) {
+        viewModelScope.launch {
+            paymentRepository.getPaymentWithJobOrders(paymentId)?.let {
+                _payment.value = it
+            }
+        }
+    }
+
+    fun getUnpaidByCustomerId(customerId: UUID?) {
         viewModelScope.launch {
             jobOrderRepository.getAllUnpaidByCustomerId(customerId).let { jo->
                 _payableJobOrders.value = jo
@@ -135,15 +151,35 @@ constructor(
             }
         }
 
-        validation.addRules(
-            "cashReceived",
-            cashReceived.value,
-            arrayOf(
-                Rule.Required,
-                Rule.IsNumeric(cashReceived.value),
-                Rule.Min(amountToPay.value, "Cash payment not enough")
+        if(paymentMethod.value == EnumPaymentMethod.CASH) {
+            validation.addRules(
+                "cashReceived",
+                cashReceived.value,
+                arrayOf(
+                    Rule.Required,
+                    Rule.IsNumeric(cashReceived.value),
+                    Rule.Min(amountToPay.value, "The payment amount is insufficient.")
+                )
             )
-        )
+        } else if(paymentMethod.value == EnumPaymentMethod.CASHLESS) {
+            validation.addRules(
+                "cashlessAmount",
+                cashlessAmount.value,
+                arrayOf(
+                    Rule.Required,
+                    Rule.IsNumeric(cashlessAmount.value),
+                    Rule.Min(amountToPay.value, "The payment amount is insufficient.")
+                )
+            )
+            validation.addRules(
+                "cashlessRefNumber",
+                cashlessRefNumber.value,
+                arrayOf(
+                    Rule.Required
+                )
+            )
+        }
+
 
         if(validation.isInvalid()) {
             _dataState.value = DataState.InvalidInput(validation)
@@ -155,27 +191,36 @@ constructor(
 
     fun save(userId: UUID) {
         viewModelScope.launch {
+            val cashless = if(paymentMethod.value == EnumPaymentMethod.CASHLESS) {
+                cashReceived.value = ""
+                EntityCashless(
+                    cashlessProvider.value,
+                    cashlessRefNumber.value,
+                    cashlessAmount.value?.toFloatOrNull()
+                )
+            } else null
+
             val payment = EntityJobOrderPayment(
                 UUID.randomUUID(),
                 paymentMethod.value!!,
-                amountToPay.value!!,
-                cashReceived.value!!.toFloat(),
+                amountToPay.value ?: 0f,
+                cashReceived.value?.toFloatOrNull() ?: 0f,
                 userId,
                 orNumber.value,
-                cashless.value
+                cashless
             )
             paymentRepository.save(payment, payableJobOrders.value!!.filter{ it.selected }.map { it.id })
-            _dataState.value = DataState.PaymentSuccess
+            _dataState.value = DataState.PaymentSuccess(payment)
         }
     }
 
-    fun openCashless() {
-        _dataState.value = DataState.OpenCashless(cashless.value)
-    }
-
-    fun setCashless(cashless: EntityCashless?) {
-        this.cashless.value = cashless
-    }
+//    fun openCashless() {
+//        _dataState.value = DataState.OpenCashless(cashless.value)
+//    }
+//
+//    fun setCashless(cashless: EntityCashless?) {
+//        this.cashless.value = cashless
+//    }
 
     fun selectItem(jobOrder: JobOrderPaymentMinimal) {
         _payableJobOrders.value = _payableJobOrders.value?.apply {

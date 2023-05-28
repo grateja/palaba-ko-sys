@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="viewModel"
+            type="com.csi.palabakosys.app.joborders.list.JobOrderListItem" />
+    </data>
+    <com.google.android.material.card.MaterialCardView
+        app:cardBackgroundColor="@color/secondary_background"
+        app:cardCornerRadius="12dp"
+        android:layout_margin="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_margin="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/labelJobOrderNumber"
+                style="@style/JobOrderNumber"
+                android:textSize="20sp"
+                android:text="@{`#` + viewModel.jobOrderNumber}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="#000001"/>
+
+            <ImageView
+                android:id="@+id/iconCustomer"
+                app:layout_constraintTop_toBottomOf="@id/labelJobOrderNumber"
+                app:layout_constraintStart_toStartOf="@id/labelJobOrderNumber"
+                android:layout_marginTop="8dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                app:srcCompat="@drawable/icon_customer" />
+
+            <TextView
+                android:id="@+id/labelCustomer"
+                android:text="@{viewModel.customerName}"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                app:layout_constraintTop_toTopOf="@id/iconCustomer"
+                app:layout_constraintStart_toEndOf="@id/iconCustomer"
+                app:layout_constraintBottom_toBottomOf="@id/iconCustomer"
+                tools:text="Marideth Luciano"/>
+
+            <TextView
+                android:id="@+id/labelCRN"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{`CRN[`+viewModel.crn+`]`}"
+                android:layout_marginStart="8dp"
+                app:layout_constraintTop_toTopOf="@id/labelCustomer"
+                app:layout_constraintBottom_toBottomOf="@id/labelCustomer"
+                app:layout_constraintStart_toEndOf="@id/labelCustomer"
+                tools:text="[090965]"/>
+
+            <ImageView
+                android:id="@+id/iconCreatedAt"
+                app:layout_constraintTop_toBottomOf="@id/labelCustomer"
+                app:layout_constraintStart_toStartOf="@id/labelJobOrderNumber"
+                android:layout_marginTop="8dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                app:srcCompat="@drawable/icon_date" />
+            <TextView
+                android:id="@+id/labelCreatedAt"
+                android:text="@{viewModel.createdAt}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                app:layout_constraintTop_toTopOf="@id/iconCreatedAt"
+                app:layout_constraintStart_toEndOf="@id/iconCreatedAt"
+                app:layout_constraintBottom_toBottomOf="@id/iconCreatedAt"
+                tools:text="Oct 24, 2022 8:40 AM"/>
+            <TextView
+                style="@style/TextItemPrice"
+                android:textSize="20sp"
+                android:id="@+id/labelDiscountedAmount"
+                android:peso="@{viewModel.discountedAmount}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="P 140.0"/>
+            <androidx.constraintlayout.widget.Group
+                android:visibility="@{viewModel.datePaid != null}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="iconDatePaid, labelDatePaid"/>
+            <TextView
+                android:text="@{viewModel.paymentStatus()}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/labelDiscountedAmount"
+                app:layout_constraintEnd_toEndOf="@id/labelDatePaid"
+                app:layout_constraintBottom_toTopOf="@id/iconDatePaid"
+                tools:text="PAID"/>
+            <ImageView
+                android:id="@+id/iconDatePaid"
+                app:layout_constraintTop_toTopOf="@id/labelDatePaid"
+                app:layout_constraintEnd_toStartOf="@id/labelDatePaid"
+                app:layout_constraintBottom_toBottomOf="@id/labelDatePaid"
+                android:layout_marginEnd="8dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                app:srcCompat="@drawable/icon_date" />
+            <TextView
+                android:id="@+id/labelDatePaid"
+                android:text="@{viewModel.datePaid}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="@id/labelDiscountedAmount"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:text="Oct 24, 2022 8:40 AM"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+</layout>

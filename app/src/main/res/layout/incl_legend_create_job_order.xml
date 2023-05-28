@@ -12,12 +12,16 @@
         <variable
             name="prompt"
             type="String" />
+        <variable
+            name="locked"
+            type="Boolean" />
     </data>
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardLegend"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="1dp"
+        android:visibility="@{hasItems || (!hasItems &amp;&amp; !locked)}"
         app:cardElevation="0dp"
         app:cardBackgroundColor="@color/secondary_background">
         <androidx.constraintlayout.widget.ConstraintLayout

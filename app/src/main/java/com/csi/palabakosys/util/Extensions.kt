@@ -2,16 +2,21 @@ package com.csi.palabakosys.util
 
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
+import androidx.databinding.InverseBindingListener
+import com.csi.palabakosys.R
+import com.csi.palabakosys.model.EnumPaymentMethod
 import com.csi.palabakosys.model.EnumProductType
 import com.csi.palabakosys.model.EnumWashType
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import java.text.NumberFormat
 import java.time.Instant
+import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -99,4 +104,43 @@ fun String?.toUUID() : UUID? {
         return UUID.fromString(this)
     }
     return null
+}
+
+fun Instant.isToday(): Boolean {
+    val currentZone = ZoneId.systemDefault()
+    val currentDate = LocalDate.now(currentZone)
+
+    val currentStartOfDay = currentDate.atStartOfDay(currentZone).toInstant()
+    val currentEndOfDay = currentDate.plusDays(1).atStartOfDay(currentZone).toInstant()
+
+    return this.isAfter(currentStartOfDay) && this.isBefore(currentEndOfDay)
+}
+
+
+@BindingAdapter("app:selectedPaymentMethod")
+fun setPaymentMethod(radioGroup: RadioGroup, paymentMethod: EnumPaymentMethod?) {
+    val selectedId = when (paymentMethod) {
+        EnumPaymentMethod.CASH -> R.id.radio_cash
+        EnumPaymentMethod.CASHLESS -> R.id.radio_cashless
+        else -> View.NO_ID
+    }
+    if (radioGroup.checkedRadioButtonId != selectedId) {
+        radioGroup.check(selectedId)
+    }
+}
+
+@InverseBindingAdapter(attribute = "app:selectedPaymentMethod", event = "android:checkedButtonAttrChanged")
+fun getPaymentMethod(radioGroup: RadioGroup): EnumPaymentMethod? {
+    return when (radioGroup.checkedRadioButtonId) {
+        R.id.radio_cash -> EnumPaymentMethod.CASH
+        R.id.radio_cashless -> EnumPaymentMethod.CASHLESS
+        else -> null
+    }
+}
+
+@BindingAdapter("android:checkedButtonAttrChanged")
+fun setCheckedButtonListener(radioGroup: RadioGroup, listener: InverseBindingListener?) {
+    radioGroup.setOnCheckedChangeListener { _, _ ->
+        listener?.onChange()
+    }
 }

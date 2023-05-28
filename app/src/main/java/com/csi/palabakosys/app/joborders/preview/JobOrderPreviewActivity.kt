@@ -1,4 +1,4 @@
-package com.csi.palabakosys.app.joborders.create.preview
+package com.csi.palabakosys.app.joborders.preview
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -6,15 +6,19 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import com.csi.palabakosys.R
-import com.csi.palabakosys.app.joborders.payment.PaymentJoPreviewActivity
+import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentActivity
 import com.csi.palabakosys.databinding.ActivityJobOrderPreviewBinding
+import com.csi.palabakosys.util.toUUID
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
 
 @AndroidEntryPoint
-class CreateJobOrderPreviewActivity : AppCompatActivity() {
+class JobOrderPreviewActivity : AppCompatActivity() {
     private lateinit var binding: ActivityJobOrderPreviewBinding
 //    private val printerViewModel: BluetoothPrinterViewModel by viewModels()
+
+    companion object {
+        const val JOB_ORDER_ID = "jobOrderId"
+    }
 
     private val viewModel: JobOrderPreviewViewModel by viewModels()
 
@@ -25,21 +29,25 @@ class CreateJobOrderPreviewActivity : AppCompatActivity() {
         subscribeEvents()
         subscribeListeners()
 
-        intent.getStringExtra("jobOrderId")?.let {
-            try {
-                viewModel.setJobOrderId(UUID.fromString(it))
-            } catch (e: Exception) {
-                finish()
-            }
-        }
+        viewModel.getByJobOrderId(
+            intent.getStringExtra("jobOrderId").toUUID()
+        )
 
-        intent.getStringExtra("customerId")?.let {
-            try {
-                viewModel.setCustomerId(UUID.fromString(it))
-            } catch (e: Exception) {
-                finish()
-            }
-        }
+//        intent.getStringExtra("jobOrderId")?.let {
+//            try {
+//                viewModel.setJobOrderId(UUID.fromString(it))
+//            } catch (e: Exception) {
+//                finish()
+//            }
+//        }
+
+//        intent.getStringExtra("customerId")?.let {
+//            try {
+//                viewModel.setCustomerId(UUID.fromString(it))
+//            } catch (e: Exception) {
+//                finish()
+//            }
+//        }
 
 //        printerViewModel.initializeBluetooth(this)
 //        printerViewModel.loadPrinters()
@@ -49,7 +57,7 @@ class CreateJobOrderPreviewActivity : AppCompatActivity() {
         viewModel.dataState.observe(this, androidx.lifecycle.Observer {
             when(it) {
                 is JobOrderPreviewViewModel.DataState.OpenPayment -> {
-                    val intent = Intent(applicationContext, PaymentJoPreviewActivity::class.java).apply {
+                    val intent = Intent(applicationContext, JobOrderPaymentActivity::class.java).apply {
                         putExtra("customerId", it.customerId.toString())
                     }
                     startActivity(intent)

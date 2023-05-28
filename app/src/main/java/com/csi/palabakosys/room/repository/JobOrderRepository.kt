@@ -1,10 +1,12 @@
 package com.csi.palabakosys.room.repository
 
+import androidx.sqlite.db.SimpleSQLiteQuery
 import com.csi.palabakosys.app.joborders.create.delivery.DeliveryCharge
 import com.csi.palabakosys.app.joborders.create.discount.MenuDiscount
 import com.csi.palabakosys.app.joborders.create.extras.MenuExtrasItem
 import com.csi.palabakosys.app.joborders.create.products.MenuProductItem
 import com.csi.palabakosys.app.joborders.create.services.MenuServiceItem
+import com.csi.palabakosys.app.joborders.list.JobOrderListItem
 import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentMinimal
 import com.csi.palabakosys.room.dao.DaoJobOrder
 import com.csi.palabakosys.room.entities.EntityJobOrder
@@ -70,11 +72,15 @@ constructor (
         return daoJobOrder.getCurrentJobOrder(customerId)
     }
 
-    suspend fun getAllUnpaidByCustomerId(customerId: UUID): List<JobOrderPaymentMinimal> {
+    suspend fun getAllUnpaidByCustomerId(customerId: UUID?): List<JobOrderPaymentMinimal> {
         return daoJobOrder.getAllUnpaidByCustomerId(customerId)
     }
 
-    suspend fun getPreviousUnpaidByCustomerId(customerId: UUID): List<JobOrderPaymentMinimal> {
-        return daoJobOrder.getPreviousUnpaidByCustomerId(customerId)
+    suspend fun getPreviousUnpaidByCustomerId(customerId: UUID, jobOrderId: UUID?): List<JobOrderPaymentMinimal> {
+        return daoJobOrder.getPreviousUnpaidByCustomerId(customerId, jobOrderId)
+    }
+
+    suspend fun load(keyword: String?, orderBy: String?, sortDirection: String?): List<JobOrderListItem> {
+        return daoJobOrder.load(keyword, orderBy, sortDirection)
     }
 }

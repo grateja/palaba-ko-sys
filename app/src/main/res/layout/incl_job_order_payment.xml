@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="viewModel"
+            type="com.csi.palabakosys.room.entities.EntityJobOrderPayment" />
+    </data>
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TableRow>
+            <TextView
+                android:layout_weight="1"
+                android:text="DATE PAID"
+                android:textStyle="bold"
+                android:padding="8dp"
+                android:background="#ECEFF1"
+                android:textColor="#37474F" />
+            <TextView
+                android:text="@{viewModel.createdAt}"
+                android:padding="8dp"
+                tools:text="Feb 29, 2023 5:00 PM"
+                android:background="#F5F5F5"
+                android:textColor="#616161" />
+        </TableRow>
+
+        <com.google.android.material.divider.MaterialDivider/>
+
+        <TableRow>
+            <TextView
+                android:layout_weight="1"
+                android:text="PAYMENT METHOD"
+                android:textStyle="bold"
+                android:padding="8dp"
+                android:background="#ECEFF1"
+                android:textColor="#37474F" />
+            <TextView
+                android:textAlignment="textEnd"
+                android:text="@{viewModel.paymentMethod.toString()}"
+                android:padding="8dp"
+                android:background="#F5F5F5"
+                android:textColor="#616161" />
+        </TableRow>
+
+        <com.google.android.material.divider.MaterialDivider/>
+
+        <TableRow>
+            <TextView
+                android:layout_weight="1"
+                android:text="OR NUMBER"
+                android:textStyle="bold"
+                android:padding="8dp"
+                android:background="#ECEFF1"
+                android:textColor="#37474F" />
+            <TextView
+                android:textAlignment="textEnd"
+                android:text="@{viewModel.orNumber}"
+                android:padding="8dp"
+                android:background="#F5F5F5"
+                android:textColor="#616161" />
+        </TableRow>
+
+    </TableLayout>
+
+</layout>

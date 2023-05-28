@@ -27,10 +27,16 @@ class SelectCustomerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         title = "Search Customer"
         binding = DataBindingUtil.setContentView(this, R.layout.activity_select_customer)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
         binding.recyclerCustomersMinimal.adapter = customersAdapter
         setSupportActionBar(binding.toolbar)
         subscribeEvents()
-        viewModel.searchMinimal("")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.filter()
     }
 
     private fun subscribeEvents() {
@@ -63,7 +69,9 @@ class SelectCustomerActivity : AppCompatActivity() {
 
     private fun openCreateJobOrderActivity(customer: CustomerMinimal) {
         val intent = Intent(this, JobOrderCreateActivity::class.java).apply {
-            putExtra("customer", customer)
+            action = JobOrderCreateActivity.ACTION_LOAD_BY_CUSTOMER_ID
+            putExtra(JobOrderCreateActivity.PAYLOAD_EXTRA, customer)
+//            putExtra("customer", customer)
         }
         startActivity(intent)
     }
@@ -89,7 +97,7 @@ class SelectCustomerActivity : AppCompatActivity() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                viewModel.searchMinimal(newText)
+                viewModel.setKeyword(newText)
                 return true
             }
         })

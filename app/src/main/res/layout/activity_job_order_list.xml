@@ -2,11 +2,11 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".app.joborders.create.customer.SelectCustomerActivity">
+    tools:context=".app.joborders.list.JobOrderListActivity">
     <data>
         <variable
             name="viewModel"
-            type="com.csi.palabakosys.app.joborders.create.customer.SelectCustomerViewModel" />
+            type="com.csi.palabakosys.app.joborders.list.JobOrderListViewModel" />
     </data>
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -26,23 +26,6 @@
                 android:background="@color/teal_700"
                 android:animateLayoutChanges="true"
                 app:layout_scrollFlags="scroll|enterAlways|snap" />
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonCreateNew"
-                style="@style/RoundButtonPrimary"
-                app:icon="@android:drawable/ic_menu_add"
-                app:iconSize="30dp"
-                app:iconGravity="textStart"
-                android:layout_margin="8dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Create new customer"
-                app:cornerRadius="25dp"
-                app:layout_scrollFlags="scroll|enterAlways|snap"/>
-            <com.google.android.material.progressindicator.LinearProgressIndicator
-                android:visibility="@{viewModel.loading}"
-                android:layout_width="match_parent"
-                android:indeterminate="true"
-                android:layout_height="5dp"/>
         </com.google.android.material.appbar.AppBarLayout>
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -53,9 +36,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerCustomersMinimal"
+                    android:id="@+id/recyclerJobOrders"
                     android:nestedScrollingEnabled="false"
                     android:orientation="vertical"
                     android:layout_width="match_parent"

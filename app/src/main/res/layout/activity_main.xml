@@ -28,7 +28,7 @@
                 android:id="@+id/btnTest"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Default"
+                android:text="Create Job Order"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
             <Button
@@ -55,6 +55,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Machines" />
+            <Button
+                android:id="@+id/btnJobOrders"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Job Orders" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </layout>

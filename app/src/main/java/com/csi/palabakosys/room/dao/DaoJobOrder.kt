@@ -1,6 +1,8 @@
 package com.csi.palabakosys.room.dao
 
 import androidx.room.*
+import androidx.sqlite.db.SupportSQLiteQuery
+import com.csi.palabakosys.app.joborders.list.JobOrderListItem
 import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentMinimal
 import com.csi.palabakosys.room.entities.*
 import java.util.*
@@ -106,8 +108,25 @@ interface DaoJobOrder {
     suspend fun getCurrentJobOrder(customerId: UUID?): EntityJobOrderWithItems?
 
     @Query("SELECT * FROM job_orders WHERE customer_id = :customerId AND payment_id IS NULL AND deleted_at IS NULL")
-    suspend fun getAllUnpaidByCustomerId(customerId: UUID): List<JobOrderPaymentMinimal>
+    suspend fun getAllUnpaidByCustomerId(customerId: UUID?): List<JobOrderPaymentMinimal>
 
-    @Query("SELECT * FROM job_orders WHERE customer_id = :customerId AND payment_id IS NULL AND deleted_at IS NULL AND DATE(`created_at`/1000, 'unixepoch', 'localtime') > DATE('now', 'localtime')")
-    suspend fun getPreviousUnpaidByCustomerId(customerId: UUID): List<JobOrderPaymentMinimal>
+    @Query("SELECT * FROM job_orders WHERE customer_id = :customerId AND payment_id IS NULL AND deleted_at IS NULL AND (:jobOrderId IS NULL OR (id IS NOT NULL AND id <> :jobOrderId))")
+    suspend fun getPreviousUnpaidByCustomerId(customerId: UUID, jobOrderId: UUID?): List<JobOrderPaymentMinimal>
+
+//    @Query("SELECT jo.id, jo.job_order_number, jo.discounted_amount, jo.payment_id, jo.customer_id, jo.created_at, cu.name, cu.crn, pa.created_at as date_paid FROM job_orders jo JOIN customers cu ON jo.customer_id = cu.id LEFT JOIN job_order_payments pa ON jo.payment_id = pa.id WHERE cu.name LIKE '%' || :keyword || '%' AND (jo.deleted_at IS NULL AND void_date IS NULL) ORDER BY " +
+//            " CASE WHEN :sortDirection = 'ASC' THEN jo.created_at END ASC, " +
+//            " CASE WHEN :sortDirection = 'DESC' THEN (" +
+//            "     CASE WHEN :orderBy = 'created_at' THEN jo.created_at END, " +
+//            "     CASE WHEN :orderBy = 'date_paid' THEN date_paid END " +
+//            " ) END DESC" +
+//            " LIMIT 20")
+    @Query("SELECT jo.id, jo.job_order_number, jo.discounted_amount, jo.payment_id, jo.customer_id, jo.created_at, cu.name, cu.crn, pa.created_at as date_paid FROM job_orders jo JOIN customers cu ON jo.customer_id = cu.id LEFT JOIN job_order_payments pa ON jo.payment_id = pa.id WHERE cu.name LIKE '%' || :keyword || '%' AND (jo.deleted_at IS NULL AND void_date IS NULL) ORDER BY " +
+        " CASE WHEN :orderBy = 'created_at' AND :sortDirection = 'ASC' THEN jo.created_at END ASC, " +
+        " CASE WHEN :orderBy = 'date_paid' AND :sortDirection = 'ASC' THEN pa.created_at END ASC, " +
+        " CASE WHEN :orderBy = 'customer_name' AND :sortDirection = 'ASC' THEN cu.name END ASC, " +
+        " CASE WHEN :orderBy = 'created_at' AND :sortDirection = 'DESC' THEN jo.created_at END DESC, " +
+        " CASE WHEN :orderBy = 'date_paid' AND :sortDirection = 'DESC' THEN pa.created_at END DESC, " +
+        " CASE WHEN :orderBy = 'customer_name' AND :sortDirection = 'DESC' THEN cu.name END DESC " +
+        " LIMIT 20")
+    suspend fun load(keyword: String?, orderBy: String?, sortDirection: String?): List<JobOrderListItem>
 }

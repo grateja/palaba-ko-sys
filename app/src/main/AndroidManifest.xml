@@ -25,6 +25,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LMS2022">
         <activity
+            android:name=".app.joborders.list.JobOrderListActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".app.remote.running.MachineRunningActivity"
             android:exported="false">
             <meta-data
@@ -33,10 +41,10 @@
         </activity>
         <activity
             android:name=".app.remote.activate.RemoteActivationPreviewActivity"
+            android:exported="false"
             android:launchMode="singleInstance"
             android:theme="@style/Theme.MaterialComponents.Light.Dialog"
-            android:windowSoftInputMode="stateHidden|adjustPan"
-            android:exported="false">
+            android:windowSoftInputMode="stateHidden|adjustPan">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -44,9 +52,9 @@
 
         <service
             android:name=".services.MachineActivationService"
-            android:stopWithTask="false"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="false"
+            android:stopWithTask="false" />
 
         <activity
             android:name=".app.machines.addedit.MachinesAddEditActivity"
@@ -73,7 +81,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".app.joborders.payment.PaymentJoPreviewActivity"
+            android:name=".app.joborders.payment.JobOrderPaymentActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -94,7 +102,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".app.joborders.create.preview.CreateJobOrderPreviewActivity"
+            android:name=".app.joborders.preview.JobOrderPreviewActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

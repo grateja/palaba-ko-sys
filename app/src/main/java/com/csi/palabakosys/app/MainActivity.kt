@@ -24,6 +24,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.window.layout.WindowMetricsCalculator
 import com.csi.palabakosys.R
 import com.csi.palabakosys.app.joborders.create.customer.SelectCustomerActivity
+import com.csi.palabakosys.app.joborders.list.JobOrderListActivity
 import com.csi.palabakosys.app.machines.MachinesActivity
 import com.csi.palabakosys.app.preferences.ip.SettingsIPAddressActivity
 import com.csi.palabakosys.app.preferences.printer.SettingsPrinterActivity
@@ -64,6 +65,10 @@ class MainActivity : EndingActivity() {
         }
         binding.btnPrinterSettings.setOnClickListener {
             val intent = Intent(this, SettingsPrinterActivity::class.java)
+            startActivity(intent)
+        }
+        binding.btnJobOrders.setOnClickListener {
+            val intent = Intent(this, JobOrderListActivity::class.java)
             startActivity(intent)
         }
         binding.btnMachines.setOnClickListener {

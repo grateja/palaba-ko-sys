@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
 import com.csi.palabakosys.app.auth.AuthActionDialogActivity
 import com.csi.palabakosys.app.auth.LoginCredentials
+import com.csi.palabakosys.app.customers.CustomerMinimal
 import com.csi.palabakosys.app.joborders.create.delivery.DeliveryCharge
 import com.csi.palabakosys.app.joborders.create.delivery.JOSelectDeliveryActivity
 import com.csi.palabakosys.app.joborders.create.discount.JOSelectDiscountActivity
@@ -19,22 +20,31 @@ import com.csi.palabakosys.app.joborders.create.discount.MenuDiscount
 import com.csi.palabakosys.app.joborders.create.extras.JOSelectExtrasActivity
 import com.csi.palabakosys.app.joborders.create.extras.JobOrderExtrasItemAdapter
 import com.csi.palabakosys.app.joborders.create.extras.MenuExtrasItem
-import com.csi.palabakosys.app.joborders.create.preview.CreateJobOrderPreviewActivity
+import com.csi.palabakosys.app.joborders.preview.JobOrderPreviewActivity
 import com.csi.palabakosys.app.joborders.create.products.JOSelectProductsActivity
 import com.csi.palabakosys.app.joborders.create.products.JobOrderProductsItemAdapter
 import com.csi.palabakosys.app.joborders.create.products.MenuProductItem
 import com.csi.palabakosys.app.joborders.create.services.JOSelectWashDryActivity
 import com.csi.palabakosys.app.joborders.create.services.JobOrderServiceItemAdapter
 import com.csi.palabakosys.app.joborders.create.services.MenuServiceItem
-import com.csi.palabakosys.app.joborders.payment.PaymentJoPreviewActivity
+import com.csi.palabakosys.app.joborders.list.JobOrderListItem
+import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentActivity
 import com.csi.palabakosys.databinding.ActivityJobOrderCreateBinding
 import com.csi.palabakosys.util.ActivityLauncher
+import com.csi.palabakosys.util.toUUID
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 import kotlin.collections.ArrayList
 
 @AndroidEntryPoint
 class JobOrderCreateActivity : AppCompatActivity() {
+    companion object {
+        const val ACTION_LOAD_BY_CUSTOMER_ID = "loadByCustomerId"
+        const val ACTION_LOAD_BY_JOB_ORDER_ID = "loadByJobOrderId"
+        const val PAYLOAD_EXTRA = "payload"
+    }
+
+
     private var backPressed = false
     private lateinit var binding: ActivityJobOrderCreateBinding
     private val viewModel: CreateJobOrderViewModel by viewModels()
@@ -59,9 +69,17 @@ class JobOrderCreateActivity : AppCompatActivity() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
-        viewModel.setCustomer(
-            intent.getParcelableExtra("customer")
-        )
+        if(intent.action == ACTION_LOAD_BY_JOB_ORDER_ID) {
+            val payload = intent.getParcelableExtra<JobOrderListItem>(PAYLOAD_EXTRA)
+            if(payload != null) {
+                viewModel.setJobOrder(payload)
+            }
+        } else if(intent.action == ACTION_LOAD_BY_CUSTOMER_ID) {
+            val payload = intent.getParcelableExtra<CustomerMinimal>(PAYLOAD_EXTRA)
+            if(payload != null) {
+                viewModel.setCustomer(payload)
+            }
+        }
 
         binding.serviceItems.adapter = servicesAdapter
         binding.productItems.adapter = productsAdapter
@@ -103,7 +121,8 @@ class JobOrderCreateActivity : AppCompatActivity() {
         }
 
         paymentLauncher.onOk = {
-            viewModel.lock()
+            val paymentId = it.data?.getStringExtra(JobOrderPaymentActivity.PAYMENT_ID).toUUID()
+            viewModel.loadPayment(paymentId)
         }
 
         servicesAdapter.onItemClick = {
@@ -193,7 +212,7 @@ class JobOrderCreateActivity : AppCompatActivity() {
                     viewModel.resetState()
                 }
                 is CreateJobOrderViewModel.DataState.OpenPayment -> {
-                    openPayment(it.jobOrderId, it.customerId)
+                    openPayment(it.customerId, it.paymentId)
                     viewModel.resetState()
                 }
                 is CreateJobOrderViewModel.DataState.RequestExit -> {
@@ -220,7 +239,7 @@ class JobOrderCreateActivity : AppCompatActivity() {
     }
 
     private fun previewJobOrder(jobOrderId: UUID, customerId: UUID) {
-        val intent = Intent(this, CreateJobOrderPreviewActivity::class.java).apply {
+        val intent = Intent(this, JobOrderPreviewActivity::class.java).apply {
             putExtra("jobOrderId", jobOrderId.toString())
             putExtra("customerId", customerId.toString())
         }
@@ -275,16 +294,15 @@ class JobOrderCreateActivity : AppCompatActivity() {
         discountLauncher.launch(intent)
     }
 
-    private fun openPayment(jobOrderId: UUID, customerId: UUID) {
-        val intent = Intent(this, PaymentJoPreviewActivity::class.java).apply {
-            putExtra(PaymentJoPreviewActivity.CUSTOMER_ID, customerId.toString())
-            putExtra(PaymentJoPreviewActivity.JOB_ORDER_ID, jobOrderId.toString())
+    private fun openPayment(customerId: UUID, paymentId: UUID?) {
+        val intent = Intent(this, JobOrderPaymentActivity::class.java).apply {
+            putExtra(JobOrderPaymentActivity.CUSTOMER_ID, customerId.toString())
+            putExtra(JobOrderPaymentActivity.PAYMENT_ID, paymentId.toString())
         }
         paymentLauncher.launch(intent)
     }
 
     override fun onBackPressed() {
-        // super.onBackPressed()
         viewModel.requestExit()
     }
 }
