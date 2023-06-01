@@ -13,6 +13,7 @@ import com.csi.palabakosys.R
 import com.csi.palabakosys.app.auth.AuthActionDialogActivity
 import com.csi.palabakosys.app.auth.LoginCredentials
 import com.csi.palabakosys.app.customers.CustomerMinimal
+import com.csi.palabakosys.app.joborders.cancel.JobOrderCancelActivity
 import com.csi.palabakosys.app.joborders.create.delivery.DeliveryCharge
 import com.csi.palabakosys.app.joborders.create.delivery.JOSelectDeliveryActivity
 import com.csi.palabakosys.app.joborders.create.discount.JOSelectDiscountActivity
@@ -57,6 +58,7 @@ class JobOrderCreateActivity : AppCompatActivity() {
     private val previewLauncher = ActivityLauncher(this)
     private val paymentLauncher = ActivityLauncher(this)
     private val authLauncher = ActivityLauncher(this)
+    private val jobOrderCancelLauncher = ActivityLauncher(this)
 
     private val servicesAdapter = JobOrderServiceItemAdapter()
     private val productsAdapter = JobOrderProductsItemAdapter()
@@ -125,6 +127,12 @@ class JobOrderCreateActivity : AppCompatActivity() {
             viewModel.loadPayment(paymentId)
         }
 
+        jobOrderCancelLauncher.onOk = {
+            if(it.data?.action == JobOrderCancelActivity.ACTION_DELETE_JOB_ORDER) {
+                finish()
+            }
+        }
+
         servicesAdapter.onItemClick = {
             viewModel.openServices(it)
         }
@@ -175,6 +183,9 @@ class JobOrderCreateActivity : AppCompatActivity() {
         binding.buttonPayment.setOnClickListener {
             viewModel.openPayment()
         }
+        binding.buttonVoid.setOnClickListener {
+            viewModel.requestCancel()
+        }
 
         viewModel.dataState().observe(this, Observer {
             when(it) {
@@ -213,6 +224,13 @@ class JobOrderCreateActivity : AppCompatActivity() {
                 }
                 is CreateJobOrderViewModel.DataState.OpenPayment -> {
                     openPayment(it.customerId, it.paymentId)
+                    viewModel.resetState()
+                }
+                is CreateJobOrderViewModel.DataState.RequestCancel -> {
+                    val intent = Intent(this, JobOrderCancelActivity::class.java).apply {
+                        putExtra(JobOrderCancelActivity.JOB_ORDER_ID, it.jobOrderId.toString())
+                    }
+                    jobOrderCancelLauncher.launch(intent)
                     viewModel.resetState()
                 }
                 is CreateJobOrderViewModel.DataState.RequestExit -> {

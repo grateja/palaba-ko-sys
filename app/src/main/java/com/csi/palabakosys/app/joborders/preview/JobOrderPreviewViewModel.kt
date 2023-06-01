@@ -33,7 +33,7 @@ constructor(
 
     fun getByJobOrderId(jobOrderId: UUID?) {
         viewModelScope.launch {
-            _jobOrder.value = jobOrderRepository.get(jobOrderId)
+            _jobOrder.value = jobOrderRepository.getJobOrderWithItems(jobOrderId)
         }
     }
 

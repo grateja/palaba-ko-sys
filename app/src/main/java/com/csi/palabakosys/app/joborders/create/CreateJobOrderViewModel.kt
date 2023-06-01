@@ -39,6 +39,7 @@ constructor(
         data class OpenPayment(val customerId: UUID, val paymentId: UUID?) : DataState()
         data class InvalidOperation(val message: String): DataState()
         data class RequestExit(val canExit: Boolean) : DataState()
+        data class RequestCancel(val jobOrderId: UUID?) : DataState()
         object ProceedToSaveJO: DataState()
     }
 
@@ -307,7 +308,7 @@ constructor(
 
     fun setJobOrder(jobOrderMinimal: JobOrderListItem) {
         viewModelScope.launch {
-            jobOrderRepository.get(jobOrderMinimal.id).let {
+            jobOrderRepository.getJobOrderWithItems(jobOrderMinimal.id).let {
                 if(it != null) {
                     currentCustomer.value = CustomerMinimal(
                         it.customer?.id!!, it.customer?.name!!, it.customer?.crn!!, it.customer?.address, null
@@ -493,7 +494,12 @@ constructor(
 
             jobOrderRepository.save(jobOrderWithItem)
             _dataState.value = DataState.SaveSuccess(jobOrder.id, customerId)
+            _jobOrder.value = jobOrder
             _saved.value = true
         }
+    }
+
+    fun requestCancel() {
+        _dataState.value = DataState.RequestCancel(_jobOrder.value?.id)
     }
 }

@@ -45,4 +45,5 @@
     <string name="payment">View Payment</string>
     <string name="print">Print</string>
     <string name="locked_job_order_prompt">The Job Order cannot be modified if it was created on a previous date other than today or if it has already been paid.</string>
+    <string name="remarks">Remarks</string>
 </resources>

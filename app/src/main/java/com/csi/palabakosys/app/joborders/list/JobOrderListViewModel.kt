@@ -42,8 +42,9 @@ constructor(
         job?.cancel()
 
         job = viewModelScope.launch {
-            println("Waiting 500 ms")
-            delay(500)
+            if(!keyword.value.isNullOrBlank()) {
+                delay(500)
+            }
             _jobOrders.value = jobOrderRepository.load(keyword.value, orderBy.value, legendSort.value)
         }
     }

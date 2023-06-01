@@ -193,7 +193,7 @@ constructor(
 //        super.get(paymentId, EntityJobOrderPayment(UUID.fromString(jobOrderId)))
         this.jobOrderId = UUID.fromString(jobOrderId)
         viewModelScope.launch {
-            jobOrderRepository.get(UUID.fromString(jobOrderId)).let {
+            jobOrderRepository.getJobOrderWithItems(UUID.fromString(jobOrderId)).let {
                 if(it == null) {
                     dataState.value = DataState.Invalidate("Job order not found or deleted")
                 } else {

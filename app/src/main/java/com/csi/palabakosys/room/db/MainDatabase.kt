@@ -9,6 +9,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.csi.palabakosys.room.dao.*
 import com.csi.palabakosys.room.db.seeder.DatabaseSeeder
 import com.csi.palabakosys.room.entities.*
+import com.csi.palabakosys.room.migrations.AddColumnPaymentVoid
 import com.csi.palabakosys.util.*
 import com.csi.palabakosys.util.converters.*
 
@@ -36,7 +37,7 @@ import com.csi.palabakosys.util.converters.*
     EntityInventoryLog::class,
     EntityDiscount::class,
     EntityCashlessProvider::class
-], version = 5)
+], version = 6)
 @TypeConverters(
     InstantConverters::class,
     UUIDConverter::class,
@@ -50,7 +51,6 @@ import com.csi.palabakosys.util.converters.*
     ServiceTypeConverter::class,
     DiscountApplicableConverter::class,
     ActionPermissionConverter::class,
-//    DiscountTypeConverter::class,
 )
 abstract class MainDatabase : RoomDatabase() {
     abstract fun daoUser() : DaoUser
@@ -60,9 +60,7 @@ abstract class MainDatabase : RoomDatabase() {
     abstract fun daoMachineUsage() : DaoMachineUsage
     abstract fun daoWashService() : DaoService
     abstract fun daoDeliveryProfile() : DaoDeliveryProfile
-//    abstract fun daoDryService() : DaoDryService
     abstract fun daoExtras() : DaoExtras
-//    abstract fun daoOtherService() : DaoOtherService
     abstract fun daoProduct() : DaoProduct
     abstract fun daoJobOrder() : DaoJobOrder
     abstract fun daoJobOrderPayment() : DaoJobOrderPayment
@@ -83,18 +81,17 @@ abstract class MainDatabase : RoomDatabase() {
         fun getInstance(context: Context) : MainDatabase {
             return instance?: synchronized(this) {
                 instance ?: Room.databaseBuilder(context, MainDatabase::class.java, DATABASE_NAME)
-//                    .fallbackToDestructiveMigration()
                     .addCallback(object: Callback() {
                         override fun onCreate(db: SupportSQLiteDatabase) {
                             super.onCreate(db)
                             DatabaseSeeder(getInstance(context)).run()
                         }
                     })
+                    .addMigrations(
+                        AddColumnPaymentVoid(),
+                    )
                     .build()
             }
-//            return Room.databaseBuilder(context, MainDatabase::class.java, DATABASE_NAME)
-//                .fallbackToDestructiveMigration()
-//                .build()
         }
     }
 }

@@ -7,9 +7,9 @@ import java.util.UUID
 
 @Dao
 abstract class DaoExpense : BaseDao<EntityExpense> {
-    @Query("SELECT * FROM expenses WHERE id = :id")
+    @Query("SELECT * FROM expenses WHERE id = :id AND deleted_at IS NULL")
     abstract suspend fun get(id: UUID) : EntityExpense?
 
-    @Query("SELECT * FROM expenses WHERE remarks LIKE '%' || :keyword || '%' ORDER BY remarks")
+    @Query("SELECT * FROM expenses WHERE remarks LIKE '%' || :keyword || '%' AND deleted_at IS NULL ORDER BY remarks")
     abstract suspend fun getAll(keyword: String) : List<EntityExpense>
 }

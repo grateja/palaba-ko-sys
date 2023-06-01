@@ -1,6 +1,5 @@
 package com.csi.palabakosys.room.repository
 
-import androidx.sqlite.db.SimpleSQLiteQuery
 import com.csi.palabakosys.app.joborders.create.delivery.DeliveryCharge
 import com.csi.palabakosys.app.joborders.create.discount.MenuDiscount
 import com.csi.palabakosys.app.joborders.create.extras.MenuExtrasItem
@@ -11,7 +10,9 @@ import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentMinimal
 import com.csi.palabakosys.room.dao.DaoJobOrder
 import com.csi.palabakosys.room.entities.EntityJobOrder
 import com.csi.palabakosys.room.entities.EntityJobOrderListItem
+import com.csi.palabakosys.room.entities.EntityJobOrderVoid
 import com.csi.palabakosys.room.entities.EntityJobOrderWithItems
+import com.csi.palabakosys.util.toUUID
 import java.lang.Exception
 import java.util.UUID
 import javax.inject.Inject
@@ -23,10 +24,14 @@ class JobOrderRepository
 constructor (
     private val daoJobOrder: DaoJobOrder,
 ) {
-    suspend fun get(id: UUID?) : EntityJobOrderWithItems? {
+    suspend fun get(id: UUID?) : EntityJobOrder? {
+        return daoJobOrder.get(id)
+    }
+
+    suspend fun getJobOrderWithItems(id: UUID?) : EntityJobOrderWithItems? {
         try {
             if(id == null) return null
-            return daoJobOrder.get(id)
+            return daoJobOrder.getJobOrderWithItems(id)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -64,9 +69,9 @@ constructor (
 
     }
 
-    suspend fun void(jobOrder: EntityJobOrder) {
-        daoJobOrder.voidJobOrder(jobOrder)
-    }
+//    suspend fun void(jobOrder: EntityJobOrder) {
+//        daoJobOrder.voidJobOrder(jobOrder)
+//    }
 
     suspend fun getCurrentJobOrder(customerId: UUID?) : EntityJobOrderWithItems? {
         return daoJobOrder.getCurrentJobOrder(customerId)
@@ -82,5 +87,9 @@ constructor (
 
     suspend fun load(keyword: String?, orderBy: String?, sortDirection: String?): List<JobOrderListItem> {
         return daoJobOrder.load(keyword, orderBy, sortDirection)
+    }
+
+    suspend fun cancelJobOrder(jobOrderWithItem: EntityJobOrderWithItems, jobOrderVoid: EntityJobOrderVoid) {
+        return daoJobOrder.cancelJobOrder(jobOrderWithItem, jobOrderVoid)
     }
 }

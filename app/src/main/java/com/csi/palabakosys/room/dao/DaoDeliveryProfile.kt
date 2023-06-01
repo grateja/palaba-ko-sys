@@ -8,9 +8,9 @@ import java.util.*
 
 @Dao
 abstract class DaoDeliveryProfile : BaseDao<EntityDeliveryProfile> {
-    @Query("SELECT * FROM delivery_profiles WHERE id = :id")
+    @Query("SELECT * FROM delivery_profiles WHERE id = :id AND deleted_at IS NULL")
     abstract suspend fun get(id: UUID) : EntityDeliveryProfile?
 
-    @Query("SELECT * FROM delivery_profiles")
+    @Query("SELECT * FROM delivery_profiles WHERE deleted_at IS NULL")
     abstract suspend fun getAll() : List<MenuDeliveryProfile>
 }

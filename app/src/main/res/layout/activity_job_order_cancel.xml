@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".app.joborders.cancel.JobOrderCancelActivity">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.csi.palabakosys.app.joborders.cancel.JobOrderCancelViewModel" />
+    </data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/remarks"
+            app:errorEnabled="true"
+            app:errorText="@{viewModel.validation.get(`remarks`)}">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:text="@={viewModel.remarks}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top"
+                android:minHeight="86dp"
+                android:inputType="textMultiLine"
+                android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`remarks`)}"
+                android:maxLines="10"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <Button
+            android:id="@+id/buttonSave"
+            android:text="@string/save"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</layout>

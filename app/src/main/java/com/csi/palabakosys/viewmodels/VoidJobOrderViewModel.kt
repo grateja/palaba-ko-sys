@@ -32,7 +32,7 @@ constructor(
     }
     fun get(jobOrderId: String) {
         viewModelScope.launch {
-            repository.get(UUID.fromString(jobOrderId)).let {
+            repository.getJobOrderWithItems(UUID.fromString(jobOrderId)).let {
                 if(it != null) {
                     jobOrder.value = it
 //                    model.value = it.jobOrder.entityJobOrderVoid ?: EntityJobOrderVoid(appPreferenceRepository.getUser()?.name)
@@ -54,7 +54,7 @@ constructor(
 
             jobOrder.value?.let {
                 it.jobOrder.entityJobOrderVoid = model.value
-                repository.void(it.jobOrder)
+//                repository.void(it.jobOrder)
                 dataState.value = DataState.Save(it.jobOrder.entityJobOrderVoid)
             }
         }
