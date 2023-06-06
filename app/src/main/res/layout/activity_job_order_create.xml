@@ -109,11 +109,11 @@
                 </TableLayout>
 
                 <com.google.android.material.divider.MaterialDivider
-
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
+
                 <include
                     android:id="@+id/inclServicesLegend"
                     layout="@layout/incl_legend_create_job_order"
@@ -252,7 +252,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
                     <TextView
-                        android:text="@{viewModel.discount.name + ` - ` + viewModel.discount.percentage + `%`}"
+                        android:text="@{viewModel.discount.name + ` - ` + viewModel.discount.value + `%`}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         tools:text="Birthday discount - 5.0%"/>

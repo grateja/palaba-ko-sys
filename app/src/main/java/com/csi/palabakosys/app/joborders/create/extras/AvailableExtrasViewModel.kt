@@ -66,7 +66,6 @@ constructor(
                 this.deletedAt = Instant.now()
             }
             this.selected = false
-//            this.quantity = 1
             dataState.value = DataState.UpdateService(this)
         }
     }

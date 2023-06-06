@@ -55,7 +55,7 @@ constructor(
     val amountToPay = MediatorLiveData<Float>().apply {
         fun update() {
             val _totalAmount = totalAmount.value?:0f
-            val _discountPercentage = discount.value?.percentage?:0f
+            val _discountPercentage = discount.value?.value?:0f
             val _discountInPeso = _discountPercentage * _totalAmount / 100f
             value = _totalAmount - _discountInPeso
         }
@@ -120,7 +120,7 @@ constructor(
     }
     val discountInPeso = MediatorLiveData<Float>().apply {
         fun update() {
-            val _percentage = discount.value?.percentage ?: 0f
+            val _percentage = discount.value?.value ?: 0f
             val _totalAmount = totalAmount.value?:0f
             value = _percentage * _totalAmount / 100
         }

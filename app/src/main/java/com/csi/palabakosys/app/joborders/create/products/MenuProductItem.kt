@@ -36,7 +36,7 @@ class MenuProductItem(
     val productType: EnumProductType,
 
     @ColumnInfo(name = "deleted_at")
-    var deletedAt: Instant? = null
+    var deletedAt: Instant? = null,
 ) : Parcelable {
     @IgnoredOnParcel
     @Ignore

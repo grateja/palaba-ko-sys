@@ -13,6 +13,6 @@ abstract class DaoProduct : BaseDao<EntityProduct> {
     @Query("SELECT * FROM products")
     abstract suspend fun getAll() : List<EntityProduct>
 
-    @Query("SELECT id, name, price, measure_unit, unit_per_serve, 1 as quantity, current_stock, product_type FROM products")
+    @Query("SELECT *, 1 as quantity FROM products WHERE deleted_at IS NULL")
     abstract suspend fun menuItems(): List<MenuProductItem>
 }

@@ -10,8 +10,6 @@ import java.util.*
 
 @Parcelize
 class MenuDeliveryProfile(
-//    val joDeliveryProfileId: UUID?,
-
     @ColumnInfo(name = "id")
     val deliveryProfileRefId: UUID,
 

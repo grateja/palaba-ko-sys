@@ -10,6 +10,7 @@ import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
+import com.csi.palabakosys.adapters.Adapter
 import com.csi.palabakosys.app.auth.AuthActionDialogActivity
 import com.csi.palabakosys.app.auth.LoginCredentials
 import com.csi.palabakosys.app.customers.CustomerMinimal
@@ -21,6 +22,8 @@ import com.csi.palabakosys.app.joborders.create.discount.MenuDiscount
 import com.csi.palabakosys.app.joborders.create.extras.JOSelectExtrasActivity
 import com.csi.palabakosys.app.joborders.create.extras.JobOrderExtrasItemAdapter
 import com.csi.palabakosys.app.joborders.create.extras.MenuExtrasItem
+import com.csi.palabakosys.app.joborders.create.packages.JOSelectPackageActivity
+import com.csi.palabakosys.app.joborders.create.packages.MenuJobOrderPackage
 import com.csi.palabakosys.app.joborders.preview.JobOrderPreviewActivity
 import com.csi.palabakosys.app.joborders.create.products.JOSelectProductsActivity
 import com.csi.palabakosys.app.joborders.create.products.JobOrderProductsItemAdapter
@@ -50,6 +53,8 @@ class JobOrderCreateActivity : AppCompatActivity() {
     private lateinit var binding: ActivityJobOrderCreateBinding
     private val viewModel: CreateJobOrderViewModel by viewModels()
 
+
+    private val packageLauncher = ActivityLauncher(this)
     private val servicesLauncher = ActivityLauncher(this)
     private val productsLauncher = ActivityLauncher(this)
     private val deliveryLauncher = ActivityLauncher(this)
@@ -63,6 +68,7 @@ class JobOrderCreateActivity : AppCompatActivity() {
     private val servicesAdapter = JobOrderServiceItemAdapter()
     private val productsAdapter = JobOrderProductsItemAdapter()
     private val extrasAdapter = JobOrderExtrasItemAdapter()
+    private val packageAdapter = Adapter<MenuJobOrderPackage>(R.layout.recycler_item_create_job_order_package)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,11 +92,16 @@ class JobOrderCreateActivity : AppCompatActivity() {
         binding.serviceItems.adapter = servicesAdapter
         binding.productItems.adapter = productsAdapter
         binding.extrasItems.adapter = extrasAdapter
+//        binding.packageItems.adapter = packageAdapter
 
         subscribeEvents()
     }
 
     private fun subscribeEvents() {
+        packageLauncher.onOk = {
+            val selected = it.data?.getParcelableArrayListExtra<MenuServiceItem>("services")?.toList()
+            viewModel.syncServices(selected)
+        }
         servicesLauncher.onOk = {
             val selected = it.data?.getParcelableArrayListExtra<MenuServiceItem>("services")?.toList()
             viewModel.syncServices(selected)
@@ -133,6 +144,10 @@ class JobOrderCreateActivity : AppCompatActivity() {
             }
         }
 
+//        packageAdapter.onItemClick = {
+//            viewModel.openPackages(it)
+//        }
+
         servicesAdapter.onItemClick = {
             viewModel.openServices(it)
         }
@@ -144,6 +159,10 @@ class JobOrderCreateActivity : AppCompatActivity() {
         extrasAdapter.onItemClick = {
             viewModel.openExtras(it)
         }
+
+//        binding.inclPackagesLegend.cardLegend.setOnClickListener {
+//            viewModel.openPackages(null)
+//        }
 
         binding.inclServicesLegend.cardLegend.setOnClickListener {
             viewModel.openServices(null)
@@ -164,6 +183,10 @@ class JobOrderCreateActivity : AppCompatActivity() {
         binding.inclDiscountLegend.cardLegend.setOnClickListener {
             viewModel.openDiscount()
         }
+
+//        viewModel.jobOrderPackage.observe(this, Observer {
+//            packageAdapter.setData(it)
+//        })
 
         viewModel.jobOrderServices.observe(this, Observer {
             servicesAdapter.setData(it.toMutableList())
@@ -189,6 +212,10 @@ class JobOrderCreateActivity : AppCompatActivity() {
 
         viewModel.dataState().observe(this, Observer {
             when(it) {
+                is CreateJobOrderViewModel.DataState.OpenPackages -> {
+                    openPackages()
+                    viewModel.resetState()
+                }
                 is CreateJobOrderViewModel.DataState.OpenServices -> {
                     openServices(it.list, it.item)
                     viewModel.resetState()
@@ -256,12 +283,9 @@ class JobOrderCreateActivity : AppCompatActivity() {
         authLauncher.launch(intent)
     }
 
-    private fun previewJobOrder(jobOrderId: UUID, customerId: UUID) {
-        val intent = Intent(this, JobOrderPreviewActivity::class.java).apply {
-            putExtra("jobOrderId", jobOrderId.toString())
-            putExtra("customerId", customerId.toString())
-        }
-        previewLauncher.launch(intent)
+    private fun openPackages() {
+        val intent = Intent(this, JOSelectPackageActivity::class.java)
+        packageLauncher.launch(intent)
     }
 
     private fun openServices(services: List<MenuServiceItem>?, itemPreset: MenuServiceItem?) {

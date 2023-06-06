@@ -3,6 +3,7 @@ package com.csi.palabakosys.room.entities
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
+import androidx.room.PrimaryKey
 import java.util.*
 
 @Entity(tableName = "job_order_extras")
@@ -25,10 +26,9 @@ data class EntityJobOrderExtras(
     @ColumnInfo(name = "category")
     var category: String?,
 
-    @Ignore
-    @ColumnInfo
-    val uuid: UUID? = null
-) : BaseEntity(uuid) {
-    constructor(jobOrderId: UUID?, extrasId: UUID, extrasName: String, price: Float, quantity: Int, category: String?)
-     : this(jobOrderId, extrasId, extrasName, price, quantity, category, null)
-}
+    @PrimaryKey(autoGenerate = false)
+    override var id: UUID,
+) : BaseEntity(id)/* {
+    constructor(jobOrderId: UUID?, extrasId: UUID, extrasName: String, price: Float, quantity: Int, isPackage: Boolean, category: String?)
+     : this(jobOrderId, extrasId, extrasName, price, quantity, isPackage, category, null)
+}*/

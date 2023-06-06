@@ -50,6 +50,12 @@ open class Adapter<R>(private val layoutId: Int) : RecyclerView.Adapter<Adapter.
         return list
     }
 
+    fun updateItem(item: R) {
+        notifyItemChanged(
+            list.indexOf(item)
+        )
+    }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -109,7 +115,7 @@ open class Adapter<R>(private val layoutId: Int) : RecyclerView.Adapter<Adapter.
     class ViewHolder<T>(private val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(model: T) {
             binding.setVariable(BR.viewModel, model)
-            binding.executePendingBindings()
+//            binding.executePendingBindings()
         }
     }
 }

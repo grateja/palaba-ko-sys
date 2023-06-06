@@ -7,9 +7,6 @@ import java.util.*
 
 @Entity(tableName = "job_order_delivery_charges")
 data class EntityJobOrderDeliveryCharge(
-//    @ColumnInfo(name = "job_order_id")
-//    val jobOrderId: UUID?,
-
     @ColumnInfo(name = "delivery_profile_id")
     val deliveryProfileId: UUID,
 
@@ -23,5 +20,5 @@ data class EntityJobOrderDeliveryCharge(
     val distance: Float,
 
     @PrimaryKey(autoGenerate = false)
-    override var id: UUID
+    override var id: UUID,
 ) : BaseEntity(id)

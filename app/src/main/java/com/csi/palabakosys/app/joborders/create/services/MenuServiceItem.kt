@@ -34,7 +34,7 @@ class MenuServiceItem(
     var used: Int,
 
     @ColumnInfo(name = "deleted_at")
-    var deletedAt: Instant? = null
+    var deletedAt: Instant? = null,
 ) : Parcelable {
 
     @IgnoredOnParcel

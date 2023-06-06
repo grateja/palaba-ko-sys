@@ -3,6 +3,7 @@ package com.csi.palabakosys.app.joborders.create.discount
 import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Ignore
+import com.csi.palabakosys.model.DiscountTypeEnum
 import com.csi.palabakosys.model.EnumDiscountApplicable
 //import com.csi.palabakosys.model.DiscountTypeEnum
 import kotlinx.parcelize.IgnoredOnParcel
@@ -14,17 +15,19 @@ import java.util.*
 data class MenuDiscount(
     @ColumnInfo(name = "id")
     val discountRefId: UUID?,
-    val name: String,
-    val percentage: Float,
 
-//    @ColumnInfo(name = "discount_type")
-//    val discountType: DiscountTypeEnum,
+    val name: String,
+
+    val value: Float,
 
     @ColumnInfo(name = "applicable_to")
     val applicableToIds: String,
 
+    @ColumnInfo(name = "discount_type")
+    val discountType: DiscountTypeEnum,
+
     @ColumnInfo(name = "deleted_at")
-    var deletedAt: Instant?
+    var deletedAt: Instant?,
 ) : Parcelable {
     @Ignore
     @IgnoredOnParcel
@@ -41,7 +44,7 @@ data class MenuDiscount(
     }
 
     private fun compute(amount: Float) : Float {
-        return (percentage / 100) * amount
+        return (value / 100) * amount
 //        return if(discountType == DiscountTypeEnum.FIXED) {
 //            if(amount - value < 0f) {
 //                return 0f

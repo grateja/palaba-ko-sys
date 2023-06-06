@@ -1,6 +1,7 @@
 package com.csi.palabakosys.room.entities
 
 import androidx.room.*
+import com.csi.palabakosys.model.DiscountTypeEnum
 //import com.csi.palabakosys.model.DiscountTypeEnum
 import java.util.*
 
@@ -11,14 +12,13 @@ data class EntityJobOrderDiscount(
 
     val name: String,
 
-    val percentage: Float,
+    val value: Float,
 
-//    @ColumnInfo(name = "discount_type")
-//    val discountType: DiscountTypeEnum,
+    val discountType: DiscountTypeEnum,
 
     @ColumnInfo(name = "applicable_to")
     val applicableToIds: String,
 
     @PrimaryKey(autoGenerate = false)
-    override var id: UUID
+    override var id: UUID,
 ) : BaseEntity(id)

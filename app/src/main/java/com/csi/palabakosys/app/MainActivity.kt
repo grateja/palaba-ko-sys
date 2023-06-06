@@ -49,6 +49,8 @@ class MainActivity : EndingActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        mainViewModel
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.btnTest.setOnClickListener {
             val intent = Intent(this, SelectCustomerActivity::class.java)

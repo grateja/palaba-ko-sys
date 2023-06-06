@@ -1,7 +1,6 @@
 package com.csi.palabakosys.di
 
 import android.content.Context
-import com.csi.palabakosys.preferences.AppPreferenceRepository
 import com.csi.palabakosys.room.dao.*
 import com.csi.palabakosys.room.db.MainDatabase
 import dagger.Module
@@ -74,6 +73,12 @@ object RoomModule {
     @Provides
     fun provideDaoJobOrder(mainDatabase: MainDatabase) : DaoJobOrder {
         return mainDatabase.daoJobOrder()
+    }
+
+    @Singleton
+    @Provides
+    fun provideDaoJobOrderPackage(mainDatabase: MainDatabase) : DaoPackage {
+        return mainDatabase.daoJobOrderPackage()
     }
 //    @Provides
 //    fun provideDaoJobOrderService(mainDatabase: MainDatabase) : DaoJobOrderService {

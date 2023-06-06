@@ -3,6 +3,7 @@ package com.csi.palabakosys.room.entities
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
+import androidx.room.PrimaryKey
 import com.csi.palabakosys.model.EnumProductType
 import com.csi.palabakosys.util.MeasureUnit
 import java.util.*
@@ -33,10 +34,9 @@ data class EntityJobOrderProduct(
     @ColumnInfo(name = "product_type")
     var productType: EnumProductType,
 
-    @Ignore
-    @ColumnInfo
-    val uuid: UUID? = null
-) : BaseEntity(uuid) {
-    constructor(jobOrderId: UUID?, productId: UUID, productName: String, price: Float, measureUnit: MeasureUnit, unitPerServe: Float, quantity: Int, productType: EnumProductType)
-     : this(jobOrderId, productId, productName, price, measureUnit, unitPerServe, quantity, productType, null)
-}
+    @PrimaryKey(autoGenerate = false)
+    override var id: UUID,
+) : BaseEntity(id)/* {
+    constructor(jobOrderId: UUID?, productId: UUID, productName: String, price: Float, measureUnit: MeasureUnit, unitPerServe: Float, quantity: Int, isPackage: Boolean, productType: EnumProductType)
+     : this(jobOrderId, productId, productName, price, measureUnit, unitPerServe, quantity, isPackage, productType, null)
+}*/

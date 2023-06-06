@@ -1,15 +1,11 @@
 package com.csi.palabakosys.room.db
 
 import android.content.Context
-import androidx.room.Database
-import androidx.room.Room
-import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
+import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.csi.palabakosys.room.dao.*
 import com.csi.palabakosys.room.db.seeder.DatabaseSeeder
 import com.csi.palabakosys.room.entities.*
-import com.csi.palabakosys.room.migrations.AddColumnPaymentVoid
 import com.csi.palabakosys.util.*
 import com.csi.palabakosys.util.converters.*
 
@@ -20,24 +16,27 @@ import com.csi.palabakosys.util.converters.*
     EntityMachineRemarks::class,
     EntityMachineUsage::class,
     EntityService::class,
-//    EntityServiceDry::class,
     EntityExtras::class,
     EntityDeliveryProfile::class,
-//    EntityServiceOther::class,
     EntityProduct::class,
     EntityJobOrder::class,
+//    EntityJobOrderPackage::class,
     EntityJobOrderService::class,
     EntityJobOrderProduct::class,
     EntityJobOrderExtras::class,
     EntityJobOrderDeliveryCharge::class,
     EntityJobOrderDiscount::class,
     EntityJobOrderPayment::class,
+    EntityPackage::class,
+    EntityPackageService::class,
     EntityCustomer::class,
     EntityExpense::class,
     EntityInventoryLog::class,
     EntityDiscount::class,
     EntityCashlessProvider::class
-], version = 6)
+], version = 1,
+    exportSchema = true,
+)
 @TypeConverters(
     InstantConverters::class,
     UUIDConverter::class,
@@ -50,6 +49,7 @@ import com.csi.palabakosys.util.converters.*
     ProductTypeConverter::class,
     ServiceTypeConverter::class,
     DiscountApplicableConverter::class,
+    DiscountTypeConverter::class,
     ActionPermissionConverter::class,
 )
 abstract class MainDatabase : RoomDatabase() {
@@ -63,13 +63,13 @@ abstract class MainDatabase : RoomDatabase() {
     abstract fun daoExtras() : DaoExtras
     abstract fun daoProduct() : DaoProduct
     abstract fun daoJobOrder() : DaoJobOrder
+    abstract fun daoJobOrderPackage(): DaoPackage
     abstract fun daoJobOrderPayment() : DaoJobOrderPayment
     abstract fun daoCustomer() : DaoCustomer
     abstract fun daoExpense() : DaoExpense
     abstract fun daoInventoryLog() : DaoInventoryLog
     abstract fun daoDiscount() : DaoDiscount
     abstract fun daoCashlessProvider() : DaoCashlessProvider
-
     abstract fun daoJobOrderQueues() : DaoJobOrderQueues
     abstract fun daoRemote() : DaoRemote
 
@@ -88,7 +88,10 @@ abstract class MainDatabase : RoomDatabase() {
                         }
                     })
                     .addMigrations(
-                        AddColumnPaymentVoid(),
+//                        AddColumnPaymentVoid(),
+//                        CreateTablePackage(),
+//                        CreateTablePackageService(),
+//                        AddColumnsIsPackage()
                     )
                     .build()
             }

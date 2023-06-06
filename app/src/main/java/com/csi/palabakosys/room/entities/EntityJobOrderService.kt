@@ -1,9 +1,6 @@
 package com.csi.palabakosys.room.entities
 
-import androidx.room.ColumnInfo
-import androidx.room.Embedded
-import androidx.room.Entity
-import androidx.room.Ignore
+import androidx.room.*
 import java.util.*
 
 @Entity(tableName = "job_order_services")
@@ -29,22 +26,9 @@ data class EntityJobOrderService(
     @Embedded
     var serviceRef: EntityServiceRef,
 
-    @Ignore
-    @ColumnInfo
-    val uuid: UUID? = null
-) : BaseEntity(uuid) {
-    constructor(jobOrderId: UUID?, serviceId: UUID, serviceName: String, price: Float, quantity: Int, used: Int, serviceRef: EntityServiceRef) :
-            this(jobOrderId, serviceId, serviceName, price, quantity, used, serviceRef, null)
-
-
-//    @ColumnInfo(name = "cash_back")
-//    var cashBack: Float = 0f
-
-//    fun pulse() : Int {
-//        return if(service.machineType == MachineType.REGULAR_DRYER || service.machineType == MachineType.TITAN_DRYER) {
-//            service.minutes / 10
-//        } else {
-//            service.washType?.pulse ?: 0
-//        }
-//    }
-}
+    @PrimaryKey(autoGenerate = false)
+    override var id: UUID,
+) : BaseEntity(id)/* {
+    constructor(jobOrderId: UUID?, serviceId: UUID, serviceName: String, price: Float, quantity: Int, used: Int, isPackage: Boolean, serviceRef: EntityServiceRef) :
+            this(jobOrderId, serviceId, serviceName, price, quantity, used, isPackage, serviceRef, null)
+}*/
