@@ -3,6 +3,7 @@ package com.csi.palabakosys.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.csi.palabakosys.model.Rule
 import com.csi.palabakosys.room.entities.BaseEntity
 import com.csi.palabakosys.room.repository.IRepository
 import com.csi.palabakosys.util.*
@@ -31,6 +32,20 @@ open class CreateViewModel<T : BaseEntity> (private val iRepository: IRepository
 
     fun requestExit() {
         dataState.value = DataState.RequestExit(promptPass)
+    }
+
+    open fun save() {
+        model.value?.let {
+            viewModelScope.launch {
+                if(validation.value?.isInvalid() == true) {
+                    return@launch
+                }
+                iRepository.save(it).let {
+                    model.value = it
+                }
+                dataState.value = DataState.Save(it)
+            }
+        }
     }
 
     protected suspend fun get(id: UUID?, initialModel: T) : T {

@@ -24,7 +24,7 @@ constructor(
         }
     }
 
-    fun save() {
+    override fun save() {
         model.value?.let {
             val inputValidation = InputValidation()
             inputValidation.addRules("name", it.name.toString(), arrayOf(Rule.Required))

@@ -15,6 +15,12 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class JOSelectPackageActivity : AppCompatActivity() {
+    companion object {
+        const val SERVICES = "services"
+        const val PRODUCTS = "products"
+        const val EXTRAS = "extras"
+    }
+
     private lateinit var binding: ActivityJoSelectPackageBinding
 
     private val viewModel: AvailablePackageViewModel by viewModels()
@@ -58,8 +64,8 @@ class JOSelectPackageActivity : AppCompatActivity() {
                     viewModel.resetState()
                 }
                 is AvailablePackageViewModel.DataState.Submit -> {
-                    println("services size")
-                    println(it.services?.size)
+//                    println("services size")
+//                    println(it.services?.size)
                     submit(it)
                     viewModel.resetState()
                 }
@@ -87,7 +93,9 @@ class JOSelectPackageActivity : AppCompatActivity() {
 
     private fun submit(data: AvailablePackageViewModel.DataState.Submit) {
         setResult(RESULT_OK, Intent().apply {
-            putParcelableArrayListExtra("services", data.services?.let { ArrayList(it) })
+            putParcelableArrayListExtra(SERVICES, data.services?.let { ArrayList(it) })
+            putParcelableArrayListExtra(EXTRAS, data.extras?.let { ArrayList(it) })
+            putParcelableArrayListExtra(PRODUCTS, data.products?.let { ArrayList(it) })
         })
         finish()
     }

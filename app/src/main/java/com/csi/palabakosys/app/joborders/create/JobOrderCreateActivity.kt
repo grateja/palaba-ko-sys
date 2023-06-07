@@ -98,9 +98,16 @@ class JobOrderCreateActivity : AppCompatActivity() {
     }
 
     private fun subscribeEvents() {
-        packageLauncher.onOk = {
-            val selected = it.data?.getParcelableArrayListExtra<MenuServiceItem>("services")?.toList()
-            viewModel.syncServices(selected)
+        packageLauncher.onOk = { result ->
+            result.data?.getParcelableArrayListExtra<MenuServiceItem>(JOSelectPackageActivity.SERVICES)?.toList().let {
+                viewModel.syncServices(it)
+            }
+            result.data?.getParcelableArrayListExtra<MenuExtrasItem>(JOSelectPackageActivity.EXTRAS)?.toList().let {
+                viewModel.syncExtras(it)
+            }
+            result.data?.getParcelableArrayListExtra<MenuProductItem>(JOSelectPackageActivity.PRODUCTS)?.toList().let {
+                viewModel.syncProducts(it)
+            }
         }
         servicesLauncher.onOk = {
             val selected = it.data?.getParcelableArrayListExtra<MenuServiceItem>("services")?.toList()

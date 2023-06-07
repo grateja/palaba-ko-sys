@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".app.expenses.edit.ExpenseAddEditActivity">
+    <data>
+        <variable
+            name="viewModel"
+            type="com.csi.palabakosys.app.expenses.edit.ExpenseAddEditViewModel" />
+    </data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/labelRemarks"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Remarks"
+                app:errorEnabled="true"
+                app:errorText="@{viewModel.validation.get(`remarks`)}">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textRemarks"
+                    android:text="@={viewModel.model.remarks}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`remarks`)}"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/labelAmount"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Amount"
+                app:errorEnabled="true"
+                app:errorText="@{viewModel.validation.get(`amount`)}">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textAmount"
+                    android:text="@={viewModel.model.amount + ``}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`amount`)}"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <Button
+                android:id="@+id/buttonSave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/save"/>
+        </LinearLayout>
+    </LinearLayout>
+</layout>

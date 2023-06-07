@@ -10,7 +10,7 @@ import com.csi.palabakosys.model.EnumPaymentMethod
 import com.csi.palabakosys.model.Rule
 import com.csi.palabakosys.preferences.AppPreferenceRepository
 import com.csi.palabakosys.room.entities.*
-import com.csi.palabakosys.room.repository.CashlessProvidersRepository
+//import com.csi.palabakosys.room.repository.CashlessProvidersRepository
 import com.csi.palabakosys.room.repository.JobOrderRepository
 import com.csi.palabakosys.room.repository.PaymentRepository
 import com.csi.palabakosys.util.DataState
@@ -27,7 +27,7 @@ constructor(
     private val preferenceRepository: AppPreferenceRepository,
     private val repository: PaymentRepository,
     private val jobOrderRepository: JobOrderRepository,
-    private val cashlessProviderRepository: CashlessProvidersRepository
+//    private val cashlessProviderRepository: CashlessProvidersRepository
 ) : ViewModel() {
     var jobOrderId: UUID? = null
     var customerId: UUID? = null
@@ -223,16 +223,16 @@ constructor(
     }
     fun getCashlessProviders() {
         viewModelScope.launch {
-            cashlessProviderRepository.getAll("").let { _list ->
+//            cashlessProviderRepository.getAll("").let { _list ->
 //                cashlessAdapter.setData(_list.map {RecyclerItem(it)})
-            }
+//            }
         }
     }
 
-    fun setCashlessProvider(provider: EntityCashlessProvider) {
-        cashlessProvider.value = provider.name
-        println("Cashless provider")
-    }
+//    fun setCashlessProvider(provider: EntityCashlessProvider) {
+//        cashlessProvider.value = provider.name
+//        println("Cashless provider")
+//    }
 
     fun save() {
 //        var cashless : EntityCashless? = null

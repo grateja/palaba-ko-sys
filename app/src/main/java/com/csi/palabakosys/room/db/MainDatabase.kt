@@ -29,11 +29,13 @@ import com.csi.palabakosys.util.converters.*
     EntityJobOrderPayment::class,
     EntityPackage::class,
     EntityPackageService::class,
+    EntityPackageExtras::class,
+    EntityPackageProduct::class,
     EntityCustomer::class,
     EntityExpense::class,
     EntityInventoryLog::class,
     EntityDiscount::class,
-    EntityCashlessProvider::class
+//    EntityCashlessProvider::class
 ], version = 1,
     exportSchema = true,
 )
@@ -69,7 +71,7 @@ abstract class MainDatabase : RoomDatabase() {
     abstract fun daoExpense() : DaoExpense
     abstract fun daoInventoryLog() : DaoInventoryLog
     abstract fun daoDiscount() : DaoDiscount
-    abstract fun daoCashlessProvider() : DaoCashlessProvider
+//    abstract fun daoCashlessProvider() : DaoCashlessProvider
     abstract fun daoJobOrderQueues() : DaoJobOrderQueues
     abstract fun daoRemote() : DaoRemote
 

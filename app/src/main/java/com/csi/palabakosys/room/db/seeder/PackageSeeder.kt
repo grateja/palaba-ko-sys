@@ -7,8 +7,8 @@ import kotlinx.coroutines.runBlocking
 class PackageSeeder(private val daoPackage: DaoPackage) : EntitySeederImpl<EntityPackage>(daoPackage) {
     override fun items(): List<EntityPackage> {
         return listOf(
-            EntityPackage("Package 1", "8KG Regular Wash/Dry/Fold", null),
-            EntityPackage("Package 2", "12KG Regular Wash/Dry/Fold", null),
+            EntityPackage("Regular Package", "8KG Regular Wash/Dry/Fold"),
+            EntityPackage("Titan Package", "12KG Regular Wash/Dry/Fold"),
         )
     }
 }

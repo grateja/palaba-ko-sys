@@ -8,5 +8,6 @@ import java.util.*
 data class LoginCredentials(
     val email: String?,
     val password: String?,
-    val userId: UUID
+    val userId: UUID,
+    val userName: String?
 ) : Parcelable

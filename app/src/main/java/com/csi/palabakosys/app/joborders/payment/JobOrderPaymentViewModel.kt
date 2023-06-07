@@ -9,7 +9,7 @@ import com.csi.palabakosys.model.EnumPaymentMethod
 import com.csi.palabakosys.model.Rule
 import com.csi.palabakosys.preferences.AppPreferenceRepository
 import com.csi.palabakosys.room.entities.EntityCashless
-import com.csi.palabakosys.room.entities.EntityCashlessProvider
+//import com.csi.palabakosys.room.entities.EntityCashlessProvider
 import com.csi.palabakosys.room.entities.EntityJobOrderPayment
 import com.csi.palabakosys.room.entities.EntityJobOrderPaymentFull
 import com.csi.palabakosys.room.repository.JobOrderRepository

@@ -100,11 +100,11 @@ object RoomModule {
         return mainDatabase.daoDiscount()
     }
 
-    @Singleton
-    @Provides
-    fun provideDaoCashlessProvider(mainDatabase: MainDatabase) : DaoCashlessProvider {
-        return mainDatabase.daoCashlessProvider()
-    }
+//    @Singleton
+//    @Provides
+//    fun provideDaoCashlessProvider(mainDatabase: MainDatabase) : DaoCashlessProvider {
+//        return mainDatabase.daoCashlessProvider()
+//    }
 
     @Singleton
     @Provides

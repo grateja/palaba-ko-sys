@@ -34,7 +34,7 @@ constructor(
         }
     }
 
-    fun save() {
+    override fun save() {
         model.value?.let {
             val inputValidation = InputValidation()
             inputValidation.addRules("name", it.name.toString(), arrayOf(Rule.Required))
@@ -48,14 +48,16 @@ constructor(
                         inputValidation.addError("crn", "CRN Conflict with ${customer.name} : ${customer.crn}")
                     }
                 }
-                if(inputValidation.isInvalid()) {
-                    validation.value = inputValidation
-                    return@launch
-                }
-                repository.save(it)?.let { customer ->
-                    model.value = customer
-                    dataState.value = DataState.Save(customer)
-                }
+                validation.value = inputValidation
+                super.save()
+//                if(inputValidation.isInvalid()) {
+//                    validation.value = inputValidation
+//                    return@launch
+//                }
+//                repository.save(it)?.let { customer ->
+//                    model.value = customer
+//                    dataState.value = DataState.Save(customer)
+//                }
             }
         }
     }

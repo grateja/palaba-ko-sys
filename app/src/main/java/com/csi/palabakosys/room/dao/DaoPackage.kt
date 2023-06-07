@@ -6,9 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.csi.palabakosys.app.joborders.create.packages.MenuJobOrderPackage
 import com.csi.palabakosys.app.joborders.create.services.MenuServiceItem
-import com.csi.palabakosys.room.entities.EntityPackage
-import com.csi.palabakosys.room.entities.EntityPackageService
-import com.csi.palabakosys.room.entities.EntityPackageWithItems
+import com.csi.palabakosys.room.entities.*
 import java.util.*
 
 @Dao
@@ -21,6 +19,12 @@ abstract class DaoPackage : BaseDao<EntityPackage> {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract suspend fun syncServices(packageServices: List<EntityPackageService>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract suspend fun syncExtras(packageExtras: MutableList<EntityPackageExtras>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract suspend fun syncProducts(packageProducts: MutableList<EntityPackageProduct>)
 
     @Query("SELECT * FROM packages WHERE id IN (:ids) AND deleted_at IS NULL")
     abstract suspend fun getByIds(ids: List<UUID>?) : List<EntityPackageWithItems>

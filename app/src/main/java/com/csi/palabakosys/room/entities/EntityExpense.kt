@@ -2,6 +2,7 @@ package com.csi.palabakosys.room.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import java.util.UUID
 
 @Entity(tableName = "expenses")
 class EntityExpense : BaseEntity() {
@@ -9,6 +10,6 @@ class EntityExpense : BaseEntity() {
     var amount: Float? = 0f
     var tag: String? = null
 
-    @ColumnInfo(name = "staff_name")
-    var staffName: String? = null
+    @ColumnInfo(name = "user_id")
+    var userId: UUID? = null
 }

@@ -23,6 +23,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.window.layout.WindowMetricsCalculator
 import com.csi.palabakosys.R
+import com.csi.palabakosys.app.expenses.ExpensesActivity
 import com.csi.palabakosys.app.joborders.create.customer.SelectCustomerActivity
 import com.csi.palabakosys.app.joborders.list.JobOrderListActivity
 import com.csi.palabakosys.app.machines.MachinesActivity
@@ -92,6 +93,11 @@ class MainActivity : EndingActivity() {
 //                }
 //            }
 
+        }
+
+        binding.btnExpenses.setOnClickListener {
+            val intent = Intent(this, ExpensesActivity::class.java)
+            startActivity(intent)
         }
 
         computeWindowSizeClasses()

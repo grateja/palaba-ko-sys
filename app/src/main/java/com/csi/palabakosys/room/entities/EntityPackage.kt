@@ -12,6 +12,6 @@ data class EntityPackage(
     @ColumnInfo(name = "description")
     val description: String?,
 
-    @ColumnInfo(name = "delivery_id")
-    val deliveryId: UUID?,
+//    @ColumnInfo(name = "delivery_id")
+//    val deliveryId: UUID?,
 ) : BaseEntity()

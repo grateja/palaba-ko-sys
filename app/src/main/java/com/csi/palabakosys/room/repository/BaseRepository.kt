@@ -7,7 +7,7 @@ import java.time.Instant
 abstract class BaseRepository<Entity : BaseEntity>(
     private val crudDao: BaseDao<Entity>
 ) : IRepository<Entity> {
-    suspend fun save(entity: Entity) : Entity? {
+    override suspend fun save(entity: Entity) : Entity? {
         try {
             entity.updatedAt = Instant.now()
             crudDao.save(entity)

@@ -52,7 +52,7 @@ constructor(
                     authRepository.oneTimeLogin(email, password).let {
                         if(it != null) {
                             _dataState.value = DataState.Save(
-                                LoginCredentials(it.email, it.password, it.id)
+                                LoginCredentials(it.email, it.password, it.id, it.name)
                             )
                         } else {
                             _dataState.value = DataState.Invalidate("Invalid login credentials")
