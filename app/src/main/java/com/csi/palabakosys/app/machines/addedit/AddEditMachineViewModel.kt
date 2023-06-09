@@ -1,4 +1,4 @@
-package com.csi.palabakosys.viewmodels
+package com.csi.palabakosys.app.machines.addedit
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -7,13 +7,12 @@ import com.csi.palabakosys.room.entities.EntityMachine
 import com.csi.palabakosys.room.repository.MachineRepository
 import com.csi.palabakosys.util.DataState
 import com.csi.palabakosys.util.InputValidation
-import com.csi.palabakosys.util.isUUID
 import com.csi.palabakosys.util.toUUID
+import com.csi.palabakosys.viewmodels.CreateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import okhttp3.*
 import java.io.IOException
-import java.util.UUID
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -48,7 +47,7 @@ constructor(
             viewModelScope.launch {
                 repository.save(it)?.let { product ->
                     model.value = product
-                    dataState.value = DataState.Save(product)
+                    dataState.value = DataState.ConfirmSave(product)
                 }
             }
         }

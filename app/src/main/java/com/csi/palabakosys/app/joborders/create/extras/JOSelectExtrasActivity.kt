@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
+import com.csi.palabakosys.app.joborders.create.JobOrderCreateActivity
 import com.csi.palabakosys.app.joborders.create.shared_ui.ModifyQuantityModalFragment
 import com.csi.palabakosys.app.joborders.create.shared_ui.QuantityModel
 import com.csi.palabakosys.databinding.ActivityJoSelectExtrasBinding
@@ -31,12 +32,12 @@ class JOSelectExtrasActivity : AppCompatActivity() {
 
         subscribeEvents()
 
-        val extras = intent.getParcelableArrayListExtra<MenuExtrasItem?>("extras")
-        println("preset")
-        println(extras?.size)
+//        val extras = intent.getParcelableArrayListExtra<MenuExtrasItem?>("extras")
+//        println("preset")
+//        println(extras?.size)
 
-        viewModel.setPreSelectedServices(intent.getParcelableArrayListExtra<MenuExtrasItem?>("extras")?.toList())
-        intent.getParcelableExtra<MenuExtrasItem>("extra")?.let {
+//        viewModel.setPreSelectedServices(intent.getParcelableArrayListExtra<MenuExtrasItem?>("extras")?.toList())
+        intent.getParcelableExtra<MenuExtrasItem>(JobOrderCreateActivity.ITEM_PRESET_EXTRA)?.let {
             itemClick(it)
         }
     }
@@ -51,7 +52,7 @@ class JOSelectExtrasActivity : AppCompatActivity() {
         viewModel.availableExtras.observe(this, Observer {
             extrasAdapter.setData(it)
             viewModel.setPreSelectedServices(
-                intent.getParcelableArrayListExtra<MenuExtrasItem?>("extras")?.toList()
+                intent.getParcelableArrayListExtra<MenuExtrasItem?>(JobOrderCreateActivity.PAYLOAD_EXTRA)?.toList()
             )
         })
 
@@ -91,7 +92,8 @@ class JOSelectExtrasActivity : AppCompatActivity() {
 
     private fun submit(list: List<MenuExtrasItem>) {
         setResult(RESULT_OK, Intent().apply {
-            putParcelableArrayListExtra("extras", ArrayList(list))
+            action = intent.action
+            putParcelableArrayListExtra(JobOrderCreateActivity.PAYLOAD_EXTRA, ArrayList(list))
         })
         finish()
     }

@@ -6,7 +6,6 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.csi.palabakosys.room.dao.*
 import com.csi.palabakosys.room.db.seeder.DatabaseSeeder
 import com.csi.palabakosys.room.entities.*
-import com.csi.palabakosys.util.*
 import com.csi.palabakosys.util.converters.*
 
 @Database(entities = [

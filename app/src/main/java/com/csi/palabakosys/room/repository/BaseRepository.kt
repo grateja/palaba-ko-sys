@@ -18,9 +18,13 @@ abstract class BaseRepository<Entity : BaseEntity>(
         return null
     }
 
-    override suspend fun delete(entity: Entity) : Boolean {
+    override suspend fun delete(entity: Entity, permanent: Boolean) : Boolean {
         try {
-            crudDao.delete(entity)
+            if(permanent) {
+                crudDao.deletePermanent(entity)
+            } else {
+                crudDao.softDelete(entity)
+            }
             return true
         } catch (e: Exception) {
             e.printStackTrace()

@@ -21,7 +21,7 @@ class JobOrderCancelActivity : AppCompatActivity() {
 
     companion object {
         const val JOB_ORDER_ID = "jobOrderId"
-        const val ACTION_DELETE_JOB_ORDER = "deleteJobOrder"
+//        const val ACTION_DELETE_JOB_ORDER = "deleteJobOrder"
     }
 
     private lateinit var binding: ActivityJobOrderCancelBinding
@@ -49,8 +49,9 @@ class JobOrderCancelActivity : AppCompatActivity() {
     private fun subscribeListeners() {
         viewModel.dataState.observe(this, Observer {
             when(it) {
-                is DataState.Save -> {
-                    setResult(RESULT_OK, Intent(ACTION_DELETE_JOB_ORDER).apply {
+                is DataState.ConfirmSave -> {
+                    setResult(RESULT_OK, Intent().apply {
+                        action = intent.action
                         putExtra(JOB_ORDER_ID, it.data.toString())
                     })
                     finish()

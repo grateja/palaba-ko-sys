@@ -4,7 +4,7 @@ import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Ignore
 import com.csi.palabakosys.model.EnumProductType
-import com.csi.palabakosys.util.MeasureUnit
+import com.csi.palabakosys.model.EnumMeasureUnit
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import java.time.Instant
@@ -22,7 +22,7 @@ class MenuProductItem(
     val price: Float,
 
     @ColumnInfo(name = "measure_unit")
-    val measureUnit: MeasureUnit,
+    val measureUnit: EnumMeasureUnit,
 
     @ColumnInfo(name = "unit_per_serve")
     val unitPerServe: Float,

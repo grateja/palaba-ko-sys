@@ -29,7 +29,7 @@ constructor(
 //    val dataState: LiveData<MainViewStateEvent>
 //        get() = _dataState
 
-    private val activeUser = appPreferenceRepository.activeUser
+//    private val activeUser = appPreferenceRepository.activeUser
     init {
 
         viewModelScope.launch {
@@ -70,14 +70,14 @@ constructor(
             }
 
             if(admin != null) {
-                activeUser.value.let {
+//                activeUser.value.let {
 //                    if(it == null) {
 //                        _dataState.value = MainViewStateEvent.LoginRequired
 //                    } else {
 //                        _dataState.value = MainViewStateEvent.AllSet(it)
 //                        menuAdapter.setRole(it.role)
 //                    }
-                }
+//                }
             }
         }
     }

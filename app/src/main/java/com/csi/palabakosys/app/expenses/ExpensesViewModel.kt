@@ -1,12 +1,10 @@
 package com.csi.palabakosys.app.expenses
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.csi.palabakosys.room.entities.EntityExpense
+import androidx.lifecycle.*
 import com.csi.palabakosys.room.repository.ExpensesRepository
+import com.csi.palabakosys.viewmodels.ListViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -15,23 +13,26 @@ class ExpensesViewModel
 
 @Inject
 constructor(
-    private val expensesRepository: ExpensesRepository
-) : ViewModel() {
-    private val _expenses = MutableLiveData<List<EntityExpense>>()
-    val expenses: LiveData<List<EntityExpense>> = _expenses
-
-    val keyword = MutableLiveData("")
-
-    fun filter() {
-        viewModelScope.launch {
-            keyword.value?.let {
-                _expenses.value = expensesRepository.getAll(it)
-            }
-        }
-    }
+    private val repository: ExpensesRepository
+) : ListViewModel<ExpenseItemFull>() {
 
     fun setKeyword(keyword: String?) {
         this.keyword.value = keyword
-        this.filter()
+        filter()
+    }
+
+    fun filter() {
+        job?.let {
+            it.cancel()
+            _loading.value = false
+        }
+
+        job = viewModelScope.launch {
+            _loading.value = true
+            delay(500)
+            keyword.value?.let {
+                items.value = repository.filter(it)
+            }
+        }
     }
 }

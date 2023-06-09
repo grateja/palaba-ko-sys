@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
+import com.csi.palabakosys.app.joborders.create.JobOrderCreateActivity
 import com.csi.palabakosys.app.joborders.create.shared_ui.ModifyQuantityModalFragment
 import com.csi.palabakosys.app.joborders.create.shared_ui.QuantityModel
 import com.csi.palabakosys.databinding.ActivityJoSelectProductsBinding
@@ -31,7 +32,7 @@ class JOSelectProductsActivity : AppCompatActivity() {
 
         subscribeEvents()
 
-        intent.getParcelableExtra<MenuProductItem>("product")?.let {
+        intent.getParcelableExtra<MenuProductItem>(JobOrderCreateActivity.ITEM_PRESET_EXTRA)?.let {
             itemClick(it)
         }
     }
@@ -46,7 +47,7 @@ class JOSelectProductsActivity : AppCompatActivity() {
         }
         viewModel.availableProducts.observe(this, Observer {
             productsAdapter.setData(it)
-            viewModel.setPreselectedProducts(intent.getParcelableArrayListExtra<MenuProductItem?>("products")?.toList())
+            viewModel.setPreselectedProducts(intent.getParcelableArrayListExtra<MenuProductItem?>(JobOrderCreateActivity.PAYLOAD_EXTRA)?.toList())
         })
 
         viewModel.dataState.observe(this, Observer {
@@ -87,7 +88,8 @@ class JOSelectProductsActivity : AppCompatActivity() {
 
     private fun submit(list: List<MenuProductItem>) {
         setResult(RESULT_OK, Intent().apply {
-            putParcelableArrayListExtra("products", ArrayList(list))
+            action = intent.action
+            putParcelableArrayListExtra(JobOrderCreateActivity.PAYLOAD_EXTRA, ArrayList(list))
         })
         finish()
     }

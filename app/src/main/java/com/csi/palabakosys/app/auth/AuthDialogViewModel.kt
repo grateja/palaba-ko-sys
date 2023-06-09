@@ -6,8 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.csi.palabakosys.app.preferences.user.AuthRepository
 import com.csi.palabakosys.model.Rule
-import com.csi.palabakosys.preferences.AppPreferenceRepository
-import com.csi.palabakosys.room.repository.UserRepository
 import com.csi.palabakosys.util.DataState
 import com.csi.palabakosys.util.InputValidation
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -51,7 +49,7 @@ constructor(
                 } else {
                     authRepository.oneTimeLogin(email, password).let {
                         if(it != null) {
-                            _dataState.value = DataState.Save(
+                            _dataState.value = DataState.ConfirmSave(
                                 LoginCredentials(it.email, it.password, it.id, it.name)
                             )
                         } else {

@@ -1,6 +1,6 @@
 package com.csi.palabakosys.model
 
-enum class ActionPermissionEnum(val id: Int, val description: String) {
+enum class EnumActionPermission(val id: Int, val description: String) {
     ALL(0, "Full access"),
     BASIC(1, "All basic operations"),
     VIEW_DAILY_REPORTS(2, "View sales reports"),
@@ -15,25 +15,25 @@ enum class ActionPermissionEnum(val id: Int, val description: String) {
     }
 
     companion object {
-        private fun fromId(id: Int?) : ActionPermissionEnum? {
+        private fun fromId(id: Int?) : EnumActionPermission? {
             return values().find {
                 it.id == id
             }
         }
 
-        private fun fromIds(ids: List<Int>) : List<ActionPermissionEnum> {
+        private fun fromIds(ids: List<Int>) : List<EnumActionPermission> {
             return ids.map {
                 fromId(it)!!
             }
         }
 
-        fun fromIds(ids: String?) : List<ActionPermissionEnum> {
+        fun fromIds(ids: String?) : List<EnumActionPermission> {
             return ids?.split(",")?.map{ it.toInt() }?.let {
                 fromIds(it)
             } ?: listOf()
         }
 
-        fun toIds(permissions: List<ActionPermissionEnum>) : String {
+        fun toIds(permissions: List<EnumActionPermission>) : String {
             return permissions.joinToString(",") { it.id.toString() }
         }
     }

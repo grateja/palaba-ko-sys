@@ -1,4 +1,4 @@
-package com.csi.palabakosys.util
+package com.csi.palabakosys.model
 
 enum class CRUDActionEnum(val value: String) {
     CREATE("Create"),

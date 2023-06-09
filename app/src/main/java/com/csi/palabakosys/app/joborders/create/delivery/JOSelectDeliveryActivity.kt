@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
+import com.csi.palabakosys.app.joborders.create.JobOrderCreateActivity
 import com.csi.palabakosys.databinding.ActivityJoSelectDeliveryBinding
 import com.csi.palabakosys.util.DataState
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,9 +30,10 @@ class JOSelectDeliveryActivity : AppCompatActivity() {
     private fun subscribeListeners() {
         viewModel.dataState.observe(this, Observer {
             when(it) {
-                is DataState.Save -> {
+                is DataState.ConfirmSave -> {
                     setResult(RESULT_OK, Intent().apply {
-                        putExtra("deliveryCharge", it.data)
+                        action = intent.action
+                        putExtra(JobOrderCreateActivity.PAYLOAD_EXTRA, it.data)
                     })
                     viewModel.resetState()
                     finish()
@@ -42,7 +44,7 @@ class JOSelectDeliveryActivity : AppCompatActivity() {
 
         viewModel.deliveryProfiles.observe(this, Observer {
             deliveryVehiclesAdapter.setData(it)
-            intent.getParcelableExtra<DeliveryCharge>("deliveryCharge")?.let { deliveryCharge ->
+            intent.getParcelableExtra<DeliveryCharge>(JobOrderCreateActivity.PAYLOAD_EXTRA)?.let { deliveryCharge ->
                 if(deliveryCharge.deletedAt == null) {
                     viewModel.setDeliveryCharge(deliveryCharge)
                 }

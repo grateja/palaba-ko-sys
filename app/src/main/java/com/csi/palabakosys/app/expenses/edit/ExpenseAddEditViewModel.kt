@@ -25,7 +25,7 @@ constructor(
     }
 
     fun save(userId: UUID?) {
-        this.model.value?.userId = userId
+        this.model.value?.createdBy = userId
         this.validation.value = InputValidation().apply {
             addRules("remarks", model.value?.remarks, arrayOf(Rule.Required))
             addRules("amount", model.value?.amount, arrayOf(Rule.Required, Rule.IsNumeric(model.value?.amount)))

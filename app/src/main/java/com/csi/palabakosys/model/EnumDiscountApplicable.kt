@@ -4,8 +4,8 @@ enum class EnumDiscountApplicable(val value: String, val id: Int) {
     TOTAL_AMOUNT("Total Amount", 1),
     WASH_DRY_SERVICES("Wash & Dry Services", 2),
     PRODUCTS_CHEMICALS("Products & Chemicals", 3),
-    EXTRAS("Extras", 3),
-    DELIVERY("Pickup/Delivery", 4);
+    EXTRAS("Extras", 4),
+    DELIVERY("Pickup/Delivery", 5);
 
     override fun toString() : String {
         return value

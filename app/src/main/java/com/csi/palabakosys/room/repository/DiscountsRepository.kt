@@ -22,4 +22,8 @@ constructor (
     suspend fun getAll(keyword: String) : List<MenuDiscount> {
         return dao.getAll(keyword)
     }
+
+    suspend fun filter(keyword: String): List<EntityDiscount> {
+        return dao.filter(keyword)
+    }
 }

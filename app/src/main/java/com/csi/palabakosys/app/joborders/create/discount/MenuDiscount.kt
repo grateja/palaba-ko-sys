@@ -3,7 +3,7 @@ package com.csi.palabakosys.app.joborders.create.discount
 import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Ignore
-import com.csi.palabakosys.model.DiscountTypeEnum
+import com.csi.palabakosys.model.EnumDiscountType
 import com.csi.palabakosys.model.EnumDiscountApplicable
 //import com.csi.palabakosys.model.DiscountTypeEnum
 import kotlinx.parcelize.IgnoredOnParcel
@@ -24,7 +24,7 @@ data class MenuDiscount(
     val applicableToIds: String,
 
     @ColumnInfo(name = "discount_type")
-    val discountType: DiscountTypeEnum,
+    val discountType: EnumDiscountType,
 
     @ColumnInfo(name = "deleted_at")
     var deletedAt: Instant?,

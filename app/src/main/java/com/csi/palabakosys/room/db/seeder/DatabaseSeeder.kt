@@ -14,6 +14,9 @@ class DatabaseSeeder(val db: MainDatabase) {
             runBlocking {
                 UsersSeeder(db.daoUser()).seed()
                 MachinesSeeder(db.daoMachine()).seed()
+                DiscountsSeeder(db.daoDiscount()).seed()
+                DeliveryProfileSeeder(db.daoDeliveryProfile()).seed()
+
                 val washServices = WashServicesSeeder(db.daoWashService()).seed()
                 val products = ProductsSeeder(db.daoProduct()).seed()
                 val extras = ExtrasSeeder(db.daoExtras()).seed()

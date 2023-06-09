@@ -1,6 +1,6 @@
-package com.csi.palabakosys.util
+package com.csi.palabakosys.model
 
-enum class MeasureUnit(private val value: String) {
+enum class EnumMeasureUnit(private val value: String) {
     PCS("pcs"),
     SACHET("sachet"),
     MILLILITER("mL"),
@@ -10,7 +10,7 @@ enum class MeasureUnit(private val value: String) {
         return value
     }
     companion object {
-        fun fromString(key: String) : MeasureUnit? {
+        fun fromString(key: String) : EnumMeasureUnit? {
             val list = values()
             return list.find {
                 it.toString() == key

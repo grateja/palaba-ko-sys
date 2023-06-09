@@ -2,7 +2,8 @@ package com.csi.palabakosys.util
 
 sealed class DataState<out R> {
     object StateLess : DataState<Nothing>()
-    data class Save<out T> (val data: T) : DataState<T>()
+    data class ConfirmSave<out T> (val data: T) : DataState<T>()
+    data class ConfirmDelete<out T>(val data: T) : DataState<T>()
     object Loading : DataState<Nothing>()
     data class Loaded<out T>(val data: T) : DataState<T>()
     object CancelOperation : DataState<Nothing>()

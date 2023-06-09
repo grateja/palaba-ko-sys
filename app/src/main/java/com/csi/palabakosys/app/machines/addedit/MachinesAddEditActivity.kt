@@ -9,8 +9,6 @@ import com.csi.palabakosys.R
 import com.csi.palabakosys.databinding.ActivityMachinesAddEditBinding
 import com.csi.palabakosys.model.EnumMachineType
 import com.csi.palabakosys.util.DataState
-import com.csi.palabakosys.util.toUUID
-import com.csi.palabakosys.viewmodels.AddEditMachineViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -54,7 +52,7 @@ class MachinesAddEditActivity : AppCompatActivity() {
     private fun subscribeListeners() {
         viewModel.dataState.observe(this, Observer {
             when(it) {
-                is DataState.Save -> {
+                is DataState.ConfirmSave -> {
                     finish()
                 }
                 else -> {}

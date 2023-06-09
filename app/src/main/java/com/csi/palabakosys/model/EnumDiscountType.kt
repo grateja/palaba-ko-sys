@@ -1,6 +1,6 @@
 package com.csi.palabakosys.model
 
-enum class DiscountTypeEnum(val value: String) {
+enum class EnumDiscountType(val value: String) {
     FIXED("Fixed"),
     PERCENTAGE("Percentage");
 
@@ -9,7 +9,7 @@ enum class DiscountTypeEnum(val value: String) {
     }
 
     companion object {
-        fun fromString(name: String?) : DiscountTypeEnum? {
+        fun fromString(name: String?) : EnumDiscountType? {
             return values().find {
                 it.value == name
             }

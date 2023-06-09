@@ -10,6 +10,9 @@ class EntityExpense : BaseEntity() {
     var amount: Float? = 0f
     var tag: String? = null
 
-    @ColumnInfo(name = "user_id")
-    var userId: UUID? = null
+    @ColumnInfo(name = "created_by")
+    var createdBy: UUID? = null
+//
+//    @ColumnInfo(name = "deleted_by")
+//    var deletedBy: UUID? = null
 }

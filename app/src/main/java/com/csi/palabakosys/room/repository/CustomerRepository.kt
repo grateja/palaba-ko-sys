@@ -18,9 +18,9 @@ constructor (
         return daoCustomer.get(id)
     }
 
-    suspend fun getAll(keyword: String) : List<EntityCustomer> {
-        return daoCustomer.getAll(keyword)
-    }
+//    suspend fun filter(keyword: String) : List<EntityCustomer> {
+//        return daoCustomer.getAll(keyword)
+//    }
 
     suspend fun getNextJONumber() : String {
         val currentCRN = daoCustomer.getLastCRN()?.toInt() ?: 0

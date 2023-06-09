@@ -1,37 +1,36 @@
 package com.csi.palabakosys.app.expenses
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
 import androidx.activity.viewModels
-import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
 import com.csi.palabakosys.adapters.Adapter
 import com.csi.palabakosys.app.expenses.edit.ExpenseAddEditActivity
 import com.csi.palabakosys.databinding.ActivityExpensesBinding
-import com.csi.palabakosys.room.entities.EntityExpense
 import com.csi.palabakosys.util.ActivityLauncher
+import com.csi.palabakosys.util.FilterActivity
 import com.csi.palabakosys.util.toUUID
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ExpensesActivity : AppCompatActivity() {
+class ExpensesActivity : FilterActivity() {
     private lateinit var binding: ActivityExpensesBinding
     private val viewModel: ExpensesViewModel by viewModels()
-    private val adapter = Adapter<EntityExpense>(R.layout.recycler_item_expenses_full)
-    private var searchBar: SearchView? = null
+    private val adapter = Adapter<ExpenseItemFull>(R.layout.recycler_item_expenses_full)
     private val addEditLauncher = ActivityLauncher(this)
+
+    override var queryHint = "Search Expenses Remarks"
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_expenses)
+
+        super.onCreate(savedInstanceState)
+
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
         binding.recyclerExpenses.adapter = adapter
-
-        setSupportActionBar(binding.toolbar)
 
         subscribeEvents()
         subscribeListeners()
@@ -41,6 +40,11 @@ class ExpensesActivity : AppCompatActivity() {
         super.onResume()
         viewModel.filter()
     }
+
+    override fun onQuery(keyword: String?) {
+        viewModel.setKeyword(keyword)
+    }
+
     private fun subscribeEvents() {
         binding.buttonCreateNew.setOnClickListener {
             openAddEdit(null)
@@ -53,44 +57,16 @@ class ExpensesActivity : AppCompatActivity() {
         }
     }
 
-    private fun openAddEdit(expense: EntityExpense?) {
+    private fun openAddEdit(item: ExpenseItemFull?) {
         val intent = Intent(this, ExpenseAddEditActivity::class.java).apply {
-            putExtra(ExpenseAddEditActivity.EXPENSE_ID, expense?.id.toString())
+            putExtra(ExpenseAddEditActivity.EXPENSE_ID, item?.expense?.id.toString())
         }
         addEditLauncher.launch(intent)
-//            startActivity(intent)
     }
 
     private fun subscribeListeners() {
-        viewModel.expenses.observe(this, Observer {
+        viewModel.items.observe(this, Observer {
             adapter.setData(it)
         })
-    }
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_search, menu)
-        searchBar = menu?.findItem(R.id.menu_search)?.actionView as SearchView
-        searchBar?.apply {
-            maxWidth = Integer.MAX_VALUE
-            queryHint = "Search expenses remarks"
-            setOnQueryTextFocusChangeListener { view, b ->
-                if(b) {
-                    binding.toolbar.setBackgroundColor(applicationContext.getColor(R.color.white))
-                } else {
-                    binding.toolbar.setBackgroundColor(applicationContext.getColor(R.color.teal_700))
-                }
-            }
-        }
-        searchBar?.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                searchBar?.clearFocus()
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                viewModel.setKeyword(newText)
-                return true
-            }
-        })
-        return super.onCreateOptionsMenu(menu)
     }
 }

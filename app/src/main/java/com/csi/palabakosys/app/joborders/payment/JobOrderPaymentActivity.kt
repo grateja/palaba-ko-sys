@@ -113,6 +113,7 @@ class JobOrderPaymentActivity : AppCompatActivity() {
                 is JobOrderPaymentViewModel.DataState.PaymentSuccess -> {
                     viewModel.resetState()
                     setResult(RESULT_OK, Intent().apply {
+                        action = intent.action
                         putExtra(PAYMENT_ID, it.payment.id.toString())
                     })
                     finish()

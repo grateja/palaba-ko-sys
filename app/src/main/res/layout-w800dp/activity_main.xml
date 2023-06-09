@@ -65,6 +65,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Expenses" />
+            <Button
+                android:id="@+id/btnDiscounts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Discounts" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </layout>

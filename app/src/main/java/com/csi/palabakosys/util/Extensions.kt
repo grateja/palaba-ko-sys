@@ -9,6 +9,7 @@ import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
 import com.csi.palabakosys.R
+import com.csi.palabakosys.model.EnumDiscountType
 import com.csi.palabakosys.model.EnumPaymentMethod
 import com.csi.palabakosys.model.EnumProductType
 import com.csi.palabakosys.model.EnumWashType
@@ -134,6 +135,27 @@ fun getPaymentMethod(radioGroup: RadioGroup): EnumPaymentMethod? {
     return when (radioGroup.checkedRadioButtonId) {
         R.id.radio_cash -> EnumPaymentMethod.CASH
         R.id.radio_cashless -> EnumPaymentMethod.CASHLESS
+        else -> null
+    }
+}
+
+@BindingAdapter("app:selectedDiscountType")
+fun setDiscountType(radioGroup: RadioGroup, discountType: EnumDiscountType?) {
+    val selectedId = when (discountType) {
+        EnumDiscountType.FIXED -> R.id.radio_cashless_discount_fixed
+        EnumDiscountType.PERCENTAGE -> R.id.radio_discount_percentage
+        else -> View.NO_ID
+    }
+    if (radioGroup.checkedRadioButtonId != selectedId) {
+        radioGroup.check(selectedId)
+    }
+}
+
+@InverseBindingAdapter(attribute = "app:selectedDiscountType", event = "android:checkedButtonAttrChanged")
+fun getDiscountType(radioGroup: RadioGroup): EnumDiscountType? {
+    return when (radioGroup.checkedRadioButtonId) {
+        R.id.radio_cashless_discount_fixed -> EnumDiscountType.FIXED
+        R.id.radio_discount_percentage -> EnumDiscountType.PERCENTAGE
         else -> null
     }
 }

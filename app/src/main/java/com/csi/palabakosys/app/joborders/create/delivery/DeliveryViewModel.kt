@@ -73,7 +73,7 @@ constructor(
         val deletedAt = if(delete) { Instant.now() } else { null }
 
         val deliveryCharge = DeliveryCharge(profile.deliveryProfileRefId, profile.vehicle, distance, option, price, deletedAt)
-        this._dataState.value = DataState.Save(deliveryCharge)
+        this._dataState.value = DataState.ConfirmSave(deliveryCharge)
     }
 
     fun setDeliveryOption(deliveryOption: EnumDeliveryOption) {

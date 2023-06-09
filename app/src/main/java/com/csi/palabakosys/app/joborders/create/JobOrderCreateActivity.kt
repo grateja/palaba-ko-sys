@@ -35,35 +35,45 @@ import com.csi.palabakosys.app.joborders.list.JobOrderListItem
 import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentActivity
 import com.csi.palabakosys.databinding.ActivityJobOrderCreateBinding
 import com.csi.palabakosys.util.ActivityLauncher
+import com.csi.palabakosys.util.BaseActivity
 import com.csi.palabakosys.util.toUUID
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 import kotlin.collections.ArrayList
 
 @AndroidEntryPoint
-class JobOrderCreateActivity : AppCompatActivity() {
+class JobOrderCreateActivity : BaseActivity() {
     companion object {
         const val ACTION_LOAD_BY_CUSTOMER_ID = "loadByCustomerId"
         const val ACTION_LOAD_BY_JOB_ORDER_ID = "loadByJobOrderId"
         const val PAYLOAD_EXTRA = "payload"
+        const val ITEM_PRESET_EXTRA = "itemPreset"
+
+        const val ACTION_SYNC_PACKAGE = "package"
+        const val ACTION_SYNC_SERVICES = "services"
+        const val ACTION_SYNC_PRODUCTS = "products"
+        const val ACTION_SYNC_EXTRAS = "extras"
+        const val ACTION_SYNC_DELIVERY = "delivery"
+        const val ACTION_SYNC_DISCOUNT = "discount"
+        const val ACTION_SYNC_PAYMENT = "payment"
+        const val ACTION_DELETE_JOB_ORDER = "deleteJobOrder"
+        const val ACTION_AUTH = "auth"
     }
 
-
-    private var backPressed = false
     private lateinit var binding: ActivityJobOrderCreateBinding
     private val viewModel: CreateJobOrderViewModel by viewModels()
 
+    private val launcher = ActivityLauncher(this)
 
-    private val packageLauncher = ActivityLauncher(this)
-    private val servicesLauncher = ActivityLauncher(this)
-    private val productsLauncher = ActivityLauncher(this)
-    private val deliveryLauncher = ActivityLauncher(this)
-    private val extrasLauncher = ActivityLauncher(this)
-    private val discountLauncher = ActivityLauncher(this)
-    private val previewLauncher = ActivityLauncher(this)
-    private val paymentLauncher = ActivityLauncher(this)
-    private val authLauncher = ActivityLauncher(this)
-    private val jobOrderCancelLauncher = ActivityLauncher(this)
+//    private val packageLauncher = ActivityLauncher(this)
+//    private val servicesLauncher = ActivityLauncher(this)
+//    private val productsLauncher = ActivityLauncher(this)
+//    private val extrasLauncher = ActivityLauncher(this)
+//    private val deliveryLauncher = ActivityLauncher(this)
+//    private val discountLauncher = ActivityLauncher(this)
+//    private val paymentLauncher = ActivityLauncher(this)
+//    private val jobOrderCancelLauncher = ActivityLauncher(this)
+//    private val authLauncher = ActivityLauncher(this)
 
     private val servicesAdapter = JobOrderServiceItemAdapter()
     private val productsAdapter = JobOrderProductsItemAdapter()
@@ -98,58 +108,118 @@ class JobOrderCreateActivity : AppCompatActivity() {
     }
 
     private fun subscribeEvents() {
-        packageLauncher.onOk = { result ->
-            result.data?.getParcelableArrayListExtra<MenuServiceItem>(JOSelectPackageActivity.SERVICES)?.toList().let {
-                viewModel.syncServices(it)
+//        packageLauncher.onOk = { result ->
+//            result.data?.getParcelableArrayListExtra<MenuServiceItem>(JOSelectPackageActivity.SERVICES)?.toList().let {
+//                viewModel.syncServices(it)
+//            }
+//            result.data?.getParcelableArrayListExtra<MenuExtrasItem>(JOSelectPackageActivity.EXTRAS)?.toList().let {
+//                viewModel.syncExtras(it)
+//            }
+//            result.data?.getParcelableArrayListExtra<MenuProductItem>(JOSelectPackageActivity.PRODUCTS)?.toList().let {
+//                viewModel.syncProducts(it)
+//            }
+//        }
+
+        launcher.onOk = { result ->
+            val data = result.data
+            when(data?.action) {
+                ACTION_SYNC_PACKAGE -> {
+                    data.getParcelableArrayListExtra<MenuServiceItem>(JOSelectPackageActivity.SERVICES)?.toList().let {
+                        viewModel.syncServices(it)
+                    }
+                    data.getParcelableArrayListExtra<MenuExtrasItem>(JOSelectPackageActivity.EXTRAS)?.toList().let {
+                        viewModel.syncExtras(it)
+                    }
+                    data.getParcelableArrayListExtra<MenuProductItem>(JOSelectPackageActivity.PRODUCTS)?.toList().let {
+                        viewModel.syncProducts(it)
+                    }
+                }
+                ACTION_SYNC_SERVICES -> {
+                    data.getParcelableArrayListExtra<MenuServiceItem>(PAYLOAD_EXTRA)?.toList().let {
+                        viewModel.syncServices(it)
+                    }
+                }
+                ACTION_SYNC_PRODUCTS -> {
+                    data.getParcelableArrayListExtra<MenuProductItem>(PAYLOAD_EXTRA)?.toList().let {
+                        viewModel.syncProducts(it)
+                    }
+                }
+                ACTION_SYNC_EXTRAS -> {
+                    data.getParcelableArrayListExtra<MenuExtrasItem>(PAYLOAD_EXTRA)?.toList().let {
+                        viewModel.syncExtras(it)
+                    }
+                }
+                ACTION_SYNC_DELIVERY -> {
+                    data.getParcelableExtra<DeliveryCharge>(PAYLOAD_EXTRA).let {
+                        viewModel.setDeliveryCharge(it)
+                    }
+                }
+                ACTION_SYNC_DISCOUNT -> {
+                    data.getParcelableExtra<MenuDiscount>(PAYLOAD_EXTRA).let {
+                        viewModel.applyDiscount(it)
+                    }
+                }
+                ACTION_SYNC_PAYMENT -> {
+                    val paymentId = data.getStringExtra(JobOrderPaymentActivity.PAYMENT_ID).toUUID()
+                    viewModel.loadPayment(paymentId)
+                }
+                ACTION_DELETE_JOB_ORDER -> {
+                    finish()
+                }
+                ACTION_AUTH -> {
+                    data.getParcelableExtra<LoginCredentials>(AuthActionDialogActivity.RESULT)?.let {
+                        viewModel.save(it.userId)
+                    }
+                }
             }
-            result.data?.getParcelableArrayListExtra<MenuExtrasItem>(JOSelectPackageActivity.EXTRAS)?.toList().let {
-                viewModel.syncExtras(it)
-            }
-            result.data?.getParcelableArrayListExtra<MenuProductItem>(JOSelectPackageActivity.PRODUCTS)?.toList().let {
-                viewModel.syncProducts(it)
-            }
-        }
-        servicesLauncher.onOk = {
-            val selected = it.data?.getParcelableArrayListExtra<MenuServiceItem>("services")?.toList()
-            viewModel.syncServices(selected)
+//            if(result.data?.action == ACTION_SYNC_SERVICES) {
+//                result.data?.getParcelableArrayListExtra<MenuServiceItem>(PAYLOAD_EXTRA)?.toList().let {
+//                    viewModel.syncServices(it)
+//                }
+//            }
         }
 
-        productsLauncher.onOk = {
-            val result = it.data?.getParcelableArrayListExtra<MenuProductItem>("products")?.toList()
-            viewModel.syncProducts(result)
-        }
+//        servicesLauncher.onOk = {
+//            val selected = it.data?.getParcelableArrayListExtra<MenuServiceItem>("services")?.toList()
+//            viewModel.syncServices(selected)
+//        }
 
-        extrasLauncher.onOk = {
-            val result = it.data?.getParcelableArrayListExtra<MenuExtrasItem>("extras")?.toList()
-            viewModel.syncExtras(result)
-        }
+//        productsLauncher.onOk = {
+//            val result = it.data?.getParcelableArrayListExtra<MenuProductItem>("products")?.toList()
+//            viewModel.syncProducts(result)
+//        }
 
-        deliveryLauncher.onOk = {
-            val result = it.data?.getParcelableExtra<DeliveryCharge>("deliveryCharge")
-            viewModel.setDeliveryCharge(result)
-        }
+//        extrasLauncher.onOk = {
+//            val result = it.data?.getParcelableArrayListExtra<MenuExtrasItem>("extras")?.toList()
+//            viewModel.syncExtras(result)
+//        }
 
-        discountLauncher.onOk = {
-            val result = it.data?.getParcelableExtra<MenuDiscount>("discount")
-            viewModel.applyDiscount(result)
-        }
+//        deliveryLauncher.onOk = {
+//            val result = it.data?.getParcelableExtra<DeliveryCharge>("deliveryCharge")
+//            viewModel.setDeliveryCharge(result)
+//        }
 
-        authLauncher.onOk = {
-            val result = it.data?.getParcelableExtra<LoginCredentials>(AuthActionDialogActivity.RESULT)?.let {
-                viewModel.save(it.userId)
-            }
-        }
+//        discountLauncher.onOk = {
+//            val result = it.data?.getParcelableExtra<MenuDiscount>("discount")
+//            viewModel.applyDiscount(result)
+//        }
 
-        paymentLauncher.onOk = {
-            val paymentId = it.data?.getStringExtra(JobOrderPaymentActivity.PAYMENT_ID).toUUID()
-            viewModel.loadPayment(paymentId)
-        }
+//        authLauncher.onOk = {
+//            val result = it.data.getParcelableExtra<LoginCredentials>(AuthActionDialogActivity.RESULT)?.let {
+//                viewModel.save(it.userId)
+//            }
+//        }
 
-        jobOrderCancelLauncher.onOk = {
-            if(it.data?.action == JobOrderCancelActivity.ACTION_DELETE_JOB_ORDER) {
-                finish()
-            }
-        }
+//        paymentLauncher.onOk = {
+//            val paymentId = it.data?.getStringExtra(JobOrderPaymentActivity.PAYMENT_ID).toUUID()
+//            viewModel.loadPayment(paymentId)
+//        }
+
+//        jobOrderCancelLauncher.onOk = {
+//            if(it.data?.action == JobOrderCancelActivity.ACTION_DELETE_JOB_ORDER) {
+//                finish()
+//            }
+//        }
 
 //        packageAdapter.onItemClick = {
 //            viewModel.openPackages(it)
@@ -262,21 +332,23 @@ class JobOrderCreateActivity : AppCompatActivity() {
                 }
                 is CreateJobOrderViewModel.DataState.RequestCancel -> {
                     val intent = Intent(this, JobOrderCancelActivity::class.java).apply {
+                        action = ACTION_DELETE_JOB_ORDER
                         putExtra(JobOrderCancelActivity.JOB_ORDER_ID, it.jobOrderId.toString())
                     }
-                    jobOrderCancelLauncher.launch(intent)
+                    launcher.launch(intent)
                     viewModel.resetState()
                 }
                 is CreateJobOrderViewModel.DataState.RequestExit -> {
-                    if(!it.canExit && !backPressed) {
-                        Toast.makeText(this, "Press back again to revert changes", Toast.LENGTH_LONG).show()
-                        backPressed = true
-                        Handler(Looper.getMainLooper()).postDelayed(Runnable {
-                            backPressed = false
-                        }, 2000)
-                    } else {
-                        finish()
-                    }
+                    confirmExit(it.canExit)
+//                    if(!it.canExit && !backPressed) {
+//                        Toast.makeText(this, "Press back again to revert changes", Toast.LENGTH_LONG).show()
+//                        backPressed = true
+//                        Handler(Looper.getMainLooper()).postDelayed(Runnable {
+//                            backPressed = false
+//                        }, 2000)
+//                    } else {
+//                        finish()
+//                    }
                     viewModel.resetState()
                 }
             }
@@ -285,70 +357,79 @@ class JobOrderCreateActivity : AppCompatActivity() {
 
     private fun prepareSubmit() {
         val intent = Intent(this, AuthActionDialogActivity::class.java).apply {
+            action = ACTION_AUTH
             putExtra(AuthActionDialogActivity.MESSAGE, "Authentication Required")
         }
-        authLauncher.launch(intent)
+        launcher.launch(intent)
     }
 
     private fun openPackages() {
-        val intent = Intent(this, JOSelectPackageActivity::class.java)
-        packageLauncher.launch(intent)
+        val intent = Intent(this, JOSelectPackageActivity::class.java).apply {
+            action = ACTION_SYNC_PACKAGE
+        }
+        launcher.launch(intent)
     }
 
     private fun openServices(services: List<MenuServiceItem>?, itemPreset: MenuServiceItem?) {
         val intent = Intent(this, JOSelectWashDryActivity::class.java).apply {
+            action = ACTION_SYNC_SERVICES
             services?.let {
-                putParcelableArrayListExtra("services", ArrayList(it))
-                putExtra("service", itemPreset)
+                putParcelableArrayListExtra(PAYLOAD_EXTRA, ArrayList(it))
+                putExtra(ITEM_PRESET_EXTRA, itemPreset)
             }
         }
-        servicesLauncher.launch(intent)
+        launcher.launch(intent)
     }
 
     private fun openProducts(products: List<MenuProductItem>?, itemPreset: MenuProductItem?) {
         val intent = Intent(this, JOSelectProductsActivity::class.java).apply {
+            action = ACTION_SYNC_PRODUCTS
             products?.let {
-                putParcelableArrayListExtra("products", ArrayList(it))
-                putExtra("product", itemPreset)
+                putParcelableArrayListExtra(PAYLOAD_EXTRA, ArrayList(it))
+                putExtra(ITEM_PRESET_EXTRA, itemPreset)
             }
         }
-        productsLauncher.launch(intent)
+        launcher.launch(intent)
     }
 
     private fun openExtras(extras: List<MenuExtrasItem>?, itemPreset: MenuExtrasItem?) {
         val intent = Intent(this, JOSelectExtrasActivity::class.java).apply {
+            action = ACTION_SYNC_EXTRAS
             extras?.let {
-                putParcelableArrayListExtra("extras", ArrayList(it))
-                putExtra("extra", itemPreset)
+                putParcelableArrayListExtra(PAYLOAD_EXTRA, ArrayList(it))
+                putExtra(ITEM_PRESET_EXTRA, itemPreset)
             }
         }
-        extrasLauncher.launch(intent)
+        launcher.launch(intent)
     }
 
     private fun openDelivery(deliveryCharge: DeliveryCharge?) {
         val intent = Intent(this, JOSelectDeliveryActivity::class.java).apply {
+            action = ACTION_SYNC_DELIVERY
             deliveryCharge?.let {
-                putExtra("deliveryCharge", deliveryCharge)
+                putExtra(PAYLOAD_EXTRA, deliveryCharge)
             }
         }
-        deliveryLauncher.launch(intent)
+        launcher.launch(intent)
     }
 
     private fun openDiscount(discount: MenuDiscount?) {
         val intent = Intent(this, JOSelectDiscountActivity::class.java).apply {
+            action = ACTION_SYNC_DISCOUNT
             discount?.let {
-                putExtra("discount", discount)
+                putExtra(PAYLOAD_EXTRA, discount)
             }
         }
-        discountLauncher.launch(intent)
+        launcher.launch(intent)
     }
 
     private fun openPayment(customerId: UUID, paymentId: UUID?) {
         val intent = Intent(this, JobOrderPaymentActivity::class.java).apply {
+            action = ACTION_SYNC_PAYMENT
             putExtra(JobOrderPaymentActivity.CUSTOMER_ID, customerId.toString())
             putExtra(JobOrderPaymentActivity.PAYMENT_ID, paymentId.toString())
         }
-        paymentLauncher.launch(intent)
+        launcher.launch(intent)
     }
 
     override fun onBackPressed() {

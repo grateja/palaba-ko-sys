@@ -53,7 +53,7 @@ class AddEditCustomerFragment : ModalFragment<CustomerMinimal?>() {
 
     private fun subscribeListeners() {
         viewModel.dataState.observe(viewLifecycleOwner, Observer {
-            if(it is DataState.Save) {
+            if(it is DataState.ConfirmSave) {
                 onOk?.invoke(CustomerMinimal(
                     it.data.id,
                     it.data.name!!,

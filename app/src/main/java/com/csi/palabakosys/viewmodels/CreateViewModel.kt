@@ -3,11 +3,10 @@ package com.csi.palabakosys.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.csi.palabakosys.model.Rule
+import com.csi.palabakosys.model.CRUDActionEnum
 import com.csi.palabakosys.room.entities.BaseEntity
 import com.csi.palabakosys.room.repository.IRepository
 import com.csi.palabakosys.util.*
-import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import java.util.UUID
 
@@ -16,7 +15,7 @@ open class CreateViewModel<T : BaseEntity> (private val iRepository: IRepository
     val crudActionEnum = MutableLiveData(CRUDActionEnum.CREATE)
     val dataState = MutableLiveData<DataState<T>>()
     val model = MutableLiveData<T?>()
-    var promptPass = true
+    var promptPass = false
 
     fun getId() : String? {
         return model.value?.id?.toString() // this.modelId?.toString()
@@ -43,7 +42,18 @@ open class CreateViewModel<T : BaseEntity> (private val iRepository: IRepository
                 iRepository.save(it).let {
                     model.value = it
                 }
-                dataState.value = DataState.Save(it)
+                dataState.value = DataState.ConfirmSave(it)
+            }
+        }
+    }
+
+    open fun confirmDelete(deletedBy: UUID?, permanent: Boolean = false) {
+        viewModelScope.launch {
+            model.value?.let {
+                it.deletedBy = deletedBy
+                if(iRepository.delete(it, permanent)) {
+                    dataState.value = DataState.ConfirmDelete(it)
+                }
             }
         }
     }

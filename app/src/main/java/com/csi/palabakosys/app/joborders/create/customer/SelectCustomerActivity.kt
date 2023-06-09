@@ -13,24 +13,29 @@ import com.csi.palabakosys.app.customers.CustomerMinimal
 import com.csi.palabakosys.app.customers.create.AddEditCustomerFragment
 import com.csi.palabakosys.app.joborders.create.JobOrderCreateActivity
 import com.csi.palabakosys.databinding.ActivitySelectCustomerBinding
+import com.csi.palabakosys.util.FilterActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SelectCustomerActivity : AppCompatActivity() {
-    private var searchBar: SearchView? = null
+class SelectCustomerActivity : FilterActivity() {
+//    private var searchBar: SearchView? = null
     private val viewModel: SelectCustomerViewModel by viewModels()
     private lateinit var binding: ActivitySelectCustomerBinding
     private lateinit var customerModal: AddEditCustomerFragment
     private val customersAdapter = CustomersAdapterMinimal()
 
+    override var queryHint = "Search Customer Name/CRN"
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_select_customer)
         super.onCreate(savedInstanceState)
         title = "Search Customer"
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_select_customer)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
         binding.recyclerCustomersMinimal.adapter = customersAdapter
-        setSupportActionBar(binding.toolbar)
+
+//        setSupportActionBar(binding.toolbar)
+
         subscribeEvents()
     }
 
@@ -76,31 +81,35 @@ class SelectCustomerActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_search, menu)
-        searchBar = menu?.findItem(R.id.menu_search)?.actionView as SearchView
-        searchBar?.apply {
-            maxWidth = Integer.MAX_VALUE
-            queryHint = "Search Customer name or CRN"
-            setOnQueryTextFocusChangeListener { view, b ->
-                if(b) {
-                    binding.toolbar.setBackgroundColor(applicationContext.getColor(R.color.white))
-                } else {
-                    binding.toolbar.setBackgroundColor(applicationContext.getColor(R.color.teal_700))
-                }
-            }
-        }
-        searchBar?.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                searchBar?.clearFocus()
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                viewModel.setKeyword(newText)
-                return true
-            }
-        })
-        return super.onCreateOptionsMenu(menu)
+    override fun onQuery(keyword: String?) {
+        viewModel.setKeyword(keyword)
     }
+
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        menuInflater.inflate(R.menu.menu_search, menu)
+//        searchBar = menu?.findItem(R.id.menu_search)?.actionView as SearchView
+//        searchBar?.apply {
+//            maxWidth = Integer.MAX_VALUE
+//            queryHint = "Search Customer name or CRN"
+//            setOnQueryTextFocusChangeListener { view, b ->
+//                if(b) {
+//                    binding.toolbar.setBackgroundColor(applicationContext.getColor(R.color.white))
+//                } else {
+//                    binding.toolbar.setBackgroundColor(applicationContext.getColor(R.color.teal_700))
+//                }
+//            }
+//        }
+//        searchBar?.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+//            override fun onQueryTextSubmit(query: String?): Boolean {
+//                searchBar?.clearFocus()
+//                return true
+//            }
+//
+//            override fun onQueryTextChange(newText: String?): Boolean {
+//                viewModel.setKeyword(newText)
+//                return true
+//            }
+//        })
+//        return super.onCreateOptionsMenu(menu)
+//    }
 }

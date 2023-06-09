@@ -8,6 +8,7 @@ import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
+import com.csi.palabakosys.app.joborders.create.JobOrderCreateActivity
 import com.csi.palabakosys.app.joborders.create.shared_ui.ModifyQuantityModalFragment
 import com.csi.palabakosys.app.joborders.create.shared_ui.QuantityModel
 import com.csi.palabakosys.databinding.ActivityJoSelectWashDryBinding
@@ -23,11 +24,6 @@ class JOSelectWashDryActivity : AppCompatActivity() {
 
     private lateinit var modifyQuantityDialog: ModifyQuantityModalFragment
 
-//    private val rwAdapter = AvailableServicesAdapter()
-//    private val rdAdapter = AvailableServicesAdapter()
-//    private val twAdapter = AvailableServicesAdapter()
-//    private val tdAdapter = AvailableServicesAdapter()
-
     private val adapter = AvailableServicesAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,23 +33,12 @@ class JOSelectWashDryActivity : AppCompatActivity() {
 
         binding.inclMachines.recyclerAvailableServices.adapter = adapter
 
-//        binding.inclMenu8KGWashers.viewModel = MachineType.REGULAR_WASHER
-//        binding.inclMenu8KGDryers.viewModel = MachineType.REGULAR_DRYER
-//        binding.inclMenu12KGWashers.viewModel = MachineType.TITAN_WASHER
-//        binding.inclMenu12KGDryers.viewModel = MachineType.TITAN_DRYER
-//
-//        binding.inclMenu8KGWashers.recyclerAvailableServices.adapter = rwAdapter
-//        binding.inclMenu8KGDryers.recyclerAvailableServices.adapter = rdAdapter
-//        binding.inclMenu12KGWashers.recyclerAvailableServices.adapter = twAdapter
-//        binding.inclMenu12KGDryers.recyclerAvailableServices.adapter = tdAdapter
-
         subscribeEvents()
-
     }
 
     private fun openSelectedItem() {
         val tab = binding.tabMachineType.tabMachineType
-        intent.getParcelableExtra<MenuServiceItem>("service").let {
+        intent.getParcelableExtra<MenuServiceItem>(JobOrderCreateActivity.ITEM_PRESET_EXTRA).let {
             if(it != null) {
                 itemClick(it)
             } else {
@@ -64,13 +49,7 @@ class JOSelectWashDryActivity : AppCompatActivity() {
                 it?.machineType ?: EnumMachineType.REGULAR_WASHER
             )
 
-//            if(tab.selectedTabPosition == 1 && index == 0) {
-//
-//            }
-
             tab.getTabAt(index)?.select()
-            println(index)
-            println("index")
         }
     }
 
@@ -92,15 +71,7 @@ class JOSelectWashDryActivity : AppCompatActivity() {
         modifyQuantityDialog.show(supportFragmentManager, this.toString())
     }
 
-//    private fun refreshList(adapter: AvailableServicesAdapter, service: MenuServiceItem) {
-//        adapter.updateItem(service)
-//    }
-
     private fun subscribeEvents() {
-//        rwAdapter.onItemClick = { itemClick(it) }
-//        rdAdapter.onItemClick = { itemClick(it) }
-//        twAdapter.onItemClick = { itemClick(it) }
-//        tdAdapter.onItemClick = { itemClick(it) }
         adapter.onItemClick = { itemClick(it) }
 
         binding.tabMachineType.tabMachineType.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener {
@@ -112,7 +83,6 @@ class JOSelectWashDryActivity : AppCompatActivity() {
 
             override fun onTabReselected(tab: TabLayout.Tab?) {
                 viewModel.setMachineType(tab?.text.toString())
-                println("Reselect tab $tab")
             }
         })
         binding.buttonOk.setOnClickListener {
@@ -126,30 +96,13 @@ class JOSelectWashDryActivity : AppCompatActivity() {
             adapter.setData(viewModel.getServices(it))
         })
         viewModel.availableServices.observe(this, Observer {
-//            rwAdapter.setData(it.filter { avs -> avs.machineType == MachineType.REGULAR_WASHER })
-//            rdAdapter.setData(it.filter { avs -> avs.machineType == MachineType.REGULAR_DRYER })
-//            twAdapter.setData(it.filter { avs -> avs.machineType == MachineType.TITAN_WASHER })
-//            tdAdapter.setData(it.filter { avs -> avs.machineType == MachineType.TITAN_DRYER })
-//            adapter.setData(it.filter {avs -> avs.machineType == })
-            viewModel.setPreSelectedServices(intent.getParcelableArrayListExtra<MenuServiceItem>("services")?.toList())
+            viewModel.setPreSelectedServices(intent.getParcelableArrayListExtra<MenuServiceItem>(JobOrderCreateActivity.PAYLOAD_EXTRA)?.toList())
             openSelectedItem()
-//            viewModel.setMachineType(
-//                intent.getStringExtra("machineType")
-//            )
         })
 
         viewModel.dataState.observe(this, Observer {
             when(it) {
                 is AvailableServicesViewModel.DataState.UpdateService -> {
-//                    if(it.serviceItem.machineType == MachineType.REGULAR_WASHER) {
-//                        refreshList(rwAdapter, it.serviceItem)
-//                    } else if(it.serviceItem.machineType == MachineType.REGULAR_DRYER) {
-//                        refreshList(rdAdapter, it.serviceItem)
-//                    } else if(it.serviceItem.machineType == MachineType.TITAN_WASHER) {
-//                        refreshList(twAdapter, it.serviceItem)
-//                    } else if(it.serviceItem.machineType == MachineType.TITAN_DRYER) {
-//                        refreshList(tdAdapter, it.serviceItem)
-//                    }
                     adapter.updateItem(it.serviceItem)
                     viewModel.resetState()
                 }
@@ -167,7 +120,8 @@ class JOSelectWashDryActivity : AppCompatActivity() {
 
     private fun submit(list: List<MenuServiceItem>) {
         setResult(RESULT_OK, Intent().apply {
-            putParcelableArrayListExtra("services", ArrayList(list))
+            action = intent.action
+            putParcelableArrayListExtra(JobOrderCreateActivity.PAYLOAD_EXTRA, ArrayList(list))
         })
         finish()
     }

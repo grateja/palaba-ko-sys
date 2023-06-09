@@ -2,10 +2,9 @@ package com.csi.palabakosys.room.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.csi.palabakosys.model.EnumProductType
-import com.csi.palabakosys.util.MeasureUnit
+import com.csi.palabakosys.model.EnumMeasureUnit
 import java.util.*
 
 @Entity(tableName = "job_order_products")
@@ -23,7 +22,7 @@ data class EntityJobOrderProduct(
     var price: Float,
 
     @ColumnInfo(name = "measure_unit")
-    val measureUnit: MeasureUnit,
+    val measureUnit: EnumMeasureUnit,
 
     @ColumnInfo(name = "unit_per_serve")
     val unitPerServe: Float,

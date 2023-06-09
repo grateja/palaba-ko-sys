@@ -1,7 +1,7 @@
 package com.csi.palabakosys.room.entities
 
 import androidx.room.*
-import com.csi.palabakosys.model.DiscountTypeEnum
+import com.csi.palabakosys.model.EnumDiscountType
 //import com.csi.palabakosys.model.DiscountTypeEnum
 import java.util.*
 
@@ -14,7 +14,7 @@ data class EntityJobOrderDiscount(
 
     val value: Float,
 
-    val discountType: DiscountTypeEnum,
+    val discountType: EnumDiscountType,
 
     @ColumnInfo(name = "applicable_to")
     val applicableToIds: String,

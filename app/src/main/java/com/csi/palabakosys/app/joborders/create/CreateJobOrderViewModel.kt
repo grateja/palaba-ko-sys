@@ -5,15 +5,13 @@ import com.csi.palabakosys.app.customers.CustomerMinimal
 import com.csi.palabakosys.app.joborders.create.delivery.DeliveryCharge
 import com.csi.palabakosys.app.joborders.create.discount.MenuDiscount
 import com.csi.palabakosys.app.joborders.create.extras.MenuExtrasItem
-import com.csi.palabakosys.app.joborders.create.packages.MenuJobOrderPackage
 import com.csi.palabakosys.app.joborders.create.products.MenuProductItem
 import com.csi.palabakosys.app.joborders.create.services.MenuServiceItem
 import com.csi.palabakosys.app.joborders.list.JobOrderListItem
 import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentMinimal
-import com.csi.palabakosys.model.DiscountTypeEnum
+import com.csi.palabakosys.model.EnumDiscountType
 import com.csi.palabakosys.model.EnumDiscountApplicable
 import com.csi.palabakosys.room.entities.*
-import com.csi.palabakosys.room.repository.JobOrderPackageRepository
 import com.csi.palabakosys.room.repository.JobOrderRepository
 import com.csi.palabakosys.room.repository.PaymentRepository
 import com.csi.palabakosys.util.isToday
@@ -124,7 +122,7 @@ constructor(
         fun update() {
             value = discount.value?.let {
                 if(it.deletedAt != null) return@let 0f
-                if(it.discountType == DiscountTypeEnum.FIXED) return@let it.value
+                if(it.discountType == EnumDiscountType.FIXED) return@let it.value
                 var total = 0f
                 total += it.getDiscount(serviceSubTotal(), EnumDiscountApplicable.WASH_DRY_SERVICES)
                 total += it.getDiscount(productSubTotal(), EnumDiscountApplicable.PRODUCTS_CHEMICALS)

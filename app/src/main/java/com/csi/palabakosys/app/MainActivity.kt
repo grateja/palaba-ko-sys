@@ -23,6 +23,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.window.layout.WindowMetricsCalculator
 import com.csi.palabakosys.R
+import com.csi.palabakosys.app.discounts.DiscountsActivity
 import com.csi.palabakosys.app.expenses.ExpensesActivity
 import com.csi.palabakosys.app.joborders.create.customer.SelectCustomerActivity
 import com.csi.palabakosys.app.joborders.list.JobOrderListActivity
@@ -97,6 +98,11 @@ class MainActivity : EndingActivity() {
 
         binding.btnExpenses.setOnClickListener {
             val intent = Intent(this, ExpensesActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.btnDiscounts.setOnClickListener {
+            val intent = Intent(this, DiscountsActivity::class.java)
             startActivity(intent)
         }
 

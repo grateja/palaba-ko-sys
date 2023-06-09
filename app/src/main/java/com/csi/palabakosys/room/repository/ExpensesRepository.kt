@@ -1,5 +1,6 @@
 package com.csi.palabakosys.room.repository
 
+import com.csi.palabakosys.app.expenses.ExpenseItemFull
 import com.csi.palabakosys.room.dao.DaoExpense
 import com.csi.palabakosys.room.entities.EntityExpense
 import java.util.UUID
@@ -17,7 +18,7 @@ constructor (
         return dao.get(id)
     }
 
-    suspend fun getAll(keyword: String) : List<EntityExpense> {
+    suspend fun filter(keyword: String): List<ExpenseItemFull> {
         return dao.getAll(keyword)
     }
 }

@@ -1,4 +1,4 @@
-package com.csi.palabakosys.util
+package com.csi.palabakosys.util.converters
 
 import androidx.room.TypeConverter
 import java.time.Instant

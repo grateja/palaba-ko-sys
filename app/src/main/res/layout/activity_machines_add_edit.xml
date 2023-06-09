@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.csi.palabakosys.viewmodels.AddEditMachineViewModel" />
+            type="com.csi.palabakosys.app.machines.addedit.AddEditMachineViewModel" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

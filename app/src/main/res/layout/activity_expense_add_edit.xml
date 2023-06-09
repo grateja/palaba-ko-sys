@@ -52,11 +52,10 @@
                     android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`amount`)}"
                     android:maxLines="1" />
             </com.google.android.material.textfield.TextInputLayout>
-            <Button
-                android:id="@+id/buttonSave"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/save"/>
+            <include
+                android:id="@+id/controls"
+                app:showDelete="@{viewModel.crudActionEnum == com.csi.palabakosys.model.CRUDActionEnum.UPDATE}"
+                layout="@layout/incl_alter_controls"/>
         </LinearLayout>
     </LinearLayout>
 </layout>

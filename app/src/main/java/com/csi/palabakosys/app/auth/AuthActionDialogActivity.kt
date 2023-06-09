@@ -49,8 +49,9 @@ class AuthActionDialogActivity : AppCompatActivity() {
     private fun subscribeListeners() {
         viewModel.dataState.observe(this, Observer {
             when(it) {
-                is DataState.Save -> {
+                is DataState.ConfirmSave -> {
                     setResult(RESULT_OK, Intent().apply {
+                        action = intent.action
                         putExtra(RESULT, it.data)
                     })
                     finish()

@@ -3,14 +3,19 @@
     <data>
         <variable
             name="viewModel"
-            type="com.csi.palabakosys.room.entities.EntityExpense" />
+            type="com.csi.palabakosys.app.expenses.ExpenseItemFull" />
     </data>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{viewModel.remarks}"/>
+            android:text="@{viewModel.expense.remarks}"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.createdBy.name}"/>
     </LinearLayout>
 </layout>

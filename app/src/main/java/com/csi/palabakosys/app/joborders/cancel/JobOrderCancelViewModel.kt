@@ -69,7 +69,7 @@ constructor(
 
             val jobOrderVoid = EntityJobOrderVoid(userId.toString(), remarks.value)
             jobOrderRepository.cancelJobOrder(jobOrderWithItems, jobOrderVoid).let {
-                _dataState.value = DataState.Save(jobOrderWithItems.jobOrder.id)
+                _dataState.value = DataState.ConfirmSave(jobOrderWithItems.jobOrder.id)
             }
         }
     }

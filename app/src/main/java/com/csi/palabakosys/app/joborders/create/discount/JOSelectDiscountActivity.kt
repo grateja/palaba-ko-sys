@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
+import com.csi.palabakosys.app.joborders.create.JobOrderCreateActivity
 import com.csi.palabakosys.databinding.ActivityJoSelectDiscountBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -30,7 +31,7 @@ class JOSelectDiscountActivity : AppCompatActivity() {
     private fun subscribeListeners() {
         viewModel.discounts.observe(this, Observer {
             adapter.setData(it)
-            intent.getParcelableExtra<MenuDiscount>("discount")?.let { discount ->
+            intent.getParcelableExtra<MenuDiscount>(JobOrderCreateActivity.PAYLOAD_EXTRA)?.let { discount ->
                 if(discount.deletedAt == null) {
                     viewModel.setDiscount(discount)
                 }
@@ -40,7 +41,10 @@ class JOSelectDiscountActivity : AppCompatActivity() {
 
     private fun subscribeEvents() {
         adapter.onItemClick = {
-            setResult(RESULT_OK, Intent().putExtra("discount", it))
+            setResult(RESULT_OK, Intent().apply {
+                action = intent.action
+                putExtra(JobOrderCreateActivity.PAYLOAD_EXTRA, it)
+            })
             finish()
         }
 
@@ -49,7 +53,10 @@ class JOSelectDiscountActivity : AppCompatActivity() {
         }
 
         binding.buttonRemove.setOnClickListener {
-            setResult(RESULT_OK, Intent().putExtra("discount", ""))
+            setResult(RESULT_OK, Intent().apply {
+                action = intent.action
+                putExtra(JobOrderCreateActivity.PAYLOAD_EXTRA, "")
+            })
             finish()
         }
     }

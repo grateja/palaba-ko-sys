@@ -2,7 +2,7 @@ package com.csi.palabakosys.room.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import com.csi.palabakosys.model.ActionPermissionEnum
+import com.csi.palabakosys.model.EnumActionPermission
 import com.csi.palabakosys.model.Role
 
 @Entity(tableName = "users")
@@ -20,7 +20,7 @@ class EntityUser(
     var password: String,
 
     @ColumnInfo(name = "permissions")
-    var permissions: List<ActionPermissionEnum>,
+    var permissions: List<EnumActionPermission>,
 
     @ColumnInfo(name = "contact_number")
     var contactNumber: String? = null,
