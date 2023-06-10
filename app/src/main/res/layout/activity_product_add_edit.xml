@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".app.products.edit.ProductAddEditActivity">
+    <data>
+        <variable
+            name="viewModel"
+            type="com.csi.palabakosys.app.products.edit.ProductAddEditViewModel" />
+    </data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Name"
+                app:errorEnabled="true"
+                app:errorText="@{viewModel.validation.get(`name`)}">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:text="@={viewModel.model.name}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`name`)}"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Price"
+                app:errorEnabled="true"
+                app:errorText="@{viewModel.validation.get(`price`)}">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:text="@={viewModel.model.price + ``}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`price`)}"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:selectedMeasureUnit="@={viewModel.model.measureUnit}">
+                <RadioButton
+                    android:id="@+id/radio_measure_unit_pcs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{com.csi.palabakosys.model.EnumMeasureUnit.PCS.toString()}"/>
+                <RadioButton
+                    android:id="@+id/radio_measure_unit_sachet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{com.csi.palabakosys.model.EnumMeasureUnit.SACHET.toString()}"/>
+                <RadioButton
+                    android:id="@+id/radio_measure_unit_milliliter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{com.csi.palabakosys.model.EnumMeasureUnit.MILLILITER.toString()}"/>
+                <RadioButton
+                    android:id="@+id/radio_measure_unit_liter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{com.csi.palabakosys.model.EnumMeasureUnit.LITER.toString()}"/>
+                <RadioButton
+                    android:id="@+id/radio_measure_unit_load"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{com.csi.palabakosys.model.EnumMeasureUnit.LOAD.toString()}"/>
+            </RadioGroup>
+            <include
+                android:id="@+id/controls"
+                app:showDelete="@{viewModel.crudActionEnum == com.csi.palabakosys.model.CRUDActionEnum.UPDATE}"
+                layout="@layout/incl_alter_controls"/>
+        </LinearLayout>
+    </LinearLayout>
+</layout>

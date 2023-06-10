@@ -1,4 +1,4 @@
-package com.csi.palabakosys.app.expenses.edit
+package com.csi.palabakosys.app.products.edit
 
 import android.app.AlertDialog
 import android.content.Intent
@@ -10,7 +10,7 @@ import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
 import com.csi.palabakosys.app.auth.AuthActionDialogActivity
 import com.csi.palabakosys.app.auth.LoginCredentials
-import com.csi.palabakosys.databinding.ActivityExpenseAddEditBinding
+import com.csi.palabakosys.databinding.ActivityProductAddEditBinding
 import com.csi.palabakosys.util.ActivityLauncher
 import com.csi.palabakosys.util.BaseActivity
 import com.csi.palabakosys.util.DataState
@@ -19,18 +19,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
 @AndroidEntryPoint
-class ExpenseAddEditActivity : BaseActivity() {
-//    companion object {
-//        const val EXPENSE_ID = "expense_id"
-//        const val ACTION_SAVE = "save"
-//        const val ACTION_DELETE = "delete"
-//    }
-    private lateinit var binding: ActivityExpenseAddEditBinding
-    private val viewModel: ExpenseAddEditViewModel by viewModels()
+class ProductAddEditActivity : BaseActivity() {
+    private lateinit var binding: ActivityProductAddEditBinding
+    private val viewModel: ProductAddEditViewModel by viewModels()
     private val authLauncher = ActivityLauncher(this)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_expense_add_edit)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_product_add_edit)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
@@ -41,7 +36,6 @@ class ExpenseAddEditActivity : BaseActivity() {
             viewModel.get(it)
         }
     }
-
     private fun subscribeEvents() {
         binding.controls.buttonSave.setOnClickListener {
             val intent = Intent(this, AuthActionDialogActivity::class.java).apply {
@@ -62,7 +56,7 @@ class ExpenseAddEditActivity : BaseActivity() {
         authLauncher.onOk = {
             val loginCredentials = it.data?.getParcelableExtra<LoginCredentials>(AuthActionDialogActivity.RESULT)
             if(it.data?.action == ACTION_SAVE) {
-                viewModel.save(loginCredentials?.userId)
+                viewModel.save()
             } else if(it.data?.action == ACTION_DELETE) {
                 AlertDialog.Builder(this).apply {
                     setTitle("Delete this item")

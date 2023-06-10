@@ -20,11 +20,11 @@ import java.util.*
 
 @AndroidEntryPoint
 class DiscountAddEditActivity : BaseActivity() {
-    companion object {
-        const val DISCOUNT_ID = "discount_id"
-        const val ACTION_SAVE = "save"
-        const val ACTION_DELETE = "delete"
-    }
+//    companion object {
+//        const val DISCOUNT_ID = "discount_id"
+//        const val ACTION_SAVE = "save"
+//        const val ACTION_DELETE = "delete"
+//    }
     private lateinit var binding: ActivityDiscountAddEditBinding
     private val viewModel: DiscountAddEditViewModel by viewModels()
     private val authLauncher = ActivityLauncher(this)
@@ -39,7 +39,7 @@ class DiscountAddEditActivity : BaseActivity() {
         subscribeListeners()
         subscribeEvents()
 
-        intent.getStringExtra(DISCOUNT_ID).toUUID().let {
+        intent.getStringExtra(ENTITY_ID).toUUID().let {
             viewModel.get(it)
         }
     }
@@ -104,7 +104,7 @@ class DiscountAddEditActivity : BaseActivity() {
 
     private fun confirm(expenseId: UUID?) {
         val intent = Intent().apply {
-            putExtra(DISCOUNT_ID, expenseId.toString())
+            putExtra(ENTITY_ID, expenseId.toString())
         }
         setResult(RESULT_OK, intent)
         viewModel.resetState()

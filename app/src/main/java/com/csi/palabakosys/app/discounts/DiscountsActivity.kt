@@ -14,6 +14,7 @@ import com.csi.palabakosys.app.expenses.edit.ExpenseAddEditActivity
 import com.csi.palabakosys.databinding.ActivityDiscountsBinding
 import com.csi.palabakosys.room.entities.EntityDiscount
 import com.csi.palabakosys.util.ActivityLauncher
+import com.csi.palabakosys.util.BaseActivity
 import com.csi.palabakosys.util.FilterActivity
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -62,7 +63,7 @@ class DiscountsActivity : FilterActivity() {
 
     private fun openAddEdit(item: EntityDiscount?) {
         val intent = Intent(this, DiscountAddEditActivity::class.java).apply {
-            putExtra(DiscountAddEditActivity.DISCOUNT_ID, item?.id.toString())
+            putExtra(BaseActivity.ENTITY_ID, item?.id.toString())
         }
         addEditLauncher.launch(intent)
     }

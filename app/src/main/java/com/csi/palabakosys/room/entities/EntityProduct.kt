@@ -17,10 +17,10 @@ class EntityProduct(
     var currentStock: Int,
 
     @ColumnInfo(name = "measure_unit")
-    val measureUnit: EnumMeasureUnit,
+    var measureUnit: EnumMeasureUnit,
 
     @ColumnInfo(name = "unit_per_serve")
-    val unitPerServe: Float,
+    var unitPerServe: Float,
 
     @ColumnInfo(name = "product_type")
     var productType: EnumProductType?

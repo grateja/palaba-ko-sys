@@ -30,6 +30,7 @@ import com.csi.palabakosys.app.joborders.list.JobOrderListActivity
 import com.csi.palabakosys.app.machines.MachinesActivity
 import com.csi.palabakosys.app.preferences.ip.SettingsIPAddressActivity
 import com.csi.palabakosys.app.preferences.printer.SettingsPrinterActivity
+import com.csi.palabakosys.app.products.ProductsActivity
 import com.csi.palabakosys.app.remote.shared_ui.RemoteActivationActivity
 import com.csi.palabakosys.broadcast_receiver.ConnectivityReceiver
 import com.csi.palabakosys.databinding.ActivityMainBinding
@@ -105,6 +106,13 @@ class MainActivity : EndingActivity() {
             val intent = Intent(this, DiscountsActivity::class.java)
             startActivity(intent)
         }
+
+        binding.btnProducts.setOnClickListener {
+            val intent = Intent(this, ProductsActivity::class.java)
+            startActivity(intent)
+        }
+
+
 
         computeWindowSizeClasses()
         val connectivityManager = getSystemService(ConnectivityManager::class.java) as ConnectivityManager

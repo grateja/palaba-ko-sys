@@ -1,6 +1,7 @@
 package com.csi.palabakosys.room.repository
 
 import com.csi.palabakosys.app.joborders.create.products.MenuProductItem
+import com.csi.palabakosys.app.products.ProductItemFull
 import com.csi.palabakosys.room.dao.DaoProduct
 import com.csi.palabakosys.room.entities.EntityProduct
 import java.util.UUID
@@ -25,5 +26,9 @@ constructor (
 
     suspend fun menuItems() : List<MenuProductItem> {
         return daoProduct.menuItems()
+    }
+
+    suspend fun filter(keyword: String) : List<ProductItemFull> {
+        return daoProduct.filter(keyword)
     }
 }

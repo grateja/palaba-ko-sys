@@ -1,4 +1,4 @@
-package com.csi.palabakosys.app.expenses
+package com.csi.palabakosys.app.products
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,8 +7,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
 import com.csi.palabakosys.adapters.Adapter
-import com.csi.palabakosys.app.expenses.edit.ExpenseAddEditActivity
-import com.csi.palabakosys.databinding.ActivityExpensesBinding
+import com.csi.palabakosys.app.products.edit.ProductAddEditActivity
+import com.csi.palabakosys.databinding.ActivityProductsBinding
 import com.csi.palabakosys.util.ActivityLauncher
 import com.csi.palabakosys.util.BaseActivity
 import com.csi.palabakosys.util.FilterActivity
@@ -16,34 +16,25 @@ import com.csi.palabakosys.util.toUUID
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ExpensesActivity : FilterActivity() {
-    private lateinit var binding: ActivityExpensesBinding
-    private val viewModel: ExpensesViewModel by viewModels()
-    private val adapter = Adapter<ExpenseItemFull>(R.layout.recycler_item_expenses_full)
+class ProductsActivity : FilterActivity() {
+    private lateinit var binding: ActivityProductsBinding
+    private val viewModel: ProductsViewModel by viewModels()
+    private val adapter = Adapter<ProductItemFull>(R.layout.recycler_item_products_full)
     private val addEditLauncher = ActivityLauncher(this)
 
-    override var queryHint = "Search Expenses Remarks"
+    override var queryHint = "Search Discounts"
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_expenses)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_products)
 
         super.onCreate(savedInstanceState)
 
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
-        binding.recyclerExpenses.adapter = adapter
+        binding.recycler.adapter = adapter
 
         subscribeEvents()
         subscribeListeners()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.filter()
-    }
-
-    override fun onQuery(keyword: String?) {
-        viewModel.setKeyword(keyword)
     }
 
     private fun subscribeEvents() {
@@ -58,9 +49,9 @@ class ExpensesActivity : FilterActivity() {
         }
     }
 
-    private fun openAddEdit(item: ExpenseItemFull?) {
-        val intent = Intent(this, ExpenseAddEditActivity::class.java).apply {
-            putExtra(BaseActivity.ENTITY_ID, item?.expense?.id.toString())
+    private fun openAddEdit(item: ProductItemFull?) {
+        val intent = Intent(this, ProductAddEditActivity::class.java).apply {
+            putExtra(BaseActivity.ENTITY_ID, item?.product?.id.toString())
         }
         addEditLauncher.launch(intent)
     }
@@ -69,5 +60,14 @@ class ExpensesActivity : FilterActivity() {
         viewModel.items.observe(this, Observer {
             adapter.setData(it)
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.filter()
+    }
+
+    override fun onQuery(keyword: String?) {
+        viewModel.setKeyword(keyword)
     }
 }
