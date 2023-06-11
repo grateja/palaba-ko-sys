@@ -46,4 +46,18 @@
     <string name="print">Print</string>
     <string name="locked_job_order_prompt">The Job Order cannot be modified if it was created on a previous date other than today or if it has already been paid.</string>
     <string name="remarks">Remarks</string>
+
+    <string name="permission_prompt">
+<![CDATA[
+<p><b>To use the app, you need to grant it the necessary permissions to enable or disable Bluetooth and access location services.</b></p>
+<p>These permissions are required for the app to function properly and provide the intended features.</p>
+<br/>
+<p>When you launch the app for the first time, it will prompt you to grant the necessary permissions. This includes the ability to <b>turn on/off Bluetooth</b> and access <b>location services</b>.</p>
+<p>By granting these permissions, you allow the app to manage Bluetooth functionality and retrieve location information as required.</p>
+<br/>
+<p>Please note that enabling these permissions is crucial for the app&apos;s functionality, as it relies on Bluetooth and location services to provide you with a seamless experience.</p>
+<p>Rest assured that the app will handle these permissions responsibly and in accordance with the applicable privacy and security guidelines.</p>
+]]>
+    </string>
+
 </resources>

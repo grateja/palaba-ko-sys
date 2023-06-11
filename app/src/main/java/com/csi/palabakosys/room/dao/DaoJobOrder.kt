@@ -127,8 +127,8 @@ interface DaoJobOrder {
         val jobOrderId = jobOrderWithItems.jobOrder.id
         val paymentId = jobOrderWithItems.payment?.id
 
-        voidJobOrder(jobOrderId, jobOrderVoid.voidBy.toUUID(), jobOrderVoid.remarks)
-        voidPayment(paymentId, jobOrderVoid.voidBy.toUUID(), jobOrderVoid.remarks)
+        voidJobOrder(jobOrderId, jobOrderVoid.voidByUserId, jobOrderVoid.remarks)
+        voidPayment(paymentId, jobOrderVoid.voidByUserId, jobOrderVoid.remarks)
         jobOrderWithItems.products?.onEach {
             returnProduct(it.productId, it.quantity)
         }

@@ -9,8 +9,8 @@ class EntityMachineRemarks : BaseEntity() {
     @ColumnInfo(name = "machine_id")
     var machineId: UUID? = null
 
-    @ColumnInfo(name = "staff_name")
-    var staffName: String? = null
+    @ColumnInfo(name = "user_id")
+    var userId: UUID? = null
     var title: String? = null
     var remarks: String? = null
 }

@@ -52,7 +52,7 @@ constructor(
         viewModelScope.launch {
             val validation = _validation.value ?: InputValidation()
             val jobOrderWithItems = _jobOrder.value
-            val jobOrderId = jobOrder.value?.jobOrder?.id
+//            val jobOrderId = jobOrder.value?.jobOrder?.id
 //            val paymentId = jobOrder.value?.payment?.id
 
             validation.addRules("remarks", remarks.value, arrayOf(Rule.Required))
@@ -67,7 +67,7 @@ constructor(
                 return@launch
             }
 
-            val jobOrderVoid = EntityJobOrderVoid(userId.toString(), remarks.value)
+            val jobOrderVoid = EntityJobOrderVoid(userId, remarks.value)
             jobOrderRepository.cancelJobOrder(jobOrderWithItems, jobOrderVoid).let {
                 _dataState.value = DataState.ConfirmSave(jobOrderWithItems.jobOrder.id)
             }

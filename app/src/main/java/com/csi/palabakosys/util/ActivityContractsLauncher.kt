@@ -11,7 +11,7 @@ class ActivityContractsLauncher(activity: AppCompatActivity) {
     private var resultLauncher =
         activity.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result ->
             onOk?.invoke(result)
-//            if(result.resultCode == AppCompatActivity.RESULT_OK) {
+//            if(result == AppCompatActivity.RESULT_OK) {
 //                println("id from activity launcher")
 //                println(result.data?.getStringExtra("id"))
 //                onOk?.invoke(result)

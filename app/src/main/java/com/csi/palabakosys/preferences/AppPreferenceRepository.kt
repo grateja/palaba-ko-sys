@@ -62,8 +62,8 @@ constructor (@ApplicationContext context: Context) {
 
     fun printerSettings(): PrinterSettings {
         return PrinterSettings(
-            sharedPreferences.getString("printer_name", ""),
-            sharedPreferences.getString("printer_address", ""),
+            sharedPreferences.getString("printer_name", "Tap to select printer") ?: "keme",
+            sharedPreferences.getString("printer_address", "Tap to select printer"),
             sharedPreferences.getInt("printer_dpi", 203),
             sharedPreferences.getFloat("printer_width", 58f),
             sharedPreferences.getInt("printer_character", 32)

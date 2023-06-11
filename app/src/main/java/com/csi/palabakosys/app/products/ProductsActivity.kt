@@ -9,10 +9,7 @@ import com.csi.palabakosys.R
 import com.csi.palabakosys.adapters.Adapter
 import com.csi.palabakosys.app.products.edit.ProductAddEditActivity
 import com.csi.palabakosys.databinding.ActivityProductsBinding
-import com.csi.palabakosys.util.ActivityLauncher
-import com.csi.palabakosys.util.BaseActivity
-import com.csi.palabakosys.util.FilterActivity
-import com.csi.palabakosys.util.toUUID
+import com.csi.palabakosys.util.*
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -20,9 +17,9 @@ class ProductsActivity : FilterActivity() {
     private lateinit var binding: ActivityProductsBinding
     private val viewModel: ProductsViewModel by viewModels()
     private val adapter = Adapter<ProductItemFull>(R.layout.recycler_item_products_full)
-    private val addEditLauncher = ActivityLauncher(this)
+//    private val addEditLauncher = ActivityLauncher(this)
 
-    override var queryHint = "Search Discounts"
+    override var filterHint = "Search Discounts"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_products)
@@ -45,13 +42,13 @@ class ProductsActivity : FilterActivity() {
             openAddEdit(it)
         }
         addEditLauncher.onOk = {
-            val expenseId = it.data?.getStringExtra(BaseActivity.ENTITY_ID).toUUID()
+            val expenseId = it.data?.getStringExtra(CrudActivity.ENTITY_ID).toUUID()
         }
     }
 
     private fun openAddEdit(item: ProductItemFull?) {
         val intent = Intent(this, ProductAddEditActivity::class.java).apply {
-            putExtra(BaseActivity.ENTITY_ID, item?.product?.id.toString())
+            putExtra(CrudActivity.ENTITY_ID, item?.product?.id.toString())
         }
         addEditLauncher.launch(intent)
     }

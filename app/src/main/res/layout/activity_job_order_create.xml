@@ -26,6 +26,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/lockedPrompt"
                     android:padding="8dp"
                     android:visibility="@{viewModel.locked}"
                     android:textColor="@color/white"
@@ -33,6 +34,10 @@
                     android:textAlignment="center"
                     android:text="@string/locked_job_order_prompt"
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:text="@{viewModel.currentJobOrder.id.toString()}"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
                 <TableLayout
                     android:layout_width="match_parent"
@@ -90,6 +95,7 @@
                             android:textAlignment="textEnd"
                             android:text="Date created:"/>
                         <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cardCreatedAt"
                             style="@style/CardSpan"
                             android:layout_margin="8dp"
                             android:layout_width="wrap_content"
@@ -99,7 +105,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="sans-serif"
-                                android:text="@{viewModel.createdAt}"
+                                android:text="@{viewModel.currentJobOrder.createdAt}"
                                 android:textColor="#000000"
                                 android:textFontWeight="900"
                                 android:textSize="20sp"

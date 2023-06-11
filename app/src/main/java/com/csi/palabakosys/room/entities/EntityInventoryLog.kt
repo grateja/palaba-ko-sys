@@ -8,18 +8,20 @@ import java.util.*
 class EntityInventoryLog : BaseEntity() {
     @ColumnInfo(name = "product_id")
     var productId: UUID? = null
-
-    @ColumnInfo(name = "product_name")
-    var productName: String? = null
+//
+//    @ColumnInfo(name = "product_name")
+//    var productName: String? = null
 
     @ColumnInfo(name = "receipt_number")
     var receiptNumber: String? = null
+
     var quantity: Float = 0f
 
     @ColumnInfo(name = "total_amount")
     var totalAmount: Float = 0f
 
-    @ColumnInfo(name = "staff_name")
-    var staffName: String? = null
+    @ColumnInfo(name = "user_id")
+    var userId: UUID? = null
+
     var remarks: String? = null
 }

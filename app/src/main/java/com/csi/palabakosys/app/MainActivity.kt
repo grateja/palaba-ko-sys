@@ -25,6 +25,7 @@ import androidx.window.layout.WindowMetricsCalculator
 import com.csi.palabakosys.R
 import com.csi.palabakosys.app.discounts.DiscountsActivity
 import com.csi.palabakosys.app.expenses.ExpensesActivity
+import com.csi.palabakosys.app.extras.ExtrasActivity
 import com.csi.palabakosys.app.joborders.create.customer.SelectCustomerActivity
 import com.csi.palabakosys.app.joborders.list.JobOrderListActivity
 import com.csi.palabakosys.app.machines.MachinesActivity
@@ -111,6 +112,12 @@ class MainActivity : EndingActivity() {
             val intent = Intent(this, ProductsActivity::class.java)
             startActivity(intent)
         }
+
+        binding.btnExtras.setOnClickListener {
+            val intent = Intent(this, ExtrasActivity::class.java)
+            startActivity(intent)
+        }
+
 
 
 

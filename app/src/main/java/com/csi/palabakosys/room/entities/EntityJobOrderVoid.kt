@@ -2,10 +2,11 @@ package com.csi.palabakosys.room.entities
 
 import androidx.room.ColumnInfo
 import java.time.Instant
+import java.util.*
 
 class EntityJobOrderVoid(
     @ColumnInfo(name = "void_by")
-    var voidBy: String?,
+    var voidByUserId: UUID?,
 
     @ColumnInfo(name = "void_remarks")
     var remarks: String?,

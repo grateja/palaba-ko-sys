@@ -15,6 +15,7 @@ import com.csi.palabakosys.databinding.ActivityDiscountsBinding
 import com.csi.palabakosys.room.entities.EntityDiscount
 import com.csi.palabakosys.util.ActivityLauncher
 import com.csi.palabakosys.util.BaseActivity
+import com.csi.palabakosys.util.CrudActivity
 import com.csi.palabakosys.util.FilterActivity
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -23,9 +24,9 @@ class DiscountsActivity : FilterActivity() {
     private lateinit var binding: ActivityDiscountsBinding
     private val viewModel: DiscountsViewModel by viewModels()
     private val adapter = Adapter<EntityDiscount>(R.layout.recycler_item_discounts_full)
-    private val addEditLauncher = ActivityLauncher(this)
+//    private val addEditLauncher = ActivityLauncher(this)
 
-    override var queryHint = "Search Discounts"
+    override var filterHint = "Search Discounts"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_discounts)
@@ -63,7 +64,7 @@ class DiscountsActivity : FilterActivity() {
 
     private fun openAddEdit(item: EntityDiscount?) {
         val intent = Intent(this, DiscountAddEditActivity::class.java).apply {
-            putExtra(BaseActivity.ENTITY_ID, item?.id.toString())
+            putExtra(CrudActivity.ENTITY_ID, item?.id.toString())
         }
         addEditLauncher.launch(intent)
     }

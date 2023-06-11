@@ -12,11 +12,11 @@ data class EntityActivationRef(
     @ColumnInfo(name = "total_minutes")
     var totalMinutes: Int?,
 
-//    @ColumnInfo(name = "customer_id")
-//    var customerId: String?,
-//
     @ColumnInfo(name = "jo_service_id")
     var joServiceId: UUID?,
+
+    @ColumnInfo(name = "customer_id")
+    var customerId: UUID?,
 ) {
     fun remainingTime() : Long {
         val _totalMinutes = this.totalMinutes ?: 0

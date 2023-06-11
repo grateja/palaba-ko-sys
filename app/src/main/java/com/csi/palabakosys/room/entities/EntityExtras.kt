@@ -13,4 +13,6 @@ data class EntityExtras(
 
     @ColumnInfo(name = "category")
     var category: String?
-) : BaseEntity()
+) : BaseEntity() {
+    constructor() : this("", 0f, null)
+}

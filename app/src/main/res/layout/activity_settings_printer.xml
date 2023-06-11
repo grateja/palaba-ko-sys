@@ -2,27 +2,112 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-    <data></data>
+    <data>
+        <variable
+            name="viewModel"
+            type="com.csi.palabakosys.app.preferences.printer.PrinterSettingsViewModel" />
+    </data>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".app.preferences.printer.SettingsPrinterActivity"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/buttonTurnOnBluetooth"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Bluetooth"
-            tools:layout_editor_absoluteX="39dp"
-            tools:layout_editor_absoluteY="68dp" />
-        <Button
-            android:id="@+id/buttonTurnOnLocationServices"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Turn on location services"
-            tools:layout_editor_absoluteX="39dp"
-            tools:layout_editor_absoluteY="68dp" />
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardPrinterBrowser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Printer name"
+                    app:errorEnabled="true"
+                    app:errorText="@{viewModel.validation.get(`name`)}">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/textPrinterName"
+                        android:text="@={viewModel.printerName}"
+                        android:enabled="false"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`name`)}"
+                        android:maxLines="1" />
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Mac Address"
+                    app:errorEnabled="true"
+                    app:errorText="@{viewModel.validation.get(`macAddress`)}">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/textMacAddress"
+                        android:text="@={viewModel.macAddress}"
+                        android:enabled="false"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`macAddress`)}"
+                        android:maxLines="1" />
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="DPI"
+                    app:errorEnabled="true"
+                    app:errorText="@{viewModel.validation.get(`dpi`)}">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/textDpi"
+                        android:text="@={viewModel.dpi}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal"
+                        android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`dpi`)}"
+                        android:maxLines="1" />
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Width (mm)"
+                    app:errorEnabled="true"
+                    app:errorText="@{viewModel.validation.get(`width`)}">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/textWidth"
+                        android:text="@={viewModel.width}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal"
+                        android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`width`)}"
+                        android:maxLines="1" />
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Characters per line"
+                    app:errorEnabled="true"
+                    app:errorText="@{viewModel.validation.get(`charactersPerLine`)}">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/textCharacters"
+                        android:text="@={viewModel.charactersPerLine}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal"
+                        android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`charactersPerLine`)}"
+                        android:maxLines="1" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/labelCRN"
@@ -33,21 +118,21 @@
             app:errorEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:text="@={viewModel.sampleText}"
                 android:id="@+id/textTestPrint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="1" />
         </com.google.android.material.textfield.TextInputLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerBluetoothDevices"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
-        </LinearLayout>
-
+        <Button
+            android:id="@+id/buttonTest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Test"/>
+        <Button
+            android:id="@+id/buttonSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/save"/>
     </LinearLayout>
 </layout>

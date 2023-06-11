@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".app.preferences.printer.browser.SettingsPrinterBrowserActivity">
+    <data>
+        <variable
+            name="viewModel"
+            type="com.csi.palabakosys.app.preferences.printer.browser.PrinterBrowserViewModel" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:visibility="gone"
+            android:id="@+id/buttonTurnOnBluetooth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/RoundButtonNeutral"
+            android:text="Turn on bluetooth"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/mainContainer"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:visibility="visible">
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/labelPermissionPrompt"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="@tools:sample/lorem/random"
+                    tools:visibility="visible"/>
+                <Button
+                    android:visibility="gone"
+                    android:id="@+id/buttonPermission"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/RoundButtonNeutral"
+                    android:text="Open permission settings"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/labelPermissionPrompt"
+                    tools:visibility="visible"/>
+                <Button
+                    android:visibility="gone"
+                    android:id="@+id/buttonTurnOnLocationServices"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/RoundButtonNeutral"
+                    android:text="Turn on location services"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/buttonTurnOnBluetooth"
+                    tools:visibility="visible"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:padding="12dp"
+                    style="@style/TextItemTitle"
+                    android:text="Found devices"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerFoundDevices"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:padding="12dp"
+                    style="@style/TextItemTitle"
+                    android:text="Saved devices"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerSavedDevices"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

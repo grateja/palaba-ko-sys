@@ -75,6 +75,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Products" />
+            <Button
+                android:id="@+id/btnExtras"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Extras" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </layout>

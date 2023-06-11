@@ -1,10 +1,11 @@
 package com.csi.palabakosys.app.joborders.create
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.widget.DatePicker
+import android.widget.TimePicker
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
@@ -24,7 +25,6 @@ import com.csi.palabakosys.app.joborders.create.extras.JobOrderExtrasItemAdapter
 import com.csi.palabakosys.app.joborders.create.extras.MenuExtrasItem
 import com.csi.palabakosys.app.joborders.create.packages.JOSelectPackageActivity
 import com.csi.palabakosys.app.joborders.create.packages.MenuJobOrderPackage
-import com.csi.palabakosys.app.joborders.preview.JobOrderPreviewActivity
 import com.csi.palabakosys.app.joborders.create.products.JOSelectProductsActivity
 import com.csi.palabakosys.app.joborders.create.products.JobOrderProductsItemAdapter
 import com.csi.palabakosys.app.joborders.create.products.MenuProductItem
@@ -38,6 +38,9 @@ import com.csi.palabakosys.util.ActivityLauncher
 import com.csi.palabakosys.util.BaseActivity
 import com.csi.palabakosys.util.toUUID
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -49,6 +52,8 @@ class JobOrderCreateActivity : BaseActivity() {
         const val PAYLOAD_EXTRA = "payload"
         const val ITEM_PRESET_EXTRA = "itemPreset"
 
+        const val ACTION_MODIFY_DATETIME = "modifyDateTime"
+        const val ACTION_REQUEST_UNLOCK = "requestUnlock"
         const val ACTION_SYNC_PACKAGE = "package"
         const val ACTION_SYNC_SERVICES = "services"
         const val ACTION_SYNC_PRODUCTS = "products"
@@ -57,7 +62,7 @@ class JobOrderCreateActivity : BaseActivity() {
         const val ACTION_SYNC_DISCOUNT = "discount"
         const val ACTION_SYNC_PAYMENT = "payment"
         const val ACTION_DELETE_JOB_ORDER = "deleteJobOrder"
-        const val ACTION_AUTH = "auth"
+        const val ACTION_CONFIRM_SAVE = "auth"
     }
 
     private lateinit var binding: ActivityJobOrderCreateBinding
@@ -107,6 +112,52 @@ class JobOrderCreateActivity : BaseActivity() {
         subscribeEvents()
     }
 
+    private fun showDateTimePickerDialog(currentDateTime: Instant) {
+        // Get current date and time
+//        val calendar = Calendar.getInstance()
+//        val year = calendar.get(Calendar.YEAR)
+//        val month = calendar.get(Calendar.MONTH)
+//        val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
+//        val hourOfDay = calendar.get(Calendar.HOUR_OF_DAY)
+//        val minute = calendar.get(Calendar.MINUTE)
+
+        // Create and show the date picker dialog
+
+        val _currentDateTime = currentDateTime.atZone(ZoneId.systemDefault())
+
+        val datePickerDialog = DatePickerDialog(this,
+            DatePickerDialog.OnDateSetListener { _: DatePicker?, selectedYear: Int, selectedMonth: Int, selectedDayOfMonth: Int ->
+                // Update the selected date
+                val year = selectedYear
+                val month = selectedMonth
+                val dayOfMonth = selectedDayOfMonth
+
+                // Create and show the time picker dialog
+                val timePickerDialog = TimePickerDialog(this,
+                    TimePickerDialog.OnTimeSetListener { _: TimePicker?, selectedHourOfDay: Int, selectedMinute: Int ->
+                        // Update the selected time
+                        val hourOfDay = selectedHourOfDay
+                        val minute = selectedMinute
+
+                        // Display the selected date and time
+                        val dateTime = "$dayOfMonth/${month + 1}/$year $hourOfDay:$minute"
+
+                        Toast.makeText(this, "Selected date and time: $dateTime", Toast.LENGTH_LONG).show()
+
+                        val localDateTime = LocalDateTime.of(year, month, dayOfMonth, hourOfDay, minute)
+                        val zoneId = ZoneId.systemDefault()
+                        val instant = localDateTime.atZone(zoneId).toInstant()
+
+                        viewModel.applyDateTime(instant)
+
+                    }, _currentDateTime.hour, _currentDateTime.minute, false)
+
+                timePickerDialog.show()
+            }, _currentDateTime.year, _currentDateTime.monthValue, _currentDateTime.dayOfMonth)
+
+        datePickerDialog.show()
+    }
+
     private fun subscribeEvents() {
 //        packageLauncher.onOk = { result ->
 //            result.data?.getParcelableArrayListExtra<MenuServiceItem>(JOSelectPackageActivity.SERVICES)?.toList().let {
@@ -119,6 +170,12 @@ class JobOrderCreateActivity : BaseActivity() {
 //                viewModel.syncProducts(it)
 //            }
 //        }
+        binding.cardCreatedAt.setOnClickListener {
+            openAuthRequestModifyDateTime()
+        }
+        binding.lockedPrompt.setOnClickListener {
+            openAuthRequestUnlock()
+        }
 
         launcher.onOk = { result ->
             val data = result.data
@@ -133,6 +190,9 @@ class JobOrderCreateActivity : BaseActivity() {
                     data.getParcelableArrayListExtra<MenuProductItem>(JOSelectPackageActivity.PRODUCTS)?.toList().let {
                         viewModel.syncProducts(it)
                     }
+                }
+                ACTION_MODIFY_DATETIME -> {
+                    viewModel.requestModifyDateTime()
                 }
                 ACTION_SYNC_SERVICES -> {
                     data.getParcelableArrayListExtra<MenuServiceItem>(PAYLOAD_EXTRA)?.toList().let {
@@ -166,10 +226,13 @@ class JobOrderCreateActivity : BaseActivity() {
                 ACTION_DELETE_JOB_ORDER -> {
                     finish()
                 }
-                ACTION_AUTH -> {
+                ACTION_CONFIRM_SAVE -> {
                     data.getParcelableExtra<LoginCredentials>(AuthActionDialogActivity.RESULT)?.let {
                         viewModel.save(it.userId)
                     }
+                }
+                ACTION_REQUEST_UNLOCK -> {
+                    viewModel.unlock()
                 }
             }
 //            if(result.data?.action == ACTION_SYNC_SERVICES) {
@@ -178,52 +241,6 @@ class JobOrderCreateActivity : BaseActivity() {
 //                }
 //            }
         }
-
-//        servicesLauncher.onOk = {
-//            val selected = it.data?.getParcelableArrayListExtra<MenuServiceItem>("services")?.toList()
-//            viewModel.syncServices(selected)
-//        }
-
-//        productsLauncher.onOk = {
-//            val result = it.data?.getParcelableArrayListExtra<MenuProductItem>("products")?.toList()
-//            viewModel.syncProducts(result)
-//        }
-
-//        extrasLauncher.onOk = {
-//            val result = it.data?.getParcelableArrayListExtra<MenuExtrasItem>("extras")?.toList()
-//            viewModel.syncExtras(result)
-//        }
-
-//        deliveryLauncher.onOk = {
-//            val result = it.data?.getParcelableExtra<DeliveryCharge>("deliveryCharge")
-//            viewModel.setDeliveryCharge(result)
-//        }
-
-//        discountLauncher.onOk = {
-//            val result = it.data?.getParcelableExtra<MenuDiscount>("discount")
-//            viewModel.applyDiscount(result)
-//        }
-
-//        authLauncher.onOk = {
-//            val result = it.data.getParcelableExtra<LoginCredentials>(AuthActionDialogActivity.RESULT)?.let {
-//                viewModel.save(it.userId)
-//            }
-//        }
-
-//        paymentLauncher.onOk = {
-//            val paymentId = it.data?.getStringExtra(JobOrderPaymentActivity.PAYMENT_ID).toUUID()
-//            viewModel.loadPayment(paymentId)
-//        }
-
-//        jobOrderCancelLauncher.onOk = {
-//            if(it.data?.action == JobOrderCancelActivity.ACTION_DELETE_JOB_ORDER) {
-//                finish()
-//            }
-//        }
-
-//        packageAdapter.onItemClick = {
-//            viewModel.openPackages(it)
-//        }
 
         servicesAdapter.onItemClick = {
             viewModel.openServices(it)
@@ -351,13 +368,17 @@ class JobOrderCreateActivity : BaseActivity() {
 //                    }
                     viewModel.resetState()
                 }
+                is CreateJobOrderViewModel.DataState.ModifyDateTime -> {
+                    showDateTimePickerDialog(it.createdAt)
+                    viewModel.resetState()
+                }
             }
         })
     }
 
     private fun prepareSubmit() {
         val intent = Intent(this, AuthActionDialogActivity::class.java).apply {
-            action = ACTION_AUTH
+            action = ACTION_CONFIRM_SAVE
             putExtra(AuthActionDialogActivity.MESSAGE, "Authentication Required")
         }
         launcher.launch(intent)
@@ -428,6 +449,20 @@ class JobOrderCreateActivity : BaseActivity() {
             action = ACTION_SYNC_PAYMENT
             putExtra(JobOrderPaymentActivity.CUSTOMER_ID, customerId.toString())
             putExtra(JobOrderPaymentActivity.PAYMENT_ID, paymentId.toString())
+        }
+        launcher.launch(intent)
+    }
+
+    private fun openAuthRequestModifyDateTime() {
+        val intent = Intent(this, AuthActionDialogActivity::class.java).apply {
+            action = ACTION_MODIFY_DATETIME
+        }
+        launcher.launch(intent)
+    }
+
+    private fun openAuthRequestUnlock() {
+        val intent = Intent(this, AuthActionDialogActivity::class.java).apply {
+            action = ACTION_REQUEST_UNLOCK
         }
         launcher.launch(intent)
     }

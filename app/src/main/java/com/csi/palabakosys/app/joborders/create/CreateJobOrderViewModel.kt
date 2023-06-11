@@ -43,6 +43,7 @@ constructor(
         data class InvalidOperation(val message: String): DataState()
         data class RequestExit(val canExit: Boolean) : DataState()
         data class RequestCancel(val jobOrderId: UUID?) : DataState()
+        data class ModifyDateTime(val createdAt: Instant) : DataState()
         object ProceedToSaveJO: DataState()
     }
 
@@ -60,7 +61,7 @@ constructor(
         _dataState.value = DataState.StateLess
     }
 
-    private val _jobOrder = MutableLiveData<EntityJobOrder>()
+    val currentJobOrder = MutableLiveData<EntityJobOrder>()
 
     val jobOrderNumber = MutableLiveData("")
     val currentCustomer = MutableLiveData<CustomerMinimal>()
@@ -68,10 +69,9 @@ constructor(
     val jobOrderServices = MutableLiveData<List<MenuServiceItem>>()
     val jobOrderProducts = MutableLiveData<List<MenuProductItem>>()
     val jobOrderExtras = MutableLiveData<List<MenuExtrasItem>>()
-//    val jobOrderPackage = MutableLiveData<List<MenuJobOrderPackage>>()
     val discount = MutableLiveData<MenuDiscount>()
     val unpaidJobOrders = MutableLiveData<List<JobOrderPaymentMinimal>>()
-    val createdAt = MutableLiveData(Instant.now())
+//    val createdAt = MutableLiveData(Instant.now())
 
     private val _payment = MutableLiveData<EntityJobOrderPayment>()
     val payment: LiveData<EntityJobOrderPayment> = _payment
@@ -262,10 +262,10 @@ constructor(
     }
 
     private fun prepare(jobOrder: EntityJobOrderWithItems) {
-        _jobOrder.value = jobOrder.jobOrder
+        currentJobOrder.value = jobOrder.jobOrder
 
         jobOrderNumber.value = jobOrder.jobOrder.jobOrderNumber
-        createdAt.value = jobOrder.jobOrder.createdAt
+//        createdAt.value = jobOrder.jobOrder.createdAt
 
         jobOrder.services.let { services ->
             jobOrderServices.value = services?.map { joSvc ->
@@ -430,6 +430,16 @@ constructor(
         _saved.value = false
     }
 
+    fun applyDateTime(instant: Instant) {
+
+//        createdAt.value = instant
+        _saved.value = false
+        currentJobOrder.value = currentJobOrder.value?.apply {
+            createdAt = instant
+            _saved.value = false
+        }
+    }
+
     /** endregion */
 
     /** region navigation */
@@ -439,6 +449,12 @@ constructor(
 //            _dataState.value = DataState.OpenPackages(it, itemPreset)
 //        }
 //    }
+
+    fun requestModifyDateTime() {
+        currentJobOrder.value?.createdAt?.let {
+            _dataState.value = DataState.ModifyDateTime(it)
+        }
+    }
 
     fun openServices(itemPreset: MenuServiceItem?) {
         if(isPaymentSaved()) return
@@ -496,13 +512,17 @@ constructor(
     }
 
     fun requestCancel() {
-        _dataState.value = DataState.RequestCancel(_jobOrder.value?.id)
+        _dataState.value = DataState.RequestCancel(currentJobOrder.value?.id)
     }
 
     fun requestExit() {
         val hasAny = hasAny.value ?: false
         val saved = saved.value ?: false
         _dataState.value = DataState.RequestExit(canExit = (!saved && !hasAny) || saved)
+    }
+
+    fun unlock() {
+        _locked.value = false
     }
 
     /** endregion */
@@ -517,10 +537,13 @@ constructor(
             val subtotal = subtotal.value ?: 0f
             val discountInPeso = discountInPeso.value ?: 0f
             val discountedAmount = subtotal - discountInPeso
+            val createdAt = currentJobOrder.value?.createdAt ?: Instant.now()
+            val jobOrderId = currentJobOrder.value?.id ?: UUID.randomUUID()
+            val paymentId = currentJobOrder.value?.paymentId
 
-            val jobOrder = EntityJobOrder(jobOrderNumber, customerId, userId, subtotal, discountInPeso, discountedAmount).apply {
-                id = _jobOrder.value?.id ?: UUID.randomUUID()
-                createdAt = _jobOrder.value?.createdAt ?: Instant.now()
+            val jobOrder = EntityJobOrder(jobOrderNumber, customerId, userId, subtotal, discountInPeso, discountedAmount, paymentId).apply {
+                this.id = jobOrderId
+                this.createdAt = createdAt
             }
 
             val services = jobOrderServices.value?.map {
@@ -552,7 +575,7 @@ constructor(
 
             jobOrderRepository.save(jobOrderWithItem)
             _dataState.value = DataState.SaveSuccess(jobOrder.id, customerId)
-            _jobOrder.value = jobOrder
+            currentJobOrder.value = jobOrder
             _saved.value = true
         }
     }

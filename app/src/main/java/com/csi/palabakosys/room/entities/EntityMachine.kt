@@ -27,21 +27,7 @@ data class EntityMachine(
     fun machineName() : String {
         return machineType?.value + "" + machineNumber
     }
-//    @ColumnInfo(name = "time_activated")
-//    var timeActivated: Instant? = null
-//
-//    @ColumnInfo(name = "total_minutes")
-//    var totalMinutes: Int = 0
-//
-//    @ColumnInfo(name = "customer_name")
-//    var customerName: String? = null
-//
-//    @ColumnInfo(name = "customer_wash_id")
-//    var customerWashId: UUID? = null
-//
-//    @ColumnInfo(name = "customer_dry_id")
-//    var customerDryId: UUID? = null
-//
+
     @ColumnInfo(name = "service_activation_id")
     var serviceActivationId: UUID? = null
 }

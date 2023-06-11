@@ -1,5 +1,6 @@
 package com.csi.palabakosys.room.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.csi.palabakosys.app.joborders.create.products.MenuProductItem
 import com.csi.palabakosys.app.products.ProductItemFull

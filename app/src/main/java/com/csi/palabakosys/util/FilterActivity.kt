@@ -1,5 +1,6 @@
 package com.csi.palabakosys.util
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
@@ -7,12 +8,10 @@ import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import com.csi.palabakosys.R
 
-open class FilterActivity : AppCompatActivity() {
+abstract class FilterActivity : AppCompatActivity(), FilterActivityInterface {
     private var searchBar: SearchView? = null
     private lateinit var toolbar: Toolbar
-    protected open lateinit var queryHint: String
-
-//    var onQuery: ((keyword: String?) -> Unit) ? = null
+    protected lateinit var addEditLauncher: ActivityLauncher
 
     protected open fun onQuery(keyword: String?) { }
 
@@ -20,15 +19,16 @@ open class FilterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
+
+        addEditLauncher = ActivityLauncher(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val hint = this.queryHint
         menuInflater.inflate(R.menu.menu_search, menu)
         searchBar = menu?.findItem(R.id.menu_search)?.actionView as SearchView
         searchBar?.apply {
             maxWidth = Integer.MAX_VALUE
-            queryHint = hint
+            queryHint = filterHint
             setOnQueryTextFocusChangeListener { _, b ->
                 if(b) {
                     toolbar.setBackgroundColor(applicationContext.getColor(R.color.white))

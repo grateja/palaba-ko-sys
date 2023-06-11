@@ -53,35 +53,4 @@ data class EntityJobOrderWithItems (
         entityColumn = "id"
     )
     var user: EntityUser? = null
-//
-//    @Relation(
-//        parentColumn = "id",
-//        entityColumn = "job_order_id"
-//    )
-//    var serviceQueues: List<EntityServiceQueue> = emptyList()
-//
-//    init {
-//        services = services.map {
-//            it.jobOrderId = jobOrder.id
-//            it
-//        }
-//        products = products.map {
-//            it.jobOrderId = jobOrder.id
-//            it
-//        }
-//    }
-
-//    fun totalAmount () : Float {
-//        return services?.map {
-//            it.price * it.quantity
-//        }?.sum() + products?.map {
-//            it.price * it.quantity
-//        }?.sum()
-//    }
-//
-//    fun cashBack() : Float {
-//        return services.map {
-//            it.cashBack * it.quantity
-//        }.sum()
-//    }
 }

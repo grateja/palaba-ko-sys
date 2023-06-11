@@ -237,7 +237,8 @@ class MachineActivationService : Service() {
                         val activationRef = EntityActivationRef(
                             Instant.now(),
                             jobOrderService.serviceRef.minutes,
-                            jobOrderService.jobOrderId
+                            jobOrderService.jobOrderId,
+                            customerId
                         )
 
                         remoteRepository.activate(

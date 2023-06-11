@@ -24,7 +24,7 @@ class SelectCustomerActivity : FilterActivity() {
     private lateinit var customerModal: AddEditCustomerFragment
     private val customersAdapter = CustomersAdapterMinimal()
 
-    override var queryHint = "Search Customer Name/CRN"
+    override var filterHint = "Search Customer Name/CRN"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_select_customer)

@@ -1,29 +1,32 @@
-package com.csi.palabakosys.app.expenses
+package com.csi.palabakosys.app.extras
 
 import android.content.Intent
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
 import com.csi.palabakosys.adapters.Adapter
-import com.csi.palabakosys.app.expenses.edit.ExpenseAddEditActivity
-import com.csi.palabakosys.databinding.ActivityExpensesBinding
-import com.csi.palabakosys.util.*
+import com.csi.palabakosys.app.extras.edit.ExtrasAddEditActivity
+import com.csi.palabakosys.databinding.ActivityExtrasBinding
+import com.csi.palabakosys.util.ActivityLauncher
+import com.csi.palabakosys.util.CrudActivity
+import com.csi.palabakosys.util.FilterActivity
+import com.csi.palabakosys.util.toUUID
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ExpensesActivity : FilterActivity() {
-    private lateinit var binding: ActivityExpensesBinding
-    private val viewModel: ExpensesViewModel by viewModels()
-    private val adapter = Adapter<ExpenseItemFull>(R.layout.recycler_item_expenses_full)
+class ExtrasActivity : FilterActivity() {
+    private lateinit var binding: ActivityExtrasBinding
+    private val viewModel: ExtrasViewModel by viewModels()
+    private val adapter = Adapter<ExtrasItemFull>(R.layout.recycler_item_extras_full)
 //    private val addEditLauncher = ActivityLauncher(this)
 
     override var filterHint = "Search Expenses Remarks"
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_expenses)
-
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_extras)
         super.onCreate(savedInstanceState)
 
         binding.viewModel = viewModel
@@ -33,7 +36,6 @@ class ExpensesActivity : FilterActivity() {
         subscribeEvents()
         subscribeListeners()
     }
-
     override fun onResume() {
         super.onResume()
         viewModel.filter()
@@ -55,9 +57,9 @@ class ExpensesActivity : FilterActivity() {
         }
     }
 
-    private fun openAddEdit(item: ExpenseItemFull?) {
-        val intent = Intent(this, ExpenseAddEditActivity::class.java).apply {
-            putExtra(CrudActivity.ENTITY_ID, item?.expense?.id.toString())
+    private fun openAddEdit(item: ExtrasItemFull?) {
+        val intent = Intent(this, ExtrasAddEditActivity::class.java).apply {
+            putExtra(CrudActivity.ENTITY_ID, item?.extras?.id.toString())
         }
         addEditLauncher.launch(intent)
     }
