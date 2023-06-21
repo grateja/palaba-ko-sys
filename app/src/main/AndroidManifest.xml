@@ -25,6 +25,23 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LMS2022">
         <activity
+            android:name=".app.customers.list.CustomersActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".app.shared_ui.AdvancedSearchDialogActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MaterialComponents.Light.Dialog"
+            android:windowSoftInputMode="stateHidden|adjustPan">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".app.preferences.printer.browser.SettingsPrinterBrowserActivity"
             android:exported="false">
             <meta-data
@@ -259,13 +276,6 @@
         </activity>
         <activity
             android:name=".app.joborders.create.JobOrderCreateActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".app.joborders.create.delicate.CategoryBrowserActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

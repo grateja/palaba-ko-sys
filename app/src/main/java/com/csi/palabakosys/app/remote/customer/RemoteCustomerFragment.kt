@@ -1,9 +1,8 @@
 package com.csi.palabakosys.app.remote.customer
 
+import android.app.Dialog
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -49,6 +48,15 @@ class RemoteCustomerFragment : BaseModalFragment() {
 
         return binding.root
     }
+
+//    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+//        val dialog = Dialog(requireContext(), R.style.FullHeightDialog)
+//        val window: Window? = dialog.window
+//        window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+//        window?.setGravity(Gravity.BOTTOM)
+//
+//        return dialog
+//    }
 
     companion object {
         var instance: RemoteCustomerFragment? = null

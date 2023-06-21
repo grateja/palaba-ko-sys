@@ -10,83 +10,73 @@
             type="com.csi.palabakosys.app.remote.shared_ui.RemoteActivationViewModel" />
     </data>
 
-    <!-- TODO: Update blank fragment layout -->
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <FrameLayout
-            android:id="@+id/fragmentRemoteSelectCustomer"
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+        <com.google.android.material.card.MaterialCardView
+            app:cardBackgroundColor="@color/secondary_background"
+            android:minHeight="300dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:behavior_peekHeight="500dp"
-            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
-            <com.google.android.material.card.MaterialCardView
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:id="@+id/mainContainer"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:minHeight="500dp">
-<!--                <com.google.android.material.progressindicator.CircularProgressIndicator-->
-<!--                    android:id="@+id/indicatorActive"-->
-<!--                    android:indeterminate="true"-->
-<!--                    android:layout_width="100dp"-->
-<!--                    android:layout_height="100dp"/>-->
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
                 <LinearLayout
-                    android:id="@+id/mainContainer"
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginBottom="16dp">
+                    android:gravity="center"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="16dp">
 
-<!--                        <ImageButton-->
-<!--                            android:id="@+id/buttonBack"-->
-<!--                            android:visibility="@{viewModel.hasSelectedCustomer}"-->
-<!--                            android:layout_width="35dp"-->
-<!--                            android:layout_height="35dp"-->
-<!--                            android:background="@color/transparent"-->
-<!--                            android:src="?attr/actionModeCloseDrawable" />-->
-
-                        <TextView
-                            style="@style/TextItemPrice"
-                            android:id="@+id/textFormTitle"
-                            android:layout_weight="1"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:text="SELECT CUSTOMER FOR"/>
-
-                        <Button
-                            android:id="@+id/buttonClose"
-                            style="@style/RoundButtonNeutral"
-                            android:text="@string/close"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                    </LinearLayout>
                     <TextView
-                        style="@style/TextItemTitle.Medium.Bold"
+                        style="@style/TextPrimary"
+                        android:id="@+id/textFormTitle"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="SELECT CUSTOMER FOR"/>
+
+                    <Button
+                        android:id="@+id/buttonClose"
+                        style="@style/RoundButtonNeutral"
+                        android:text="@string/close"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:text="Washer 1"
-                        android:text="@{viewModel.machine.machineName()}"
-                        android:layout_marginStart="12dp"/>
-                    <com.google.android.material.divider.MaterialDivider
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginVertical="10dp"/>
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyclerCustomerQueues"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginHorizontal="10dp"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-        </FrameLayout>
+                <TextView
+                    style="@style/TextItemTitle.Medium.Bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Washer 1"
+                    android:text="@{viewModel.machine.machineName()}"
+                    android:layout_marginStart="12dp"/>
+                <com.google.android.material.divider.MaterialDivider
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="10dp"/>
+                <TextView
+                    android:padding="12dp"
+                    android:visibility="@{viewModel.customerQueues.size() == 0}"
+                    android:text="@{`There are currently no customers who have available ` + viewModel.machine.machineType + ` services.`}"
+                    android:textAlignment="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="@tools:sample/lorem/random"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:visibility="@{viewModel.customerQueues.size() > 0}"
+                    android:id="@+id/recyclerCustomerQueues"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginHorizontal="10dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </layout>

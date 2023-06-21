@@ -16,16 +16,25 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp">
             <TextView
+                android:id="@+id/labelCRN"
+                style="@style/TextPrimary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{`[CRN] : ` + viewModel.crn}"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="[CRN] : #0392029"/>
+            <TextView
                 android:id="@+id/labelName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                style="@style/TileSubTitle"
+                style="@style/TextItemTitle"
                 android:text="@{viewModel.name}"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/labelCRN"
+                app:layout_constraintTop_toBottomOf="@id/labelCRN"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:text="Chris Hemsworth"/>
             <TextView
+                android:visibility="@{viewModel.address != null}"
                 android:id="@+id/labelAddress"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -44,15 +53,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/buttonEdit"
                 tools:text="10 unpaid"/>
-            <TextView
-                android:id="@+id/labelCRN"
-                style="@style/CRN"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{viewModel.crn}"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/buttonEdit"
-                tools:text="#0392029"/>
             <Button
                 style="@style/RoundButtonNeutral.Small"
                 android:id="@+id/buttonEdit"

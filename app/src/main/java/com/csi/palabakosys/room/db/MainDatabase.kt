@@ -6,6 +6,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.csi.palabakosys.room.dao.*
 import com.csi.palabakosys.room.db.seeder.DatabaseSeeder
 import com.csi.palabakosys.room.entities.*
+import com.csi.palabakosys.room.migrations.AddColumnPackagePrice
 import com.csi.palabakosys.util.converters.*
 
 @Database(entities = [
@@ -35,7 +36,7 @@ import com.csi.palabakosys.util.converters.*
     EntityInventoryLog::class,
     EntityDiscount::class,
 //    EntityCashlessProvider::class
-], version = 1,
+], version = 2,
     exportSchema = true,
 )
 @TypeConverters(
@@ -89,6 +90,7 @@ abstract class MainDatabase : RoomDatabase() {
                         }
                     })
                     .addMigrations(
+                        AddColumnPackagePrice()
 //                        AddColumnPaymentVoid(),
 //                        CreateTablePackage(),
 //                        CreateTablePackageService(),

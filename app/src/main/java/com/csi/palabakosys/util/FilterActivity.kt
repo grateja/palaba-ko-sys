@@ -1,6 +1,5 @@
 package com.csi.palabakosys.util
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
@@ -9,11 +8,9 @@ import androidx.appcompat.widget.Toolbar
 import com.csi.palabakosys.R
 
 abstract class FilterActivity : AppCompatActivity(), FilterActivityInterface {
-    private var searchBar: SearchView? = null
+    protected var searchBar: SearchView? = null
     private lateinit var toolbar: Toolbar
     protected lateinit var addEditLauncher: ActivityLauncher
-
-    protected open fun onQuery(keyword: String?) { }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +22,7 @@ abstract class FilterActivity : AppCompatActivity(), FilterActivityInterface {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_search, menu)
+
         searchBar = menu?.findItem(R.id.menu_search)?.actionView as SearchView
         searchBar?.apply {
             maxWidth = Integer.MAX_VALUE
@@ -48,6 +46,14 @@ abstract class FilterActivity : AppCompatActivity(), FilterActivityInterface {
                 return true
             }
         })
+
+        menu.findItem(R.id.menu_advanced_option).apply {
+            setOnMenuItemClickListener {
+                onAdvancedSearchClicked()
+            }
+            isVisible = enableAdvancedSearch
+        }
+
         return super.onCreateOptionsMenu(menu)
     }
 }

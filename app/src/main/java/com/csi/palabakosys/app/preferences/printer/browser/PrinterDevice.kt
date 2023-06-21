@@ -7,4 +7,5 @@ import kotlinx.parcelize.Parcelize
 data class PrinterDevice(
     val deviceName: String?,
     val macAddress: String?,
+    var selected: Boolean = false
 ) : Parcelable

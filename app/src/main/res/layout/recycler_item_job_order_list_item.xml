@@ -81,7 +81,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/iconCreatedAt"
                 tools:text="Oct 24, 2022 8:40 AM"/>
             <TextView
-                style="@style/TextItemPrice"
+                style="@style/TextPrimary"
                 android:textSize="20sp"
                 android:id="@+id/labelDiscountedAmount"
                 android:peso="@{viewModel.discountedAmount}"

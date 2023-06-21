@@ -27,23 +27,42 @@
                 android:animateLayoutChanges="true"
                 app:layout_scrollFlags="scroll|enterAlways|snap" />
         </com.google.android.material.appbar.AppBarLayout>
-        <androidx.core.widget.NestedScrollView
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
-            <LinearLayout
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerJobOrders"
                 android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/statusBar"/>
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/statusBar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerJobOrders"
-                    android:nestedScrollingEnabled="false"
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent">
+                <TextView
+                    android:text="@{`Showing total of : ` + viewModel.total + ` item(s)`}"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
-            </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
+                    tools:text="Total page"/>
+            </com.google.android.material.card.MaterialCardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+<!--        <androidx.core.widget.NestedScrollView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
+<!--            <LinearLayout-->
+<!--                android:orientation="vertical"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content">-->
+
+<!--            </LinearLayout>-->
+<!--        </androidx.core.widget.NestedScrollView>-->
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

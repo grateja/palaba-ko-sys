@@ -25,10 +25,14 @@ constructor(
     }
 
     fun save(userId: UUID?) {
-        this.model.value?.createdBy = userId
+
+        val model = model.value
+
+        model?.createdBy = userId
+
         this.validation.value = InputValidation().apply {
-            addRules("remarks", model.value?.remarks, arrayOf(Rule.Required))
-            addRules("amount", model.value?.amount, arrayOf(Rule.Required, Rule.IsNumeric(model.value?.amount)))
+            addRules("remarks", model?.remarks, arrayOf(Rule.Required))
+            addRules("amount", model?.amount, arrayOf(Rule.Required, Rule.IsNumeric(model?.amount)))
 //            addRules("tag", model.value?.tag, arrayOf(Rule.Required))
         }
 

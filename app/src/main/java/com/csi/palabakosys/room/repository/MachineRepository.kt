@@ -32,5 +32,7 @@ class MachineRepository
 
     fun getAllAsLiveData() : LiveData<List<EntityMachine>> = daoMachine.getAllAsLiveData()
 
+    fun getListAsLiveData() = daoMachine.getListAllAsLiveData()
+
     fun getMachineLiveData(id: UUID) : LiveData<EntityMachine> = daoMachine.getMachineLiveData(id)
 }

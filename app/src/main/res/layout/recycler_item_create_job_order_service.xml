@@ -8,14 +8,13 @@
             type="com.csi.palabakosys.app.joborders.create.services.MenuServiceItem" />
     </data>
     <com.google.android.material.card.MaterialCardView
-        android:layout_marginTop="2dp"
-        android:layout_marginBottom="2dp"
+        style="@style/CardMenuItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <LinearLayout
-            android:layout_margin="12dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:orientation="horizontal">
 
 <!--            <TextView-->
@@ -27,11 +26,26 @@
 <!--                android:textSize="20sp" />-->
             <ImageView
                 tools:src="@drawable/icon_washer"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginEnd="8dp"
                 app:imageResource="@{viewModel.machineType.icon}"/>
 
             <TextView
+                style="@style/Bold"
+                android:id="@+id/textQuantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:text="@{viewModel.quantity + `*`}"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                tools:text="1*"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <TextView
+                style="@style/TextItemTitle"
                 android:id="@+id/textTitle"
                 android:textColor="@color/black"
                 android:layout_width="0dp"
@@ -39,24 +53,6 @@
                 android:layout_height="wrap_content"
                 android:text="@{viewModel.abbr()}"
                 tools:text="8Kg Regular Wash" />
-
-            <TextView
-                android:id="@+id/textQuantity"
-                android:textFontWeight="900"
-                android:fontFamily="sans-serif-black"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{viewModel.quantityStr()}"
-                tools:text="*1 load"/>
-
-            <TextView
-                android:id="@+id/textUsed"
-                android:textFontWeight="900"
-                android:fontFamily="sans-serif-black"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{viewModel.used + `used`}"
-                tools:text="*1 load"/>
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardPrice"
@@ -67,7 +63,7 @@
 
                 <TextView
                     android:textSize="20sp"
-                    style="@style/TextItemPrice"
+                    style="@style/TextPrimary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:peso="@{viewModel.price}"

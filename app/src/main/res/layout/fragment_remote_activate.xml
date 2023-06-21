@@ -11,13 +11,13 @@
     </data>
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
         <FrameLayout
             android:id="@+id/fragmentRemoteSelectCustomer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:behavior_peekHeight="500dp"
-            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+            app:behavior_peekHeight="500dp">
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

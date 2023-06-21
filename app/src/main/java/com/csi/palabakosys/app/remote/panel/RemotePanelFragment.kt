@@ -63,7 +63,7 @@ class RemotePanelFragment : Fragment() {
 
     private fun subscribeEvents() {
         adapter.onItemClick = {
-            remoteViewModel.selectMachine(it.entityMachine)
+            remoteViewModel.selectMachine(it.machine)
         }
     }
 }

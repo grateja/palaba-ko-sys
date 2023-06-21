@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".app.customers.list.CustomersActivity">
+    <data>
+        <variable
+            name="viewModel"
+            type="com.csi.palabakosys.app.customers.list.CustomersViewModel" />
+    </data>
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.google.android.material.appbar.AppBarLayout
+            android:background="@color/secondary_background"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/Theme.MaterialComponents.Light"
+            app:elevation="24dp"
+            android:fitsSystemWindows="true">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/teal_700"
+                android:animateLayoutChanges="true"
+                app:layout_scrollFlags="scroll|enterAlways|snap" />
+        </com.google.android.material.appbar.AppBarLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/statusBar"/>
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/statusBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent">
+                <TextView
+                    android:text="@{`Showing total of : ` + viewModel.total + ` item(s)`}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Total page"/>
+            </com.google.android.material.card.MaterialCardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+<!--        <androidx.core.widget.NestedScrollView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
+<!--            <LinearLayout-->
+<!--                android:orientation="vertical"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
+<!--                <androidx.recyclerview.widget.RecyclerView-->
+<!--                    android:id="@+id/recycler"-->
+<!--                    android:orientation="vertical"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>-->
+<!--            </LinearLayout>-->
+<!--        </androidx.core.widget.NestedScrollView>-->
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

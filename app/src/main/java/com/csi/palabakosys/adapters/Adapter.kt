@@ -12,20 +12,29 @@ import android.animation.ObjectAnimator
 import android.animation.AnimatorSet
 
 open class Adapter<R>(private val layoutId: Int) : RecyclerView.Adapter<Adapter.ViewHolder<R>>() {
-    protected var list: List<R> = emptyList()
+    protected var list: MutableList<R> = mutableListOf()
     private var on_attach = true
     var DURATION: Long = 50
     //    private var selectedItem: R? = null
     var onItemClick: ((R) -> Unit) ? = null
     var onDataSetChanged: (() -> Unit) ? = null
+    var onScrollAtTheBottom: (() -> Unit) ? = null
     var allowSelection = false
 
     open fun add(item: R) {
-        val k = list.toMutableList()
-        k.add(item)
-        list = k.toList()
+//        val k = list.toMutableList()
+//        k.add(item)
+//        list = k.toList()
+        list.add(item)
         notifyItemInserted(itemCount - 1)
         onDataSetChanged?.invoke()
+    }
+
+    fun addItems(items: List<R>) {
+        val startPosition = list.size // Get the current size of the list
+        list.addAll(items)
+        val endPosition = list.size - 1 // Get the new size of the list after adding items
+        notifyItemRangeInserted(startPosition, endPosition)
     }
 
     open fun removeItem(item: R) {
@@ -41,7 +50,7 @@ open class Adapter<R>(private val layoutId: Int) : RecyclerView.Adapter<Adapter.
     }
 
     fun setData(items: List<R>) {
-        this.list = items
+        this.list = items.toMutableList()
         notifyDataSetChanged()
         onDataSetChanged?.invoke()
     }
@@ -76,6 +85,12 @@ open class Adapter<R>(private val layoutId: Int) : RecyclerView.Adapter<Adapter.
             onItemClick?.invoke(r)
         }
         //setFadeAnimation(holder.itemView, position)
+        println("on bind view holder position $position item count $itemCount")
+        println(position)
+        if(position == itemCount - 1) {
+            onScrollAtTheBottom?.invoke()
+            println("Your reached the end")
+        }
     }
 
     private fun setFadeAnimation(itemView: View, position: Int) {

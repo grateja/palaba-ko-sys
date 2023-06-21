@@ -1,8 +1,11 @@
 package com.csi.palabakosys.room.repository
 
 import com.csi.palabakosys.app.customers.CustomerMinimal
+import com.csi.palabakosys.app.customers.list.CustomerListItem
+import com.csi.palabakosys.app.customers.list.CustomerQueryResult
 import com.csi.palabakosys.room.dao.DaoCustomer
 import com.csi.palabakosys.room.entities.EntityCustomer
+import com.csi.palabakosys.util.QueryResult
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -31,8 +34,14 @@ constructor (
         return daoCustomer.checkName(name)
     }
 
-    suspend fun getCustomersMinimal(keyword: String?): List<CustomerMinimal> {
-        return daoCustomer.getCustomersMinimal(keyword)
+    suspend fun getCustomersMinimal(keyword: String?, page: Int): List<CustomerMinimal> {
+        val offset = (20 * page) - 20
+        return daoCustomer.getCustomersMinimal(keyword, 20, offset)
+    }
+
+    suspend fun getListItems(keyword: String?, page: Int): CustomerQueryResult {
+        val offset = (20 * page) - 20
+        return daoCustomer.getListItem(keyword, offset)
     }
 
     suspend fun getCustomerMinimalByCRN(crn: String?): CustomerMinimal? {

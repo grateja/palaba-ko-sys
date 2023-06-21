@@ -18,7 +18,7 @@ constructor (
 ) {
     suspend fun getByMachineType(machineType: EnumMachineType) : List<EntityCustomerQueueService> {
         try {
-            return dao.getByMachineType(machineType)
+            return dao.getCustomersByMachineType(machineType)
         } catch (e: Exception) {
             e.printStackTrace()
         }

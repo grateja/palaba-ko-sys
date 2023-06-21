@@ -26,6 +26,11 @@ class EntityProduct(
     var productType: EnumProductType?
 ) : BaseEntity() {
     constructor() : this(null, 0f, 0, EnumMeasureUnit.PCS, 0f, EnumProductType.OTHER)
+
+    fun currentStockStr() : String {
+        return "$currentStock $measureUnit remaining"
+    }
+
 //    @ColumnInfo(name = "name")
 //    var name: String? = null
 //

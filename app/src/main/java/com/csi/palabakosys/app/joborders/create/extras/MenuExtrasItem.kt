@@ -32,11 +32,11 @@ class MenuExtrasItem(
 
     fun quantityStr() : String {
         return quantity.toString() + if(quantity == 1) {
-            " load"
+            " Load/Item"
         } else if(quantity == 0) {
             ""
         } else {
-            " loads"
+            " Loads/Items"
         }
     }
 }

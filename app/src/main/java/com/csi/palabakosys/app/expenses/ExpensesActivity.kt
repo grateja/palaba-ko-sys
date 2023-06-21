@@ -20,6 +20,8 @@ class ExpensesActivity : FilterActivity() {
 //    private val addEditLauncher = ActivityLauncher(this)
 
     override var filterHint = "Search Expenses Remarks"
+    override var enableAdvancedSearch = true
+    override fun onAdvancedSearchClicked(): Boolean { return true }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_expenses)
@@ -36,7 +38,7 @@ class ExpensesActivity : FilterActivity() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.filter()
+        viewModel.filter(true)
     }
 
     override fun onQuery(keyword: String?) {

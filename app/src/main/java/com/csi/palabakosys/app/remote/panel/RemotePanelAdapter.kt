@@ -7,14 +7,15 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.csi.palabakosys.BR
 import com.csi.palabakosys.R
+import com.csi.palabakosys.app.machines.MachineListItem
 import com.csi.palabakosys.room.entities.EntityMachine
 import java.util.*
 
 class RemotePanelAdapter : RecyclerView.Adapter<RemotePanelAdapter.ViewHolder>() {
-    var list = emptyList<MachineTile>()
-    var onItemClick: ((MachineTile) -> Unit) ? = null
+    var list = emptyList<MachineListItem>()
+    var onItemClick: ((MachineListItem) -> Unit) ? = null
     class ViewHolder(private val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(model: MachineTile) {
+        fun bind(model: MachineListItem) {
             binding.setVariable(BR.viewModel, model)
         }
     }
@@ -41,19 +42,17 @@ class RemotePanelAdapter : RecyclerView.Adapter<RemotePanelAdapter.ViewHolder>()
         return list.size
     }
 
-    fun setData(list: List<EntityMachine>) {
-        this.list = list.map {
-            MachineTile(it)
-        }
+    fun setData(list: List<MachineListItem>) {
+        this.list = list
         notifyDataSetChanged()
     }
 
-    fun setConnection(connecting: Boolean, machineId: UUID?, workerId: UUID?) {
-        list.find {it.entityMachine.id == machineId || it.entityMachine.serviceActivationId == workerId}?.apply {
-            this.connecting = connecting
-            notifyItemChanged(list.indexOf(this))
-        }
-    }
+//    fun setConnection(connecting: Boolean, machineId: UUID?, workerId: UUID?) {
+//        list.find {it.entityMachine.id == machineId || it.entityMachine.serviceActivationId == workerId}?.apply {
+//            this.connecting = connecting
+//            notifyItemChanged(list.indexOf(this))
+//        }
+//    }
 
 //    fun initiateConnection(workerId: UUID) {
 //        list.find {it.entityMachine.workerId == workerId}?.apply {

@@ -5,21 +5,23 @@
     <data>
         <variable
             name="viewModel"
-            type="com.csi.palabakosys.room.entities.EntityMachine" />
+            type="com.csi.palabakosys.app.machines.MachineListItem" />
     </data>
     <com.google.android.material.card.MaterialCardView
+        style="@style/CardMenuItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
+                style="@style/TextItemTitle"
                 android:id="@+id/textMachineName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:text="@{viewModel.machineName()}"
+                android:text="@{viewModel.machine.machineName()}"
                 tools:text="Washer 1"/>
             <TextView
                 android:id="@+id/textIpEnd"
@@ -27,7 +29,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/textMachineName"
                 app:layout_constraintStart_toStartOf="parent"
-                android:text="@{viewModel.ipEnd + ``}"
+                android:text="@{viewModel.machine.ipEnd + ``}"
                 tools:text="192.168.210.11"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>

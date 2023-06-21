@@ -14,22 +14,16 @@ class ExtrasViewModel
 @Inject
 constructor(
     private val repository: ExtrasRepository
-) : ListViewModel<ExtrasItemFull>()
-{
+) : ListViewModel<ExtrasItemFull>() {
 
-    fun setKeyword(keyword: String?) {
-        this.keyword.value = keyword
-        filter()
-    }
-
-    fun filter() {
+    override fun filter(reset: Boolean) {
         job?.let {
             it.cancel()
-            _loading.value = false
+            loading.value = false
         }
 
         job = viewModelScope.launch {
-            _loading.value = true
+            loading.value = true
             delay(500)
             keyword.value?.let {
                 items.value = repository.filter(it)

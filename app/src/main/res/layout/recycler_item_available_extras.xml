@@ -8,14 +8,13 @@
             type="com.csi.palabakosys.app.joborders.create.extras.MenuExtrasItem" />
     </data>
     <com.google.android.material.card.MaterialCardView
-        style="@style/JobOrderMenuItem"
+        style="@style/CardMenuItem"
         android:id="@+id/jobOrderMenuItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/textTitle"
@@ -33,26 +32,45 @@
                 style="@style/CardSpan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/textTitle"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <TextView
-                    style="@style/TextItemPrice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@{`P ` + String.format(`%.2f`, viewModel.price)}"
-                    tools:text="P 30.00" />
+                app:layout_constraintTop_toTopOf="@+id/textTitle">
+                    <TextView
+                        style="@style/TextPrimary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:peso="@{viewModel.price}"
+                        tools:text="P 30.00" />
             </com.google.android.material.card.MaterialCardView>
 
-            <TextView
-                android:id="@+id/textLoads"
-                android:visibility="@{viewModel.selected}"
+            <com.google.android.material.card.MaterialCardView
+                app:contentPadding="4dp"
+                app:cardCornerRadius="15dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{viewModel.quantityStr()}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:text="1 load" />
+                android:layout_marginTop="8dp"
+                android:visibility="@{viewModel.selected}"
+                app:layout_constraintEnd_toEndOf="@id/cardPrice"
+                app:layout_constraintTop_toBottomOf="@id/cardPrice">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/icno_cart"
+                        android:layout_marginEnd="10dp"/>
+                    <TextView
+                        style="@style/Bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{viewModel.quantityStr()}"
+                        tools:text="1 loads/item"
+                        tools:visibility="visible" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>

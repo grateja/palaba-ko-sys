@@ -19,4 +19,10 @@ class EntityDiscount(
     var applicableTo: List<EnumDiscountApplicable>
 ) : BaseEntity(null) {
     constructor() : this(null, 0f, null, listOf())
+
+    fun applicableToStr() : String {
+        return "Applicable to: " + applicableTo.joinToString(",") {
+            it.value
+        }
+    }
 }

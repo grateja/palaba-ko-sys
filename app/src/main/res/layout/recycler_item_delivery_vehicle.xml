@@ -8,12 +8,10 @@
             type="com.csi.palabakosys.app.joborders.create.delivery.MenuDeliveryProfile" />
     </data>
     <com.google.android.material.card.MaterialCardView
-        style="@style/CardPrimary"
+        style="@style/CardMenuItem"
         android:id="@+id/cardVehicle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        app:contentPadding="8dp">
+        android:layout_height="wrap_content">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

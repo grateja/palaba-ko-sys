@@ -80,6 +80,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Extras" />
+            <Button
+                android:id="@+id/btnCustomers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Customers" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </layout>

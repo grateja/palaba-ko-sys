@@ -23,6 +23,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.window.layout.WindowMetricsCalculator
 import com.csi.palabakosys.R
+import com.csi.palabakosys.app.customers.list.CustomersActivity
 import com.csi.palabakosys.app.discounts.DiscountsActivity
 import com.csi.palabakosys.app.expenses.ExpensesActivity
 import com.csi.palabakosys.app.extras.ExtrasActivity
@@ -115,6 +116,11 @@ class MainActivity : EndingActivity() {
 
         binding.btnExtras.setOnClickListener {
             val intent = Intent(this, ExtrasActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.btnCustomers.setOnClickListener {
+            val intent = Intent(this, CustomersActivity::class.java)
             startActivity(intent)
         }
 

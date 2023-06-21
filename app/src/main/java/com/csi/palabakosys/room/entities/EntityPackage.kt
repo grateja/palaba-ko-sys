@@ -12,6 +12,9 @@ data class EntityPackage(
     @ColumnInfo(name = "description")
     val description: String?,
 
+    @ColumnInfo(name = "total_price")
+    val totalPrice: Float?,
+
 //    @ColumnInfo(name = "delivery_id")
 //    val deliveryId: UUID?,
 ) : BaseEntity()

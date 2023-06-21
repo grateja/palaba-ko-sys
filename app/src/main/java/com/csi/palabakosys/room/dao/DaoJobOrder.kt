@@ -2,6 +2,7 @@ package com.csi.palabakosys.room.dao
 
 import androidx.room.*
 import com.csi.palabakosys.app.joborders.list.JobOrderListItem
+import com.csi.palabakosys.app.joborders.list.JobOrderQueryResult
 import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentMinimal
 import com.csi.palabakosys.room.entities.*
 import com.csi.palabakosys.util.toUUID
@@ -94,8 +95,19 @@ interface DaoJobOrder {
         " CASE WHEN :orderBy = 'created_at' AND :sortDirection = 'DESC' THEN jo.created_at END DESC, " +
         " CASE WHEN :orderBy = 'date_paid' AND :sortDirection = 'DESC' THEN pa.created_at END DESC, " +
         " CASE WHEN :orderBy = 'customer_name' AND :sortDirection = 'DESC' THEN cu.name END DESC " +
-        " LIMIT 20")
-    suspend fun load(keyword: String?, orderBy: String?, sortDirection: String?): List<JobOrderListItem>
+        " LIMIT 20 OFFSET :offset")
+    fun load(keyword: String?, orderBy: String?, sortDirection: String?, offset: Int): List<JobOrderListItem>
+
+    @Query("SELECT COUNT(*) FROM job_orders jo JOIN customers cu ON jo.customer_id = cu.id WHERE cu.name LIKE '%' || :keyword || '%'")
+    fun count(keyword: String?): Int
+
+    @Transaction
+    suspend fun queryResult(keyword: String?, orderBy: String?, sortDirection: String?, offset: Int) : JobOrderQueryResult {
+        return JobOrderQueryResult(
+            load(keyword, orderBy, sortDirection, offset),
+            count(keyword)
+        )
+    }
 
     @Query("UPDATE job_orders SET void_by = :userId, void_remarks = :remarks, void_date = :voidDate WHERE id = :jobOrderId")
     suspend fun voidJobOrder(jobOrderId: UUID, userId: UUID?, remarks: String?, voidDate: Instant? = Instant.now())

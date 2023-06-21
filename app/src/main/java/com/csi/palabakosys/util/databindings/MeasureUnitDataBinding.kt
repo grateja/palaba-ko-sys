@@ -37,10 +37,10 @@ import com.csi.palabakosys.model.EnumMeasureUnit
             else -> null
         }
     }
-    @BindingAdapter("android:checkedButtonAttrChanged")
-    fun setCheckedButtonListener(radioGroup: RadioGroup, listener: InverseBindingListener?) {
-        radioGroup.setOnCheckedChangeListener { _, _ ->
-            listener?.onChange()
-        }
-    }
+//    @BindingAdapter("android:checkedButtonAttrChanged")
+//    fun setCheckedButtonListener(radioGroup: RadioGroup, listener: InverseBindingListener?) {
+//        radioGroup.setOnCheckedChangeListener { _, _ ->
+//            listener?.onChange()
+//        }
+//    }
 //}

@@ -27,7 +27,7 @@ constructor(
     private val repository: JobOrderPackageRepository
 ): ViewModel() {
     private val _availablePackages = MutableLiveData<List<MenuJobOrderPackage>>()
-    val availablePackages: LiveData<List<MenuJobOrderPackage>> = _availablePackages
+    val availablePackages /*= repository.getAllAsLiveData() */: LiveData<List<MenuJobOrderPackage>> = _availablePackages
 
     private val _dataState = MutableLiveData<DataState>()
     val dataState: LiveData<DataState> = _dataState
@@ -72,7 +72,7 @@ constructor(
 
     private fun menuServiceItem(service: EntityPackageServiceWithService): MenuServiceItem {
         return MenuServiceItem(
-            UUID.randomUUID(),
+            null,
             service.service.id,
             service.service.name!!,
             service.service.serviceRef.minutes,
@@ -86,7 +86,7 @@ constructor(
 
     private fun menuExtrasItem(extras: EntityPackageExtrasWithExtras): MenuExtrasItem {
         return MenuExtrasItem(
-            UUID.randomUUID(),
+            null,
             extras.extras.id,
             extras.extras.name!!,
             extras.extras.price,
@@ -97,7 +97,7 @@ constructor(
 
     private fun menuProductItem(product: EntityPackageProductWithProduct): MenuProductItem {
         return MenuProductItem(
-            UUID.randomUUID(),
+            null,
             product.product.id,
             product.product.name!!,
             product.product.price,

@@ -11,13 +11,13 @@
     </data>
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <FrameLayout
-            android:id="@+id/fragmentRemoteSelectCustomer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:behavior_peekHeight="500dp"
-            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+<!--        <FrameLayout-->
+<!--            android:id="@+id/fragmentRemoteSelectCustomer"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            app:behavior_peekHeight="500dp">-->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -42,7 +42,7 @@
                             android:src="?attr/actionModeCloseDrawable" />
 
                         <TextView
-                            style="@style/TextItemPrice"
+                            style="@style/TextPrimary"
                             android:id="@+id/textFormTitle"
                             android:layout_weight="1"
                             android:layout_width="0dp"
@@ -82,15 +82,15 @@
                         android:orientation="vertical"
                         android:layout_marginHorizontal="10dp"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyclerServiceQueues"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginHorizontal="10dp"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+<!--                    <androidx.recyclerview.widget.RecyclerView-->
+<!--                        android:id="@+id/recyclerServiceQueues"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:orientation="vertical"-->
+<!--                        android:layout_marginHorizontal="10dp"-->
+<!--                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>-->
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-        </FrameLayout>
+<!--        </FrameLayout>-->
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

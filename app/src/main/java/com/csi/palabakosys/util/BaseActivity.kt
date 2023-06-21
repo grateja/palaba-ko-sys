@@ -14,11 +14,11 @@ import com.csi.palabakosys.app.auth.LoginCredentials
 import java.util.*
 
 abstract class BaseActivity : AppCompatActivity() {
-    private var backPressed = false
+    protected var backPressed = false
 
 //    protected lateinit var authLauncher: ActivityLauncher
 
-    fun confirmExit(promptPass: Boolean) {
+    open fun confirmExit(promptPass: Boolean) {
         if(promptPass) {
             finish()
         } else if(!backPressed) {

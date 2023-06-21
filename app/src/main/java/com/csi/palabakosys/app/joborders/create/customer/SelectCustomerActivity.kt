@@ -1,11 +1,8 @@
 package com.csi.palabakosys.app.joborders.create.customer
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
 import androidx.activity.viewModels
-import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
@@ -14,6 +11,7 @@ import com.csi.palabakosys.app.customers.create.AddEditCustomerFragment
 import com.csi.palabakosys.app.joborders.create.JobOrderCreateActivity
 import com.csi.palabakosys.databinding.ActivitySelectCustomerBinding
 import com.csi.palabakosys.util.FilterActivity
+import com.csi.palabakosys.viewmodels.ListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -25,6 +23,8 @@ class SelectCustomerActivity : FilterActivity() {
     private val customersAdapter = CustomersAdapterMinimal()
 
     override var filterHint = "Search Customer Name/CRN"
+    override var enableAdvancedSearch = true
+    override fun onAdvancedSearchClicked(): Boolean { return true }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_select_customer)
@@ -36,12 +36,27 @@ class SelectCustomerActivity : FilterActivity() {
 
 //        setSupportActionBar(binding.toolbar)
 
+        subscribeListeners()
         subscribeEvents()
     }
 
     override fun onResume() {
         super.onResume()
-        viewModel.filter()
+        viewModel.filter(true)
+    }
+
+    private fun subscribeListeners() {
+        viewModel.dataState.observe(this, Observer {
+            when(it) {
+                is ListViewModel.DataState.LoadItems -> {
+                    if(it.reset) {
+                        customersAdapter.setData(it.items)
+                    } else {
+                        customersAdapter.addItems(it.items)
+                    }
+                }
+            }
+        })
     }
 
     private fun subscribeEvents() {
@@ -59,9 +74,12 @@ class SelectCustomerActivity : FilterActivity() {
         customersAdapter.onEdit = {
             editCustomer(it.id.toString())
         }
-        viewModel.customers.observe(this, Observer {
-            customersAdapter.setData(it)
-        })
+        customersAdapter.onScrollAtTheBottom = {
+            viewModel.loadMore()
+        }
+//        viewModel.items.observe(this, Observer {
+//            customersAdapter.setData(it)
+//        })
     }
 
     private fun editCustomer(customerId: String?) {

@@ -70,7 +70,7 @@
             <include
                 android:id="@+id/controls"
                 app:showDelete="@{viewModel.crudActionEnum == com.csi.palabakosys.model.CRUDActionEnum.UPDATE}"
-                layout="@layout/incl_alter_controls"/>
+                layout="@layout/incl_controls_alter"/>
         </LinearLayout>
     </LinearLayout>
 </layout>

@@ -27,6 +27,8 @@ class DiscountsActivity : FilterActivity() {
 //    private val addEditLauncher = ActivityLauncher(this)
 
     override var filterHint = "Search Discounts"
+    override var enableAdvancedSearch = false
+    override fun onAdvancedSearchClicked(): Boolean { return false }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_discounts)
@@ -40,7 +42,7 @@ class DiscountsActivity : FilterActivity() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.filter()
+        viewModel.filter(true)
     }
 
     override fun onQuery(keyword: String?) {

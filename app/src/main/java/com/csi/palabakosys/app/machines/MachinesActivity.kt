@@ -19,7 +19,7 @@ class MachinesActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMachinesBinding
     private val viewModel: MachinesViewModel by viewModels()
-    private val adapter = Adapter<EntityMachine>(R.layout.recycler_item_machine_details)
+    private val adapter = Adapter<MachineListItem>(R.layout.recycler_item_machine_details)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,8 +47,8 @@ class MachinesActivity : AppCompatActivity() {
         })
         adapter.onItemClick = {
             val intent = Intent(this, MachinesAddEditActivity::class.java).apply {
-                putExtra(MachinesAddEditActivity.MACHINE_ID_EXTRA, it.id.toString())
-                putExtra(MachinesAddEditActivity.MACHINE_TYPE_EXTRA, it.machineType?.id)
+                putExtra(MachinesAddEditActivity.MACHINE_ID_EXTRA, it.machine.id.toString())
+                putExtra(MachinesAddEditActivity.MACHINE_TYPE_EXTRA, it.machine.machineType?.id)
             }
             startActivity(intent)
         }

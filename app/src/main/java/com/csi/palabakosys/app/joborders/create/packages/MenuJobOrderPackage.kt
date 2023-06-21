@@ -27,8 +27,8 @@ data class MenuJobOrderPackage(
 
     var quantity: Int = 1,
 
-    @ColumnInfo(name = "fixed_price")
-    var fixedPrice: Float?,
+    @ColumnInfo(name = "total_price")
+    var totalPrice: Float?,
 
     @ColumnInfo(name = "deleted_at")
     var deletedAt: Instant? = null
@@ -36,4 +36,14 @@ data class MenuJobOrderPackage(
     @IgnoredOnParcel
     @Ignore
     var selected = false
+
+    fun quantityStr() : String {
+        return quantity.toString() + if(quantity == 1) {
+            " Package"
+        } else if(quantity == 0) {
+            ""
+        } else {
+            " Packages"
+        }
+    }
 }

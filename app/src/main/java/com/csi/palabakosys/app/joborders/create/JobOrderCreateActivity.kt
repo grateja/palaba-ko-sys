@@ -4,6 +4,8 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.widget.DatePicker
 import android.widget.TimePicker
 import android.widget.Toast
@@ -47,6 +49,7 @@ import kotlin.collections.ArrayList
 @AndroidEntryPoint
 class JobOrderCreateActivity : BaseActivity() {
     companion object {
+        const val JOB_ORDER_ID = "jobOrderId"
         const val ACTION_LOAD_BY_CUSTOMER_ID = "loadByCustomerId"
         const val ACTION_LOAD_BY_JOB_ORDER_ID = "loadByJobOrderId"
         const val PAYLOAD_EXTRA = "payload"
@@ -291,7 +294,7 @@ class JobOrderCreateActivity : BaseActivity() {
         })
 
         viewModel.jobOrderExtras.observe(this, Observer {
-            extrasAdapter.setData(it)
+            extrasAdapter.setData(it.toMutableList())
         })
 
         binding.buttonSave.setOnClickListener {
@@ -356,16 +359,7 @@ class JobOrderCreateActivity : BaseActivity() {
                     viewModel.resetState()
                 }
                 is CreateJobOrderViewModel.DataState.RequestExit -> {
-                    confirmExit(it.canExit)
-//                    if(!it.canExit && !backPressed) {
-//                        Toast.makeText(this, "Press back again to revert changes", Toast.LENGTH_LONG).show()
-//                        backPressed = true
-//                        Handler(Looper.getMainLooper()).postDelayed(Runnable {
-//                            backPressed = false
-//                        }, 2000)
-//                    } else {
-//                        finish()
-//                    }
+                    confirmExit(it.canExit, it.resultCode, it.jobOrderId)
                     viewModel.resetState()
                 }
                 is CreateJobOrderViewModel.DataState.ModifyDateTime -> {
@@ -469,5 +463,20 @@ class JobOrderCreateActivity : BaseActivity() {
 
     override fun onBackPressed() {
         viewModel.requestExit()
+    }
+
+    private fun confirmExit(promptPass: Boolean, resultCode: Int, jobOrderId: UUID?) {
+        if((backPressed && !promptPass) || promptPass) {
+            setResult(resultCode, Intent(intent.action).apply {
+                putExtra(JOB_ORDER_ID, jobOrderId.toString())
+            })
+            finish()
+        } else {
+            Toast.makeText(this, "Press back again to revert changes", Toast.LENGTH_LONG).show()
+            backPressed = true
+            Handler(Looper.getMainLooper()).postDelayed(Runnable {
+                backPressed = false
+            }, 2000)
+        }
     }
 }

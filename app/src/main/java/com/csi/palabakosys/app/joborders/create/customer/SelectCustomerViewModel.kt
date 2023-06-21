@@ -1,11 +1,10 @@
 package com.csi.palabakosys.app.joborders.create.customer
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.csi.palabakosys.app.customers.CustomerMinimal
 import com.csi.palabakosys.room.repository.CustomerRepository
+import com.csi.palabakosys.viewmodels.ListViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import javax.inject.Inject
@@ -16,34 +15,53 @@ class SelectCustomerViewModel
 @Inject
 constructor(
     private val repository: CustomerRepository
-) : ViewModel() {
-    val customers = MutableLiveData<List<CustomerMinimal>>()
+) : ListViewModel<CustomerMinimal>() {
+//    val items = MutableLiveData<List<CustomerMinimal>>()
 
-    private val _loading = MutableLiveData(false)
-    val loading: LiveData<Boolean> = _loading
+//    private val _loading = MutableLiveData(false)
+//    val loading: LiveData<Boolean> = _loading
 
-    private var keyword: String? = ""
+//    private var keyword: String? = ""
 
-    fun setKeyword(keyword: String?) {
-        this.keyword = keyword
-        this.filter()
-    }
+//    fun setKeyword(keyword: String?) {
+//        this.keyword = keyword
+//        this.filter()
+//    }
 
-    private var job: Job? = null
-    fun filter() {
+//    private var job: Job? = null
+    override fun filter(reset: Boolean) {
         job?.let {
             it.cancel()
-            _loading.value = false
+            loading.value = false
         }
 
         job = viewModelScope.launch {
-            _loading.value = true
+            loading.value = true
             delay(500)
 
-            repository.getCustomersMinimal(keyword).let {
-                customers.value = it
-                _loading.value = false
+            if(reset) {
+                page.value = 1
             }
+
+            val keyword = keyword.value
+            val orderBy = orderBy.value
+            val sortDirection = sortDirection.value
+            val page = page.value ?: 1
+
+            val result = repository.getCustomersMinimal(
+                keyword,
+                page
+            )
+            _dataState.value = DataState.LoadItems(
+                result,
+                reset
+            )
+            loading.value = false
         }
+    }
+
+    fun loadMore() {
+        page.value = page.value?.plus(1)
+        filter(false)
     }
 }

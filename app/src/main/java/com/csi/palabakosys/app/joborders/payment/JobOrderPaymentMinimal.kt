@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Ignore
 import androidx.room.Relation
 import com.csi.palabakosys.room.entities.EntityUser
+import java.time.Instant
 import java.util.*
 
 data class JobOrderPaymentMinimal(
@@ -22,6 +23,9 @@ data class JobOrderPaymentMinimal(
 
     @ColumnInfo(name = "user_id")
     val userId: UUID,
+
+    @ColumnInfo(name = "created_at")
+    val createdAt: Instant,
 
     @Relation(
         parentColumn = "user_id",

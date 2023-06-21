@@ -59,7 +59,7 @@ class ExpenseAddEditActivity : CrudActivity() {
     }
 
     override fun save(loginCredentials: LoginCredentials?) {
-        viewModel.save()
+        viewModel.save(loginCredentials?.userId)
     }
 
     override fun confirmDelete(loginCredentials: LoginCredentials?) {

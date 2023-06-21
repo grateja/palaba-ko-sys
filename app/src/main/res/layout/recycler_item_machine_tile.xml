@@ -3,7 +3,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.csi.palabakosys.app.remote.panel.MachineTile" />
+            type="com.csi.palabakosys.app.machines.MachineListItem" />
     </data>
     <com.google.android.material.card.MaterialCardView
         android:layout_width="100dp"
@@ -13,21 +13,16 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
             <TextView
-                android:visibility="@{viewModel.entityMachine.activationRef.running()}"
-                android:text="@{viewModel.entityMachine.activationRef.remainingTime() + ` mins remaining`}"
+                android:visibility="@{viewModel.machine.activationRef.running()}"
+                android:text="@{viewModel.machine.activationRef.remainingTime() + ` mins remaining`}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <TextView
-                android:text="@{viewModel.entityMachine.machineName()}"
+                android:text="@{viewModel.machine.machineName()}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <TextView
-                android:visibility="@{viewModel.connecting}"
-                android:text="Connecting"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:text="@{viewModel.entityMachine.serviceActivationId + ``}"
+                android:text="@{viewModel.machine.serviceActivationId + ``}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>

@@ -16,13 +16,13 @@ class MachinesViewModel
 constructor(
     machineRepository: MachineRepository
 ) : ViewModel() {
-    private val _machines = machineRepository.getAllAsLiveData()
+    private val _machines = machineRepository.getListAsLiveData()
     private val _machineType = MutableLiveData(EnumMachineType.REGULAR_WASHER)
-    val machines = MediatorLiveData<List<EntityMachine>>().apply {
+    val machines = MediatorLiveData<List<MachineListItem>>().apply {
         fun update() {
             val machines = _machines.value?: listOf()
             val machineType = _machineType.value
-            value = machines.filter { it.machineType == machineType }
+            value = machines.filter { it.machine.machineType == machineType }
         }
         addSource(_machines) { update() }
         addSource(_machineType) { update() }

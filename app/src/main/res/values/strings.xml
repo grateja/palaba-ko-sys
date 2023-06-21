@@ -59,5 +59,12 @@
 <p>Rest assured that the app will handle these permissions responsibly and in accordance with the applicable privacy and security guidelines.</p>
 ]]>
     </string>
-
+    <string name="keyword">Keyword</string>
+    <string name="items_per_page">Items per page:</string>
+    <string-array name="spinner_items">
+        <item>10</item>
+        <item>50</item>
+        <item>100</item>
+        <item>200</item>
+    </string-array>
 </resources>
