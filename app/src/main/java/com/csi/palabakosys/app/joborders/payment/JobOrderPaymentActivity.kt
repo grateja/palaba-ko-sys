@@ -24,6 +24,7 @@ class JobOrderPaymentActivity : AppCompatActivity() {
     companion object {
         const val CUSTOMER_ID = "customer_id"
         const val PAYMENT_ID = "payment_id"
+        const val SELECTED_JOB_ORDER_IDS = "jobOrderIds"
     }
 
     private lateinit var binding: ActivityJobOrderPaymentBinding
@@ -115,6 +116,7 @@ class JobOrderPaymentActivity : AppCompatActivity() {
                     setResult(RESULT_OK, Intent().apply {
                         action = intent.action
                         putExtra(PAYMENT_ID, it.payment.id.toString())
+                        putExtra(SELECTED_JOB_ORDER_IDS, it.jobOrderIds)
                     })
                     finish()
                 }

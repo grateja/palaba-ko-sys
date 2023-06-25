@@ -9,6 +9,7 @@ import com.csi.palabakosys.R
 import com.csi.palabakosys.app.customers.CustomerMinimal
 import com.csi.palabakosys.app.customers.create.AddEditCustomerFragment
 import com.csi.palabakosys.app.joborders.create.JobOrderCreateActivity
+import com.csi.palabakosys.app.joborders.unpaid.prompt.JobOrdersUnpaidPromptActivity
 import com.csi.palabakosys.databinding.ActivitySelectCustomerBinding
 import com.csi.palabakosys.util.FilterActivity
 import com.csi.palabakosys.viewmodels.ListViewModel
@@ -23,8 +24,6 @@ class SelectCustomerActivity : FilterActivity() {
     private val customersAdapter = CustomersAdapterMinimal()
 
     override var filterHint = "Search Customer Name/CRN"
-    override var enableAdvancedSearch = true
-    override fun onAdvancedSearchClicked(): Boolean { return true }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_select_customer)
@@ -69,7 +68,7 @@ class SelectCustomerActivity : FilterActivity() {
 //            }
         }
         customersAdapter.onItemClick = {
-            openCreateJobOrderActivity(it)
+            open(it)
         }
         customersAdapter.onEdit = {
             editCustomer(it.id.toString())
@@ -82,19 +81,33 @@ class SelectCustomerActivity : FilterActivity() {
 //        })
     }
 
+    private fun open(customer: CustomerMinimal) {
+        if(customer.unpaid != null && customer.unpaid!! > 0) {
+            openUnpaidJobOrderPrompt(customer)
+        } else {
+            openCreateJobOrderActivity(customer)
+        }
+    }
+
     private fun editCustomer(customerId: String?) {
         customerModal = AddEditCustomerFragment.getInstance(customerId)
         customerModal.show(supportFragmentManager, "KEME")
         customerModal.onOk = {
-            openCreateJobOrderActivity(it!!)
+            open(it!!)
         }
     }
 
     private fun openCreateJobOrderActivity(customer: CustomerMinimal) {
         val intent = Intent(this, JobOrderCreateActivity::class.java).apply {
             action = JobOrderCreateActivity.ACTION_LOAD_BY_CUSTOMER_ID
-            putExtra(JobOrderCreateActivity.PAYLOAD_EXTRA, customer)
-//            putExtra("customer", customer)
+            putExtra(JobOrderCreateActivity.CUSTOMER_EXTRA, customer)
+        }
+        startActivity(intent)
+    }
+
+    private fun openUnpaidJobOrderPrompt(customer: CustomerMinimal) {
+        val intent = Intent(this, JobOrdersUnpaidPromptActivity::class.java).apply {
+            putExtra(JobOrdersUnpaidPromptActivity.CUSTOMER_EXTRA, customer)
         }
         startActivity(intent)
     }

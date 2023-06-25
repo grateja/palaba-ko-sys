@@ -38,6 +38,17 @@ sealed class Rule(var message: String) : RuleInterface {
         }
     }
 
+    class ExactAmount(private val amount: Float?) : Rule("Field must be exact amount only") {
+        constructor(value: Float?, defaultMessage: String) : this(value) {
+            message = defaultMessage
+        }
+
+        override fun isValid(input: Any?): Boolean {
+            val _input = input.toString().toFloatOrNull()?:0f
+            return _input == amount
+        }
+    }
+
     class IsNumeric(private val value: Any?) : Rule("Not a valid number") {
         override fun isValid(input: Any?): Boolean {
             return try {

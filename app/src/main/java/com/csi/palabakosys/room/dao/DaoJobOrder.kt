@@ -89,12 +89,14 @@ interface DaoJobOrder {
     suspend fun getPreviousUnpaidByCustomerId(customerId: UUID, jobOrderId: UUID?): List<JobOrderPaymentMinimal>
 
     @Query("SELECT jo.id, jo.job_order_number, jo.discounted_amount, jo.payment_id, jo.customer_id, jo.created_at, cu.name, cu.crn, pa.created_at as date_paid FROM job_orders jo JOIN customers cu ON jo.customer_id = cu.id LEFT JOIN job_order_payments pa ON jo.payment_id = pa.id WHERE cu.name LIKE '%' || :keyword || '%' AND (jo.deleted_at IS NULL AND jo.void_date IS NULL) ORDER BY " +
-        " CASE WHEN :orderBy = 'created_at' AND :sortDirection = 'ASC' THEN jo.created_at END ASC, " +
-        " CASE WHEN :orderBy = 'date_paid' AND :sortDirection = 'ASC' THEN pa.created_at END ASC, " +
-        " CASE WHEN :orderBy = 'customer_name' AND :sortDirection = 'ASC' THEN cu.name END ASC, " +
-        " CASE WHEN :orderBy = 'created_at' AND :sortDirection = 'DESC' THEN jo.created_at END DESC, " +
-        " CASE WHEN :orderBy = 'date_paid' AND :sortDirection = 'DESC' THEN pa.created_at END DESC, " +
-        " CASE WHEN :orderBy = 'customer_name' AND :sortDirection = 'DESC' THEN cu.name END DESC " +
+        " CASE WHEN :orderBy = 'Date Created' AND :sortDirection = 'ASC' THEN jo.created_at END ASC, " +
+        " CASE WHEN :orderBy = 'Date Paid' AND :sortDirection = 'ASC' THEN pa.created_at END ASC, " +
+        " CASE WHEN :orderBy = 'Customer Name' AND :sortDirection = 'ASC' THEN cu.name END ASC, " +
+        " CASE WHEN :orderBy = 'Job Order Number' AND :sortDirection = 'ASC' THEN jo.job_order_number END ASC, " +
+        " CASE WHEN :orderBy = 'Date Created' AND :sortDirection = 'DESC' THEN jo.created_at END DESC, " +
+        " CASE WHEN :orderBy = 'Date Paid' AND :sortDirection = 'DESC' THEN pa.created_at END DESC, " +
+        " CASE WHEN :orderBy = 'Customer Name' AND :sortDirection = 'DESC' THEN cu.name END DESC, " +
+        " CASE WHEN :orderBy = 'Job Order Number' AND :sortDirection = 'DESC' THEN jo.job_order_number END DESC " +
         " LIMIT 20 OFFSET :offset")
     fun load(keyword: String?, orderBy: String?, sortDirection: String?, offset: Int): List<JobOrderListItem>
 

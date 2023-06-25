@@ -8,156 +8,160 @@
             name="viewModel"
             type="com.csi.palabakosys.app.joborders.payment.JobOrderPaymentViewModel" />
     </data>
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerJobOrderPaymentMinimal"
+        android:layout_height="match_parent">
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerJobOrderPaymentMinimal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
 
-        <RadioGroup
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:selectedPaymentMethod="@={viewModel.paymentMethod}">
-
-            <RadioButton
-                android:id="@+id/radio_cash"
+            <RadioGroup
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Cash" />
+                app:selectedPaymentMethod="@={viewModel.paymentMethod}">
 
-            <RadioButton
-                android:id="@+id/radio_cashless"
+                <RadioButton
+                    android:id="@+id/radio_cash"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cash" />
+
+                <RadioButton
+                    android:id="@+id/radio_cashless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cashless" />
+
+            </RadioGroup>
+
+
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Cashless" />
-
-        </RadioGroup>
-
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{`Payable amount: ` + viewModel.payableAmount}"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{`Amount to pay: ` + viewModel.amountToPay}"/>
-        <TextView
-            android:visibility="@{viewModel.remainingBalance > 0}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{`Remaining balance: ` + viewModel.remainingBalance}"/>
-        <TextView
-            android:visibility="@{viewModel.change > 0}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{`Change: ` + viewModel.change}"/>
-        <com.google.android.material.textfield.TextInputLayout
-            android:visibility="@{viewModel.paymentMethod == com.csi.palabakosys.model.EnumPaymentMethod.CASH}"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Cash received"
-            app:errorEnabled="true"
-            app:errorText="@{viewModel.inputValidation.get(`cashReceived`)}">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/textInputCashReceived"
-                android:text="@={viewModel.cashReceived}"
+                android:text="@{`Payable amount: ` + viewModel.payableAmount}"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{`Amount to pay: ` + viewModel.amountToPay}"/>
+            <TextView
+                android:visibility="@{viewModel.remainingBalance > 0}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{`Remaining balance: ` + viewModel.remainingBalance}"/>
+            <TextView
+                android:visibility="@{viewModel.change > 0}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{`Change: ` + viewModel.change}"/>
+            <com.google.android.material.textfield.TextInputLayout
+                android:visibility="@{viewModel.paymentMethod == com.csi.palabakosys.model.EnumPaymentMethod.CASH}"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"
-                android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`cashReceived`)}"
-                android:maxLines="1" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:hint="Cash received"
+                app:errorEnabled="true"
+                app:errorText="@{viewModel.inputValidation.get(`cashReceived`)}">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:visibility="@{viewModel.paymentMethod == com.csi.palabakosys.model.EnumPaymentMethod.CASHLESS}"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Cashless Provider"
-            app:errorEnabled="true"
-            app:errorText="@{viewModel.inputValidation.get(`cashlessProvider`)}">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textInputCashReceived"
+                    android:text="@={viewModel.cashReceived}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`cashReceived`)}"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                android:id="@+id/textInputCashlessProvider"
-                android:completionThreshold="0"
-                android:padding="12dp"
-                android:text="@={viewModel.cashlessProvider}"
+            <com.google.android.material.textfield.TextInputLayout
+                android:visibility="@{viewModel.paymentMethod == com.csi.palabakosys.model.EnumPaymentMethod.CASHLESS}"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textAutoComplete"
-                android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`cashlessProvider`)}"
-                android:maxLines="1" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:hint="Cashless Provider"
+                app:errorEnabled="true"
+                app:errorText="@{viewModel.inputValidation.get(`cashlessProvider`)}">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:visibility="@{viewModel.paymentMethod == com.csi.palabakosys.model.EnumPaymentMethod.CASHLESS}"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Cashless amount"
-            app:errorEnabled="true"
-            app:errorText="@{viewModel.inputValidation.get(`cashlessAmount`)}">
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/textInputCashlessProvider"
+                    android:completionThreshold="0"
+                    android:padding="12dp"
+                    android:text="@={viewModel.cashlessProvider}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textAutoComplete"
+                    android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`cashlessProvider`)}"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/textInputCashlessAmount"
-                android:text="@={viewModel.cashlessAmount}"
+            <com.google.android.material.textfield.TextInputLayout
+                android:visibility="@{viewModel.paymentMethod == com.csi.palabakosys.model.EnumPaymentMethod.CASHLESS}"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
-                android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`cashlessAmount`)}"
-                android:maxLines="1" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:hint="Cashless amount"
+                app:errorEnabled="true"
+                app:errorText="@{viewModel.inputValidation.get(`cashlessAmount`)}">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:visibility="@{viewModel.paymentMethod == com.csi.palabakosys.model.EnumPaymentMethod.CASHLESS}"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Cashless Reference number"
-            app:errorEnabled="true"
-            app:errorText="@{viewModel.inputValidation.get(`cashlessRefNumber`)}">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textInputCashlessAmount"
+                    android:text="@={viewModel.cashlessAmount}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number|numberDecimal"
+                    android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`cashlessAmount`)}"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:text="@={viewModel.cashlessRefNumber}"
+            <com.google.android.material.textfield.TextInputLayout
+                android:visibility="@{viewModel.paymentMethod == com.csi.palabakosys.model.EnumPaymentMethod.CASHLESS}"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
-                android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`cashlessRefNumber`)}"
-                android:maxLines="1" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:hint="Cashless Reference number"
+                app:errorEnabled="true"
+                app:errorText="@{viewModel.inputValidation.get(`cashlessRefNumber`)}">
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="OR Number"
-            app:errorEnabled="true"
-            app:errorText="@{viewModel.inputValidation.get(`orNumber`)}">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:text="@={viewModel.cashlessRefNumber}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`cashlessRefNumber`)}"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:text="@={viewModel.orNumber}"
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
-                android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`orNumber`)}"
-                android:maxLines="1" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:hint="OR Number"
+                app:errorEnabled="true"
+                app:errorText="@{viewModel.inputValidation.get(`orNumber`)}">
 
-        <Button
-            android:id="@+id/buttonSave"
-            android:text="@string/save"
-            android:visibility="@{viewModel.payment == null}"
-            style="@style/RoundButtonPrimary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:text="@={viewModel.orNumber}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`orNumber`)}"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/buttonSave"
+                android:text="@string/save"
+                android:visibility="@{viewModel.payment == null}"
+                style="@style/RoundButtonPrimary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 </layout>

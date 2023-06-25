@@ -12,6 +12,13 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp">
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/labelCRN"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="@{viewModel.customer.createdAt}"
+            tools:text="June 21, 2023"/>
+        <TextView
             android:id="@+id/labelCRN"
             style="@style/TextPrimary"
             android:layout_width="wrap_content"

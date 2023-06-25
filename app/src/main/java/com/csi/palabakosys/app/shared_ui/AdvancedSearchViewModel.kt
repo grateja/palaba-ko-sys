@@ -2,7 +2,7 @@ package com.csi.palabakosys.app.shared_ui
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.csi.palabakosys.util.EnumSortDirection
+//import com.csi.palabakosys.util.EnumSortDirection
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -14,5 +14,5 @@ constructor()
 : ViewModel() {
     val keyword = MutableLiveData("")
     val itemPerPage = MutableLiveData("")
-    val sortDirection = MutableLiveData(EnumSortDirection.DESC)
+    val sortDirection = MutableLiveData("DESC")
 }

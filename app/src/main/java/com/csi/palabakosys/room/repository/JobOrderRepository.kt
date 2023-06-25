@@ -5,7 +5,6 @@ import com.csi.palabakosys.app.joborders.create.discount.MenuDiscount
 import com.csi.palabakosys.app.joborders.create.extras.MenuExtrasItem
 import com.csi.palabakosys.app.joborders.create.products.MenuProductItem
 import com.csi.palabakosys.app.joborders.create.services.MenuServiceItem
-import com.csi.palabakosys.app.joborders.list.JobOrderListItem
 import com.csi.palabakosys.app.joborders.list.JobOrderQueryResult
 import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentMinimal
 import com.csi.palabakosys.room.dao.DaoJobOrder
@@ -14,7 +13,6 @@ import com.csi.palabakosys.room.entities.EntityJobOrderListItem
 import com.csi.palabakosys.room.entities.EntityJobOrderVoid
 import com.csi.palabakosys.room.entities.EntityJobOrderWithItems
 import com.csi.palabakosys.util.EnumSortDirection
-import com.csi.palabakosys.util.toUUID
 import java.lang.Exception
 import java.util.UUID
 import javax.inject.Inject
@@ -83,9 +81,9 @@ constructor (
         return daoJobOrder.getAllUnpaidByCustomerId(customerId)
     }
 
-    suspend fun getPreviousUnpaidByCustomerId(customerId: UUID, jobOrderId: UUID?): List<JobOrderPaymentMinimal> {
-        return daoJobOrder.getPreviousUnpaidByCustomerId(customerId, jobOrderId)
-    }
+//    suspend fun getUnpaidByCustomerId(customerId: UUID, jobOrderId: UUID?): List<JobOrderPaymentMinimal> {
+//        return daoJobOrder.getPreviousUnpaidByCustomerId(customerId, jobOrderId)
+//    }
 
     suspend fun load(keyword: String?, orderBy: String?, sortDirection: EnumSortDirection?, page: Int): JobOrderQueryResult {
         val offset = (20 * page) - 20

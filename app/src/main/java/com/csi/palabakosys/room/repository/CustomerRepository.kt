@@ -5,6 +5,7 @@ import com.csi.palabakosys.app.customers.list.CustomerListItem
 import com.csi.palabakosys.app.customers.list.CustomerQueryResult
 import com.csi.palabakosys.room.dao.DaoCustomer
 import com.csi.palabakosys.room.entities.EntityCustomer
+import com.csi.palabakosys.util.EnumSortDirection
 import com.csi.palabakosys.util.QueryResult
 import java.util.*
 import javax.inject.Inject
@@ -39,9 +40,9 @@ constructor (
         return daoCustomer.getCustomersMinimal(keyword, 20, offset)
     }
 
-    suspend fun getListItems(keyword: String?, page: Int): CustomerQueryResult {
+    suspend fun getListItems(keyword: String?, orderBy: String?, sortDirection: EnumSortDirection?, page: Int): CustomerQueryResult {
         val offset = (20 * page) - 20
-        return daoCustomer.getListItem(keyword, offset)
+        return daoCustomer.getListItem(keyword, orderBy, sortDirection.toString(), offset)
     }
 
     suspend fun getCustomerMinimalByCRN(crn: String?): CustomerMinimal? {

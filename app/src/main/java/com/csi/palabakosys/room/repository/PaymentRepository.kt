@@ -1,6 +1,7 @@
 package com.csi.palabakosys.room.repository
 
 import androidx.lifecycle.LiveData
+import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentMinimal
 import com.csi.palabakosys.room.dao.DaoJobOrderPayment
 import com.csi.palabakosys.room.entities.EntityJobOrderPayment
 import com.csi.palabakosys.room.entities.EntityJobOrderPaymentFull
@@ -24,6 +25,10 @@ constructor (
 
     suspend fun save(payment: EntityJobOrderPayment, jobOrderIds: List<UUID>) : EntityJobOrderPayment {
         return daoPayment.save(payment, jobOrderIds)
+    }
+
+    suspend fun getByJobOrderId(jobOrderId: UUID?) : EntityJobOrderPayment? {
+        return daoPayment.getByJobOrderId(jobOrderId)
     }
 
     fun getCashlessProviders(): LiveData<List<String>> {

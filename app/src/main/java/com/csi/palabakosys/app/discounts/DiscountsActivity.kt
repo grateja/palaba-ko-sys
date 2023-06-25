@@ -27,8 +27,6 @@ class DiscountsActivity : FilterActivity() {
 //    private val addEditLauncher = ActivityLauncher(this)
 
     override var filterHint = "Search Discounts"
-    override var enableAdvancedSearch = false
-    override fun onAdvancedSearchClicked(): Boolean { return false }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_discounts)

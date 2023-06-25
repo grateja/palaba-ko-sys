@@ -16,7 +16,7 @@ abstract class ListViewModel<T> : ViewModel(), ListViewModelInterface {
 
     val items = MutableLiveData<List<T>>()
     val orderBy = MutableLiveData("created_at")
-    val sortDirection = MutableLiveData(EnumSortDirection.DESC)
+    val sortDirection = MutableLiveData<EnumSortDirection>()
     val page = MutableLiveData(1)
     val loading = MutableLiveData(false)
 

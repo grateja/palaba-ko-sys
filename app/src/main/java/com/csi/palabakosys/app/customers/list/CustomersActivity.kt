@@ -21,6 +21,7 @@ class CustomersActivity : FilterActivity() {
     private val adapter = Adapter<CustomerListItem>(R.layout.recycler_item_customers_list_item)
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        title = "Customers"
         binding = DataBindingUtil.setContentView(this, R.layout.activity_customers)
         super.onCreate(savedInstanceState)
         binding.viewModel = viewModel
@@ -29,28 +30,12 @@ class CustomersActivity : FilterActivity() {
 
         subscribeEvents()
         subscribeListeners()
-        viewModel.filter(true)
     }
 
     private fun subscribeEvents() {
         adapter.onScrollAtTheBottom = {
             viewModel.loadMore()
         }
-        binding.recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-
-                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-
-                val totalItemCount = layoutManager.itemCount
-                val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
-
-                if (lastVisibleItemPosition == totalItemCount - 1) {
-                    println("load more")
-//                    viewModel.loadMore()
-                }
-            }
-        })
     }
 
     private fun subscribeListeners() {
@@ -65,17 +50,18 @@ class CustomersActivity : FilterActivity() {
                 }
             }
         })
+        viewModel.orderBy.observe(this, Observer {
+            viewModel.filter(true)
+        })
+        viewModel.sortDirection.observe(this, Observer {
+            viewModel.filter(true)
+        })
     }
 
 
     override var filterHint = "Search customer name of CRN"
-    override var enableAdvancedSearch = false
 
     override fun onQuery(keyword: String?) {
         viewModel.setKeyword(keyword)
-    }
-
-    override fun onAdvancedSearchClicked(): Boolean {
-        TODO("Not yet implemented")
     }
 }

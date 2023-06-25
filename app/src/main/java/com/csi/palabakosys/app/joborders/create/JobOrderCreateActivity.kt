@@ -6,10 +6,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.MotionEvent
+import android.view.inputmethod.InputMethodManager
 import android.widget.DatePicker
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
@@ -34,15 +37,19 @@ import com.csi.palabakosys.app.joborders.create.services.JOSelectWashDryActivity
 import com.csi.palabakosys.app.joborders.create.services.JobOrderServiceItemAdapter
 import com.csi.palabakosys.app.joborders.create.services.MenuServiceItem
 import com.csi.palabakosys.app.joborders.list.JobOrderListItem
+import com.csi.palabakosys.app.joborders.payment.JobOrderListPaymentAdapter
 import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentActivity
+import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentMinimal
 import com.csi.palabakosys.databinding.ActivityJobOrderCreateBinding
 import com.csi.palabakosys.util.ActivityLauncher
 import com.csi.palabakosys.util.BaseActivity
+import com.csi.palabakosys.util.hideKeyboard
 import com.csi.palabakosys.util.toUUID
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -50,6 +57,7 @@ import kotlin.collections.ArrayList
 class JobOrderCreateActivity : BaseActivity() {
     companion object {
         const val JOB_ORDER_ID = "jobOrderId"
+        const val CUSTOMER_EXTRA = "customer"
         const val ACTION_LOAD_BY_CUSTOMER_ID = "loadByCustomerId"
         const val ACTION_LOAD_BY_JOB_ORDER_ID = "loadByJobOrderId"
         const val PAYLOAD_EXTRA = "payload"
@@ -86,6 +94,7 @@ class JobOrderCreateActivity : BaseActivity() {
     private val servicesAdapter = JobOrderServiceItemAdapter()
     private val productsAdapter = JobOrderProductsItemAdapter()
     private val extrasAdapter = JobOrderExtrasItemAdapter()
+    private val unpaidJobOrdersAdapter = Adapter<JobOrderPaymentMinimal>(R.layout.recycler_item_job_order_read_only)
     private val packageAdapter = Adapter<MenuJobOrderPackage>(R.layout.recycler_item_create_job_order_package)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -96,12 +105,15 @@ class JobOrderCreateActivity : BaseActivity() {
         binding.lifecycleOwner = this
 
         if(intent.action == ACTION_LOAD_BY_JOB_ORDER_ID) {
-            val payload = intent.getParcelableExtra<JobOrderListItem>(PAYLOAD_EXTRA)
-            if(payload != null) {
-                viewModel.setJobOrder(payload)
+            intent.getStringExtra(JOB_ORDER_ID).toUUID()?.let {
+                viewModel.setJobOrder(it)
             }
+//            val payload = intent.getParcelableExtra<JobOrderListItem>(PAYLOAD_EXTRA)
+//            if(payload != null) {
+//                viewModel.setJobOrder(payload)
+//            }
         } else if(intent.action == ACTION_LOAD_BY_CUSTOMER_ID) {
-            val payload = intent.getParcelableExtra<CustomerMinimal>(PAYLOAD_EXTRA)
+            val payload = intent.getParcelableExtra<CustomerMinimal>(CUSTOMER_EXTRA)
             if(payload != null) {
                 viewModel.setCustomer(payload)
             }
@@ -116,48 +128,36 @@ class JobOrderCreateActivity : BaseActivity() {
     }
 
     private fun showDateTimePickerDialog(currentDateTime: Instant) {
-        // Get current date and time
-//        val calendar = Calendar.getInstance()
-//        val year = calendar.get(Calendar.YEAR)
-//        val month = calendar.get(Calendar.MONTH)
-//        val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
-//        val hourOfDay = calendar.get(Calendar.HOUR_OF_DAY)
-//        val minute = calendar.get(Calendar.MINUTE)
-
-        // Create and show the date picker dialog
-
         val _currentDateTime = currentDateTime.atZone(ZoneId.systemDefault())
 
-        val datePickerDialog = DatePickerDialog(this,
-            DatePickerDialog.OnDateSetListener { _: DatePicker?, selectedYear: Int, selectedMonth: Int, selectedDayOfMonth: Int ->
-                // Update the selected date
-                val year = selectedYear
-                val month = selectedMonth
-                val dayOfMonth = selectedDayOfMonth
+        val datePickerDialog = DatePickerDialog(
+            this,
+            { _, selectedYear, selectedMonth, selectedDayOfMonth ->
+                val timePickerDialog = TimePickerDialog(
+                    this,
+                    { _, selectedHourOfDay, selectedMinute ->
+                        val localDateTime = LocalDateTime.of(selectedYear, selectedMonth + 1, selectedDayOfMonth, selectedHourOfDay, selectedMinute)
+                        val instant = localDateTime.atZone(ZoneId.systemDefault()).toInstant()
 
-                // Create and show the time picker dialog
-                val timePickerDialog = TimePickerDialog(this,
-                    TimePickerDialog.OnTimeSetListener { _: TimePicker?, selectedHourOfDay: Int, selectedMinute: Int ->
-                        // Update the selected time
-                        val hourOfDay = selectedHourOfDay
-                        val minute = selectedMinute
-
-                        // Display the selected date and time
-                        val dateTime = "$dayOfMonth/${month + 1}/$year $hourOfDay:$minute"
+                        val dateTime = DateTimeFormatter.ofPattern("d/M/yyyy HH:mm").format(localDateTime)
 
                         Toast.makeText(this, "Selected date and time: $dateTime", Toast.LENGTH_LONG).show()
 
-                        val localDateTime = LocalDateTime.of(year, month, dayOfMonth, hourOfDay, minute)
-                        val zoneId = ZoneId.systemDefault()
-                        val instant = localDateTime.atZone(zoneId).toInstant()
-
                         viewModel.applyDateTime(instant)
-
-                    }, _currentDateTime.hour, _currentDateTime.minute, false)
+                    },
+                    _currentDateTime.hour,
+                    _currentDateTime.minute,
+                    false
+                )
 
                 timePickerDialog.show()
-            }, _currentDateTime.year, _currentDateTime.monthValue, _currentDateTime.dayOfMonth)
+            },
+            _currentDateTime.year,
+            _currentDateTime.monthValue - 1,
+            _currentDateTime.dayOfMonth
+        )
 
+        datePickerDialog.setCanceledOnTouchOutside(false)
         datePickerDialog.show()
     }
 
@@ -223,8 +223,9 @@ class JobOrderCreateActivity : BaseActivity() {
                     }
                 }
                 ACTION_SYNC_PAYMENT -> {
-                    val paymentId = data.getStringExtra(JobOrderPaymentActivity.PAYMENT_ID).toUUID()
-                    viewModel.loadPayment(paymentId)
+//                    val paymentId = data.getStringExtra(JobOrderPaymentActivity.PAYMENT_ID).toUUID()
+//                    val paidJobOrderIds = data.getStringArrayListExtra(JobOrderPaymentActivity.SELECTED_JOB_ORDER_IDS)
+                    viewModel.loadPayment()
                 }
                 ACTION_DELETE_JOB_ORDER -> {
                     finish()
@@ -297,6 +298,10 @@ class JobOrderCreateActivity : BaseActivity() {
             extrasAdapter.setData(it.toMutableList())
         })
 
+        viewModel.unpaidJobOrders.observe(this, Observer {
+            unpaidJobOrdersAdapter.setData(it)
+        })
+
         binding.buttonSave.setOnClickListener {
             viewModel.validate()
         }
@@ -363,8 +368,10 @@ class JobOrderCreateActivity : BaseActivity() {
                     viewModel.resetState()
                 }
                 is CreateJobOrderViewModel.DataState.ModifyDateTime -> {
-                    showDateTimePickerDialog(it.createdAt)
-                    viewModel.resetState()
+                    Handler(Looper.getMainLooper()).postDelayed(Runnable {
+                        showDateTimePickerDialog(it.createdAt)
+                        viewModel.resetState()
+                    }, 100)
                 }
             }
         })

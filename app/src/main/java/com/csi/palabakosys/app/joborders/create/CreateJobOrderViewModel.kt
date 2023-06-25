@@ -175,7 +175,8 @@ constructor(
 
     val previousBalance = MediatorLiveData<Float>().apply {
         fun update() {
-            value = unpaidJobOrders.value ?. sumOf { it.discountedAmount.toDouble() }?.toFloat()
+            val jobOrderId = jobOrderId.value
+            value = unpaidJobOrders.value ?.filter { it.id != jobOrderId } ?. sumOf { it.discountedAmount.toDouble() }?.toFloat()
         }
         addSource(unpaidJobOrders) {update()}
     }
@@ -190,6 +191,14 @@ constructor(
         addSource(discountedAmount) {update()}
         addSource(previousBalance) {update()}
     }
+
+    val hasPreviousBalance = MediatorLiveData<Boolean>().apply {
+        fun update() {
+            value = unpaidJobOrders.value?.isNotEmpty()
+        }
+        addSource(unpaidJobOrders) {update()}
+    }
+
     /** endregion mediator live data */
 
     /** region computed functions */
@@ -240,7 +249,7 @@ constructor(
         } ?: 0f
     }
 
-    private fun isPaymentSaved() : Boolean {
+    private fun isLocked() : Boolean {
         return if(_locked.value == true) {
             _dataState.value = DataState.InvalidOperation("Cannot modify locked Job Order")
             true
@@ -251,15 +260,16 @@ constructor(
 
     /** region setter functions */
 
-    private suspend fun loadPreviousJobOrders(customerId: UUID, jobOrderId: UUID?) {
-        viewModelScope.launch {
-            unpaidJobOrders.value = jobOrderRepository.getPreviousUnpaidByCustomerId(customerId, jobOrderId)
-        }
+    private suspend fun loadUnpaidJobOrders(customerId: UUID/*, jobOrderId: UUID?*/) : Boolean {
+        val unpaid = jobOrderRepository.getAllUnpaidByCustomerId(customerId)
+        unpaidJobOrders.value = unpaid
+        return unpaid.isNotEmpty()
     }
 
-    fun loadPayment(paymentId: UUID?) {
+    fun loadPayment() {
         viewModelScope.launch {
-            paymentRepository.get(paymentId)?.let {
+            val jobOrderId = jobOrderId.value
+            paymentRepository.getByJobOrderId(jobOrderId)?.let {
                 _payment.value = it
                 _locked.value = true
             }
@@ -345,10 +355,10 @@ constructor(
         _saved.value = true
     }
 
-    fun setJobOrder(jobOrderMinimal: JobOrderListItem) {
+    fun setJobOrder(joId: UUID) {
         if(currentCustomer.value != null) return
         viewModelScope.launch {
-            jobOrderRepository.getJobOrderWithItems(jobOrderMinimal.id).let {
+            jobOrderRepository.getJobOrderWithItems(joId).let {
                 jobOrderId.value = it?.jobOrder?.id
                 createdAt.value = it?.jobOrder?.createdAt
                 jobOrderNumber.value = it?.jobOrder?.jobOrderNumber
@@ -357,7 +367,7 @@ constructor(
                         it.customer?.id!!, it.customer?.name!!, it.customer?.crn!!, it.customer?.address, null
                     )
                     prepare(it)
-                    loadPreviousJobOrders(it.customer?.id!!, it.jobOrder.id)
+                    loadUnpaidJobOrders(it.customer?.id!!/*, it.jobOrder.id*/)
                 } else {
                     _dataState.value = DataState.InvalidOperation("Job Order maybe deleted")
                 }
@@ -365,18 +375,18 @@ constructor(
         }
     }
 
-    fun setCustomer(customer: CustomerMinimal?) {
+    fun setCustomer(customer: CustomerMinimal) {
         if(currentCustomer.value != null) return
-        currentCustomer.value = customer!!
+        currentCustomer.value = customer
         viewModelScope.launch {
-            jobOrderRepository.getCurrentJobOrder(customer.id).let {
-                jobOrderId.value = it?.jobOrder?.id ?: UUID.randomUUID()
-                createdAt.value = it?.jobOrder?.createdAt ?: Instant.now()
-                jobOrderNumber.value = it?.jobOrder?.jobOrderNumber ?: jobOrderRepository.getNextJONumber()
-                if(it != null) {
-                    prepare(it)
+            jobOrderRepository.getCurrentJobOrder(customer.id).let { jobOrderWithItems ->
+                jobOrderId.value = jobOrderWithItems?.jobOrder?.id ?: UUID.randomUUID()
+                createdAt.value = jobOrderWithItems?.jobOrder?.createdAt ?: Instant.now()
+                jobOrderNumber.value = jobOrderWithItems?.jobOrder?.jobOrderNumber ?: jobOrderRepository.getNextJONumber()
+                loadUnpaidJobOrders(customer.id)
+                if(jobOrderWithItems != null) {
+                    prepare(jobOrderWithItems)
                 } else {
-                    loadPreviousJobOrders(customer.id, null)
                     _dataState.value = DataState.OpenPackages
                 }
             }
@@ -478,6 +488,7 @@ constructor(
 //    }
 
     fun requestModifyDateTime() {
+        if(isLocked()) return
         createdAt.value?.let {
             _dataState.value = DataState.ModifyDateTime(it)
         }
@@ -487,35 +498,35 @@ constructor(
     }
 
     fun openServices(itemPreset: MenuServiceItem?) {
-        if(isPaymentSaved()) return
+        if(isLocked()) return
         jobOrderServices.value.let {
             _dataState.value = DataState.OpenServices(it, itemPreset)
         }
     }
 
     fun openProducts(itemPreset: MenuProductItem?) {
-        if(isPaymentSaved()) return
+        if(isLocked()) return
         jobOrderProducts.value.let {
             _dataState.value = DataState.OpenProducts(it, itemPreset)
         }
     }
 
     fun openExtras(itemPreset: MenuExtrasItem?) {
-        if(isPaymentSaved()) return
+        if(isLocked()) return
         jobOrderExtras.value.let {
             _dataState.value = DataState.OpenExtras(it, itemPreset)
         }
     }
 
     fun openDelivery() {
-        if(isPaymentSaved()) return
+        if(isLocked()) return
         deliveryCharge.value.let {
             _dataState.value = DataState.OpenDelivery(it)
         }
     }
 
     fun openDiscount() {
-        if(isPaymentSaved()) return
+        if(isLocked()) return
         discount.value.let {
             _dataState.value = DataState.OpenDiscount(it)
         }
@@ -532,9 +543,18 @@ constructor(
         _dataState.value = DataState.OpenPayment(currentCustomer.value!!.id, payment.value?.id)
     }
 
+//    fun openUnpaidJobOrdersPayment() {
+//        _dataState.value = DataState.OpenPayment(currentCustomer.value!!.id, payment.value?.id)
+//    }
+
     fun validate() {
         if(hasAny.value != true) {
             _dataState.value = DataState.InvalidOperation("Your Job Order is empty!")
+            return
+        }
+
+        if(createdAt.value?.isAfter(Instant.now()) == true) {
+            _dataState.value = DataState.InvalidOperation("Invalid date and time!")
             return
         }
 
@@ -564,7 +584,7 @@ constructor(
     /** endregion */
 
     fun save(userId: UUID) {
-        if(isPaymentSaved()) return
+        if(isLocked()) return
         viewModelScope.launch {
 
 //            val currentJobOrder = currentJobOrder.value

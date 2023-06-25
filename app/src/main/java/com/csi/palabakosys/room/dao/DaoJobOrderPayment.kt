@@ -2,6 +2,7 @@ package com.csi.palabakosys.room.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentMinimal
 import com.csi.palabakosys.room.entities.EntityJobOrderPayment
 import com.csi.palabakosys.room.entities.EntityJobOrderPaymentFull
 import java.util.*
@@ -32,4 +33,7 @@ interface DaoJobOrderPayment {
 
     @Query("SELECT DISTINCT cashless_provider FROM job_order_payments WHERE cashless_provider IS NOT NULL ORDER BY cashless_provider")
     fun getCashlessProviders(): LiveData<List<String>>
+
+    @Query("SELECT jop.* FROM job_order_payments jop JOIN job_orders jo ON jop.id = jo.payment_id WHERE jo.id = :jobOrderId AND jo.deleted_at IS NULL")
+    suspend fun getByJobOrderId(jobOrderId: UUID?) : EntityJobOrderPayment?
 }

@@ -47,13 +47,6 @@ abstract class FilterActivity : AppCompatActivity(), FilterActivityInterface {
             }
         })
 
-        menu.findItem(R.id.menu_advanced_option).apply {
-            setOnMenuItemClickListener {
-                onAdvancedSearchClicked()
-            }
-            isVisible = enableAdvancedSearch
-        }
-
         return super.onCreateOptionsMenu(menu)
     }
 }

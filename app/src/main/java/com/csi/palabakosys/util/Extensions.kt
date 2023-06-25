@@ -87,8 +87,8 @@ fun setPeso(view: TextView, value: Float?) {
 }
 
 fun View.hideKeyboard() : Boolean {
-    val imm = ContextCompat.getSystemService(context, InputMethodManager::class.java) as InputMethodManager
-    return imm.hideSoftInputFromWindow(windowToken, 0)
+    val imm = ContextCompat.getSystemService(this.context, InputMethodManager::class.java) as InputMethodManager
+    return imm.hideSoftInputFromWindow(this.windowToken, 0)
 }
 
 fun String?.isUUID(): Boolean {

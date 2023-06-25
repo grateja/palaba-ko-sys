@@ -88,9 +88,11 @@
                     <TableRow
                         android:gravity="center">
                         <TextView
+                            android:id="@+id/labelCreatedAt"
                             android:textAlignment="textEnd"
                             android:text="Date created:"/>
                         <com.google.android.material.card.MaterialCardView
+                            android:enabled="@{!viewModel.locked}"
                             android:id="@+id/cardCreatedAt"
                             style="@style/CardSpan"
                             android:layout_margin="8dp"

@@ -32,7 +32,7 @@ constructor(
     sealed class DataState {
         object StateLess : DataState()
         class OpenCashless(val cashless: EntityCashless?) : DataState()
-        class PaymentSuccess(val payment: EntityJobOrderPayment) : DataState()
+        class PaymentSuccess(val payment: EntityJobOrderPayment, val jobOrderIds: ArrayList<String>) : DataState()
         class InvalidInput(val inputValidation: InputValidation) : DataState()
         class InvalidOperation(val message: String) : DataState()
         object ValidationPassed: DataState()
@@ -168,7 +168,8 @@ constructor(
                 arrayOf(
                     Rule.Required,
                     Rule.IsNumeric(cashlessAmount.value),
-                    Rule.Min(amountToPay.value, "The payment amount is insufficient.")
+                    Rule.Min(amountToPay.value, "The payment amount is insufficient."),
+                    Rule.ExactAmount(amountToPay.value, "Exact amount only")
                 )
             )
             validation.addRules(
@@ -200,6 +201,10 @@ constructor(
                 )
             } else null
 
+            val payableJobOrders = payableJobOrders.value
+
+            val jobOrderIds = payableJobOrders?.filter { it.selected }?.map { it.id } ?: return@launch
+
             val payment = EntityJobOrderPayment(
                 UUID.randomUUID(),
                 paymentMethod.value!!,
@@ -209,8 +214,8 @@ constructor(
                 orNumber.value,
                 cashless
             )
-            paymentRepository.save(payment, payableJobOrders.value!!.filter{ it.selected }.map { it.id })
-            _dataState.value = DataState.PaymentSuccess(payment)
+            paymentRepository.save(payment, jobOrderIds)
+            _dataState.value = DataState.PaymentSuccess(payment, ArrayList(jobOrderIds.map {it.toString()}))
         }
     }
 

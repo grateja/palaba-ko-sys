@@ -25,11 +25,15 @@ constructor(
             }
             val keyword = keyword.value
             val page = page.value ?: 1
+            val orderBy = orderBy.value
+            val sortDirection = sortDirection.value
 
             loading.value = true
 
             val items = repository.getListItems(
                 keyword,
+                orderBy,
+                sortDirection,
                 page
             )
             _dataState.value = DataState.LoadItems(items.result, reset)

@@ -2,6 +2,9 @@ package com.csi.palabakosys.app.joborders.list
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemSelectedListener
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -16,28 +19,15 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class JobOrderListActivity : FilterActivity() {
-    companion object {
-        const val ADVANCED_OPTION_SEARCH = "advanced_search"
-    }
     private lateinit var binding: ActivityJobOrderListBinding
     private val viewModel: JobOrderListViewModel by viewModels()
 
     override var filterHint = "Search customer name or CRN"
-    override var enableAdvancedSearch = true
-    override fun onAdvancedSearchClicked(): Boolean {
-//        viewModel.showAdvancedOptions()
-//        val intent = Intent(this, AdvancedSearchDialogActivity::class.java).apply {
-//            action = ADVANCED_OPTION_SEARCH
-//            putExtra(AdvancedSearchDialogActivity.KEYWORD_EXTRA, searchBar?.query)
-//        }
-//        addEditLauncher.launch(intent)
-        return true
-    }
 
-    //    private var searchBar: SearchView? = null
     private val adapter = Adapter<JobOrderListItem>(R.layout.recycler_item_job_order_list_item)
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        title = "Job Orders"
         binding = DataBindingUtil.setContentView(this, R.layout.activity_job_order_list)
         super.onCreate(savedInstanceState)
         binding.lifecycleOwner = this
@@ -46,7 +36,6 @@ class JobOrderListActivity : FilterActivity() {
 
         subscribeEvents()
         subscribeListeners()
-        viewModel.filter(true)
     }
 
     override fun onQuery(keyword: String?) {
@@ -57,10 +46,9 @@ class JobOrderListActivity : FilterActivity() {
         adapter.onItemClick = {
             val intent = Intent(this, JobOrderCreateActivity::class.java).apply {
                 action = JobOrderCreateActivity.ACTION_LOAD_BY_JOB_ORDER_ID
-                putExtra(JobOrderCreateActivity.PAYLOAD_EXTRA, it)
+                putExtra(JobOrderCreateActivity.JOB_ORDER_ID, it.id.toString())
             }
             addEditLauncher.launch(intent)
-//            startActivity(intent)
         }
         addEditLauncher.onOk = {
             viewModel.filter(true)
@@ -83,29 +71,13 @@ class JobOrderListActivity : FilterActivity() {
                 }
             }
         })
-//        viewModel.items.observe(this, Observer {
-//            adapter.setData(it)
-//        })
-//        binding.buttonNext.setOnClickListener {
-//            viewModel.navigate(1)
-//        }
-//        binding.buttonPrev.setOnClickListener {
-//            viewModel.navigate(-1)
-//        }
-//        viewModel.dataState.observe(this, Observer {
-//            when (it) {
-//                is JobOrderListViewModel.DataState.ShowAdvancedSearch -> {
-//                    val intent = Intent(this, AdvancedSearchDialogActivity::class.java).apply {
-//                        action = ADVANCED_OPTION_SEARCH
-//                        putExtra(AdvancedSearchDialogActivity.KEYWORD_EXTRA, it.keyword)
-//                        putExtra(AdvancedSearchDialogActivity.ORDER_BY_EXTRA, it.orderBy)
-//                        putExtra(AdvancedSearchDialogActivity.SORT_DIRECTION_EXTRA, it.sortDirection)
-//                        putExtra(AdvancedSearchDialogActivity.ITEM_PER_PAGE_EXTRA, it.itemPerPage)
-//                        putExtra(AdvancedSearchDialogActivity.PAGE_EXTRA, it.page)
-//                    }
-//                    addEditLauncher.launch(intent)
-//                }
-//            }
-//        })
+
+        viewModel.sortDirection.observe(this, Observer {
+            viewModel.filter(true)
+        })
+
+        viewModel.orderBy.observe(this, Observer {
+            viewModel.filter(true)
+        })
     }
 }

@@ -89,7 +89,7 @@ open class Adapter<R>(private val layoutId: Int) : RecyclerView.Adapter<Adapter.
         println(position)
         if(position == itemCount - 1) {
             onScrollAtTheBottom?.invoke()
-            println("Your reached the end")
+            println("You reached the end")
         }
     }
 
