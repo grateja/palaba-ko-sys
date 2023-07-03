@@ -1,5 +1,6 @@
 package com.csi.palabakosys.room.repository
 
+import androidx.lifecycle.LiveData
 import com.csi.palabakosys.app.customers.CustomerMinimal
 import com.csi.palabakosys.app.customers.list.CustomerListItem
 import com.csi.palabakosys.app.customers.list.CustomerQueryResult
@@ -40,9 +41,9 @@ constructor (
         return daoCustomer.getCustomersMinimal(keyword, 20, offset)
     }
 
-    suspend fun getListItems(keyword: String?, orderBy: String?, sortDirection: EnumSortDirection?, page: Int): CustomerQueryResult {
+    suspend fun getListItems(keyword: String?, orderBy: String?, sortDirection: EnumSortDirection?, page: Int, hideAllWithoutJO: Boolean): CustomerQueryResult {
         val offset = (20 * page) - 20
-        return daoCustomer.getListItem(keyword, orderBy, sortDirection.toString(), offset)
+        return daoCustomer.getListItem(keyword, orderBy, sortDirection.toString(), offset, hideAllWithoutJO)
     }
 
     suspend fun getCustomerMinimalByCRN(crn: String?): CustomerMinimal? {

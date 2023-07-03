@@ -1,6 +1,5 @@
 package com.csi.palabakosys.app.discounts.edit
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
@@ -14,7 +13,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
 @AndroidEntryPoint
-class DiscountAddEditActivity : CrudActivity() {
+class DiscountAddEditActivity(
+    override var requireAuthOnSave: Boolean = false,
+    override var requireAuthOnDelete: Boolean = false
+) : CrudActivity() {
     private lateinit var binding: ActivityDiscountAddEditBinding
     private val viewModel: DiscountAddEditViewModel by viewModels()
     private val discountApplicableAdapter = Adapter<DiscountApplicableViewModel>(R.layout.recycler_item_discount_applicable)
@@ -38,11 +40,15 @@ class DiscountAddEditActivity : CrudActivity() {
     private fun subscribeListeners() {
         viewModel.dataState.observe(this, Observer {
             when(it) {
-                is DataState.ConfirmSave -> {
-                    confirm(it.data.id)
+                is DataState.ValidationPassed -> {
+                    viewModel.save()
+                    viewModel.resetState()
                 }
-                is DataState.ConfirmDelete -> {
-                    confirm(it.data.id)
+                is DataState.SaveSuccess -> {
+                    confirmExit(it.data.id)
+                }
+                is DataState.DeleteSuccess -> {
+                    confirmExit(it.data.id)
                 }
                 is DataState.RequestExit -> {
                     confirmExit(it.promptPass)
@@ -64,8 +70,8 @@ class DiscountAddEditActivity : CrudActivity() {
         viewModel.get(id)
     }
 
-    override fun save(loginCredentials: LoginCredentials?) {
-        viewModel.save()
+    override fun saveButtonClicked(loginCredentials: LoginCredentials?) {
+        viewModel.validate()
     }
 
     override fun confirmDelete(loginCredentials: LoginCredentials?) {
@@ -76,8 +82,8 @@ class DiscountAddEditActivity : CrudActivity() {
         viewModel.requestExit()
     }
 
-    override fun confirm(entityId: UUID?) {
-        super.confirm(entityId)
+    override fun confirmExit(entityId: UUID?) {
+        super.confirmExit(entityId)
         viewModel.resetState()
     }
 }

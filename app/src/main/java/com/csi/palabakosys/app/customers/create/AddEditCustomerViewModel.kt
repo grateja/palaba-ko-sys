@@ -4,7 +4,6 @@ import androidx.lifecycle.viewModelScope
 import com.csi.palabakosys.model.Rule
 import com.csi.palabakosys.room.entities.EntityCustomer
 import com.csi.palabakosys.room.repository.CustomerRepository
-import com.csi.palabakosys.util.DataState
 import com.csi.palabakosys.util.InputValidation
 import com.csi.palabakosys.viewmodels.CreateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -37,7 +36,7 @@ constructor(
     override fun save() {
         model.value?.let {
             val inputValidation = InputValidation()
-            inputValidation.addRules("name", it.name.toString(), arrayOf(Rule.Required))
+            inputValidation.addRule("name", it.name.toString(), arrayOf(Rule.Required))
 
             viewModelScope.launch {
                 if(originalName != it.name &&  repository.checkName(it.name)) {

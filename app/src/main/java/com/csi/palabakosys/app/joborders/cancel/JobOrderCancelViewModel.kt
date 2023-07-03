@@ -55,7 +55,7 @@ constructor(
 //            val jobOrderId = jobOrder.value?.jobOrder?.id
 //            val paymentId = jobOrder.value?.payment?.id
 
-            validation.addRules("remarks", remarks.value, arrayOf(Rule.Required))
+            validation.addRule("remarks", remarks.value, arrayOf(Rule.Required))
 
             if(validation.isInvalid()) {
                 _validation.value = validation
@@ -69,7 +69,7 @@ constructor(
 
             val jobOrderVoid = EntityJobOrderVoid(userId, remarks.value)
             jobOrderRepository.cancelJobOrder(jobOrderWithItems, jobOrderVoid).let {
-                _dataState.value = DataState.ConfirmSave(jobOrderWithItems.jobOrder.id)
+                _dataState.value = DataState.SaveSuccess(jobOrderWithItems.jobOrder.id)
             }
         }
     }

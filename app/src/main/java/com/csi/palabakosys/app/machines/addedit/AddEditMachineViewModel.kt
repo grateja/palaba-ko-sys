@@ -47,7 +47,7 @@ constructor(
             viewModelScope.launch {
                 repository.save(it)?.let { product ->
                     model.value = product
-                    dataState.value = DataState.ConfirmSave(product)
+                    dataState.value = DataState.SaveSuccess(product)
                 }
             }
         }

@@ -1,17 +1,8 @@
 package com.csi.palabakosys.app.preferences.printer
 
-import android.Manifest
-import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
-import android.bluetooth.BluetoothSocket
 import android.content.Context
-import android.os.Build
-import android.os.Handler
-import android.os.Looper
-import android.widget.Toast
-import androidx.annotation.RequiresApi
-import androidx.annotation.RequiresPermission
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -24,7 +15,6 @@ import com.dantsu.escposprinter.EscPosPrinter
 import com.dantsu.escposprinter.connection.bluetooth.BluetoothConnection
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import java.io.IOException
 import java.util.*
 import javax.inject.Inject
 
@@ -75,11 +65,11 @@ constructor(
 
 
         val _validation = InputValidation().apply {
-            addRules("printerName", name, arrayOf(Rule.Required))
-            addRules("macAddress", address, arrayOf(Rule.Required))
-            addRules("dpi", dpi, arrayOf(Rule.Required, Rule.IsNumeric(dpi)))
-            addRules("width", width, arrayOf(Rule.Required, Rule.IsNumeric(width)))
-            addRules("charactersPerLine", charactersPerLine, arrayOf(Rule.Required, Rule.IsNumeric(charactersPerLine)))
+            addRule("printerName", name, arrayOf(Rule.Required))
+            addRule("macAddress", address, arrayOf(Rule.Required))
+            addRule("dpi", dpi, arrayOf(Rule.Required, Rule.IsNumeric))
+            addRule("width", width, arrayOf(Rule.Required, Rule.IsNumeric))
+            addRule("charactersPerLine", charactersPerLine, arrayOf(Rule.Required, Rule.IsNumeric))
         }
 
         validation.value = _validation

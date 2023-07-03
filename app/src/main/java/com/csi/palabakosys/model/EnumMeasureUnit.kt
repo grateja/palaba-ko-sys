@@ -1,11 +1,12 @@
 package com.csi.palabakosys.model
 
-enum class EnumMeasureUnit(private val value: String) {
+enum class EnumMeasureUnit(val value: String) {
     PCS("pcs"),
     SACHET("sachet"),
     MILLILITER("mL"),
     LITER("L"),
-    LOAD("Load");
+    LOAD("Load"),
+    PACK("Pack");
     override fun toString() : String {
         return value
     }

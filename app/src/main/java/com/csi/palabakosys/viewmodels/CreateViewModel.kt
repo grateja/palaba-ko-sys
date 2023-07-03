@@ -2,6 +2,7 @@ package com.csi.palabakosys.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.csi.palabakosys.model.CRUDActionEnum
 import com.csi.palabakosys.room.entities.BaseEntity
@@ -15,17 +16,20 @@ open class CreateViewModel<T : BaseEntity> (private val iRepository: IRepository
     val crudActionEnum = MutableLiveData(CRUDActionEnum.CREATE)
     val dataState = MutableLiveData<DataState<T>>()
     val model = MutableLiveData<T?>()
+
+    protected val entityId = MutableLiveData<UUID?>()
+
     var promptPass = false
 
     fun getId() : String? {
-        return model.value?.id?.toString() // this.modelId?.toString()
+        return entityId.value?.toString() // this.modelId?.toString()
     }
 
     fun clearError(key: String = "") {
         validation.value = validation.value?.removeError(key)
     }
     
-    fun resetState() {
+    open fun resetState() {
         dataState.value = DataState.StateLess
     }
 
@@ -33,16 +37,26 @@ open class CreateViewModel<T : BaseEntity> (private val iRepository: IRepository
         dataState.value = DataState.RequestExit(promptPass)
     }
 
+    protected fun validate(inputValidation: InputValidation) : Boolean {
+        val isInvalid = inputValidation.isInvalid()
+
+        dataState.value = if (isInvalid)
+            DataState.InvalidInput(inputValidation)
+        else
+            DataState.ValidationPassed
+
+        validation.value = inputValidation
+
+        return isInvalid
+    }
+
     open fun save() {
         model.value?.let {
             viewModelScope.launch {
-                if(validation.value?.isInvalid() == true) {
-                    return@launch
-                }
                 iRepository.save(it).let {
                     model.value = it
                 }
-                dataState.value = DataState.ConfirmSave(it)
+                dataState.value = DataState.SaveSuccess(it)
             }
         }
     }
@@ -52,14 +66,16 @@ open class CreateViewModel<T : BaseEntity> (private val iRepository: IRepository
             model.value?.let {
                 it.deletedBy = deletedBy
                 if(iRepository.delete(it, permanent)) {
-                    dataState.value = DataState.ConfirmDelete(it)
+                    dataState.value = DataState.DeleteSuccess(it)
                 }
             }
         }
     }
 
     protected suspend fun get(id: UUID?, initialModel: T) : T {
-        model.value.let { it ->
+        entityId.value = id
+
+        model.value.let {
             if(it != null) return it
             if(id == null) {
                 model.value = initialModel

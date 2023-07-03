@@ -7,14 +7,16 @@ import java.util.*
 @Entity(tableName = "packages")
 data class EntityPackage(
     @ColumnInfo(name = "package_name")
-    val packageName: String,
+    var packageName: String,
 
     @ColumnInfo(name = "description")
-    val description: String?,
+    var description: String?,
 
     @ColumnInfo(name = "total_price")
     val totalPrice: Float?,
 
 //    @ColumnInfo(name = "delivery_id")
 //    val deliveryId: UUID?,
-) : BaseEntity()
+) : BaseEntity() {
+    constructor() : this("", "", null)
+}

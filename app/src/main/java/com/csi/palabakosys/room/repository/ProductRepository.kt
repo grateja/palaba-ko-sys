@@ -32,4 +32,8 @@ constructor (
     suspend fun filter(keyword: String) : List<ProductItemFull> {
         return daoProduct.filter(keyword)
     }
+
+    suspend fun checkAll(products: List<MenuProductItem>) : String? {
+        return daoProduct.checkAll(products)
+    }
 }

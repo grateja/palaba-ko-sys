@@ -1,8 +1,11 @@
 package com.csi.palabakosys.model
 
+import android.os.Parcelable
 import com.csi.palabakosys.R
+import kotlinx.parcelize.Parcelize
 
-enum class EnumMachineType(val id: Int, val value: String, val abbr: String, val serviceType: EnumServiceType, val icon: Int) {
+@Parcelize
+enum class EnumMachineType(val id: Int, val value: String, val abbr: String, val serviceType: EnumServiceType, val icon: Int) : Parcelable {
     REGULAR_WASHER(
         1,
         "8KG Washer",

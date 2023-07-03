@@ -7,43 +7,88 @@
             name="viewModel"
             type="com.csi.palabakosys.app.customers.list.CustomerListItem" />
     </data>
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.google.android.material.card.MaterialCardView
+        style="@style/CardItem"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="@id/labelCRN"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:text="@{viewModel.customer.createdAt}"
-            tools:text="June 21, 2023"/>
-        <TextView
-            android:id="@+id/labelCRN"
-            style="@style/TextPrimary"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{`[CRN] : ` + viewModel.customer.crn}"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:text="[CRN] : #0392029"/>
-        <TextView
-            android:id="@+id/labelName"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            style="@style/TextItemTitle"
-            android:text="@{viewModel.customer.name}"
-            app:layout_constraintTop_toBottomOf="@id/labelCRN"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:text="Chris Hemsworth"/>
-        <TextView
-            android:visibility="@{viewModel.customer.address != null}"
-            android:id="@+id/labelAddress"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@{viewModel.customer.address}"
-            app:layout_constraintTop_toBottomOf="@id/labelName"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:text="Sa dako paroon. Malayo sa kabihasnan"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="wrap_content">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.jobOrdersCountStr()}"
+                tools:text="1/2 PAID"/>
+
+            <TextView
+                android:id="@+id/labelCRN"
+                style="@style/TextPrimary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{`[CRN] : ` + viewModel.customer.crn}"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="[CRN] : #0392029"/>
+            <TextView
+                android:id="@+id/labelName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                style="@style/TextItemTitle"
+                android:text="@{viewModel.customer.name + ` ` + viewModel.paidJo}"
+                app:layout_constraintTop_toBottomOf="@id/labelCRN"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="Chris Hemsworth"/>
+            <TextView
+                android:visibility="@{viewModel.customer.address != null}"
+                android:id="@+id/labelAddress"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.customer.address}"
+                app:layout_constraintTop_toBottomOf="@id/labelName"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="Sa dako paroon. Malayo sa kabihasnan"/>
+            <LinearLayout
+                android:id="@+id/labelVisits"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/labelAddress"
+                app:layout_constraintStart_toStartOf="@id/labelAddress"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="First visit: "/>
+                <TextView
+                    android:id="@+id/textFirstVisit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="@id/labelCRN"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:text="@{viewModel.firstVisit}"
+                    tools:text="June 21, 2023"/>
+                <TextView
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/symbol_bullet"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Last visit: "/>
+
+                <TextView
+                    android:id="@+id/textLastVisit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/textFirstVisit"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:momentAgo="@{viewModel.lastVisit}"
+                    tools:text="June 21, 2023"/>
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
 </layout>

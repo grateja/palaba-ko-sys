@@ -16,6 +16,7 @@ import com.csi.palabakosys.model.EnumDiscountApplicable
 import com.csi.palabakosys.room.entities.*
 import com.csi.palabakosys.room.repository.JobOrderRepository
 import com.csi.palabakosys.room.repository.PaymentRepository
+import com.csi.palabakosys.room.repository.ProductRepository
 import com.csi.palabakosys.util.isToday
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -30,6 +31,7 @@ class CreateJobOrderViewModel
 constructor(
     private val jobOrderRepository: JobOrderRepository,
     private val paymentRepository: PaymentRepository,
+    private val productsRepository: ProductRepository,
 //    private val packageRepository: JobOrderPackageRepository,
 ) : ViewModel() {
     sealed class DataState {
@@ -558,7 +560,28 @@ constructor(
             return
         }
 
-        _dataState.value = DataState.ProceedToSaveJO
+        viewModelScope.launch {
+            val products = jobOrderProducts.value?.filter {
+                it.deletedAt == null
+            }
+            products?.let {
+                val unavailable = productsRepository.checkAll(it)
+                if(unavailable != null) {
+                    _dataState.value = DataState.InvalidOperation(unavailable)
+                    return@launch
+                } else {
+                    _dataState.value = DataState.ProceedToSaveJO
+                }
+            }
+        }
+
+//        jobOrderProducts.value?.let { list ->
+//            if(list.firstOrNull { it.currentStock < it.quantity } ?.let {
+//                _dataState.value = DataState.InvalidOperation("No enough stocks for ${it.name}")
+//            } != null) return
+//        }
+
+//        _dataState.value = DataState.ProceedToSaveJO
     }
 
     fun requestCancel() {

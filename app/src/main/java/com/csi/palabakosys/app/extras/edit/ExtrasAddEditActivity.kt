@@ -1,6 +1,5 @@
 package com.csi.palabakosys.app.extras.edit
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import androidx.activity.viewModels
@@ -15,7 +14,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
 @AndroidEntryPoint
-class ExtrasAddEditActivity : CrudActivity() {
+class ExtrasAddEditActivity(
+    override var requireAuthOnSave: Boolean = false,
+    override var requireAuthOnDelete: Boolean = false
+) : CrudActivity() {
     private lateinit var binding: ActivityExtrasAddEditBinding
     private val viewModel: ExtrasAddEditViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,11 +32,15 @@ class ExtrasAddEditActivity : CrudActivity() {
     private fun subscribeListeners() {
         viewModel.dataState.observe(this, Observer {
             when(it) {
-                is DataState.ConfirmSave -> {
-                    confirm(it.data.id)
+                is DataState.ValidationPassed -> {
+                    viewModel.save()
+                    viewModel.resetState()
                 }
-                is DataState.ConfirmDelete -> {
-                    confirm(it.data.id)
+                is DataState.SaveSuccess -> {
+                    confirmExit(it.data.id)
+                }
+                is DataState.DeleteSuccess -> {
+                    confirmExit(it.data.id)
                 }
                 is DataState.RequestExit -> {
                     confirmExit(it.promptPass)
@@ -56,8 +62,8 @@ class ExtrasAddEditActivity : CrudActivity() {
         viewModel.get(id)
     }
 
-    override fun save(loginCredentials: LoginCredentials?) {
-        viewModel.save()
+    override fun saveButtonClicked(loginCredentials: LoginCredentials?) {
+        viewModel.validate()
     }
 
     override fun confirmDelete(loginCredentials: LoginCredentials?) {
@@ -68,8 +74,8 @@ class ExtrasAddEditActivity : CrudActivity() {
         viewModel.requestExit()
     }
 
-    override fun confirm(entityId: UUID?) {
-        super.confirm(entityId)
+    override fun confirmExit(entityId: UUID?) {
+        super.confirmExit(entityId)
         viewModel.resetState()
     }
 }

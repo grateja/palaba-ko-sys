@@ -4,7 +4,7 @@ import android.util.Patterns
 
 sealed class Rule(var message: String) : RuleInterface {
 
-    class IsEmail(private val email: String?) : Rule("No a valid email format") {
+    object IsEmail : Rule("No a valid email format") {
         override fun isValid(input: Any?): Boolean {
             return Patterns.EMAIL_ADDRESS.matcher(input.toString()).matches()
         }
@@ -26,7 +26,7 @@ sealed class Rule(var message: String) : RuleInterface {
         }
     }
 
-    class Min(private val minimumValue: Float?) : Rule("Field must be greater than $minimumValue") {
+    class Min(private val minimumValue: Float?) : Rule("Field must be greater than or equal $minimumValue") {
         constructor(value: Float?, defaultMessage: String) : this(value) {
             message = defaultMessage
         }
@@ -35,6 +35,18 @@ sealed class Rule(var message: String) : RuleInterface {
             val _input = input.toString().toFloatOrNull()?:0f
             val _min = this.minimumValue?:0f
             return _input >= _min
+        }
+    }
+
+    class Max(private val maxValue: Float?) : Rule("Field must be less than or equal $maxValue") {
+        constructor(value: Float?, defaultMessage: String) : this(value) {
+            message = defaultMessage
+        }
+
+        override fun isValid(input: Any?): Boolean {
+            val _input = input.toString().toFloatOrNull()?:0f
+            val _max = this.maxValue?:0f
+            return _input <= _max
         }
     }
 
@@ -49,26 +61,38 @@ sealed class Rule(var message: String) : RuleInterface {
         }
     }
 
-    class IsNumeric(private val value: Any?) : Rule("Not a valid number") {
+//    class IsNumeric(private val value: Any?) : Rule("Not a valid number") {
+//        override fun isValid(input: Any?): Boolean {
+//            return try {
+//                val keme = value?.toString()?.toDoubleOrNull()
+//                println("keme")
+//                println(keme)
+//                value?.toString()?.toDoubleOrNull() != null
+//            } catch (e: Exception) {
+//                false
+//            }
+//        }
+//    }
+
+    object IsNumeric : Rule("Not a valid number") {
         override fun isValid(input: Any?): Boolean {
             return try {
-                val keme = value?.toString()?.toDoubleOrNull()
+                val keme = input?.toString()?.toDoubleOrNull()
                 println("keme")
                 println(keme)
-                value?.toString()?.toDoubleOrNull() != null
+                input?.toString()?.toDoubleOrNull() != null
             } catch (e: Exception) {
                 false
             }
         }
     }
 
-    class TRUE(private val isIt: Boolean) : Rule("Invalid input") {
-        constructor(isIt: Boolean, defaultMessage: String) : this(isIt) {
-            message = defaultMessage
-        }
-
+    object DivisibleBy10 : Rule("Field must be divisible by 10") {
         override fun isValid(input: Any?): Boolean {
-            return isIt
+            if (input is Int) {
+                return input % 10 == 0
+            }
+            return false
         }
     }
 }

@@ -49,10 +49,10 @@ constructor(
         val option = this.deliveryOption.value
         val profile = this.profile.value
 
-        inputValidation.addRules("distance", distance.value,
+        inputValidation.addRule("distance", distance.value,
             arrayOf(
                 Rule.Required,
-                Rule.IsNumeric(distance.value))
+                Rule.IsNumeric)
         )
 
         if(profile == null) {
@@ -73,7 +73,7 @@ constructor(
         val deletedAt = if(delete) { Instant.now() } else { null }
 
         val deliveryCharge = DeliveryCharge(profile.deliveryProfileRefId, profile.vehicle, distance, option, price, deletedAt)
-        this._dataState.value = DataState.ConfirmSave(deliveryCharge)
+        this._dataState.value = DataState.SaveSuccess(deliveryCharge)
     }
 
     fun setDeliveryOption(deliveryOption: EnumDeliveryOption) {

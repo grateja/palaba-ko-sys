@@ -28,9 +28,9 @@ class CashlessPaymentViewModel : ViewModel()
 
     fun prepareSubmit() {
         val inputValidation = InputValidation()
-        inputValidation.addRules("provider", provider.value, arrayOf(Rule.Required))
-        inputValidation.addRules("amount", amount.value, arrayOf(Rule.Required))
-        inputValidation.addRules("reference", reference.value, arrayOf(Rule.Required))
+        inputValidation.addRule("provider", provider.value, arrayOf(Rule.Required))
+        inputValidation.addRule("amount", amount.value, arrayOf(Rule.Required))
+        inputValidation.addRule("reference", reference.value, arrayOf(Rule.Required))
         if(inputValidation.isInvalid()) {
             _dataState.value = DataState.InvalidOperation(inputValidation)
         } else {

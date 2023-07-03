@@ -1,9 +1,15 @@
 package com.csi.palabakosys.room.entities
 
 import androidx.room.*
+import java.time.Instant
 import java.util.*
 
-@Entity(tableName = "package_products")
+@Entity(
+    tableName = "package_products",
+    foreignKeys = [
+        ForeignKey(entity = EntityPackage::class, parentColumns = ["id"], childColumns = ["package_id"], onDelete = ForeignKey.CASCADE)
+    ]
+)
 data class EntityPackageProduct(
     @ColumnInfo(name = "package_id")
     val packageId: UUID,
@@ -17,4 +23,7 @@ data class EntityPackageProduct(
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "id")
     val id: UUID = UUID.randomUUID(),
+
+    @ColumnInfo(name = "deleted_at")
+    var deletedAt: Instant? = null
 )

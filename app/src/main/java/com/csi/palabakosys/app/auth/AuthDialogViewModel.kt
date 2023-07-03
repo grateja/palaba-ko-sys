@@ -41,15 +41,15 @@ constructor(
                 val email = email.value
                 val password = password.value
 
-                this.addRules("email", email, arrayOf(Rule.Required, Rule.IsEmail(email)))
-                this.addRules("password", password, arrayOf(Rule.Required))
+                this.addRule("email", email, arrayOf(Rule.Required, Rule.IsEmail))
+                this.addRule("password", password, arrayOf(Rule.Required))
 
                 if(this.isInvalid()) {
                     _dataState.value = DataState.InvalidInput(this)
                 } else {
                     authRepository.oneTimeLogin(email, password).let {
                         if(it != null) {
-                            _dataState.value = DataState.ConfirmSave(
+                            _dataState.value = DataState.SaveSuccess(
                                 LoginCredentials(it.email, it.password, it.id, it.name)
                             )
                         } else {

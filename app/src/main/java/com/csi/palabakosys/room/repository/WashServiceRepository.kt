@@ -1,6 +1,7 @@
 package com.csi.palabakosys.room.repository
 
 import com.csi.palabakosys.app.joborders.create.services.MenuServiceItem
+import com.csi.palabakosys.model.EnumMachineType
 import com.csi.palabakosys.room.dao.DaoService
 import com.csi.palabakosys.room.entities.EntityService
 import java.util.UUID
@@ -21,4 +22,7 @@ constructor (
     suspend fun getAll() : List<MenuServiceItem> {
         return daoWashService.menuItems()
     }
+
+    fun getByMachineTypeAsLiveData(machineType: EnumMachineType) =
+        daoWashService.getByMachineTypeAsLiveData(machineType)
 }

@@ -43,7 +43,7 @@ class InputValidation {
         return error?.message ?: ""
     }
 
-    fun addRules(key: String, input: Any?, rules: Array<Rule>) {
+    fun addRule(key: String, input: Any?, rules: Array<Rule>) {
         var error = errorList.find {
             it.key == key
         }

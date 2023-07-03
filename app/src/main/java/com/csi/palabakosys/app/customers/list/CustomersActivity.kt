@@ -1,5 +1,6 @@
 package com.csi.palabakosys.app.customers.list
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.csi.palabakosys.R
 import com.csi.palabakosys.adapters.Adapter
+import com.csi.palabakosys.app.customers.preview.CustomerPreviewActivity
 import com.csi.palabakosys.databinding.ActivityCustomersBinding
 import com.csi.palabakosys.util.FilterActivity
 import com.csi.palabakosys.viewmodels.ListViewModel
@@ -36,6 +38,12 @@ class CustomersActivity : FilterActivity() {
         adapter.onScrollAtTheBottom = {
             viewModel.loadMore()
         }
+        adapter.onItemClick = {
+            val intent = Intent(this, CustomerPreviewActivity::class.java).apply {
+                putExtra(CustomerPreviewActivity.CUSTOMER_ID_EXTRA, it.customer.id.toString())
+            }
+            addEditLauncher.launch(intent)
+        }
     }
 
     private fun subscribeListeners() {
@@ -59,7 +67,7 @@ class CustomersActivity : FilterActivity() {
     }
 
 
-    override var filterHint = "Search customer name of CRN"
+    override var filterHint = "Search customer name or CRN"
 
     override fun onQuery(keyword: String?) {
         viewModel.setKeyword(keyword)

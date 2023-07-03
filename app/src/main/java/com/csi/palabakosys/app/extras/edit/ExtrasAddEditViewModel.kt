@@ -26,12 +26,20 @@ constructor(
         }
     }
 
-    override fun save() {
-        this.validation.value = InputValidation().apply {
-            addRules("name", model.value?.name, arrayOf(Rule.Required))
-            addRules("price", model.value?.price, arrayOf(Rule.Required, Rule.IsNumeric(model.value?.price)))
+    fun validate() {
+        val inputValidation = InputValidation().apply {
+            addRule("name", model.value?.name, arrayOf(Rule.Required))
+            addRule("price", model.value?.price, arrayOf(Rule.Required, Rule.IsNumeric))
         }
-
-        super.save()
+        super.validate(inputValidation)
     }
+//
+//    override fun save() {
+//        this.validation.value = InputValidation().apply {
+//            addRule("name", model.value?.name, arrayOf(Rule.Required))
+//            addRule("price", model.value?.price, arrayOf(Rule.Required, Rule.IsNumeric))
+//        }
+//
+//        super.save()
+//    }
 }

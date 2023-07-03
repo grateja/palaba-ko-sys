@@ -3,6 +3,7 @@ package com.csi.palabakosys.room.entities
 import androidx.room.Embedded
 import androidx.room.Relation
 import com.csi.palabakosys.app.joborders.create.delivery.DeliveryCharge
+import com.csi.palabakosys.app.packages.PackageItem
 
 data class EntityPackageServiceWithService(
     @Embedded
@@ -64,4 +65,46 @@ data class EntityPackageWithItems(
         entity = EntityPackageProduct::class
     )
     val products: List<EntityPackageProductWithProduct>?,
-)
+) {
+    fun simpleList() : List<PackageItem> {
+        val list: MutableList<PackageItem> = mutableListOf()
+
+        services?.let { items ->
+            list.addAll(items.map {
+                PackageItem(
+                    it.service.id,
+                    it.service.name.toString(),
+                    it.service.price,
+                    it.serviceCrossRef.quantity,
+                    it.serviceCrossRef.deletedAt,
+                )
+            }.toList())
+        }
+
+        products?.let { items ->
+            list.addAll(items.map {
+                PackageItem(
+                    it.product.id,
+                    it.product.name.toString(),
+                    it.product.price,
+                    it.productCrossRef.quantity,
+                    it.productCrossRef.deletedAt,
+                )
+            }.toList())
+        }
+
+        extras?.let { items ->
+            list.addAll(items.map {
+                PackageItem(
+                    it.extras.id,
+                    it.extras.name.toString(),
+                    it.extras.price,
+                    it.extrasCrossRef.quantity,
+                    it.extrasCrossRef.deletedAt,
+                )
+            }.toList())
+        }
+
+        return list.filter { it.deletedAt == null }
+    }
+}

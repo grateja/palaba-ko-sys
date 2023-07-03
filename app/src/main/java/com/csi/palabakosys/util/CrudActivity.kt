@@ -29,17 +29,25 @@ abstract class CrudActivity : BaseActivity(), CrudActivityInterface {
         buttonCancel = findViewById(R.id.buttonCancel)
 
         buttonSave?.setOnClickListener {
-            val intent = Intent(this, AuthActionDialogActivity::class.java).apply {
-                action = ACTION_SAVE
+            if(requireAuthOnSave) {
+                val intent = Intent(this, AuthActionDialogActivity::class.java).apply {
+                    action = ACTION_SAVE
+                }
+                authLauncher.launch(intent)
+            } else {
+                this.saveButtonClicked(null)
             }
-            authLauncher.launch(intent)
         }
 
         buttonDelete?.setOnClickListener {
-            val intent = Intent(this, AuthActionDialogActivity::class.java).apply {
-                action = ACTION_DELETE
+            if(requireAuthOnDelete) {
+                val intent = Intent(this, AuthActionDialogActivity::class.java).apply {
+                    action = ACTION_DELETE
+                }
+                authLauncher.launch(intent)
+            } else {
+                this.showDeleteDialog(null)
             }
-            authLauncher.launch(intent)
         }
 
         buttonCancel?.setOnClickListener {
@@ -50,19 +58,26 @@ abstract class CrudActivity : BaseActivity(), CrudActivityInterface {
             val loginCredentials = it.data?.getParcelableExtra<LoginCredentials>(
                 AuthActionDialogActivity.RESULT)
             when (it.data?.action) {
-                ACTION_SAVE -> this.save(loginCredentials)
+                ACTION_SAVE -> this.saveButtonClicked(loginCredentials)
                 ACTION_DELETE -> {
-                    AlertDialog.Builder(this).apply {
-                        setTitle("Delete this item")
-                        setMessage("Are you sure you want to proceed?")
-                        setPositiveButton("Yes") { _, _ ->
-                            confirmDelete(loginCredentials)
-                        }
-                        create()
-                    }.show()
+                    showDeleteDialog(loginCredentials)
                 }
             }
         }
+    }
+
+    private fun showDeleteDialog(loginCredentials: LoginCredentials?) {
+        AlertDialog.Builder(this).apply {
+            setTitle("Delete this item")
+            setMessage("Are you sure you want to proceed?")
+            setPositiveButton("Yes") { _, _ ->
+                confirmDelete(loginCredentials)
+            }
+            setNegativeButton("Cancel") { _, _ ->
+
+            }
+            create()
+        }.show()
     }
 
     override fun onStop() {
@@ -82,8 +97,9 @@ abstract class CrudActivity : BaseActivity(), CrudActivityInterface {
         }
     }
 
-    override fun confirm(entityId: UUID?) {
+    override fun confirmExit(entityId: UUID?) {
         val intent = Intent().apply {
+            action = intent.action
             putExtra(ENTITY_ID, entityId.toString())
         }
         setResult(RESULT_OK, intent)

@@ -59,9 +59,9 @@ class DatabaseSeeder(val db: MainDatabase) {
                         packageProducts.add(EntityPackageProduct(_package.id, downy.id, 2))
                     }
 
-                    db.daoJobOrderPackage().syncServices(packageServices)
-                    db.daoJobOrderPackage().syncExtras(packageExtras)
-                    db.daoJobOrderPackage().syncProducts(packageProducts)
+                    db.daoJobOrderPackage().insertServices(packageServices)
+                    db.daoJobOrderPackage().insertExtras(packageExtras)
+                    db.daoJobOrderPackage().insertProducts(packageProducts)
                 }
             }
         }

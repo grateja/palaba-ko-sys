@@ -18,7 +18,7 @@ class EntityDiscount(
     @ColumnInfo(name = "applicable_to")
     var applicableTo: List<EnumDiscountApplicable>
 ) : BaseEntity(null) {
-    constructor() : this(null, 0f, null, listOf())
+    constructor(discountType: EnumDiscountType, applicableTo: List<EnumDiscountApplicable>) : this(null, 0f, discountType, applicableTo)
 
     fun applicableToStr() : String {
         return "Applicable to: " + applicableTo.joinToString(",") {

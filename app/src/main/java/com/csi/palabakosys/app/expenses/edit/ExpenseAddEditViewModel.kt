@@ -31,8 +31,8 @@ constructor(
         model?.createdBy = userId
 
         this.validation.value = InputValidation().apply {
-            addRules("remarks", model?.remarks, arrayOf(Rule.Required))
-            addRules("amount", model?.amount, arrayOf(Rule.Required, Rule.IsNumeric(model?.amount)))
+            addRule("remarks", model?.remarks, arrayOf(Rule.Required))
+            addRule("amount", model?.amount, arrayOf(Rule.Required, Rule.IsNumeric))
 //            addRules("tag", model.value?.tag, arrayOf(Rule.Required))
         }
 

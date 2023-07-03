@@ -49,7 +49,7 @@ class JobOrderCancelActivity : AppCompatActivity() {
     private fun subscribeListeners() {
         viewModel.dataState.observe(this, Observer {
             when(it) {
-                is DataState.ConfirmSave -> {
+                is DataState.SaveSuccess -> {
                     setResult(RESULT_OK, Intent().apply {
                         action = intent.action
                         putExtra(JOB_ORDER_ID, it.data.toString())

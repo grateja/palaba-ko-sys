@@ -81,7 +81,7 @@ class AvailableProductsViewModel
         availableProducts.value?.let { list ->
             val validation = InputValidation()
             list.filter { it.selected } .onEach {
-                if(it.quantity > it.currentStock) {
+                if(it.joProductItemId == null && it.quantity > it.currentStock) {
                     validation.addError(it.productRefId.toString(), "Not enough stocks!")
                 }
             }

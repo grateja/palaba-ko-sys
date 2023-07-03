@@ -1,22 +1,23 @@
 package com.csi.palabakosys.app.products.edit
 
-import android.app.AlertDialog
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.ArrayAdapter
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
-import com.csi.palabakosys.app.auth.AuthActionDialogActivity
 import com.csi.palabakosys.app.auth.LoginCredentials
 import com.csi.palabakosys.databinding.ActivityProductAddEditBinding
+import com.csi.palabakosys.model.EnumMeasureUnit
 import com.csi.palabakosys.util.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
 @AndroidEntryPoint
-class ProductAddEditActivity : CrudActivity() {
+class ProductAddEditActivity(
+    override var requireAuthOnSave: Boolean = false,
+    override var requireAuthOnDelete: Boolean = false
+) : CrudActivity() {
     private lateinit var binding: ActivityProductAddEditBinding
     private val viewModel: ProductAddEditViewModel by viewModels()
 //    private val authLauncher = ActivityLauncher(this)
@@ -25,6 +26,7 @@ class ProductAddEditActivity : CrudActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_add_edit)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
+        binding.spinnerMeasureUnit.adapter = ArrayAdapter(applicationContext, android.R.layout.simple_list_item_1, EnumMeasureUnit.values())
 
         subscribeListeners()
         subscribeEvents()
@@ -70,15 +72,18 @@ class ProductAddEditActivity : CrudActivity() {
     private fun subscribeListeners() {
         viewModel.dataState.observe(this, Observer {
             when(it) {
-                is DataState.ConfirmSave -> {
-                    confirm(it.data.id)
+                is DataState.SaveSuccess -> {
+                    confirmExit(it.data.id)
                 }
-                is DataState.ConfirmDelete -> {
-                    confirm(it.data.id)
+                is DataState.DeleteSuccess -> {
+                    confirmExit(it.data.id)
                 }
                 is DataState.RequestExit -> {
                     confirmExit(it.promptPass)
                     viewModel.resetState()
+                }
+                is DataState.ValidationPassed -> {
+                    viewModel.save()
                 }
             }
         })
@@ -92,8 +97,8 @@ class ProductAddEditActivity : CrudActivity() {
         viewModel.get(id)
     }
 
-    override fun save(loginCredentials: LoginCredentials?) {
-        viewModel.save()
+    override fun saveButtonClicked(loginCredentials: LoginCredentials?) {
+        viewModel.validate()
     }
 
     override fun confirmDelete(loginCredentials: LoginCredentials?) {
@@ -104,8 +109,8 @@ class ProductAddEditActivity : CrudActivity() {
         viewModel.requestExit()
     }
 
-    override fun confirm(entityId: UUID?) {
-        super.confirm(entityId)
+    override fun confirmExit(entityId: UUID?) {
+        super.confirmExit(entityId)
         viewModel.resetState()
     }
 }

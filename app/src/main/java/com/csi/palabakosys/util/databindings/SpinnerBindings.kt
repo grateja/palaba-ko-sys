@@ -3,11 +3,17 @@ package com.csi.palabakosys.util.databindings
 import android.widget.Spinner
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
+import com.csi.palabakosys.model.EnumMeasureUnit
 import com.csi.palabakosys.util.EnumSortDirection
 
 @BindingAdapter("app:text")
 fun setText(spinner: Spinner, text: String?) {
-    spinner.setSelection(spinner.selectedItemPosition)
+    for (i in 0 until spinner.adapter.count) {
+        if(spinner.adapter.getItem(i).toString() == text) {
+            spinner.setSelection(i)
+            return
+        }
+    }
 }
 
 @InverseBindingAdapter(
@@ -20,7 +26,9 @@ fun getText(spinner: Spinner): String? {
 
 @BindingAdapter("app:sortDirection")
 fun setSortDirection(spinner: Spinner, sortDirection: EnumSortDirection?) {
-    spinner.setSelection(spinner.selectedItemPosition)
+    sortDirection?.itemIndex?.let {
+        spinner.setSelection(it)
+    }
 }
 
 @InverseBindingAdapter(
@@ -30,5 +38,26 @@ fun setSortDirection(spinner: Spinner, sortDirection: EnumSortDirection?) {
 fun getSortDirection(spinner: Spinner): EnumSortDirection? {
     return EnumSortDirection.values().find {
         it.itemIndex == spinner.selectedItemPosition
+    }
+}
+
+
+@BindingAdapter("app:measureUnit")
+fun setMeasureUnit(spinner: Spinner, measureUnit: EnumMeasureUnit?) {
+    for (i in 0 until spinner.adapter.count) {
+        if(spinner.adapter.getItem(i).toString() == measureUnit?.value) {
+            spinner.setSelection(i)
+            return
+        }
+    }
+}
+
+@InverseBindingAdapter(
+    attribute = "app:measureUnit",
+    event = "android:selectedItemPositionAttrChanged"
+)
+fun getMeasureUnit(spinner: Spinner): EnumMeasureUnit? {
+    return EnumMeasureUnit.values().find {
+        it.value == spinner.selectedItem.toString()
     }
 }

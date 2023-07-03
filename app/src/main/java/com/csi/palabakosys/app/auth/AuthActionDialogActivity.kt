@@ -11,7 +11,6 @@ import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
 import com.csi.palabakosys.databinding.ActivityAuthActionDialogBinding
 import com.csi.palabakosys.util.DataState
-import com.csi.palabakosys.util.hideKeyboard
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -50,7 +49,7 @@ class AuthActionDialogActivity : AppCompatActivity() {
     private fun subscribeListeners() {
         viewModel.dataState.observe(this, Observer {
             when(it) {
-                is DataState.ConfirmSave -> {
+                is DataState.SaveSuccess -> {
                     setResult(RESULT_OK, Intent().apply {
                         action = intent.action
                         putExtra(RESULT, it.data)

@@ -30,10 +30,12 @@ import com.csi.palabakosys.app.extras.ExtrasActivity
 import com.csi.palabakosys.app.joborders.create.customer.SelectCustomerActivity
 import com.csi.palabakosys.app.joborders.list.JobOrderListActivity
 import com.csi.palabakosys.app.machines.MachinesActivity
+import com.csi.palabakosys.app.packages.PackagesActivity
 import com.csi.palabakosys.app.preferences.ip.SettingsIPAddressActivity
 import com.csi.palabakosys.app.preferences.printer.SettingsPrinterActivity
 import com.csi.palabakosys.app.products.ProductsActivity
 import com.csi.palabakosys.app.remote.shared_ui.RemoteActivationActivity
+import com.csi.palabakosys.app.services.ServicesActivity
 import com.csi.palabakosys.broadcast_receiver.ConnectivityReceiver
 import com.csi.palabakosys.databinding.ActivityMainBinding
 import com.csi.palabakosys.model.EnumMachineType
@@ -124,7 +126,15 @@ class MainActivity : EndingActivity() {
             startActivity(intent)
         }
 
+        binding.btnServices.setOnClickListener {
+            val intent = Intent(this, ServicesActivity::class.java)
+            startActivity(intent)
+        }
 
+        binding.btnPackages.setOnClickListener {
+            val intent = Intent(this, PackagesActivity::class.java)
+            startActivity(intent)
+        }
 
 
         computeWindowSizeClasses()

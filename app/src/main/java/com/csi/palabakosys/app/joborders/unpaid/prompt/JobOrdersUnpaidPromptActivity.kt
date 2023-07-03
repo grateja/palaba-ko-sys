@@ -21,7 +21,6 @@ import java.util.*
 class JobOrdersUnpaidPromptActivity : AppCompatActivity() {
     companion object {
         const val CUSTOMER_EXTRA = "customer"
-
         const val OPEN_PAYMENT_ACTION = "openPayment"
     }
 
@@ -60,6 +59,9 @@ class JobOrdersUnpaidPromptActivity : AppCompatActivity() {
         }
         adapter.onItemClick = {
             previewJobOrder(it.id)
+        }
+        binding.buttonOk.setOnClickListener {
+            finish()
         }
     }
 

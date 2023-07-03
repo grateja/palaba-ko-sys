@@ -52,7 +52,7 @@ class MachinesAddEditActivity : AppCompatActivity() {
     private fun subscribeListeners() {
         viewModel.dataState.observe(this, Observer {
             when(it) {
-                is DataState.ConfirmSave -> {
+                is DataState.SaveSuccess -> {
                     finish()
                 }
                 else -> {}

@@ -6,6 +6,9 @@
         <variable
             name="viewModel"
             type="com.csi.palabakosys.model.EnumMachineType" />
+        <variable
+            name="readOnly"
+            type="Boolean" />
     </data>
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,13 +16,25 @@
         android:layout_margin="8dp"
         android:orientation="vertical">
 
-        <TextView
-            style="@style/TileTitle"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:text="@{viewModel.toString()}"
-            tools:text="Regular Washer"/>
+            android:layout_height="wrap_content">
+            <TextView
+                style="@style/TileTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="8dp"
+                android:text="@{viewModel.toString()}"
+                tools:text="Regular Washer"/>
+            <Button
+                android:id="@+id/buttonAdd"
+                android:visibility="@{!readOnly}"
+                style="@style/RoundButtonNeutral"
+                android:text="Add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

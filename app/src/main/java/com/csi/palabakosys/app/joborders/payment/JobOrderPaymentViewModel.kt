@@ -141,7 +141,7 @@ constructor(
     fun validate() {
         val validation = InputValidation()
         if(appPreferenceRepository.requireORNumber()) {
-            validation.addRules("orNumber", orNumber.value, arrayOf(Rule.Required))
+            validation.addRule("orNumber", orNumber.value, arrayOf(Rule.Required))
         }
 
         _payableJobOrders.value?.let { list ->
@@ -152,27 +152,27 @@ constructor(
         }
 
         if(paymentMethod.value == EnumPaymentMethod.CASH) {
-            validation.addRules(
+            validation.addRule(
                 "cashReceived",
                 cashReceived.value,
                 arrayOf(
                     Rule.Required,
-                    Rule.IsNumeric(cashReceived.value),
+                    Rule.IsNumeric,
                     Rule.Min(amountToPay.value, "The payment amount is insufficient.")
                 )
             )
         } else if(paymentMethod.value == EnumPaymentMethod.CASHLESS) {
-            validation.addRules(
+            validation.addRule(
                 "cashlessAmount",
                 cashlessAmount.value,
                 arrayOf(
                     Rule.Required,
-                    Rule.IsNumeric(cashlessAmount.value),
+                    Rule.IsNumeric,
                     Rule.Min(amountToPay.value, "The payment amount is insufficient."),
                     Rule.ExactAmount(amountToPay.value, "Exact amount only")
                 )
             )
-            validation.addRules(
+            validation.addRule(
                 "cashlessRefNumber",
                 cashlessRefNumber.value,
                 arrayOf(

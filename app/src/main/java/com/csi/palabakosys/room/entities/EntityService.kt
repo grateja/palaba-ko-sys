@@ -3,6 +3,7 @@ package com.csi.palabakosys.room.entities
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
+import com.csi.palabakosys.model.EnumMachineType
 
 @Entity(tableName = "services")
 class EntityService(
@@ -14,4 +15,6 @@ class EntityService(
 
     @Embedded
     var serviceRef: EntityServiceRef
-) : BaseEntity()
+) : BaseEntity() {
+    constructor(machineType: EnumMachineType) : this(null, 0f, EntityServiceRef(machineType, null, 0))
+}
