@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
 import com.csi.palabakosys.databinding.ActivityMachinesAddEditBinding
 import com.csi.palabakosys.model.EnumMachineType
+import com.csi.palabakosys.util.Constants
 import com.csi.palabakosys.util.DataState
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -15,7 +16,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class MachinesAddEditActivity : AppCompatActivity() {
 
     companion object {
-        const val MACHINE_ID_EXTRA = "machineId"
         const val MACHINE_TYPE_EXTRA = "machineType"
     }
 
@@ -31,7 +31,7 @@ class MachinesAddEditActivity : AppCompatActivity() {
         subscribeEvents()
         subscribeListeners()
 
-        val machineId = intent.getStringExtra(MACHINE_ID_EXTRA).toString()
+        val machineId = intent.getStringExtra(Constants.MACHINE_ID_EXTRA).toString()
         val machineType = EnumMachineType.fromId(intent.getIntExtra(MACHINE_TYPE_EXTRA, 1))
 
         machineType?.let {

@@ -34,6 +34,7 @@ import com.csi.palabakosys.app.packages.PackagesActivity
 import com.csi.palabakosys.app.preferences.ip.SettingsIPAddressActivity
 import com.csi.palabakosys.app.preferences.printer.SettingsPrinterActivity
 import com.csi.palabakosys.app.products.ProductsActivity
+import com.csi.palabakosys.app.remote.RemotePanelActivity
 import com.csi.palabakosys.app.remote.shared_ui.RemoteActivationActivity
 import com.csi.palabakosys.app.services.ServicesActivity
 import com.csi.palabakosys.broadcast_receiver.ConnectivityReceiver
@@ -65,7 +66,7 @@ class MainActivity : EndingActivity() {
             startActivity(intent)
         }
         binding.btnRemote.setOnClickListener {
-            val intent = Intent(this, RemoteActivationActivity::class.java)
+            val intent = Intent(this, RemotePanelActivity::class.java)
             startActivity(intent)
         }
         binding.btnIpSettings.setOnClickListener {

@@ -28,5 +28,5 @@ abstract class DaoMachine : BaseDao<EntityMachine> {
     abstract fun getListAllAsLiveData(): LiveData<List<MachineListItem>>
 
     @Query("SELECT * FROM machines WHERE id = :id")
-    abstract fun getMachineLiveData(id: UUID) : LiveData<EntityMachine>
+    abstract fun getMachineLiveData(id: UUID?) : LiveData<EntityMachine?>
 }

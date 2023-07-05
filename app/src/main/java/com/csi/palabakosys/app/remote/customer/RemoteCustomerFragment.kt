@@ -38,13 +38,22 @@ class RemoteCustomerFragment : BaseModalFragment() {
             dismiss()
         }
 
-        viewModel.customerQueues.observe(viewLifecycleOwner, Observer {
-            customerQueuesAdapter.setData(it)
+        viewModel.customerQueues.observe(viewLifecycleOwner, Observer { list ->
+            list?.let {
+                customerQueuesAdapter.setData(it)
+                println("queues loaded")
+            }
         })
 
         customerQueuesAdapter.onItemClick = {
             viewModel.selectCustomer(it)
         }
+
+        viewModel.machine.observe(viewLifecycleOwner, Observer {
+            if(it?.activationRef?.running() == true) {
+
+            }
+        })
 
         return binding.root
     }

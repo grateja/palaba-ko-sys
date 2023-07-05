@@ -10,6 +10,8 @@ import com.csi.palabakosys.BR
 import android.animation.ObjectAnimator
 
 import android.animation.AnimatorSet
+import android.os.Handler
+import android.os.Looper
 
 open class Adapter<R>(private val layoutId: Int) : RecyclerView.Adapter<Adapter.ViewHolder<R>>() {
     protected var list: MutableList<R> = mutableListOf()
@@ -77,7 +79,6 @@ open class Adapter<R>(private val layoutId: Int) : RecyclerView.Adapter<Adapter.
         )
         return ViewHolder(binding)
     }
-
     override fun onBindViewHolder(holder: ViewHolder<R>, position: Int) {
         val r = list[position]
         holder.bind(r)

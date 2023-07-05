@@ -7,6 +7,7 @@ import androidx.databinding.DataBindingUtil
 import com.csi.palabakosys.R
 import com.csi.palabakosys.databinding.ActivityMachineRunningBinding
 import com.csi.palabakosys.services.MachineActivationService
+import com.csi.palabakosys.util.Constants
 import com.csi.palabakosys.util.toUUID
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -25,7 +26,7 @@ class MachineRunningActivity : AppCompatActivity() {
         subscribeListeners()
         subscribeEvents()
 
-        val machineId = intent.getStringExtra(MachineActivationService.MACHINE_ID_EXTRA).toUUID()
+        val machineId = intent.getStringExtra(Constants.MACHINE_ID_EXTRA).toUUID()
 
         viewModel.get(machineId)
     }

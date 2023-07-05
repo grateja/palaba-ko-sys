@@ -17,6 +17,7 @@ import com.csi.palabakosys.databinding.ActivityRemoteActivationPreviewBinding
 import com.csi.palabakosys.model.MachineActivationQueues
 import com.csi.palabakosys.model.MachineConnectionStatus
 import com.csi.palabakosys.services.MachineActivationService
+import com.csi.palabakosys.util.Constants
 import com.csi.palabakosys.util.toUUID
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.UUID
@@ -42,7 +43,7 @@ class RemoteActivationPreviewActivity : AppCompatActivity() {
         intent.getStringExtra(MachineActivationService.JO_SERVICE_ID_EXTRA).toUUID()?.let {
             viewModel.setServiceId(it)
         }
-        intent.getStringExtra(MachineActivationService.MACHINE_ID_EXTRA).toUUID()?.let {
+        intent.getStringExtra(Constants.MACHINE_ID_EXTRA).toUUID()?.let {
             viewModel.setMachineId(it)
         }
         intent.getStringExtra(MachineActivationService.CUSTOMER_ID_EXTRA).toUUID()?.let {
@@ -66,7 +67,7 @@ class RemoteActivationPreviewActivity : AppCompatActivity() {
                 }
                 is RemoteActivationPreviewViewModel.DataState.InitiateActivation -> {
                     val intent = Intent(applicationContext, MachineActivationService::class.java).apply {
-                        putExtra(MachineActivationService.MACHINE_ID_EXTRA, it.machineId.toString())
+                        putExtra(Constants.MACHINE_ID_EXTRA, it.machineId.toString())
                         putExtra(MachineActivationService.JO_SERVICE_ID_EXTRA, it.workerId.toString())
                         putExtra(MachineActivationService.CUSTOMER_ID_EXTRA, it.customerId.toString())
                     }
@@ -97,7 +98,7 @@ class RemoteActivationPreviewActivity : AppCompatActivity() {
     private fun checkPending(machineId: UUID) {
         val intent = Intent(this, MachineActivationService::class.java).apply {
             putExtra(MachineActivationService.CHECK_ONLY_EXTRA, true)
-            putExtra(MachineActivationService.MACHINE_ID_EXTRA, machineId.toString())
+            putExtra(Constants.MACHINE_ID_EXTRA, machineId.toString())
         }
         startForegroundService(intent)
     }

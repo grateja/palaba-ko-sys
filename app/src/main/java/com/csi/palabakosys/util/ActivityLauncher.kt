@@ -8,18 +8,21 @@ import androidx.appcompat.app.AppCompatActivity
 class ActivityLauncher(activity: AppCompatActivity) {
     var onOk: ((ActivityResult) -> Unit) ? = null
     var onCancel: (() -> Unit) ? = null
+    private var active = false
     private var resultLauncher =
         activity.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if(result.resultCode == AppCompatActivity.RESULT_OK) {
-                println("id from activity launcher")
-                println(result.data?.getStringExtra("id"))
                 onOk?.invoke(result)
             } else if(result.resultCode == AppCompatActivity.RESULT_CANCELED) {
                 onCancel?.invoke()
             }
+            active = false
         }
 
     fun launch(intent: Intent) {
-        resultLauncher.launch(intent)
+        if(!active) {
+            resultLauncher.launch(intent)
+            active = true
+        }
     }
 }

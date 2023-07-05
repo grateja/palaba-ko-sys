@@ -172,6 +172,10 @@ fun setCheckedButtonListener(radioGroup: RadioGroup, listener: InverseBindingLis
 
 @BindingAdapter("app:momentAgo")
 fun setMomentAgo(view: TextView, dateTime: Instant?) {
+    if(dateTime == null) {
+        view.text = ""
+        return
+    }
     val now = Instant.now()
     val duration = Duration.between(dateTime, now).abs()
 

@@ -15,6 +15,7 @@ import com.csi.palabakosys.room.repository.CustomerRepository
 import com.csi.palabakosys.room.repository.JobOrderQueuesRepository
 import com.csi.palabakosys.room.repository.MachineRepository
 import com.csi.palabakosys.room.repository.RemoteRepository
+import com.csi.palabakosys.util.Constants
 import com.csi.palabakosys.util.MachineActivationBus
 import com.csi.palabakosys.util.toUUID
 import dagger.hilt.android.AndroidEntryPoint
@@ -57,7 +58,6 @@ class MachineActivationService : Service() {
         const val MESSAGE_EXTRA = "message_extra"
 
         const val CHECK_ONLY_EXTRA = "check_only"
-        const val MACHINE_ID_EXTRA = "machine_id"
         const val JO_SERVICE_ID_EXTRA = "jo_service_id"
         const val CUSTOMER_ID_EXTRA = "customer_id"
 
@@ -98,13 +98,13 @@ class MachineActivationService : Service() {
         val context = this
         Thread {
             runBlocking {
-                val machineId = intent?.getStringExtra(MACHINE_ID_EXTRA).toUUID()
+                val machineId = intent?.getStringExtra(Constants.MACHINE_ID_EXTRA).toUUID()
                 val machine = machineRepository.get(machineId)
                 if(machine?.serviceActivationId != null) {
                     // something is wrong
                     sendInvalidInput("Inconsistencies with the database detected")
                     LocalBroadcastManager.getInstance(context).sendBroadcast(Intent(DATABASE_INCONSISTENCIES_ACTION).apply {
-                        putExtra(MACHINE_ID_EXTRA, machine.id.toString())
+                        putExtra(Constants.MACHINE_ID_EXTRA, machine.id.toString())
                         putExtra(JO_SERVICE_ID_EXTRA, machine.serviceActivationId.toString())
                     })
                 } else {
@@ -118,7 +118,7 @@ class MachineActivationService : Service() {
     }
 
     private fun enqueue(intent: Intent?) {
-        val machineId = intent?.getStringExtra(MACHINE_ID_EXTRA).toUUID()
+        val machineId = intent?.getStringExtra(Constants.MACHINE_ID_EXTRA).toUUID()
         val joServiceId = intent?.getStringExtra(JO_SERVICE_ID_EXTRA).toUUID()
         val customerId = intent?.getStringExtra(CUSTOMER_ID_EXTRA).toUUID()
 
@@ -130,7 +130,7 @@ class MachineActivationService : Service() {
     }
 
     private fun checkPendingQueues(intent: Intent?) : MachineActivationQueues? {
-        return intent?.getStringExtra(MACHINE_ID_EXTRA)?.let { machineId ->
+        return intent?.getStringExtra(Constants.MACHINE_ID_EXTRA)?.let { machineId ->
             queues.get(machineId.toUUID())
         }
     }

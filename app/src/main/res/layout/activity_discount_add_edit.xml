@@ -8,15 +8,20 @@
             name="viewModel"
             type="com.csi.palabakosys.app.discounts.edit.DiscountAddEditViewModel" />
     </data>
-    <LinearLayout
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+        android:layout_height="match_parent"
         android:orientation="vertical">
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/controls">
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
@@ -76,31 +81,13 @@
                 android:orientation="vertical"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
-<!--            <CheckBox-->
-<!--                android:id="@+id/checkboxTotalAmount"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="@{com.csi.palabakosys.model.EnumDiscountApplicable.TOTAL_AMOUNT.toString()}"-->
-<!--                android:checked="@{viewModel.discountSelected(com.csi.palabakosys.model.EnumDiscountApplicable.TOTAL_AMOUNT)}"/>-->
-
-<!--            <CheckBox-->
-<!--                android:id="@+id/checkboxWashDry"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="@{com.csi.palabakosys.model.EnumDiscountApplicable.WASH_DRY_SERVICES.toString()}"-->
-<!--                android:checked="@{viewModel.discountSelected(com.csi.palabakosys.model.EnumDiscountApplicable.WASH_DRY_SERVICES)}"/>-->
-
-<!--            <CheckBox-->
-<!--                android:id="@+id/checkboxProducts"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="@{com.csi.palabakosys.model.EnumDiscountApplicable.PRODUCTS_CHEMICALS.toString()}"-->
-<!--                android:checked="@{viewModel.discountSelected(com.csi.palabakosys.model.EnumDiscountApplicable.PRODUCTS_CHEMICALS)}"/>-->
-
-            <include
-                android:id="@+id/controls"
-                app:showDelete="@{false}"
-                layout="@layout/incl_controls_alter"/>
         </LinearLayout>
-    </LinearLayout>
+        <include
+            android:id="@+id/controls"
+            app:showDelete="@{viewModel.crudActionEnum == com.csi.palabakosys.model.CRUDActionEnum.UPDATE}"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            layout="@layout/incl_controls_alter"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

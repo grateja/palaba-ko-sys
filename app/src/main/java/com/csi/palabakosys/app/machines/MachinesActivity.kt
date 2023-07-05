@@ -11,6 +11,7 @@ import com.csi.palabakosys.adapters.Adapter
 import com.csi.palabakosys.app.machines.addedit.MachinesAddEditActivity
 import com.csi.palabakosys.databinding.ActivityMachinesBinding
 import com.csi.palabakosys.room.entities.EntityMachine
+import com.csi.palabakosys.util.Constants
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -47,7 +48,7 @@ class MachinesActivity : AppCompatActivity() {
         })
         adapter.onItemClick = {
             val intent = Intent(this, MachinesAddEditActivity::class.java).apply {
-                putExtra(MachinesAddEditActivity.MACHINE_ID_EXTRA, it.machine.id.toString())
+                putExtra(Constants.MACHINE_ID_EXTRA, it.machine.id.toString())
                 putExtra(MachinesAddEditActivity.MACHINE_TYPE_EXTRA, it.machine.machineType?.id)
             }
             startActivity(intent)

@@ -1,6 +1,7 @@
 package com.csi.palabakosys.room.repository
 
 import androidx.lifecycle.LiveData
+import com.csi.palabakosys.app.remote.panel.MachineTile
 import com.csi.palabakosys.model.EnumMachineType
 import com.csi.palabakosys.room.dao.DaoMachine
 import com.csi.palabakosys.room.entities.EntityMachine
@@ -30,9 +31,9 @@ class MachineRepository
 //        daoMachine.setWorkerId(machineId, workerId)
 //    }
 
-    fun getAllAsLiveData() : LiveData<List<EntityMachine>> = daoMachine.getAllAsLiveData()
+    fun getAllAsLiveData() = daoMachine.getAllAsLiveData()
 
     fun getListAsLiveData() = daoMachine.getListAllAsLiveData()
 
-    fun getMachineLiveData(id: UUID) : LiveData<EntityMachine> = daoMachine.getMachineLiveData(id)
+    fun getMachineLiveData(id: UUID?) = daoMachine.getMachineLiveData(id)
 }

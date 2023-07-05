@@ -25,6 +25,29 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LMS2022">
         <activity
+            android:name=".app.remote.queues.RemoteQueuesActivity"
+            android:exported="false"
+            android:label="Remote Activation">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".app.remote.customer.RemoteCustomerActivity"
+            android:exported="false"
+            android:label="Remote Activation">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".app.remote.RemotePanelActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".app.packages.edit.PackagesAddEditActivity"
             android:exported="false">
             <meta-data
@@ -189,7 +212,6 @@
         <activity
             android:name=".app.remote.activate.RemoteActivationPreviewActivity"
             android:exported="false"
-            android:launchMode="singleInstance"
             android:theme="@style/Theme.MaterialComponents.Light.Dialog"
             android:windowSoftInputMode="stateHidden|adjustPan">
             <meta-data

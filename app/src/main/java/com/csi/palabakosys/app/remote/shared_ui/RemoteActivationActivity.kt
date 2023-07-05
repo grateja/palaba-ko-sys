@@ -19,6 +19,7 @@ import com.csi.palabakosys.model.MachineActivationQueues
 import com.csi.palabakosys.model.MachineConnectionStatus
 import com.csi.palabakosys.services.MachineActivationService
 import com.csi.palabakosys.util.ActivityLauncher
+import com.csi.palabakosys.util.Constants
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
@@ -60,16 +61,21 @@ class RemoteActivationActivity : AppCompatActivity() {
         viewModel.dataState.observe(this, Observer {
             when(it) {
                 is RemoteActivationViewModel.DataState.SelectMachine -> {
-                    if(it.entityMachine?.activationRef?.running() == true) {
-                        val intent = Intent(this, MachineRunningActivity::class.java).apply {
-                            putExtra(MachineActivationService.MACHINE_ID_EXTRA, it.entityMachine.id.toString())
-                        }
-                        startActivity(intent)
-                    } else if(it.entityMachine?.serviceActivationId != null) {
-                        openActivationPreview(it.entityMachine.id)
-                    } else {
-                        navigate(R.id.remote_customerFragment)
-                    }
+                    navigate(R.id.remote_customerFragment)
+//                    val intent = Intent(this, MachineRunningActivity::class.java).apply {
+//                        putExtra(MachineActivationService.MACHINE_ID_EXTRA, it.toString())
+//                    }
+//                    startActivity(intent)
+//                    if(it.entityMachine?.activationRef?.running() == true) {
+//                        val intent = Intent(this, MachineRunningActivity::class.java).apply {
+//                            putExtra(MachineActivationService.MACHINE_ID_EXTRA, it.entityMachine.id.toString())
+//                        }
+//                        startActivity(intent)
+//                    } else if(it.entityMachine?.serviceActivationId != null) {
+//                        openActivationPreview(it.entityMachine.id)
+//                    } else {
+//                        navigate(R.id.remote_customerFragment)
+//                    }
                     viewModel.resetState()
                 }
                 is RemoteActivationViewModel.DataState.SelectCustomer -> {
@@ -87,7 +93,7 @@ class RemoteActivationActivity : AppCompatActivity() {
                         println("fucking ids : ${it.machineId} ; ${it.serviceId} ; ${it.customerId}")
                         putExtra(MachineActivationService.JO_SERVICE_ID_EXTRA, it.serviceId.toString())
                         putExtra(MachineActivationService.CUSTOMER_ID_EXTRA, it.customerId.toString())
-                        putExtra(MachineActivationService.MACHINE_ID_EXTRA, it.machineId.toString())
+                        putExtra(Constants.MACHINE_ID_EXTRA, it.machineId.toString())
                     }
                     launcher.launch(intent)
 //                    startActivity(intent)
@@ -102,7 +108,7 @@ class RemoteActivationActivity : AppCompatActivity() {
 
     private fun openActivationPreview(machineId: UUID) {
         val intent = Intent(applicationContext, RemoteActivationPreviewActivity::class.java).apply {
-            putExtra(MachineActivationService.MACHINE_ID_EXTRA, machineId.toString())
+            putExtra(Constants.MACHINE_ID_EXTRA, machineId.toString())
             putExtra(MachineActivationService.CHECK_ONLY_EXTRA, true)
         }
         startActivity(intent)
