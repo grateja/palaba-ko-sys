@@ -29,25 +29,11 @@ abstract class CrudActivity : BaseActivity(), CrudActivityInterface {
         buttonCancel = findViewById(R.id.buttonCancel)
 
         buttonSave?.setOnClickListener {
-            if(requireAuthOnSave) {
-                val intent = Intent(this, AuthActionDialogActivity::class.java).apply {
-                    action = ACTION_SAVE
-                }
-                authLauncher.launch(intent)
-            } else {
-                this.saveButtonClicked(null)
-            }
+            onSave()
         }
 
         buttonDelete?.setOnClickListener {
-            if(requireAuthOnDelete) {
-                val intent = Intent(this, AuthActionDialogActivity::class.java).apply {
-                    action = ACTION_DELETE
-                }
-                authLauncher.launch(intent)
-            } else {
-                this.showDeleteDialog(null)
-            }
+            onDelete()
         }
 
         buttonCancel?.setOnClickListener {
@@ -57,21 +43,35 @@ abstract class CrudActivity : BaseActivity(), CrudActivityInterface {
         authLauncher.onOk = {
             val loginCredentials = it.data?.getParcelableExtra<LoginCredentials>(
                 AuthActionDialogActivity.RESULT)
+
             when (it.data?.action) {
-                ACTION_SAVE -> this.saveButtonClicked(loginCredentials)
-                ACTION_DELETE -> {
-                    showDeleteDialog(loginCredentials)
-                }
+                ACTION_SAVE -> this.confirmSave(loginCredentials)
+                ACTION_DELETE ->  this.confirmDelete(loginCredentials)
             }
         }
     }
 
-    private fun showDeleteDialog(loginCredentials: LoginCredentials?) {
+    override fun onSave() {
+        authenticate(ACTION_SAVE)
+    }
+
+    override fun onDelete() {
+        showDeleteDialog()
+    }
+
+    protected open fun authenticate(action: String) {
+        val intent = Intent(this, AuthActionDialogActivity::class.java).apply {
+            this.action = action
+        }
+        authLauncher.launch(intent)
+    }
+
+    private fun showDeleteDialog() {
         AlertDialog.Builder(this).apply {
             setTitle("Delete this item")
             setMessage("Are you sure you want to proceed?")
             setPositiveButton("Yes") { _, _ ->
-                confirmDelete(loginCredentials)
+                authenticate(ACTION_DELETE)
             }
             setNegativeButton("Cancel") { _, _ ->
 

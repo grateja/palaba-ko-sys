@@ -8,14 +8,36 @@
             name="viewModel"
             type="com.csi.palabakosys.app.expenses.edit.ExpenseAddEditViewModel" />
     </data>
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/controls"
             android:orientation="vertical">
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Date"
+                app:errorEnabled="true"
+                app:errorText="@{viewModel.validation.get(`createdAt`)}">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textDatePaid"
+                    android:text="@{viewModel.model.createdAt}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:focusable="false"
+                    android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`createdAt`)}"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/labelRemarks"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
@@ -52,10 +74,15 @@
                     android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`amount`)}"
                     android:maxLines="1" />
             </com.google.android.material.textfield.TextInputLayout>
-            <include
-                android:id="@+id/controls"
-                app:showDelete="@{viewModel.crudActionEnum == com.csi.palabakosys.model.CRUDActionEnum.UPDATE}"
-                layout="@layout/incl_controls_alter"/>
         </LinearLayout>
-    </LinearLayout>
+        <include
+            android:id="@+id/controls"
+            app:showDelete="@{viewModel.crudActionEnum == com.csi.palabakosys.model.CRUDActionEnum.UPDATE}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            layout="@layout/incl_controls_alter"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

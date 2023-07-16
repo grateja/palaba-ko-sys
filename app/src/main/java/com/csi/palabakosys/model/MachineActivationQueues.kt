@@ -1,6 +1,7 @@
 package com.csi.palabakosys.model
 
 import android.os.Parcelable
+import com.csi.palabakosys.app.remote.activate.MachineActivationToken
 import kotlinx.parcelize.Parcelize
 import java.util.*
 

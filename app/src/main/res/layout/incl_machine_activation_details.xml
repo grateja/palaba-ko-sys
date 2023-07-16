@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="machineName"
+            type="String" />
+        <variable
+            name="customerName"
+            type="String" />
+        <variable
+            name="serviceName"
+            type="String" />
+    </data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/activity_vertical_margin"
+        android:orientation="vertical">
+        <TextView
+            android:text="MACHINE NAME"
+            style="@style/Caption.Term"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="MACHINE NAME"/>
+        <TextView
+            style="@style/Caption.Definition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="@string/regular_washer"
+            android:text="@{machineName}"/>
+        <TextView
+            android:text="CUSTOMER NAME"
+            style="@style/Caption.Term"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="CUSTOMER NAME"/>
+        <TextView
+            style="@style/Caption.Definition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{customerName}"
+            tools:text="Tony Parker"/>
+        <TextView
+            android:text="SERVICE NAME"
+            style="@style/Caption.Term"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="SERVICE NAME"/>
+        <TextView
+            style="@style/Caption.Definition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{serviceName}"
+            tools:text="Regular Wash"/>
+    </LinearLayout>
+</layout>

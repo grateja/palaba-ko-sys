@@ -15,21 +15,21 @@ import com.csi.palabakosys.app.remote.customer.RemoteCustomerActivity
 import com.csi.palabakosys.app.remote.panel.RemotePanelAdapter
 import com.csi.palabakosys.app.remote.running.RemoteRunningActivity
 import com.csi.palabakosys.databinding.ActivityRemotePanelBinding
+import com.csi.palabakosys.databinding.ActivityRemotePanelCopyBinding
 import com.csi.palabakosys.model.EnumMachineType
 import com.csi.palabakosys.util.ActivityLauncher
 import com.csi.palabakosys.util.Constants
-import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class RemotePanelActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityRemotePanelBinding
+class RemotePanelActivityCopy : AppCompatActivity() {
+    private lateinit var binding: ActivityRemotePanelCopyBinding
     private val viewModel: RemotePanelViewModel by viewModels()
 
-    private val adapter = RemotePanelAdapter() //Adapter<MachineListItem>(R.layout.recycler_item_machine_tile)
-//    private val regularDryersAdapter = RemotePanelAdapter() //Adapter<MachineListItem>(R.layout.recycler_item_machine_tile)
-//    private val titanWashersAdapter = RemotePanelAdapter() //Adapter<MachineListItem>(R.layout.recycler_item_machine_tile)
-//    private val titanDryersAdapter = RemotePanelAdapter() //Adapter<MachineListItem>(R.layout.recycler_item_machine_tile)
+    private val regularWashersAdapter = RemotePanelAdapter() //Adapter<MachineListItem>(R.layout.recycler_item_machine_tile)
+    private val regularDryersAdapter = RemotePanelAdapter() //Adapter<MachineListItem>(R.layout.recycler_item_machine_tile)
+    private val titanWashersAdapter = RemotePanelAdapter() //Adapter<MachineListItem>(R.layout.recycler_item_machine_tile)
+    private val titanDryersAdapter = RemotePanelAdapter() //Adapter<MachineListItem>(R.layout.recycler_item_machine_tile)
 
     private val launcher = ActivityLauncher(this)
 
@@ -39,46 +39,38 @@ class RemotePanelActivity : AppCompatActivity() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
-        binding.recycler.layoutManager = GridLayoutManager(this, spanCount)
-        binding.recycler.adapter = adapter
-//
-//        binding.inclRegularDryers.recycler.layoutManager = GridLayoutManager(this, spanCount)
-//        binding.inclRegularDryers.recycler.adapter = regularDryersAdapter
-//
-//        binding.inclTitanWashers.recycler.layoutManager = GridLayoutManager(this, spanCount)
-//        binding.inclTitanWashers.recycler.adapter = titanWashersAdapter
-//
-//        binding.inclTitanDryers.recycler.layoutManager = GridLayoutManager(this, spanCount)
-//        binding.inclTitanDryers.recycler.adapter = titanDryersAdapter
+        binding.inclRegularWashers.recycler.layoutManager = GridLayoutManager(this, spanCount)
+        binding.inclRegularWashers.recycler.adapter = regularWashersAdapter
+
+        binding.inclRegularDryers.recycler.layoutManager = GridLayoutManager(this, spanCount)
+        binding.inclRegularDryers.recycler.adapter = regularDryersAdapter
+
+        binding.inclTitanWashers.recycler.layoutManager = GridLayoutManager(this, spanCount)
+        binding.inclTitanWashers.recycler.adapter = titanWashersAdapter
+
+        binding.inclTitanDryers.recycler.layoutManager = GridLayoutManager(this, spanCount)
+        binding.inclTitanDryers.recycler.adapter = titanDryersAdapter
 
         subscribeEvents()
         subscribeListeners()
     }
 
     private fun subscribeEvents() {
-        adapter.onItemClick = { selectMachine(it) }
-        binding.tabMachineType.tabMachineType.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener{
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                viewModel.setMachineType(tab?.text.toString())
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-            }
-        })
-//        regularDryersAdapter.onItemClick = { selectMachine(it) }
-//        titanWashersAdapter.onItemClick = { selectMachine(it) }
-//        titanDryersAdapter.onItemClick = { selectMachine(it) }
+        regularWashersAdapter.onItemClick = { selectMachine(it) }
+        regularDryersAdapter.onItemClick = { selectMachine(it) }
+        titanWashersAdapter.onItemClick = { selectMachine(it) }
+        titanDryersAdapter.onItemClick = { selectMachine(it) }
     }
 
     private fun subscribeListeners() {
         viewModel.machines.observe(this, Observer {
-            adapter.setData(it)
-//            regularDryersAdapter.setData(it.filter { it.machine.machineType == EnumMachineType.REGULAR_DRYER })
-//            titanWashersAdapter.setData(it.filter { it.machine.machineType == EnumMachineType.TITAN_WASHER })
-//            titanDryersAdapter.setData(it.filter { it.machine.machineType == EnumMachineType.TITAN_DRYER })
+            val regularDryers = it.filter { it.machine.machineType == EnumMachineType.REGULAR_DRYER }
+            regularWashersAdapter.setData(it.filter { it.machine.machineType == EnumMachineType.REGULAR_WASHER })
+            regularDryersAdapter.setData(it.filter { it.machine.machineType == EnumMachineType.REGULAR_DRYER })
+            titanWashersAdapter.setData(it.filter { it.machine.machineType == EnumMachineType.TITAN_WASHER })
+            titanDryersAdapter.setData(it.filter { it.machine.machineType == EnumMachineType.TITAN_DRYER })
+            println("items")
+            println(regularDryers.size)
         })
     }
 

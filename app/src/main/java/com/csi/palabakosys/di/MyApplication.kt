@@ -23,6 +23,6 @@ class MyApplication : Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
-//        Printooth.init(applicationContext)
+
     }
 }

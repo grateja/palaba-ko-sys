@@ -41,10 +41,8 @@ import com.csi.palabakosys.app.joborders.payment.JobOrderListPaymentAdapter
 import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentActivity
 import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentMinimal
 import com.csi.palabakosys.databinding.ActivityJobOrderCreateBinding
-import com.csi.palabakosys.util.ActivityLauncher
-import com.csi.palabakosys.util.BaseActivity
-import com.csi.palabakosys.util.hideKeyboard
-import com.csi.palabakosys.util.toUUID
+import com.csi.palabakosys.model.EnumActionPermission
+import com.csi.palabakosys.util.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.Instant
 import java.time.LocalDateTime
@@ -80,16 +78,9 @@ class JobOrderCreateActivity : BaseActivity() {
     private val viewModel: CreateJobOrderViewModel by viewModels()
 
     private val launcher = ActivityLauncher(this)
-
-//    private val packageLauncher = ActivityLauncher(this)
-//    private val servicesLauncher = ActivityLauncher(this)
-//    private val productsLauncher = ActivityLauncher(this)
-//    private val extrasLauncher = ActivityLauncher(this)
-//    private val deliveryLauncher = ActivityLauncher(this)
-//    private val discountLauncher = ActivityLauncher(this)
-//    private val paymentLauncher = ActivityLauncher(this)
-//    private val jobOrderCancelLauncher = ActivityLauncher(this)
-//    private val authLauncher = ActivityLauncher(this)
+    private val dateTimePicker: DateTimePicker by lazy {
+        DateTimePicker(this)
+    }
 
     private val servicesAdapter = JobOrderServiceItemAdapter()
     private val productsAdapter = JobOrderProductsItemAdapter()
@@ -103,6 +94,7 @@ class JobOrderCreateActivity : BaseActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_job_order_create)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
+
 
         if(intent.action == ACTION_LOAD_BY_JOB_ORDER_ID) {
             intent.getStringExtra(JOB_ORDER_ID).toUUID()?.let {
@@ -128,37 +120,39 @@ class JobOrderCreateActivity : BaseActivity() {
     }
 
     private fun showDateTimePickerDialog(currentDateTime: Instant) {
-        val _currentDateTime = currentDateTime.atZone(ZoneId.systemDefault())
+        dateTimePicker.show(currentDateTime)
 
-        val datePickerDialog = DatePickerDialog(
-            this,
-            { _, selectedYear, selectedMonth, selectedDayOfMonth ->
-                val timePickerDialog = TimePickerDialog(
-                    this,
-                    { _, selectedHourOfDay, selectedMinute ->
-                        val localDateTime = LocalDateTime.of(selectedYear, selectedMonth + 1, selectedDayOfMonth, selectedHourOfDay, selectedMinute)
-                        val instant = localDateTime.atZone(ZoneId.systemDefault()).toInstant()
-
-                        val dateTime = DateTimeFormatter.ofPattern("d/M/yyyy HH:mm").format(localDateTime)
-
-                        Toast.makeText(this, "Selected date and time: $dateTime", Toast.LENGTH_LONG).show()
-
-                        viewModel.applyDateTime(instant)
-                    },
-                    _currentDateTime.hour,
-                    _currentDateTime.minute,
-                    false
-                )
-
-                timePickerDialog.show()
-            },
-            _currentDateTime.year,
-            _currentDateTime.monthValue - 1,
-            _currentDateTime.dayOfMonth
-        )
-
-        datePickerDialog.setCanceledOnTouchOutside(false)
-        datePickerDialog.show()
+//        val _currentDateTime = currentDateTime.atZone(ZoneId.systemDefault())
+//
+//        val datePickerDialog = DatePickerDialog(
+//            this,
+//            { _, selectedYear, selectedMonth, selectedDayOfMonth ->
+//                val timePickerDialog = TimePickerDialog(
+//                    this,
+//                    { _, selectedHourOfDay, selectedMinute ->
+//                        val localDateTime = LocalDateTime.of(selectedYear, selectedMonth + 1, selectedDayOfMonth, selectedHourOfDay, selectedMinute)
+//                        val instant = localDateTime.atZone(ZoneId.systemDefault()).toInstant()
+//
+//                        val dateTime = DateTimeFormatter.ofPattern("d/M/yyyy HH:mm").format(localDateTime)
+//
+//                        Toast.makeText(this, "Selected date and time: $dateTime", Toast.LENGTH_LONG).show()
+//
+//                        viewModel.applyDateTime(instant)
+//                    },
+//                    _currentDateTime.hour,
+//                    _currentDateTime.minute,
+//                    false
+//                )
+//
+//                timePickerDialog.show()
+//            },
+//            _currentDateTime.year,
+//            _currentDateTime.monthValue - 1,
+//            _currentDateTime.dayOfMonth
+//        )
+//
+//        datePickerDialog.setCanceledOnTouchOutside(false)
+//        datePickerDialog.show()
     }
 
     private fun subscribeEvents() {
@@ -173,7 +167,10 @@ class JobOrderCreateActivity : BaseActivity() {
 //                viewModel.syncProducts(it)
 //            }
 //        }
-        binding.cardCreatedAt.setOnClickListener {
+        dateTimePicker.setOnDateTimeSelectedListener {
+            viewModel.applyDateTime(it)
+        }
+        binding.textCreatedAt.setOnClickListener {
             openAuthRequestModifyDateTime()
         }
         binding.lockedPrompt.setOnClickListener {
@@ -457,6 +454,10 @@ class JobOrderCreateActivity : BaseActivity() {
     private fun openAuthRequestModifyDateTime() {
         val intent = Intent(this, AuthActionDialogActivity::class.java).apply {
             action = ACTION_MODIFY_DATETIME
+            putExtra(AuthActionDialogActivity.PERMISSIONS_EXTRA, arrayListOf(
+                EnumActionPermission.MODIFY_JOB_ORDERS,
+                EnumActionPermission.MODIFY_SERVICES
+            ))
         }
         launcher.launch(intent)
     }

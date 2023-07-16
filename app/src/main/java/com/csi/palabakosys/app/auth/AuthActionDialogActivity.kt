@@ -9,7 +9,9 @@ import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
+import com.csi.palabakosys.adapters.Adapter
 import com.csi.palabakosys.databinding.ActivityAuthActionDialogBinding
+import com.csi.palabakosys.model.EnumActionPermission
 import com.csi.palabakosys.util.DataState
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -17,6 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class AuthActionDialogActivity : AppCompatActivity() {
     companion object {
         const val MESSAGE = "message"
+        const val PERMISSIONS_EXTRA = "permissions"
 
         @SuppressLint("Returns Login Credentials if Authentication succeeded")
         const val RESULT = "LoginCredential"
@@ -24,6 +27,7 @@ class AuthActionDialogActivity : AppCompatActivity() {
     
     private lateinit var binding: ActivityAuthActionDialogBinding
     private val viewModel: AuthDialogViewModel by viewModels()
+    private val adapter = Adapter<String>(R.layout.recycler_item_simple_item)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,8 +37,18 @@ class AuthActionDialogActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_auth_action_dialog)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
+        binding.recyclerPermissions.adapter = adapter
+
         subscribeEvents()
         subscribeListeners()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        intent.getParcelableArrayListExtra<EnumActionPermission>(PERMISSIONS_EXTRA)?.let {
+            viewModel.setPermissions(it)
+        }
     }
 
     private fun subscribeEvents() {
@@ -47,6 +61,11 @@ class AuthActionDialogActivity : AppCompatActivity() {
     }
 
     private fun subscribeListeners() {
+        viewModel.permissions.observe(this, Observer {
+            adapter.setData(it.map {
+                it.description
+            })
+        })
         viewModel.dataState.observe(this, Observer {
             when(it) {
                 is DataState.SaveSuccess -> {

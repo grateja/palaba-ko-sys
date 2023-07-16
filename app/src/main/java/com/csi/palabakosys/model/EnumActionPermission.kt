@@ -1,6 +1,10 @@
 package com.csi.palabakosys.model
 
-enum class EnumActionPermission(val id: Int, val description: String) {
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+enum class EnumActionPermission(val id: Int, val description: String) : Parcelable {
     ALL(0, "Full access"),
     BASIC(1, "All basic operations"),
     VIEW_DAILY_REPORTS(2, "View sales reports"),

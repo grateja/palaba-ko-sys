@@ -29,6 +29,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerPermissions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"

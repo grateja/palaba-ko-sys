@@ -366,7 +366,7 @@ constructor(
                 jobOrderNumber.value = it?.jobOrder?.jobOrderNumber
                 if(it != null) {
                     currentCustomer.value = CustomerMinimal(
-                        it.customer?.id!!, it.customer?.name!!, it.customer?.crn!!, it.customer?.address, null
+                        it.customer?.id!!, it.customer?.name!!, it.customer?.crn!!, it.customer?.address, null, null
                     )
                     prepare(it)
                     loadUnpaidJobOrders(it.customer?.id!!/*, it.jobOrder.id*/)
@@ -475,8 +475,12 @@ constructor(
     }
 
     fun applyDateTime(instant: Instant) {
-        createdAt.value = instant
-        _saved.value = false
+        if(instant.isAfter(Instant.now())) {
+            _dataState.value = DataState.InvalidOperation("Date created must not be after today")
+        } else {
+            createdAt.value = instant
+            _saved.value = false
+        }
     }
 
     /** endregion */
@@ -564,14 +568,19 @@ constructor(
             val products = jobOrderProducts.value?.filter {
                 it.deletedAt == null
             }
-            products?.let {
-                val unavailable = productsRepository.checkAll(it)
-                if(unavailable != null) {
-                    _dataState.value = DataState.InvalidOperation(unavailable)
-                    return@launch
-                } else {
-                    _dataState.value = DataState.ProceedToSaveJO
+
+            if(products != null && products.isNotEmpty()) {
+                products.let {
+                    val unavailable = productsRepository.checkAll(it)
+                    if(unavailable != null) {
+                        _dataState.value = DataState.InvalidOperation(unavailable)
+                        return@launch
+                    } else {
+                        _dataState.value = DataState.ProceedToSaveJO
+                    }
                 }
+            } else {
+                _dataState.value = DataState.ProceedToSaveJO
             }
         }
 

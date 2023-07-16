@@ -14,8 +14,8 @@ import java.util.*
 
 @AndroidEntryPoint
 class DiscountAddEditActivity(
-    override var requireAuthOnSave: Boolean = false,
-    override var requireAuthOnDelete: Boolean = false
+//    override var requireAuthOnSave: Boolean = false,
+//    override var requireAuthOnDelete: Boolean = false
 ) : CrudActivity() {
     private lateinit var binding: ActivityDiscountAddEditBinding
     private val viewModel: DiscountAddEditViewModel by viewModels()
@@ -70,8 +70,12 @@ class DiscountAddEditActivity(
         viewModel.get(id)
     }
 
-    override fun saveButtonClicked(loginCredentials: LoginCredentials?) {
+    override fun onSave() {
         viewModel.validate()
+    }
+
+    override fun confirmSave(loginCredentials: LoginCredentials?) {
+        viewModel.save()
     }
 
     override fun confirmDelete(loginCredentials: LoginCredentials?) {

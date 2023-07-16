@@ -24,8 +24,8 @@ abstract class DaoMachine : BaseDao<EntityMachine> {
     @Query("SELECT * FROM machines ORDER BY stack_order")
     abstract fun getAllAsLiveData(): LiveData<List<EntityMachine>>
 
-    @Query("SELECT * FROM machines ORDER BY stack_order")
-    abstract fun getListAllAsLiveData(): LiveData<List<MachineListItem>>
+    @Query("SELECT * FROM machines WHERE machine_type = :machineType ORDER BY stack_order")
+    abstract fun getListAllAsLiveData(machineType: EnumMachineType): LiveData<List<MachineListItem>>
 
     @Query("SELECT * FROM machines WHERE id = :id")
     abstract fun getMachineLiveData(id: UUID?) : LiveData<EntityMachine?>

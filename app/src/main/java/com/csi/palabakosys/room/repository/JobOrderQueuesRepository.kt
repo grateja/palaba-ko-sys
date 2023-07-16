@@ -37,6 +37,8 @@ constructor (
 
     fun getAvailableServicesByCustomerIdAsLiveData(customerId: UUID, machineType: EnumMachineType) = dao.getAvailableServicesAsLiveData(customerId, machineType)
 
+    fun getAsLiveData(id: UUID?) = dao.getAsLiveData(id)
+
     suspend fun get(id: UUID?) : EntityJobOrderService? {
         return dao.get(id)
     }

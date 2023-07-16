@@ -47,29 +47,37 @@ class AddEditCustomerFragment : ModalFragment<CustomerMinimal?>() {
         binding.buttonSave.setOnClickListener {
             binding.progressBarSaving.visibility = View.VISIBLE
             it.hideKeyboard()
-            viewModel.save()
+            viewModel.validate()
         }
     }
 
     private fun subscribeListeners() {
         viewModel.dataState.observe(viewLifecycleOwner, Observer {
-            if(it is DataState.SaveSuccess) {
-                onOk?.invoke(CustomerMinimal(
-                    it.data.id,
-                    it.data.name!!,
-                    it.data.crn!!,
-                    it.data.address,
-                    null
-                ))
-                viewModel.resetState()
-                dismiss()
-            } else if(it is DataState.InvalidInput) {
-                binding.progressBarSaving.visibility = View.INVISIBLE
-            } else if(it is DataState.RequestExit) {
-                if(it.promptPass) {
+            when(it) {
+                is DataState.ValidationPassed -> {
+                    viewModel.save()
+                }
+                is DataState.SaveSuccess -> {
+                    onOk?.invoke(CustomerMinimal(
+                        it.data.id,
+                        it.data.name!!,
+                        it.data.crn!!,
+                        it.data.address,
+                        null,
+                        null
+                    ))
+                    viewModel.resetState()
                     dismiss()
-                } else {
-                    Toast.makeText(context, "Press back again to revert changes", Toast.LENGTH_LONG).show()
+                }
+                is DataState.InvalidInput -> {
+                    binding.progressBarSaving.visibility = View.INVISIBLE
+                }
+                is DataState.RequestExit -> {
+                    if(it.promptPass) {
+                        dismiss()
+                    } else {
+                        Toast.makeText(context, "Press back again to revert changes", Toast.LENGTH_LONG).show()
+                    }
                 }
             }
             binding.progressBarSaving.visibility = View.INVISIBLE

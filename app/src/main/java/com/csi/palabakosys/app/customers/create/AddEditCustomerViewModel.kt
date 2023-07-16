@@ -33,31 +33,52 @@ constructor(
         }
     }
 
-    override fun save() {
-        model.value?.let {
-            val inputValidation = InputValidation()
-            inputValidation.addRule("name", it.name.toString(), arrayOf(Rule.Required))
+    fun validate() {
+        viewModelScope.launch {
+            val customer = model.value
+            val inputValidation = InputValidation().apply {
+                addRule("name", customer?.name, arrayOf(Rule.Required))
+                addRule("crn", customer?.crn, arrayOf(Rule.Required))
 
-            viewModelScope.launch {
-                if(originalName != it.name &&  repository.checkName(it.name)) {
-                    inputValidation.addError("name", "Name already taken. Please specify more details")
+                if(originalName != customer?.name &&  repository.checkName(customer?.name)) {
+                    addError("name", "Name already taken. Please specify more details")
                 }
-                if(originalCRN != it.crn) {
-                    repository.getCustomerMinimalByCRN(it.crn)?.let { customer ->
-                        inputValidation.addError("crn", "CRN Conflict with ${customer.name} : ${customer.crn}")
+
+                if(originalCRN != customer?.crn) {
+                    repository.getCustomerMinimalByCRN(customer?.crn)?.let { customer ->
+                        addError("crn", "CRN Conflict with ${customer.name} : ${customer.crn}")
                     }
                 }
-                validation.value = inputValidation
-                super.save()
-//                if(inputValidation.isInvalid()) {
-//                    validation.value = inputValidation
-//                    return@launch
-//                }
-//                repository.save(it)?.let { customer ->
-//                    model.value = customer
-//                    dataState.value = DataState.Save(customer)
-//                }
             }
+            super.validate(inputValidation)
         }
     }
+
+//    override fun save() {
+//        model.value?.let {
+//            val inputValidation = InputValidation()
+//            inputValidation.addRule("name", it.name.toString(), arrayOf(Rule.Required))
+//
+//            viewModelScope.launch {
+//                if(originalName != it.name &&  repository.checkName(it.name)) {
+//                    inputValidation.addError("name", "Name already taken. Please specify more details")
+//                }
+//                if(originalCRN != it.crn) {
+//                    repository.getCustomerMinimalByCRN(it.crn)?.let { customer ->
+//                        inputValidation.addError("crn", "CRN Conflict with ${customer.name} : ${customer.crn}")
+//                    }
+//                }
+//                validation.value = inputValidation
+//                super.save()
+////                if(inputValidation.isInvalid()) {
+////                    validation.value = inputValidation
+////                    return@launch
+////                }
+////                repository.save(it)?.let { customer ->
+////                    model.value = customer
+////                    dataState.value = DataState.Save(customer)
+////                }
+//            }
+//        }
+//    }
 }

@@ -21,11 +21,12 @@ import com.csi.palabakosys.util.toUUID
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import okhttp3.Cache
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.time.Instant
-import java.util.UUID
+import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -51,6 +52,7 @@ class MachineActivationService : Service() {
 
     companion object {
         const val MACHINE_ACTIVATION = "machine_activation"
+        const val MACHINE_ACTIVATION_READY = "machine_activation_ready"
         const val INPUT_INVALID_ACTION = "input_invalid"
         const val DATABASE_INCONSISTENCIES_ACTION = "inconsistent_db"
 
@@ -111,7 +113,7 @@ class MachineActivationService : Service() {
                     // all good
                     // send empty queue
                     safeStop()
-                    LocalBroadcastManager.getInstance(context).sendBroadcast(Intent(MACHINE_ACTIVATION))
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(Intent(MACHINE_ACTIVATION_READY))
                 }
             }
         }.start()
@@ -193,6 +195,7 @@ class MachineActivationService : Service() {
 
     private val client: OkHttpClient by lazy {
         OkHttpClient.Builder()
+            .cache(null)
             .connectTimeout(appPreferences.urlSettings.connectionTimeout, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)

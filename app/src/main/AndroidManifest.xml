@@ -14,6 +14,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:name=".di.MyApplication"
@@ -42,56 +43,64 @@
         </activity>
         <activity
             android:name=".app.remote.RemotePanelActivity"
-            android:exported="false">
+            android:exported="false"
+            android:label="Remote Activation">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".app.packages.edit.PackagesAddEditActivity"
-            android:exported="false">
+            android:exported="false"
+            android:label="Packages">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".app.packages.preview.PackagesPreviewActivity"
-            android:exported="false">
+            android:exported="false"
+            android:label="Packages">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".app.packages.PackagesActivity"
-            android:exported="false">
+            android:exported="false"
+            android:label="Packages">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".app.services.edit.AddEditServiceActivity"
-            android:exported="false">
+            android:exported="false"
+            android:label="Services">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".app.services.ServicesActivity"
-            android:exported="false">
+            android:exported="false"
+            android:label="Services">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".app.customers.preview.CustomerPreviewActivity"
-            android:exported="false">
+            android:exported="false"
+            android:label="Customer Details">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".app.joborders.unpaid.prompt.JobOrdersUnpaidPromptActivity"
-            android:exported="false">
+            android:exported="false"
+            android:label="Unpaid Job Orders">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -99,30 +108,33 @@
         <activity
             android:name=".app.customers.list.CustomersActivity"
             android:exported="false"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
+            android:label="Customers">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-        <activity
-            android:name=".app.shared_ui.AdvancedSearchDialogActivity"
-            android:exported="false"
-            android:theme="@style/Theme.MaterialComponents.Light.Dialog"
-            android:windowSoftInputMode="stateHidden|adjustPan">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
+<!--        <activity-->
+<!--            android:name=".app.shared_ui.AdvancedSearchDialogActivity"-->
+<!--            android:exported="false"-->
+<!--            android:theme="@style/Theme.MaterialComponents.Light.Dialog"-->
+<!--            android:windowSoftInputMode="stateHidden|adjustPan">-->
+<!--            <meta-data-->
+<!--                android:name="android.app.lib_name"-->
+<!--                android:value="" />-->
+<!--        </activity>-->
         <activity
             android:name=".app.preferences.printer.browser.SettingsPrinterBrowserActivity"
-            android:exported="false">
+            android:exported="false"
+            android:label="Printer Settings">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".app.extras.edit.ExtrasAddEditActivity"
-            android:exported="false">
+            android:exported="false"
+            android:label="Extras Services">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -130,14 +142,16 @@
         <activity
             android:name=".app.extras.ExtrasActivity"
             android:exported="false"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
+            android:label="Extras Services">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".app.products.edit.ProductAddEditActivity"
-            android:exported="false">
+            android:exported="false"
+            android:label="Products">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -145,14 +159,16 @@
         <activity
             android:name=".app.products.ProductsActivity"
             android:exported="false"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
+            android:label="Products">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".app.discounts.edit.DiscountAddEditActivity"
-            android:exported="false">
+            android:exported="false"
+            android:label="Discounts">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -160,14 +176,16 @@
         <activity
             android:name=".app.discounts.DiscountsActivity"
             android:exported="false"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
+            android:label="Discounts">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".app.expenses.edit.ExpenseAddEditActivity"
-            android:exported="false">
+            android:exported="false"
+            android:label="Expenses">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -175,21 +193,25 @@
         <activity
             android:name=".app.expenses.ExpensesActivity"
             android:exported="false"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
+            android:label="Expenses">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".app.joborders.create.packages.JOSelectPackageActivity"
-            android:exported="false">
+            android:exported="false"
+            android:label="Select Package">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".app.joborders.cancel.JobOrderCancelActivity"
-            android:exported="false">
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"
+            android:label="Cancel Job Order">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -197,14 +219,16 @@
         <activity
             android:name=".app.joborders.list.JobOrderListActivity"
             android:exported="false"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
+            android:label="Job Orders">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".app.remote.running.MachineRunningActivity"
-            android:exported="false">
+            android:name=".app.remote.running.RemoteRunningActivity"
+            android:exported="false"
+            android:label="Remote Panel">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -213,7 +237,8 @@
             android:name=".app.remote.activate.RemoteActivationPreviewActivity"
             android:exported="false"
             android:theme="@style/Theme.MaterialComponents.Light.Dialog"
-            android:windowSoftInputMode="stateHidden|adjustPan">
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            android:label="Remote Activation">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -227,14 +252,16 @@
 
         <activity
             android:name=".app.machines.addedit.MachinesAddEditActivity"
-            android:exported="false">
+            android:exported="false"
+            android:label="Machines">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".app.machines.MachinesActivity"
-            android:exported="false">
+            android:exported="false"
+            android:label="Machines">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -244,42 +271,48 @@
             android:exported="false"
             android:launchMode="singleInstance"
             android:theme="@style/Theme.MaterialComponents.Light.Dialog"
-            android:windowSoftInputMode="stateHidden|adjustPan">
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            android:label="Authorization">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".app.joborders.payment.JobOrderPaymentActivity"
-            android:exported="false">
+            android:exported="false"
+            android:label="Payment">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".app.joborders.print.PrintJoMainActivity"
-            android:exported="false">
+            android:exported="false"
+            android:label="Print Job Order">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".app.preferences.printer.SettingsPrinterActivity"
-            android:exported="false">
+            android:exported="false"
+            android:label="Printer Settings">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".app.joborders.preview.JobOrderPreviewActivity"
-            android:exported="false">
+            android:exported="false"
+            android:label="Preview Job Order">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".app.remote.shared_ui.RemoteActivationActivity"
-            android:exported="false">
+            android:exported="false"
+            android:label="Remote Activation">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -299,7 +332,8 @@
         <!-- </activity> -->
         <activity
             android:name=".app.preferences.ip.SettingsIPAddressActivity"
-            android:exported="false">
+            android:exported="false"
+            android:label="IP Address Settings">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -312,35 +346,40 @@
         <!-- </activity> -->
         <activity
             android:name=".app.joborders.create.discount.JOSelectDiscountActivity"
-            android:exported="false">
+            android:exported="false"
+            android:label="Select Discount">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".app.joborders.create.extras.JOSelectExtrasActivity"
-            android:exported="false">
+            android:exported="false"
+            android:label="Select Extras Services">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".app.joborders.create.delivery.JOSelectDeliveryActivity"
-            android:exported="false">
+            android:exported="false"
+            android:label="Select Delivery">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".app.joborders.create.products.JOSelectProductsActivity"
-            android:exported="false">
+            android:exported="false"
+            android:label="Select Products">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".app.joborders.create.services.JOSelectWashDryActivity"
-            android:exported="false">
+            android:exported="false"
+            android:label="Select Machine Services">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -356,7 +395,8 @@
         <activity
             android:name=".app.joborders.create.customer.SelectCustomerActivity"
             android:exported="false"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar" />
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
+            android:label="Select Customer"/>
         <activity
             android:name=".app.MainActivity"
             android:exported="true"

@@ -18,8 +18,8 @@ import java.util.*
 
 @AndroidEntryPoint
 class AddEditServiceActivity(
-    override var requireAuthOnSave: Boolean = false,
-    override var requireAuthOnDelete: Boolean = false
+//    override var requireAuthOnSave: Boolean = false,
+//    override var requireAuthOnDelete: Boolean = false
 ) : CrudActivity() {
     companion object {
         const val SERVICE_ID_EXTRA = "serviceId"
@@ -44,10 +44,14 @@ class AddEditServiceActivity(
         viewModel.get(serviceId, machineType)
     }
 
-    override fun saveButtonClicked(loginCredentials: LoginCredentials?) {
+    override fun onSave() {
         viewModel.validate()
-//        viewModel.save()
     }
+
+    override fun confirmSave(loginCredentials: LoginCredentials?) {
+        viewModel.save()
+    }
+
 
     override fun confirmDelete(loginCredentials: LoginCredentials?) {
         viewModel.confirmDelete(loginCredentials?.userId)

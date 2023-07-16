@@ -11,7 +11,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/activity_horizontal_margin">
+        android:background="@color/secondary_background">
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -22,21 +22,35 @@
                 android:divider="@drawable/divider_20"
                 android:showDividers="middle">
                 <include
-                    android:id="@+id/incl_regular_dryers"
-                    app:machineType="@{com.csi.palabakosys.model.EnumMachineType.REGULAR_DRYER}"
-                    layout="@layout/incl_remote_panel"/>
-                <include
-                    android:id="@+id/incl_regular_washers"
-                    app:machineType="@{com.csi.palabakosys.model.EnumMachineType.REGULAR_WASHER}"
-                    layout="@layout/incl_remote_panel"/>
-                <include
-                    android:id="@+id/incl_titan_dryers"
-                    app:machineType="@{com.csi.palabakosys.model.EnumMachineType.TITAN_DRYER}"
-                    layout="@layout/incl_remote_panel"/>
-                <include
-                    android:id="@+id/incl_titan_washers"
-                    app:machineType="@{com.csi.palabakosys.model.EnumMachineType.TITAN_WASHER}"
-                    layout="@layout/incl_remote_panel"/>
+                    android:id="@+id/tabMachineType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    layout="@layout/incl_tab_machines_simple"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler"
+                    android:nestedScrollingEnabled="false"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"/>
+<!--                <include-->
+<!--                    android:id="@+id/incl_regular_dryers"-->
+<!--                    app:machineType="@{com.csi.palabakosys.model.EnumMachineType.REGULAR_DRYER}"-->
+<!--                    layout="@layout/incl_remote_panel"/>-->
+<!--                <include-->
+<!--                    android:id="@+id/incl_regular_washers"-->
+<!--                    app:machineType="@{com.csi.palabakosys.model.EnumMachineType.REGULAR_WASHER}"-->
+<!--                    layout="@layout/incl_remote_panel"/>-->
+<!--                <include-->
+<!--                    android:id="@+id/incl_titan_dryers"-->
+<!--                    app:machineType="@{com.csi.palabakosys.model.EnumMachineType.TITAN_DRYER}"-->
+<!--                    layout="@layout/incl_remote_panel"/>-->
+<!--                <include-->
+<!--                    android:id="@+id/incl_titan_washers"-->
+<!--                    app:machineType="@{com.csi.palabakosys.model.EnumMachineType.TITAN_WASHER}"-->
+<!--                    layout="@layout/incl_remote_panel"/>-->
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </FrameLayout>

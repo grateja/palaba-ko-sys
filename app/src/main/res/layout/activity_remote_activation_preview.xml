@@ -9,42 +9,40 @@
             type="com.csi.palabakosys.app.remote.activate.RemoteActivationPreviewViewModel" />
     </data>
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_width="400dp"
+        android:layout_height="match_parent"
+        android:padding="18dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+            <include
+                layout="@layout/incl_machine_activation_details"
+                app:machineName="@{viewModel.machine.machineName()}"
+                app:customerName="@{viewModel.customer.name}"
+                app:serviceName="@{viewModel.jobOrderService.serviceName}"
+                />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{viewModel.customer.name}"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{viewModel.machine.machineName()}"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{viewModel.jobOrderService.serviceName}"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{viewModel.message}"/>
+                android:text="@{viewModel.machineActivationQueue.message}"/>
             <Button
                 android:id="@+id/buttonActivate"
                 android:visibility="gone"
                 android:text="@string/activate"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                tools:visibility="visible"/>
             <Button
                 android:id="@+id/buttonFix"
                 android:visibility="gone"
                 android:text="Fix"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                tools:visibility="visible"/>
             <com.google.android.material.progressindicator.CircularProgressIndicator
-                android:visibility="@{viewModel.machineStatus == com.csi.palabakosys.model.MachineConnectionStatus.CONNECTING}"
+                android:layout_gravity="center"
+                android:visibility="@{viewModel.machineActivationQueue.status == com.csi.palabakosys.model.MachineConnectionStatus.CONNECTING}"
                 android:indeterminate="true"
                 android:layout_width="30dp"
                 android:layout_height="30dp"/>

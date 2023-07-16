@@ -1,11 +1,8 @@
 package com.csi.palabakosys.app.remote.shared_ui
 
-import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -13,10 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.fragment.NavHostFragment
 import com.csi.palabakosys.R
 import com.csi.palabakosys.app.remote.activate.RemoteActivationPreviewActivity
-import com.csi.palabakosys.app.remote.running.MachineRunningActivity
 import com.csi.palabakosys.databinding.ActivityRemoteActivationBinding
-import com.csi.palabakosys.model.MachineActivationQueues
-import com.csi.palabakosys.model.MachineConnectionStatus
 import com.csi.palabakosys.services.MachineActivationService
 import com.csi.palabakosys.util.ActivityLauncher
 import com.csi.palabakosys.util.Constants

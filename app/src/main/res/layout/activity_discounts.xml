@@ -21,18 +21,19 @@
                 android:background="@color/teal_700"
                 android:animateLayoutChanges="true"
                 app:layout_scrollFlags="scroll|enterAlways|snap" />
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/buttonCreateNew"
                 style="@style/RoundButtonPrimary"
-                app:icon="@android:drawable/ic_menu_add"
-                app:iconSize="30dp"
-                app:iconGravity="textStart"
-                android:layout_margin="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Create new expense"
+                android:layout_margin="8dp"
+                android:text="Create new discount"
                 app:cornerRadius="25dp"
-                app:layout_scrollFlags="scroll|enterAlways|snap"/>
+                app:icon="@android:drawable/ic_menu_add"
+                app:iconGravity="textStart"
+                app:iconSize="30dp"
+                app:layout_scrollFlags="scroll|enterAlways|snap" />
         </com.google.android.material.appbar.AppBarLayout>
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"

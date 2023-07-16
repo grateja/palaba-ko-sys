@@ -48,24 +48,41 @@ constructor(
         }
     }
 
+    fun validate() {
+        val jobOrderWithItems = _jobOrder.value
+        val inputValidation = InputValidation().apply {
+            addRule("remarks", remarks.value, arrayOf(Rule.Required))
+        }
+
+        if(inputValidation.isInvalid()) {
+            _validation.value = inputValidation
+            return
+        }
+
+        if(jobOrderWithItems == null) {
+            _dataState.value = DataState.Invalidate("Invalid Job Order or deleted")
+            return
+        }
+
+        _dataState.value = DataState.ValidationPassed
+    }
+
     fun save(userId: UUID?) {
         viewModelScope.launch {
-            val validation = _validation.value ?: InputValidation()
-            val jobOrderWithItems = _jobOrder.value
-//            val jobOrderId = jobOrder.value?.jobOrder?.id
-//            val paymentId = jobOrder.value?.payment?.id
+//            val validation = _validation.value ?: InputValidation()
+            val jobOrderWithItems = _jobOrder.value ?: return@launch
 
-            validation.addRule("remarks", remarks.value, arrayOf(Rule.Required))
+//            validation.addRule("remarks", remarks.value, arrayOf(Rule.Required))
+//
+//            if(validation.isInvalid()) {
+//                _validation.value = validation
+//                return@launch
+//            }
 
-            if(validation.isInvalid()) {
-                _validation.value = validation
-                return@launch
-            }
-
-            if(jobOrderWithItems == null) {
-                _dataState.value = DataState.Invalidate("Invalid Job Order or deleted")
-                return@launch
-            }
+//            if(jobOrderWithItems == null) {
+//                _dataState.value = DataState.Invalidate("Invalid Job Order or deleted")
+//                return@launch
+//            }
 
             val jobOrderVoid = EntityJobOrderVoid(userId, remarks.value)
             jobOrderRepository.cancelJobOrder(jobOrderWithItems, jobOrderVoid).let {

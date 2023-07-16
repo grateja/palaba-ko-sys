@@ -16,5 +16,11 @@ data class EntityRunningMachine(
         parentColumn = "id",
         entityColumn = "machine_id"
     )
-    var machineUsage: EntityMachineUsage
+    var machineUsage: EntityMachineUsage,
+
+    @Relation(
+        parentColumn = "customer_id",
+        entityColumn = "id"
+    )
+    val customer: EntityCustomer?
 )

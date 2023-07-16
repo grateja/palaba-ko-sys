@@ -1,5 +1,6 @@
 package com.csi.palabakosys.room.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.csi.palabakosys.room.entities.EntityActivationRef
 import com.csi.palabakosys.room.entities.EntityMachineUsage
@@ -9,15 +10,15 @@ import java.util.*
 
 @Dao
 interface DaoRemote {
-    @Query("UPDATE machines SET time_activated = :timeActivated, total_minutes = :totalMinutes, service_activation_id = null, jo_service_id = :jobOrderServiceId WHERE id = :machineId")
-    fun startMachine(machineId: UUID, jobOrderServiceId: UUID, timeActivated: Instant?, totalMinutes: Int?)
+    @Query("UPDATE machines SET time_activated = :timeActivated, total_minutes = :totalMinutes, service_activation_id = null, jo_service_id = :jobOrderServiceId, customer_id = :customerId WHERE id = :machineId")
+    fun startMachine(machineId: UUID, jobOrderServiceId: UUID, customerId: UUID?, timeActivated: Instant?, totalMinutes: Int?)
 
     @Insert
     fun insertMachineUsage(machineUsage: EntityMachineUsage)
 
     @Transaction
     suspend fun activate(activationRef: EntityActivationRef, jobOrderServiceId: UUID, machineId: UUID, machineUsage: EntityMachineUsage) {
-        startMachine(machineId, jobOrderServiceId, activationRef.timeActivated, activationRef.totalMinutes)
+        startMachine(machineId, jobOrderServiceId, activationRef.customerId, activationRef.timeActivated, activationRef.totalMinutes)
         insertMachineUsage(machineUsage)
     }
 
@@ -44,5 +45,5 @@ interface DaoRemote {
 
     @Transaction
     @Query("SELECT * FROM machines WHERE id = :machineId LIMIT 1")
-    suspend fun getActiveMachine(machineId: UUID?) : EntityRunningMachine?
+    fun getActiveMachine(machineId: UUID?) : LiveData<EntityRunningMachine?>
 }

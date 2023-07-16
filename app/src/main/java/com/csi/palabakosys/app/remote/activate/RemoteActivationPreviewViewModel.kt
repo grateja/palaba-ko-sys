@@ -1,10 +1,8 @@
 package com.csi.palabakosys.app.remote.activate
 
 import android.app.Activity
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import com.csi.palabakosys.model.MachineActivationQueues
 import com.csi.palabakosys.model.MachineConnectionStatus
 import com.csi.palabakosys.room.entities.EntityCustomer
 import com.csi.palabakosys.room.entities.EntityJobOrderService
@@ -29,35 +27,34 @@ constructor(
     private val jobOrderQueuesRepository: JobOrderQueuesRepository,
     private val remoteRepository: RemoteRepository
 ): ViewModel() {
+    private val _machineActivationQueue = MutableLiveData<MachineActivationQueues>()
+    val machineActivationQueue: LiveData<MachineActivationQueues> = _machineActivationQueue
+
     private val _dataState = MutableLiveData<DataState>()
     val dataState: LiveData<DataState> = _dataState
 
-    private val _machine = MutableLiveData<EntityMachine>()
-    val machine: LiveData<EntityMachine> = _machine
+    private val machineId = MutableLiveData<UUID>()
+    val machine = machineId.switchMap { machineRepository.getMachineLiveData(it) } //: LiveData<EntityMachine> = _machine
 
-    private val _jobOrderService = MutableLiveData<EntityJobOrderService>()
-    val jobOrderService: LiveData<EntityJobOrderService> = _jobOrderService
+    private val joServiceId = MutableLiveData<UUID>()
+    val jobOrderService = joServiceId.switchMap { jobOrderQueuesRepository.getAsLiveData(it) } //: LiveData<EntityJobOrderService> = _jobOrderService
 
     private val _customer = MutableLiveData<EntityCustomer>()
     val customer: LiveData<EntityCustomer> = _customer
 
-    private val _machineStatus = MutableLiveData<MachineConnectionStatus>()
-    val machineStatus: LiveData<MachineConnectionStatus> = _machineStatus
-
-    private val _message = MutableLiveData<String>()
-    val message: LiveData<String> = _message
+//    private val _machineStatus = MutableLiveData<MachineConnectionStatus>()
+//    val machineStatus: LiveData<MachineConnectionStatus> = _machineStatus
+//
+//    private val _message = MutableLiveData<String>()
+//    val message: LiveData<String> = _message
 
     fun setMachineId(id: UUID) {
-        viewModelScope.launch {
-            _machine.value = machineRepository.get(id)
-            _dataState.value = DataState.CheckPending(id)
-        }
+        machineId.value = id
+        _dataState.value = DataState.CheckPending(id)
     }
 
     fun setServiceId(id: UUID) {
-        viewModelScope.launch {
-            _jobOrderService.value = jobOrderQueuesRepository.get(id)
-        }
+        joServiceId.value = id
     }
 
     fun setCustomerId(id: UUID) {
@@ -66,12 +63,18 @@ constructor(
         }
     }
 
-    fun setMachineStatus(status: MachineConnectionStatus) {
-        _machineStatus.value = status
-    }
+//    fun setMachineStatus(status: MachineConnectionStatus) {
+//        _machineStatus.value = status
+//    }
+//
+//    fun setMessage(message: String?) {
+//        this._message.value = message
+//    }
 
-    fun setMessage(message: String?) {
-        this._message.value = message
+    fun setMachineActivationQueue(machineActivationQueues: MachineActivationQueues) {
+        if(machineActivationQueues.machineId == machineId.value) {
+            _machineActivationQueue.value = machineActivationQueues
+        }
     }
 
     fun prepareSubmit() {
@@ -83,9 +86,8 @@ constructor(
     }
 
     fun dismiss() {
-        println("machine status")
-        println(machineStatus.value)
-        if(machineStatus.value == MachineConnectionStatus.CONNECTING || machineStatus.value == MachineConnectionStatus.SUCCESS) {
+        val status = _machineActivationQueue.value?.status
+        if(status == MachineConnectionStatus.CONNECTING || status == MachineConnectionStatus.SUCCESS) {
             _dataState.value = DataState.Dismiss(Activity.RESULT_OK)
         } else {
             _dataState.value = DataState.Dismiss(Activity.RESULT_CANCELED)

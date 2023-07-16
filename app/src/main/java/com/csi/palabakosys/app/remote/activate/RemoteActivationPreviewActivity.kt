@@ -52,6 +52,7 @@ class RemoteActivationPreviewActivity : AppCompatActivity() {
 
         val filter = IntentFilter(MachineActivationService.MACHINE_ACTIVATION)
             .apply {
+                addAction(MachineActivationService.MACHINE_ACTIVATION_READY)
                 addAction(MachineActivationService.INPUT_INVALID_ACTION)
                 addAction(MachineActivationService.DATABASE_INCONSISTENCIES_ACTION)
             }
@@ -116,24 +117,24 @@ class RemoteActivationPreviewActivity : AppCompatActivity() {
 
     private val receiver = object: BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            val message = intent?.getStringExtra(MachineActivationService.MESSAGE_EXTRA)
-            Toast.makeText(context, message ?: "", Toast.LENGTH_LONG).show()
             val action = intent?.action
-
-            if(action == MachineActivationService.MACHINE_ACTIVATION) {
+            if(action == MachineActivationService.MACHINE_ACTIVATION_READY) {
+                binding.buttonActivate.visibility = View.VISIBLE
+            } else if(action == MachineActivationService.MACHINE_ACTIVATION) {
                 intent.getParcelableExtra<MachineActivationQueues>(MachineActivationService.PENDING_QUEUES_EXTRA).let {
                     if(it != null) {
-                        viewModel.setMachineStatus(it.status)
-                        viewModel.setServiceId(it.jobOrderServiceId)
-                        viewModel.setCustomerId(it.customerId)
-                        viewModel.setMessage(it.message)
+                        viewModel.setMachineActivationQueue(it)
+//                        viewModel.setMachineStatus(it.status)
+//                        viewModel.setServiceId(it.jobOrderServiceId)
+//                        viewModel.setCustomerId(it.customerId)
+//                        viewModel.setMessage(it.message)
                         if(it.connecting() || it.status == MachineConnectionStatus.SUCCESS) {
                             binding.buttonActivate.visibility = View.GONE
                         } else {
                             binding.buttonActivate.visibility = View.VISIBLE
                         }
-                    } else {
-                        binding.buttonActivate.visibility = View.VISIBLE
+//                    } else {
+//                        binding.buttonActivate.visibility = View.VISIBLE
                     }
                 }
             } else if(action == MachineActivationService.DATABASE_INCONSISTENCIES_ACTION) {

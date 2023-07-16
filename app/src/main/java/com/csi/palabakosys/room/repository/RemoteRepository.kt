@@ -26,7 +26,5 @@ constructor (
         daoRemote.cancelActivation(machineId, jobOrderServiceId)
     }
 
-    suspend fun getRunningMachine(machineId: UUID?) : EntityRunningMachine? {
-        return daoRemote.getActiveMachine(machineId)
-    }
+    fun getRunningMachine(machineId: UUID?) = daoRemote.getActiveMachine(machineId)
 }

@@ -14,9 +14,9 @@ import com.csi.palabakosys.app.auth.LoginCredentials
 import com.csi.palabakosys.app.joborders.payment.cashless.PaymentJoCashlessModalFragment
 import com.csi.palabakosys.databinding.ActivityJobOrderPaymentBinding
 import com.csi.palabakosys.util.ActivityLauncher
+import com.csi.palabakosys.util.DateTimePicker
 import com.csi.palabakosys.util.toUUID
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.UUID
 
 @AndroidEntryPoint
 class JobOrderPaymentActivity : AppCompatActivity() {
@@ -25,6 +25,8 @@ class JobOrderPaymentActivity : AppCompatActivity() {
         const val CUSTOMER_ID = "customer_id"
         const val PAYMENT_ID = "payment_id"
         const val SELECTED_JOB_ORDER_IDS = "jobOrderIds"
+        const val AUTH_REQUEST_MODIFY_DATE_ACTION = "modifyDate"
+        const val AUTH_REQUEST_SAVE = "save"
     }
 
     private lateinit var binding: ActivityJobOrderPaymentBinding
@@ -33,6 +35,9 @@ class JobOrderPaymentActivity : AppCompatActivity() {
     private val adapter = JobOrderListPaymentAdapter()
 
     private val authLauncher = ActivityLauncher(this)
+    private val dateTimePicker: DateTimePicker by lazy {
+        DateTimePicker(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,8 +64,10 @@ class JobOrderPaymentActivity : AppCompatActivity() {
 //        binding.textInputCashlessProvider.setAdapter(adapter)
     }
 
-    private fun prepareSubmit() {
-        val intent = Intent(this, AuthActionDialogActivity::class.java)
+    private fun auth(action: String) {
+        val intent = Intent(this, AuthActionDialogActivity::class.java).apply {
+            this.action = action
+        }
         authLauncher.launch(intent)
     }
 
@@ -72,14 +79,27 @@ class JobOrderPaymentActivity : AppCompatActivity() {
             viewModel.validate()
 //            prepareSubmit()
         }
+        binding.textDatePaid.setOnClickListener {
+            auth(AUTH_REQUEST_MODIFY_DATE_ACTION)
+        }
 //        binding.buttonOpenCashless.setOnClickListener {
 //            viewModel.openCashless()
 //        }
+        dateTimePicker.setOnDateTimeSelectedListener {
+            viewModel.setDateTime(it)
+        }
         authLauncher.onOk = { result ->
 //            val email = it.data?.getStringExtra(AuthActionDialogActivity.EMAIL_EXTRA)
 //            val password = it.data?.getStringExtra(AuthActionDialogActivity.PASSWORD_EXTRA)
-            result.data?.getParcelableExtra<LoginCredentials>(AuthActionDialogActivity.RESULT)?.let {
-                viewModel.save(it.userId)
+            when(result.data?.action) {
+                AUTH_REQUEST_SAVE -> {
+                    result.data?.getParcelableExtra<LoginCredentials>(AuthActionDialogActivity.RESULT)?.let {
+                        viewModel.save(it.userId)
+                    }
+                }
+                AUTH_REQUEST_MODIFY_DATE_ACTION -> {
+                    viewModel.requestModifyDateTime()
+                }
             }
         }
     }
@@ -108,7 +128,7 @@ class JobOrderPaymentActivity : AppCompatActivity() {
 //                    viewModel.resetState()
 //                }
                 is JobOrderPaymentViewModel.DataState.ValidationPassed -> {
-                    prepareSubmit()
+                    auth(AUTH_REQUEST_SAVE)
                     viewModel.resetState()
                 }
                 is JobOrderPaymentViewModel.DataState.PaymentSuccess -> {
@@ -122,6 +142,10 @@ class JobOrderPaymentActivity : AppCompatActivity() {
                 }
                 is JobOrderPaymentViewModel.DataState.InvalidOperation -> {
                     Toast.makeText(applicationContext, it.message, Toast.LENGTH_LONG).show()
+                    viewModel.resetState()
+                }
+                is JobOrderPaymentViewModel.DataState.RequestModifyDateTime -> {
+                    dateTimePicker.show(it.dateTime)
                     viewModel.resetState()
                 }
                 else -> {}

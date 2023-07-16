@@ -57,6 +57,11 @@ class MainActivity : EndingActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ActivityCompat.requestPermissions(this,
+                arrayOf(Manifest.permission.POST_NOTIFICATIONS), 0)
+        }
+
         mainViewModel
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -85,6 +90,8 @@ class MainActivity : EndingActivity() {
             val intent = Intent(this, MachinesActivity::class.java)
             startActivity(intent)
 //            if(ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+//
+//            }
 //            val intent = Intent(applicationContext, MachineActivationService::class.java).apply {
 //                putExtra("machineType", EnumMachineType.REGULAR_DRYER.id)
 //                putExtra(RemoteWorker.MACHINE_ID, "ff72b605-88f8-4a3e-9818-7cb83167e336")

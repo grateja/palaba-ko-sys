@@ -33,7 +33,7 @@ class MachineRepository
 
     fun getAllAsLiveData() = daoMachine.getAllAsLiveData()
 
-    fun getListAsLiveData() = daoMachine.getListAllAsLiveData()
+    fun getListAsLiveData(machineType: EnumMachineType) = daoMachine.getListAllAsLiveData(machineType)
 
     fun getMachineLiveData(id: UUID?) = daoMachine.getMachineLiveData(id)
 }

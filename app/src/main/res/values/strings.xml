@@ -62,6 +62,7 @@
     <string name="keyword">Keyword</string>
     <string name="unpaid_prompt">This customer has previous unpaid job orders. It is important to address this situation and ensure that the outstanding payments are resolved.</string>
     <string name="Continue">Continue</string>
+    <string name="create_new">Create New</string>
     <string-array name="sort_direction">
         <item>DESC</item>
         <item>ASC</item>

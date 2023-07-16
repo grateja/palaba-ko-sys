@@ -22,6 +22,9 @@ interface DaoJobOrderQueues {
     @Query("SELECT * FROM job_order_services WHERE id = :id")
     suspend fun get(id: UUID?): EntityJobOrderService?
 
+    @Query("SELECT * FROM job_order_services WHERE id = :id")
+    fun getAsLiveData(id: UUID?): LiveData<EntityJobOrderService?>
+
     @Query("SELECT jo.id, SUM(jo.quantity - used) as available, service_name, svc_minutes as minutes, service_id, job_order_id, svc_wash_type, svc_machine_type FROM job_order_services jo JOIN job_orders on job_orders.id = job_order_id WHERE customer_id = :customerId AND jo.svc_machine_type = :machineType AND (quantity - used) > 0  GROUP BY service_name")
     fun getAvailableServicesAsLiveData(customerId: UUID, machineType: EnumMachineType): LiveData<List<EntityAvailableService>?>
 }

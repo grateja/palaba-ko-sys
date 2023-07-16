@@ -1,6 +1,7 @@
 package com.csi.palabakosys.model
 
 import android.util.Patterns
+import java.time.Instant
 
 sealed class Rule(var message: String) : RuleInterface {
 
@@ -93,6 +94,28 @@ sealed class Rule(var message: String) : RuleInterface {
                 return input % 10 == 0
             }
             return false
+        }
+    }
+
+    class NotBefore(val instant: Instant) : Rule("Must not be before $instant") {
+        override fun isValid(input: Any?): Boolean {
+            return if(input is Instant) {
+                !input.isBefore(instant)
+            } else {
+                message = "Invalid date time"
+                false
+            }
+        }
+    }
+
+    class NotAfter(val instant: Instant) : Rule("Must not be after $instant") {
+        override fun isValid(input: Any?): Boolean {
+            return if(input is Instant) {
+                !input.isAfter(instant)
+            } else {
+                message = "Invalid date time"
+                false
+            }
         }
     }
 }

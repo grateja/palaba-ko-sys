@@ -5,10 +5,12 @@ import java.util.*
 
 interface CrudActivityInterface {
     fun get(id: UUID?)
-    fun saveButtonClicked(loginCredentials: LoginCredentials?)
+    fun onSave()
+    fun onDelete()
     fun confirmDelete(loginCredentials: LoginCredentials?)
+    fun confirmSave(loginCredentials: LoginCredentials?)
     fun requestExit()
     fun confirmExit(entityId: UUID?)
-    var requireAuthOnSave: Boolean
-    var requireAuthOnDelete: Boolean
+//    var requireAuthOnSave: Boolean
+//    var requireAuthOnDelete: Boolean
 }

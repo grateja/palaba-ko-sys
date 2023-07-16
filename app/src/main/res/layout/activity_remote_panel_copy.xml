@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".app.remote.RemotePanelActivity">
+    <data>
+        <variable
+            name="viewModel"
+            type="com.csi.palabakosys.app.remote.RemotePanelViewModel" />
+    </data>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/secondary_background">
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:divider="@drawable/divider_20"
+                android:showDividers="middle">
+                <include
+                    android:id="@+id/incl_regular_dryers"
+                    app:machineType="@{com.csi.palabakosys.model.EnumMachineType.REGULAR_DRYER}"
+                    layout="@layout/incl_remote_panel"/>
+                <include
+                    android:id="@+id/incl_regular_washers"
+                    app:machineType="@{com.csi.palabakosys.model.EnumMachineType.REGULAR_WASHER}"
+                    layout="@layout/incl_remote_panel"/>
+                <include
+                    android:id="@+id/incl_titan_dryers"
+                    app:machineType="@{com.csi.palabakosys.model.EnumMachineType.TITAN_DRYER}"
+                    layout="@layout/incl_remote_panel"/>
+                <include
+                    android:id="@+id/incl_titan_washers"
+                    app:machineType="@{com.csi.palabakosys.model.EnumMachineType.TITAN_WASHER}"
+                    layout="@layout/incl_remote_panel"/>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </FrameLayout>
+</layout>

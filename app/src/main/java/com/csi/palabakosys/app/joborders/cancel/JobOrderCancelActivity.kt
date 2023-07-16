@@ -33,22 +33,27 @@ class JobOrderCancelActivity : AppCompatActivity() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
         binding.buttonSave.setOnClickListener {
-            val intent = Intent(this, AuthActionDialogActivity::class.java)
-            authLauncher.launch(intent)
+            viewModel.validate()
         }
         authLauncher.onOk = { result ->
             result.data?.getParcelableExtra<LoginCredentials>(AuthActionDialogActivity.RESULT)?.let {
                 viewModel.save(it.userId)
             }
         }
-        val jobOrderId = intent.getStringExtra(JOB_ORDER_ID).toUUID()
-        viewModel.loadJobOrder(jobOrderId)
+        intent.getStringExtra(JOB_ORDER_ID).toUUID().let {
+            viewModel.loadJobOrder(it)
+        }
         subscribeListeners()
     }
 
     private fun subscribeListeners() {
         viewModel.dataState.observe(this, Observer {
             when(it) {
+                is DataState.ValidationPassed -> {
+                    val intent = Intent(this, AuthActionDialogActivity::class.java)
+                    authLauncher.launch(intent)
+                    viewModel.resetState()
+                }
                 is DataState.SaveSuccess -> {
                     setResult(RESULT_OK, Intent().apply {
                         action = intent.action

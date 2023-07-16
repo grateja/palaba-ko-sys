@@ -15,8 +15,8 @@ import java.util.*
 
 @AndroidEntryPoint
 class ProductAddEditActivity(
-    override var requireAuthOnSave: Boolean = false,
-    override var requireAuthOnDelete: Boolean = false
+//    override var requireAuthOnSave: Boolean = false,
+//    override var requireAuthOnDelete: Boolean = false
 ) : CrudActivity() {
     private lateinit var binding: ActivityProductAddEditBinding
     private val viewModel: ProductAddEditViewModel by viewModels()
@@ -84,6 +84,7 @@ class ProductAddEditActivity(
                 }
                 is DataState.ValidationPassed -> {
                     viewModel.save()
+                    viewModel.resetState()
                 }
             }
         })
@@ -97,8 +98,12 @@ class ProductAddEditActivity(
         viewModel.get(id)
     }
 
-    override fun saveButtonClicked(loginCredentials: LoginCredentials?) {
+    override fun onSave() {
         viewModel.validate()
+    }
+
+    override fun confirmSave(loginCredentials: LoginCredentials?) {
+        viewModel.save()
     }
 
     override fun confirmDelete(loginCredentials: LoginCredentials?) {

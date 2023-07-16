@@ -17,6 +17,7 @@ import com.csi.palabakosys.room.repository.PaymentRepository
 import com.csi.palabakosys.util.InputValidation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.time.Instant
 import java.util.*
 import javax.inject.Inject
 
@@ -35,6 +36,7 @@ constructor(
         class PaymentSuccess(val payment: EntityJobOrderPayment, val jobOrderIds: ArrayList<String>) : DataState()
         class InvalidInput(val inputValidation: InputValidation) : DataState()
         class InvalidOperation(val message: String) : DataState()
+        class RequestModifyDateTime(val dateTime: Instant) : DataState()
         object ValidationPassed: DataState()
     }
 
@@ -45,6 +47,7 @@ constructor(
     val cashlessProvider = MutableLiveData("")
     val orNumber = MutableLiveData("")
     val cashlessProviders = paymentRepository.getCashlessProviders()
+    val datePaid = MutableLiveData(Instant.now())
 //    val cashless = MutableLiveData<EntityCashless?>()
 
     private val _payment = MutableLiveData<EntityJobOrderPaymentFull>()
@@ -151,6 +154,8 @@ constructor(
             }
         }
 
+        validation.addRule("datePaid", datePaid.value, arrayOf(Rule.Required, Rule.NotAfter(Instant.now())))
+
         if(paymentMethod.value == EnumPaymentMethod.CASH) {
             validation.addRule(
                 "cashReceived",
@@ -162,6 +167,13 @@ constructor(
                 )
             )
         } else if(paymentMethod.value == EnumPaymentMethod.CASHLESS) {
+            validation.addRule(
+                "cashlessProvider",
+                cashlessProvider.value,
+                arrayOf(
+                    Rule.Required
+                )
+            )
             validation.addRule(
                 "cashlessAmount",
                 cashlessAmount.value,
@@ -201,6 +213,8 @@ constructor(
                 )
             } else null
 
+            val datePaid = datePaid.value ?: Instant.now()
+
             val payableJobOrders = payableJobOrders.value
 
             val jobOrderIds = payableJobOrders?.filter { it.selected }?.map { it.id } ?: return@launch
@@ -213,7 +227,9 @@ constructor(
                 userId,
                 orNumber.value,
                 cashless
-            )
+            ).apply {
+                createdAt = datePaid
+            }
             paymentRepository.save(payment, jobOrderIds)
             _dataState.value = DataState.PaymentSuccess(payment, ArrayList(jobOrderIds.map {it.toString()}))
         }
@@ -230,6 +246,26 @@ constructor(
     fun selectItem(jobOrder: JobOrderPaymentMinimal) {
         _payableJobOrders.value = _payableJobOrders.value?.apply {
             this.find {it.id == jobOrder.id}?.selected = jobOrder.selected
+        }
+    }
+
+    fun setDateTime(instant: Instant) {
+        val inputValidation = InputValidation().apply {
+            addRule("datePaid", instant, arrayOf(
+                Rule.Required,
+                Rule.NotAfter(Instant.now())
+            ))
+        }
+        if(inputValidation.isInvalid()) {
+            _inputValidation.value = inputValidation
+            return
+        }
+        datePaid.value = instant
+    }
+
+    fun requestModifyDateTime() {
+        datePaid.value?.let {
+            _dataState.value = DataState.RequestModifyDateTime(it)
         }
     }
 }

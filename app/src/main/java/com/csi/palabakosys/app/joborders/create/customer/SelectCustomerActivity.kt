@@ -12,6 +12,7 @@ import com.csi.palabakosys.app.joborders.create.JobOrderCreateActivity
 import com.csi.palabakosys.app.joborders.unpaid.prompt.JobOrdersUnpaidPromptActivity
 import com.csi.palabakosys.databinding.ActivitySelectCustomerBinding
 import com.csi.palabakosys.util.FilterActivity
+import com.csi.palabakosys.util.isToday
 import com.csi.palabakosys.viewmodels.ListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -82,7 +83,7 @@ class SelectCustomerActivity : FilterActivity() {
     }
 
     private fun open(customer: CustomerMinimal) {
-        if(customer.unpaid != null && customer.unpaid!! > 0) {
+        if(customer.unpaid != null && customer.unpaid!! > 0 && customer.lastJobOrder?.isToday() != true) {
             openUnpaidJobOrderPrompt(customer)
         } else {
             openCreateJobOrderActivity(customer)

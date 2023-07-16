@@ -9,13 +9,25 @@
             type="com.csi.palabakosys.app.joborders.create.CreateJobOrderViewModel" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:background="@color/secondary_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/lockedPrompt"
+            android:padding="8dp"
+            android:visibility="@{viewModel.locked}"
+            android:textColor="@color/white"
+            android:background="@color/black"
+            android:textAlignment="center"
+            android:text="@string/locked_job_order_prompt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"/>
         <androidx.core.widget.NestedScrollView
             android:id="@+id/mainContainer"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lockedPrompt"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toTopOf="@id/controls">
@@ -23,94 +35,126 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_marginHorizontal="@dimen/activity_horizontal_margin">
 
-                <TextView
-                    android:id="@+id/lockedPrompt"
-                    android:padding="8dp"
-                    android:visibility="@{viewModel.locked}"
-                    android:textColor="@color/white"
-                    android:background="@color/black"
-                    android:textAlignment="center"
-                    android:text="@string/locked_job_order_prompt"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-                <TableLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <TableRow
-                        android:gravity="center">
-                        <TextView
-                            android:text="JobOrder Number:"
-                            android:textAlignment="textEnd"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-                        <com.google.android.material.card.MaterialCardView
-                            style="@style/CardSpan"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="8dp">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        style="@style/Caption.Term"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="JOB ORDER NUMBER:"/>
+                    <TextView
+                        style="@style/Caption.Definition"
+                        android:text="@{viewModel.jobOrderNumber}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="#09230"/>
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="sans-serif"
-                                android:text="@{viewModel.jobOrderNumber}"
-                                android:textColor="#00685F"
-                                android:textFontWeight="900"
-                                android:textSize="24sp"
-                                tools:text="#00685F"/>
-                        </com.google.android.material.card.MaterialCardView>
-                    </TableRow>
-                    <TableRow
-                        android:gravity="center">
-                        <TextView
-                            android:textAlignment="textEnd"
-                            android:text="Customer name:"/>
-                        <com.google.android.material.card.MaterialCardView
-                            style="@style/CardSpan"
-                            android:layout_margin="8dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
+                    <TextView
+                        style="@style/Caption.Term"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="CUSTOMER NAME:"/>
+                    <TextView
+                        style="@style/Caption.Definition"
+                        android:text="@{viewModel.currentCustomer.name}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="Chris Pratt"/>
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="sans-serif"
-                                android:text="@{viewModel.currentCustomer.name}"
-                                android:textColor="#000000"
-                                android:textFontWeight="900"
-                                android:textSize="20sp"
-                                tools:text="Chris Pratt"/>
-                        </com.google.android.material.card.MaterialCardView>
+                    <TextView
+                        style="@style/Caption.Term"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Date/Time::"/>
+                    <TextView
+                        android:id="@+id/text_created_at"
+                        style="@style/Caption.Definition"
+                        android:text="@{viewModel.createdAt}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="Feb 29, 2023 5:00 PM"/>
+                </LinearLayout>
+<!--                <TableLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content">-->
+<!--                    <TableRow-->
+<!--                        android:gravity="center">-->
+<!--                        <TextView-->
+<!--                            android:text="JobOrder Number:"-->
+<!--                            android:textAlignment="textEnd"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"/>-->
+<!--                        <com.google.android.material.card.MaterialCardView-->
+<!--                            style="@style/CardSpan"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_margin="8dp">-->
 
-                    </TableRow>
-                    <TableRow
-                        android:gravity="center">
-                        <TextView
-                            android:id="@+id/labelCreatedAt"
-                            android:textAlignment="textEnd"
-                            android:text="Date created:"/>
-                        <com.google.android.material.card.MaterialCardView
-                            android:enabled="@{!viewModel.locked}"
-                            android:id="@+id/cardCreatedAt"
-                            style="@style/CardSpan"
-                            android:layout_margin="8dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
+<!--                            <TextView-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:fontFamily="sans-serif"-->
+<!--                                android:text="@{viewModel.jobOrderNumber}"-->
+<!--                                android:textColor="#00685F"-->
+<!--                                android:textFontWeight="900"-->
+<!--                                android:textSize="24sp"-->
+<!--                                tools:text="#00685F"/>-->
+<!--                        </com.google.android.material.card.MaterialCardView>-->
+<!--                    </TableRow>-->
+<!--                    <TableRow-->
+<!--                        android:gravity="center">-->
+<!--                        <TextView-->
+<!--                            android:textAlignment="textEnd"-->
+<!--                            android:text="Customer name:"/>-->
+<!--                        <com.google.android.material.card.MaterialCardView-->
+<!--                            style="@style/CardSpan"-->
+<!--                            android:layout_margin="8dp"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content">-->
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="sans-serif"
-                                android:text="@{viewModel.createdAt}"
-                                android:textColor="#000000"
-                                android:textFontWeight="900"
-                                android:textSize="20sp"
-                                tools:text="Feb 29, 2023 5:00 PM"/>
-                        </com.google.android.material.card.MaterialCardView>
-                    </TableRow>
-                </TableLayout>
+<!--                            <TextView-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:fontFamily="sans-serif"-->
+<!--                                android:text="@{viewModel.currentCustomer.name}"-->
+<!--                                android:textColor="#000000"-->
+<!--                                android:textFontWeight="900"-->
+<!--                                android:textSize="20sp"-->
+<!--                                tools:text="Chris Pratt"/>-->
+<!--                        </com.google.android.material.card.MaterialCardView>-->
+
+<!--                    </TableRow>-->
+<!--                    <TableRow-->
+<!--                        android:gravity="center">-->
+<!--                        <TextView-->
+<!--                            android:id="@+id/labelCreatedAt"-->
+<!--                            android:textAlignment="textEnd"-->
+<!--                            android:text="Date created:"/>-->
+<!--                        <com.google.android.material.card.MaterialCardView-->
+<!--                            android:enabled="@{!viewModel.locked}"-->
+<!--                            android:id="@+id/cardCreatedAt"-->
+<!--                            style="@style/CardSpan"-->
+<!--                            android:layout_margin="8dp"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content">-->
+
+<!--                            <TextView-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:fontFamily="sans-serif"-->
+<!--                                android:text="@{viewModel.createdAt}"-->
+<!--                                android:textColor="#000000"-->
+<!--                                android:textFontWeight="900"-->
+<!--                                android:textSize="20sp"-->
+<!--                                tools:text="Feb 29, 2023 5:00 PM"/>-->
+<!--                        </com.google.android.material.card.MaterialCardView>-->
+<!--                    </TableRow>-->
+<!--                </TableLayout>-->
 
                 <com.google.android.material.divider.MaterialDivider
                     android:layout_marginTop="10dp"
