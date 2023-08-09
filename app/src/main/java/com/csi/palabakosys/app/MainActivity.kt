@@ -27,6 +27,7 @@ import com.csi.palabakosys.app.customers.list.CustomersActivity
 import com.csi.palabakosys.app.discounts.DiscountsActivity
 import com.csi.palabakosys.app.expenses.ExpensesActivity
 import com.csi.palabakosys.app.extras.ExtrasActivity
+import com.csi.palabakosys.app.image_browser.ImageBrowserActivity
 import com.csi.palabakosys.app.joborders.create.customer.SelectCustomerActivity
 import com.csi.palabakosys.app.joborders.list.JobOrderListActivity
 import com.csi.palabakosys.app.machines.MachinesActivity
@@ -144,6 +145,10 @@ class MainActivity : EndingActivity() {
             startActivity(intent)
         }
 
+        binding.btnCam?.setOnClickListener {
+            val intent = Intent(this, ImageBrowserActivity::class.java)
+            startActivity(intent)
+        }
 
         computeWindowSizeClasses()
         val connectivityManager = getSystemService(ConnectivityManager::class.java) as ConnectivityManager

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.ArrayAdapter
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -13,6 +14,7 @@ import com.csi.palabakosys.adapters.Adapter
 import com.csi.palabakosys.app.joborders.create.JobOrderCreateActivity
 import com.csi.palabakosys.app.shared_ui.AdvancedSearchDialogActivity
 import com.csi.palabakosys.databinding.ActivityJobOrderListBinding
+import com.csi.palabakosys.model.EnumPaymentStatus
 import com.csi.palabakosys.util.FilterActivity
 import com.csi.palabakosys.viewmodels.ListViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,6 +35,8 @@ class JobOrderListActivity : FilterActivity() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         binding.recyclerJobOrders.adapter = adapter
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         subscribeEvents()
         subscribeListeners()
@@ -77,6 +81,10 @@ class JobOrderListActivity : FilterActivity() {
         })
 
         viewModel.orderBy.observe(this, Observer {
+            viewModel.filter(true)
+        })
+
+        viewModel.paymentStatus.observe(this, Observer {
             viewModel.filter(true)
         })
     }

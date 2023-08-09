@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import com.csi.palabakosys.room.dao.DaoUser
 import com.csi.palabakosys.room.entities.EntityUser
 import java.lang.Exception
+import java.util.ArrayList
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -42,5 +43,9 @@ constructor (
 
     fun getCurrentUserByEmail(email: String?): LiveData<EntityUser?> {
         return daoUser.getByEmailLiveData(email)
+    }
+
+    suspend fun getByEmailAndPattern(email: String, patternIds: ArrayList<Int>): EntityUser? {
+        return daoUser.getByEmailAndPattern(email, patternIds)
     }
 }

@@ -1,6 +1,7 @@
 package com.csi.palabakosys.app.joborders.create.extras
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.databinding.DataBindingUtil
@@ -8,9 +9,12 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.csi.palabakosys.BR
 import com.csi.palabakosys.R
+import com.google.android.material.card.MaterialCardView
 
 class JobOrderExtrasItemAdapter: RecyclerView.Adapter<JobOrderExtrasItemAdapter.ViewHolder>() {
     class ViewHolder(private val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
+        val removeButton: ImageButton = binding.root.findViewById(R.id.button_remove)
+        val cardItem: MaterialCardView = binding.root.findViewById(R.id.card_item)
         fun bind(model: MenuExtrasItem) {
             binding.setVariable(BR.viewModel, model)
         }
@@ -20,10 +24,7 @@ class JobOrderExtrasItemAdapter: RecyclerView.Adapter<JobOrderExtrasItemAdapter.
 
     var onItemClick: ((MenuExtrasItem) -> Unit) ? = null
     var onDeleteRequest: ((MenuExtrasItem) -> Unit) ? = null
-
-//    private fun filtered() : List<MenuExtrasItem> {
-//        return list.filter { it.deletedAt == null }
-//    }
+    var locked: Boolean = false
 
     fun setData(services: List<MenuExtrasItem>) {
         list = services.filter { it.deletedAt == null }.toMutableList()
@@ -70,15 +71,21 @@ class JobOrderExtrasItemAdapter: RecyclerView.Adapter<JobOrderExtrasItemAdapter.
         val r = list[position]
         holder.bind(r)
 
-        holder.itemView.setOnClickListener {
+        holder.cardItem.setOnClickListener {
             onItemClick?.invoke(r)
         }
-//        holder.itemView.findViewById<ImageButton>(R.id.buttonDelete).setOnClickListener {
-//            onDeleteRequest?.invoke(r)
-//        }
+        holder.removeButton.visibility = if(locked) View.GONE else View.VISIBLE
+        holder.removeButton.setOnClickListener {
+            onDeleteRequest?.invoke(r)
+        }
     }
 
     override fun getItemCount(): Int {
         return list.size
+    }
+
+    fun lock(value: Boolean) {
+        locked = value
+        notifyDataSetChanged()
     }
 }

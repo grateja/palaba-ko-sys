@@ -60,7 +60,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="First visit: "/>
+                    android:text="First JO: "/>
                 <TextView
                     android:id="@+id/textFirstVisit"
                     android:layout_width="wrap_content"
@@ -78,7 +78,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Last visit: "/>
+                    android:text="Last JO: "/>
 
                 <TextView
                     android:id="@+id/textLastVisit"

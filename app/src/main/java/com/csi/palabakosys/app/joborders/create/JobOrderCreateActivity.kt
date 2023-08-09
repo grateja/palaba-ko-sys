@@ -170,6 +170,9 @@ class JobOrderCreateActivity : BaseActivity() {
         dateTimePicker.setOnDateTimeSelectedListener {
             viewModel.applyDateTime(it)
         }
+        binding.buttonPackages.setOnClickListener {
+            viewModel.openPackages()
+        }
         binding.textCreatedAt.setOnClickListener {
             openAuthRequestModifyDateTime()
         }
@@ -189,6 +192,9 @@ class JobOrderCreateActivity : BaseActivity() {
                     }
                     data.getParcelableArrayListExtra<MenuProductItem>(JOSelectPackageActivity.PRODUCTS)?.toList().let {
                         viewModel.syncProducts(it)
+                    }
+                    data.getParcelableArrayListExtra<MenuJobOrderPackage>(JOSelectPackageActivity.PACKAGES)?.toList().let {
+                        viewModel.syncPackages(it)
                     }
                 }
                 ACTION_MODIFY_DATETIME -> {
@@ -243,16 +249,38 @@ class JobOrderCreateActivity : BaseActivity() {
 //            }
         }
 
-        servicesAdapter.onItemClick = {
-            viewModel.openServices(it)
+        servicesAdapter.apply {
+            onItemClick = {
+                viewModel.openServices(it)
+            }
+            onDeleteRequest = {
+                showDeleteConfirmationDialog("Remove this item?", "Are you sure you want to remove this item from the list?") {
+                    viewModel.removeService(it.serviceRefId)
+                }
+            }
         }
 
-        productsAdapter.onItemClick = {
-            viewModel.openProducts(it)
+
+        productsAdapter.apply {
+            onItemClick = {
+                viewModel.openProducts(it)
+            }
+            onDeleteRequest = {
+                showDeleteConfirmationDialog("Remove this item?", "Are you sure you want to remove this item from the list?") {
+                    viewModel.removeProduct(it.productRefId)
+                }
+            }
         }
 
-        extrasAdapter.onItemClick = {
-            viewModel.openExtras(it)
+        extrasAdapter.apply {
+            onItemClick = {
+                viewModel.openExtras(it)
+            }
+            onDeleteRequest = {
+                showDeleteConfirmationDialog("Remove this item?", "Are you sure you want to remove this item from the list?") {
+                    viewModel.removeExtras(it.extrasRefId)
+                }
+            }
         }
 
 //        binding.inclPackagesLegend.cardLegend.setOnClickListener {
@@ -283,6 +311,12 @@ class JobOrderCreateActivity : BaseActivity() {
 //            packageAdapter.setData(it)
 //        })
 
+        viewModel.locked.observe(this, Observer {
+            servicesAdapter.lock(it)
+            productsAdapter.lock(it)
+            extrasAdapter.lock(it)
+        })
+
         viewModel.jobOrderServices.observe(this, Observer {
             servicesAdapter.setData(it.toMutableList())
         })
@@ -312,7 +346,7 @@ class JobOrderCreateActivity : BaseActivity() {
         viewModel.dataState().observe(this, Observer {
             when(it) {
                 is CreateJobOrderViewModel.DataState.OpenPackages -> {
-                    openPackages()
+                    openPackages(it.list)
                     viewModel.resetState()
                 }
                 is CreateJobOrderViewModel.DataState.OpenServices -> {
@@ -340,11 +374,13 @@ class JobOrderCreateActivity : BaseActivity() {
                     viewModel.resetState()
                 }
                 is CreateJobOrderViewModel.DataState.InvalidOperation -> {
-                    Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
+                    binding.root.showSnackBar(it.message)
+//                    Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
                     viewModel.resetState()
                 }
                 is CreateJobOrderViewModel.DataState.SaveSuccess -> {
-                    Toast.makeText(this, "Job Order saved successfully!", Toast.LENGTH_LONG).show()
+                    binding.root.showSnackBar("Job Order saved successfully!")
+//                    Toast.makeText(this, "Job Order saved successfully!", Toast.LENGTH_LONG).show()
 //                    previewJobOrder(it.jobOrderId, it.customerId)
                     viewModel.resetState()
                 }
@@ -382,9 +418,12 @@ class JobOrderCreateActivity : BaseActivity() {
         launcher.launch(intent)
     }
 
-    private fun openPackages() {
+    private fun openPackages(packages: List<MenuJobOrderPackage>?) {
         val intent = Intent(this, JOSelectPackageActivity::class.java).apply {
             action = ACTION_SYNC_PACKAGE
+            packages?.let {
+                putParcelableArrayListExtra(PAYLOAD_EXTRA, ArrayList(it))
+            }
         }
         launcher.launch(intent)
     }

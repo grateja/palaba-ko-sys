@@ -13,82 +13,114 @@
         app:contentPadding="20dp"
         android:layout_width="380dp"
         android:layout_height="wrap_content">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-<!--            <TextView-->
-<!--                style="@style/TileTitle"-->
-<!--                android:text="Authentication Required"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"/>-->
-
-            <com.google.android.material.divider.MaterialDivider
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerPermissions"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/email"
-                app:errorEnabled="true"
-                app:errorText="@{viewModel.validation.get(`email`)}">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:text="@={viewModel.email}"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress"
-                    android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`email`)}"
-                    android:maxLines="1" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/password"
-                app:errorEnabled="true"
-                app:errorText="@{viewModel.validation.get(`password`)}">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:text="@={viewModel.password}"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPassword"
-                    android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`password`)}"
-                    android:maxLines="1" />
-            </com.google.android.material.textfield.TextInputLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <Button
-                    android:id="@+id/buttonCancel"
-                    style="@style/RoundButtonNeutral"
-                    android:layout_width="wrap_content"
+                android:orientation="vertical">
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/cancel"/>
-                <View
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"/>
-                <Button
-                    android:id="@+id/buttonOk"
-                    style="@style/RoundButtonPrimary"
-                    android:layout_width="wrap_content"
+                    android:divider="@drawable/divider_5"
+                    android:showDividers="middle">
+                    <Button
+                        android:text="Pass"
+                        style="@style/RoundButtonNeutral.Small"
+                        android:id="@+id/button_auth_method_password"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+                    <Button
+                        android:text="Patt"
+                        style="@style/RoundButtonNeutral.Small"
+                        android:id="@+id/button_auth_method_pattern"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+                    <!--                    <Button-->
+                    <!--                        android:text="Bio"-->
+                    <!--                        style="@style/RoundButtonNeutral.Small"-->
+                    <!--                        android:id="@+id/button_auth_method_biometric"-->
+                    <!--                        android:layout_width="0dp"-->
+                    <!--                        android:layout_height="wrap_content"-->
+                    <!--                        android:layout_weight="1"/>-->
+                    <Button
+                        android:text=""
+                        style="@style/RoundButtonNeutral.Small"
+                        android:id="@+id/button_privilege"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+                </LinearLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/ok"/>
+                    android:hint="@string/email"
+                    app:errorEnabled="true"
+                    app:errorText="@{viewModel.validation.get(`email`)}">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:text="@={viewModel.email}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress"
+                        android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`email`)}"
+                        android:maxLines="1" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:visibility="@{viewModel.authMethod == com.csi.palabakosys.model.EnumAuthMethod.AUTH_BY_PASSWORD}"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/password"
+                    app:errorEnabled="true"
+                    app:errorText="@{viewModel.validation.get(`password`)}">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:text="@={viewModel.password}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword"
+                        android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`password`)}"
+                        android:maxLines="1" />
+                </com.google.android.material.textfield.TextInputLayout>
+                <LinearLayout
+                    android:visibility="@{viewModel.authMethod == com.csi.palabakosys.model.EnumAuthMethod.AUTH_BY_PASSWORD}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <Button
+                        android:id="@+id/buttonCancel"
+                        style="@style/RoundButtonNeutral"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cancel"/>
+                    <View
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"/>
+                    <Button
+                        android:id="@+id/buttonOk"
+                        style="@style/RoundButtonPrimary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ok"/>
+                </LinearLayout>
+                <com.itsxtt.patternlock.PatternLockView
+                    android:visibility="@{viewModel.authMethod == com.csi.palabakosys.model.EnumAuthMethod.AUTH_BY_PATTERN}"
+                    android:id="@+id/pattern_lock"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
             </LinearLayout>
-        </LinearLayout>
+<!--        </androidx.core.widget.NestedScrollView>-->
     </com.google.android.material.card.MaterialCardView>
 </layout>

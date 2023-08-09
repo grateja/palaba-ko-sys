@@ -72,6 +72,7 @@
                         android:layout_height="wrap_content"
                         android:text="Date/Time::"/>
                     <TextView
+                        android:enabled="@{!viewModel.locked}"
                         android:id="@+id/text_created_at"
                         style="@style/Caption.Definition"
                         android:text="@{viewModel.createdAt}"
@@ -159,6 +160,14 @@
                 <com.google.android.material.divider.MaterialDivider
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <Button
+                    android:visibility="@{!viewModel.locked}"
+                    android:id="@+id/button_packages"
+                    style="@style/RoundButtonNeutral.Small"
+                    android:text="Packages"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 

@@ -7,6 +7,7 @@ import com.csi.palabakosys.app.joborders.create.products.MenuProductItem
 import com.csi.palabakosys.app.joborders.create.services.MenuServiceItem
 import com.csi.palabakosys.app.joborders.list.JobOrderQueryResult
 import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentMinimal
+import com.csi.palabakosys.model.EnumPaymentStatus
 import com.csi.palabakosys.room.dao.DaoJobOrder
 import com.csi.palabakosys.room.entities.EntityJobOrder
 import com.csi.palabakosys.room.entities.EntityJobOrderListItem
@@ -85,9 +86,9 @@ constructor (
 //        return daoJobOrder.getPreviousUnpaidByCustomerId(customerId, jobOrderId)
 //    }
 
-    suspend fun load(keyword: String?, orderBy: String?, sortDirection: EnumSortDirection?, page: Int): JobOrderQueryResult {
+    suspend fun load(keyword: String?, orderBy: String?, sortDirection: EnumSortDirection?, page: Int, paymentStatus: EnumPaymentStatus?): JobOrderQueryResult {
         val offset = (20 * page) - 20
-        return daoJobOrder.queryResult(keyword, orderBy, sortDirection.toString(), offset)
+        return daoJobOrder.queryResult(keyword, orderBy, sortDirection.toString(), offset, paymentStatus)
     }
 
     suspend fun cancelJobOrder(jobOrderWithItem: EntityJobOrderWithItems, jobOrderVoid: EntityJobOrderVoid) {

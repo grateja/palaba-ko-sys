@@ -2,6 +2,7 @@ package com.csi.palabakosys.app.joborders.list
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.csi.palabakosys.model.EnumPaymentStatus
 import com.csi.palabakosys.room.repository.JobOrderRepository
 import com.csi.palabakosys.viewmodels.ListViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,6 +18,7 @@ constructor(
     private val jobOrderRepository: JobOrderRepository
 ) : ListViewModel<JobOrderListItem>() {
 
+    val paymentStatus = MutableLiveData(EnumPaymentStatus.ALL)
     val total = MutableLiveData(0)
     val hideDeleted = MutableLiveData(true)
 
@@ -39,8 +41,9 @@ constructor(
             val orderBy = orderBy.value
             val sortDirection = sortDirection.value
             val page = page.value ?: 1
+            val paymentStatus = paymentStatus.value
 
-            val result = jobOrderRepository.load(keyword, orderBy, sortDirection, page)
+            val result = jobOrderRepository.load(keyword, orderBy, sortDirection, page, paymentStatus)
 
             total.value = result.count
 

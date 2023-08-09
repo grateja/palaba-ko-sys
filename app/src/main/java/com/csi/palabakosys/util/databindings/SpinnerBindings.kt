@@ -4,6 +4,7 @@ import android.widget.Spinner
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
 import com.csi.palabakosys.model.EnumMeasureUnit
+import com.csi.palabakosys.model.EnumPaymentStatus
 import com.csi.palabakosys.util.EnumSortDirection
 
 @BindingAdapter("app:text")
@@ -59,5 +60,25 @@ fun setMeasureUnit(spinner: Spinner, measureUnit: EnumMeasureUnit?) {
 fun getMeasureUnit(spinner: Spinner): EnumMeasureUnit? {
     return EnumMeasureUnit.values().find {
         it.value == spinner.selectedItem.toString()
+    }
+}
+
+@BindingAdapter("app:paymentStatus")
+fun setPaymentStatus(spinner: Spinner, paymentStatus: EnumPaymentStatus?) {
+    for (i in 0 until spinner.adapter.count) {
+        if(spinner.adapter.getItem(i).toString() == paymentStatus?.prompt) {
+            spinner.setSelection(i)
+            return
+        }
+    }
+}
+
+@InverseBindingAdapter(
+    attribute = "app:paymentStatus",
+    event = "android:selectedItemPositionAttrChanged"
+)
+fun getPaymentStatus(spinner: Spinner): EnumPaymentStatus? {
+    return EnumPaymentStatus.values().find {
+        it.prompt == spinner.selectedItem.toString()
     }
 }

@@ -34,6 +34,8 @@ class SelectCustomerActivity : FilterActivity() {
         binding.lifecycleOwner = this
         binding.recyclerCustomersMinimal.adapter = customersAdapter
 
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
 //        setSupportActionBar(binding.toolbar)
 
         subscribeListeners()

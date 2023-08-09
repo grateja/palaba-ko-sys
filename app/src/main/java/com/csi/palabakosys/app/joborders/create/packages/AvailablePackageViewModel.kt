@@ -42,15 +42,15 @@ constructor(
         }
     }
 
-//    fun setPreselectedPackages(packages: List<MenuJobOrderPackage>?) {
-//        packages?.forEach { mjp ->
-//            availablePackages.value?.find {mjp.packageRefId == it.packageRefId}?.apply {
-//                this.selected = true
-//                this.quantity = mjp.quantity
-//                this.deletedAt = mjp.deletedAt
-//            }
-//        }
-//    }
+    fun setPreselectedPackages(packages: List<MenuJobOrderPackage>?) {
+        packages?.forEach { mjp ->
+            availablePackages.value?.find {mjp.packageRefId == it.packageRefId}?.apply {
+                this.selected = true
+                this.quantity = mjp.quantity
+                this.deletedAt = mjp.deletedAt
+            }
+        }
+    }
 
     fun putPackage(quantityModel: QuantityModel) {
         val packageItem =
@@ -109,55 +109,55 @@ constructor(
         )
     }
 
-    fun prepareSubmit(packageId: UUID) {
-        viewModelScope.launch {
-            repository.getById(packageId)?.let { _package ->
-                val services = mutableListOf<MenuServiceItem>()
-                val products = mutableListOf<MenuProductItem>()
-                val extras = mutableListOf<MenuExtrasItem>()
-                var discount: MenuDiscount? = null
-                var deliveryCharge: DeliveryCharge? = null
-
-                _package.services?.forEach { _packageService ->
-                    val exists = services.find { it.serviceRefId == _packageService.service.id }
-                    if (exists != null) {
-                        exists.quantity += _packageService.serviceCrossRef.quantity
-                        services.add(exists)
-                    } else {
-                        services.add(menuServiceItem(_packageService))
-                    }
-                }
-
-                _package.extras?.forEach { _packageExtras ->
-                    val exists = extras.find { it.extrasRefId == _packageExtras.extras.id }
-                    if (exists != null) {
-                        exists.quantity += _packageExtras.extrasCrossRef.quantity
-                        extras.add(exists)
-                    } else {
-                        extras.add(menuExtrasItem(_packageExtras))
-                    }
-                }
-
-                _package.products?.forEach { _packageProduct ->
-                    val exists = products.find { it.productRefId == _packageProduct.product.id }
-                    if (exists != null) {
-                        exists.quantity += _packageProduct.productCrossRef.quantity
-                        products.add(exists)
-                    } else {
-                        products.add(menuProductItem(_packageProduct))
-                    }
-                }
-
-                _dataState.value = DataState.Submit(
-                    services,
-                    products,
-                    extras,
-                    discount,
-                    deliveryCharge
-                )
-            }
-        }
-    }
+//    fun prepareSubmit(packageId: UUID) {
+//        viewModelScope.launch {
+//            repository.getById(packageId)?.let { _package ->
+//                val services = mutableListOf<MenuServiceItem>()
+//                val products = mutableListOf<MenuProductItem>()
+//                val extras = mutableListOf<MenuExtrasItem>()
+//                var discount: MenuDiscount? = null
+//                var deliveryCharge: DeliveryCharge? = null
+//
+//                _package.services?.forEach { _packageService ->
+//                    val exists = services.find { it.serviceRefId == _packageService.service.id }
+//                    if (exists != null) {
+//                        exists.quantity += _packageService.serviceCrossRef.quantity
+//                        services.add(exists)
+//                    } else {
+//                        services.add(menuServiceItem(_packageService))
+//                    }
+//                }
+//
+//                _package.extras?.forEach { _packageExtras ->
+//                    val exists = extras.find { it.extrasRefId == _packageExtras.extras.id }
+//                    if (exists != null) {
+//                        exists.quantity += _packageExtras.extrasCrossRef.quantity
+//                        extras.add(exists)
+//                    } else {
+//                        extras.add(menuExtrasItem(_packageExtras))
+//                    }
+//                }
+//
+//                _package.products?.forEach { _packageProduct ->
+//                    val exists = products.find { it.productRefId == _packageProduct.product.id }
+//                    if (exists != null) {
+//                        exists.quantity += _packageProduct.productCrossRef.quantity
+//                        products.add(exists)
+//                    } else {
+//                        products.add(menuProductItem(_packageProduct))
+//                    }
+//                }
+//
+//                _dataState.value = DataState.Submit(
+//                    services,
+//                    products,
+//                    extras,
+//                    discount,
+//                    deliveryCharge
+//                )
+//            }
+//        }
+//    }
 
     fun prepareSubmit() {
         viewModelScope.launch {
@@ -231,10 +231,12 @@ constructor(
 //                }
 //            }
 //            println("after loop")
+            val packages = _availablePackages.value?.filter { it.selected }
             _dataState.value = DataState.Submit(
                 services,
                 products,
                 extras,
+                packages,
                 discount,
                 deliveryCharge
             )
@@ -283,6 +285,7 @@ constructor(
             val services: List<MenuServiceItem>?,
             val products: List<MenuProductItem>?,
             val extras: List<MenuExtrasItem>?,
+            val packages: List<MenuJobOrderPackage>?,
             val discount: MenuDiscount?,
             val deliveryCharge: DeliveryCharge?,
         ) : DataState()

@@ -15,6 +15,7 @@ import com.csi.palabakosys.app.joborders.payment.cashless.PaymentJoCashlessModal
 import com.csi.palabakosys.databinding.ActivityJobOrderPaymentBinding
 import com.csi.palabakosys.util.ActivityLauncher
 import com.csi.palabakosys.util.DateTimePicker
+import com.csi.palabakosys.util.showSnackBar
 import com.csi.palabakosys.util.toUUID
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -141,7 +142,8 @@ class JobOrderPaymentActivity : AppCompatActivity() {
                     finish()
                 }
                 is JobOrderPaymentViewModel.DataState.InvalidOperation -> {
-                    Toast.makeText(applicationContext, it.message, Toast.LENGTH_LONG).show()
+                    binding.root.showSnackBar(it.message)
+//                    Toast.makeText(applicationContext, it.message, Toast.LENGTH_LONG).show()
                     viewModel.resetState()
                 }
                 is JobOrderPaymentViewModel.DataState.RequestModifyDateTime -> {

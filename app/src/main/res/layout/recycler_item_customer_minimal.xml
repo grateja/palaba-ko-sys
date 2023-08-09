@@ -53,6 +53,20 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/buttonEdit"
                 tools:text="10 unpaid"/>
+            <TextView
+                android:id="@+id/label_last_job_order"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Last visit "
+                app:layout_constraintTop_toBottomOf="@id/labelUnpaid"
+                app:layout_constraintStart_toStartOf="@id/labelUnpaid"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:momentAgo="@{viewModel.lastJobOrder}"
+                tools:text="3 years ago"
+                app:layout_constraintTop_toBottomOf="@id/labelUnpaid"
+                app:layout_constraintStart_toEndOf="@id/label_last_job_order"/>
             <Button
                 style="@style/RoundButtonNeutral.Small"
                 android:id="@+id/buttonEdit"

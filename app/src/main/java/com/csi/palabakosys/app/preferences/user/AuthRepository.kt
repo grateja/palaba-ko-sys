@@ -31,6 +31,15 @@ constructor(
         return userRepository.getByEmailAndPassword(email, password)
     }
 
+    suspend fun oneTimeLogin(email: String?, patternIds: ArrayList<Int>) : EntityUser? {
+        if(email == null) return null
+        with(pref.edit()) {
+            this.putString("email", email)
+            this.commit()
+        }
+        return userRepository.getByEmailAndPattern(email, patternIds)
+    }
+
     suspend fun login(email: String?, password: String?, remember: Boolean) : EntityUser? {
 //        if(email == null || password == null) return null
         val user = this.oneTimeLogin(email, password)

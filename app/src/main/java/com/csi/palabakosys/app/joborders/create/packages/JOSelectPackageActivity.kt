@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
 import com.csi.palabakosys.adapters.Adapter
+import com.csi.palabakosys.app.joborders.create.JobOrderCreateActivity
 import com.csi.palabakosys.app.joborders.create.shared_ui.ModifyQuantityModalFragment
 import com.csi.palabakosys.app.joborders.create.shared_ui.QuantityModel
 import com.csi.palabakosys.databinding.ActivityJoSelectPackageBinding
@@ -19,6 +20,7 @@ class JOSelectPackageActivity : AppCompatActivity() {
         const val SERVICES = "services"
         const val PRODUCTS = "products"
         const val EXTRAS = "extras"
+        const val PACKAGES = "packages"
     }
 
     private lateinit var binding: ActivityJoSelectPackageBinding
@@ -53,6 +55,9 @@ class JOSelectPackageActivity : AppCompatActivity() {
     private fun subscribeListeners() {
         viewModel.availablePackages.observe(this, Observer {
             adapter.setData(it)
+            intent.getParcelableArrayListExtra<MenuJobOrderPackage>(JobOrderCreateActivity.PAYLOAD_EXTRA).let {
+                viewModel.setPreselectedPackages(it)
+            }
 //            viewModel.setPreselectedPackages(
 //                intent.getParcelableArrayListExtra<MenuJobOrderPackage>("packages")?.toList()
 //            )
@@ -97,6 +102,7 @@ class JOSelectPackageActivity : AppCompatActivity() {
             putParcelableArrayListExtra(SERVICES, data.services?.let { ArrayList(it) })
             putParcelableArrayListExtra(EXTRAS, data.extras?.let { ArrayList(it) })
             putParcelableArrayListExtra(PRODUCTS, data.products?.let { ArrayList(it) })
+            putParcelableArrayListExtra(PACKAGES, data.packages?.let { ArrayList(it) })
         })
         finish()
     }

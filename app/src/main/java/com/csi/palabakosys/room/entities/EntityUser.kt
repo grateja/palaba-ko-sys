@@ -24,4 +24,7 @@ class EntityUser(
 
     @ColumnInfo(name = "contact_number")
     var contactNumber: String? = null,
+
+    @ColumnInfo(name = "pattern_ids")
+    var patternIds: ArrayList<Int>,
 ) : BaseEntity()

@@ -7,6 +7,7 @@ import com.csi.palabakosys.app.customers.CustomerMinimal
 import com.csi.palabakosys.app.joborders.create.delivery.DeliveryCharge
 import com.csi.palabakosys.app.joborders.create.discount.MenuDiscount
 import com.csi.palabakosys.app.joborders.create.extras.MenuExtrasItem
+import com.csi.palabakosys.app.joborders.create.packages.MenuJobOrderPackage
 import com.csi.palabakosys.app.joborders.create.products.MenuProductItem
 import com.csi.palabakosys.app.joborders.create.services.MenuServiceItem
 import com.csi.palabakosys.app.joborders.list.JobOrderListItem
@@ -38,7 +39,7 @@ constructor(
         object StateLess: DataState()
         data class SaveSuccess(val jobOrderId: UUID, val customerId: UUID): DataState()
         data class OpenServices(val list: List<MenuServiceItem>?, val item: MenuServiceItem?): DataState()
-        object OpenPackages : DataState()
+        data class OpenPackages(val list: List<MenuJobOrderPackage>?) : DataState()
         data class OpenProducts(val list: List<MenuProductItem>?, val item: MenuProductItem?): DataState()
         data class OpenExtras(val list: List<MenuExtrasItem>?, val item: MenuExtrasItem?): DataState()
         data class OpenDelivery(val deliveryCharge: DeliveryCharge?): DataState()
@@ -73,6 +74,7 @@ constructor(
     val jobOrderNumber = MutableLiveData("")
     val currentCustomer = MutableLiveData<CustomerMinimal>()
     val deliveryCharge = MutableLiveData<DeliveryCharge?>()
+    val jobOrderPackages = MutableLiveData<List<MenuJobOrderPackage>?>()
     val jobOrderServices = MutableLiveData<List<MenuServiceItem>>()
     val jobOrderProducts = MutableLiveData<List<MenuProductItem>>()
     val jobOrderExtras = MutableLiveData<List<MenuExtrasItem>>()
@@ -388,11 +390,15 @@ constructor(
                 loadUnpaidJobOrders(customer.id)
                 if(jobOrderWithItems != null) {
                     prepare(jobOrderWithItems)
-                } else {
-                    _dataState.value = DataState.OpenPackages
-                }
+                }// else {
+//                    _dataState.value = DataState.OpenPackages
+//                }
             }
         }
+    }
+
+    fun syncPackages(packages: List<MenuJobOrderPackage>?) {
+        jobOrderPackages.value = packages
     }
 
 //    fun syncPackages(packages: List<MenuJobOrderPackage>?) {
@@ -474,6 +480,54 @@ constructor(
         _saved.value = false
     }
 
+    fun removeService(id: UUID?) {
+        jobOrderServices.value?.apply {
+            val found = this.find { it.serviceRefId == id }
+
+            if(found != null) {
+                if(found.joServiceItemId != null) {
+                    found.deletedAt = Instant.now()
+                    jobOrderServices.value = this
+                } else {
+                    jobOrderServices.value = this.filter { it.serviceRefId != id }
+                }
+                _saved.value = false
+            }
+        }
+    }
+
+    fun removeProduct(id: UUID?) {
+        jobOrderProducts.value?.apply {
+            val found = this.find { it.productRefId == id }
+
+            if(found != null) {
+                if(found.joProductItemId != null) {
+                    found.deletedAt = Instant.now()
+                    jobOrderProducts.value = this
+                } else {
+                    jobOrderProducts.value = this.filter { it.productRefId != id }
+                }
+                _saved.value = false
+            }
+        }
+    }
+
+    fun removeExtras(id: UUID?) {
+        jobOrderExtras.value?.apply {
+            val found = this.find { it.extrasRefId == id }
+
+            if(found != null) {
+                if(found.joExtrasItemId != null) {
+                    found.deletedAt = Instant.now()
+                    jobOrderExtras.value = this
+                } else {
+                    jobOrderExtras.value = this.filter { it.extrasRefId != id }
+                }
+                _saved.value = false
+            }
+        }
+    }
+
     fun applyDateTime(instant: Instant) {
         if(instant.isAfter(Instant.now())) {
             _dataState.value = DataState.InvalidOperation("Date created must not be after today")
@@ -501,6 +555,13 @@ constructor(
 //        currentJobOrder.value?.createdAt?.let {
 //            _dataState.value = DataState.ModifyDateTime(it)
 //        }
+    }
+
+    fun openPackages() {
+        if(isLocked()) return
+        jobOrderPackages.value.let {
+            _dataState.value = DataState.OpenPackages(it)
+        }
     }
 
     fun openServices(itemPreset: MenuServiceItem?) {

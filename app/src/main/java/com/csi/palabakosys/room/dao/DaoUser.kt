@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Query
 import com.csi.palabakosys.room.entities.EntityUser
+import java.util.ArrayList
 import java.util.UUID
 
 @Dao
@@ -25,4 +26,7 @@ abstract class DaoUser : BaseDao<EntityUser> {
 
     @Query("SELECT * FROM users WHERE email = :email AND password = :password AND deleted_at IS NULL LIMIT 1")
     abstract suspend fun getByEmailAndPassword(email: String, password: String): EntityUser?
+
+    @Query("SELECT * FROM users WHERE email = :email AND pattern_ids = :patternIds AND deleted_at IS NULL LIMIT 1")
+    abstract suspend fun getByEmailAndPattern(email: String, patternIds: ArrayList<Int>): EntityUser?
 }

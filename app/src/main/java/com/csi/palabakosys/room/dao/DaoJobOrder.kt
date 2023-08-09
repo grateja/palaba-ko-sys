@@ -4,8 +4,8 @@ import androidx.room.*
 import com.csi.palabakosys.app.joborders.list.JobOrderListItem
 import com.csi.palabakosys.app.joborders.list.JobOrderQueryResult
 import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentMinimal
+import com.csi.palabakosys.model.EnumPaymentStatus
 import com.csi.palabakosys.room.entities.*
-import com.csi.palabakosys.util.toUUID
 import java.time.Instant
 import java.util.*
 
@@ -88,7 +88,15 @@ interface DaoJobOrder {
     @Query("SELECT * FROM job_orders WHERE customer_id = :customerId AND payment_id IS NULL AND deleted_at IS NULL AND void_date IS NULL AND (:jobOrderId IS NULL OR (id IS NOT NULL AND id <> :jobOrderId))")
     suspend fun getPreviousUnpaidByCustomerId(customerId: UUID, jobOrderId: UUID?): List<JobOrderPaymentMinimal>
 
-    @Query("SELECT jo.id, jo.job_order_number, jo.discounted_amount, jo.payment_id, jo.customer_id, jo.created_at, cu.name, cu.crn, pa.created_at as date_paid FROM job_orders jo JOIN customers cu ON jo.customer_id = cu.id LEFT JOIN job_order_payments pa ON jo.payment_id = pa.id WHERE cu.name LIKE '%' || :keyword || '%' AND (jo.deleted_at IS NULL AND jo.void_date IS NULL) ORDER BY " +
+    @Query("SELECT jo.id, jo.job_order_number, jo.discounted_amount, jo.payment_id, jo.customer_id, jo.created_at, cu.name, cu.crn, pa.created_at as date_paid FROM job_orders jo JOIN customers cu ON jo.customer_id = cu.id LEFT JOIN job_order_payments pa ON jo.payment_id = pa.id WHERE " +
+        " (cu.name LIKE '%' || :keyword || '%'" +
+        "       OR jo.job_order_number LIKE '%' || :keyword || '%'" +
+        "       OR cu.crn LIKE '%' || :keyword || '%') " +
+        " AND (jo.deleted_at IS NULL AND jo.void_date IS NULL) " +
+        " AND ((:paymentStatus = 0 AND pa.created_at IS NOT NULL) OR" +
+        "      (:paymentStatus = 1 AND pa.created_at IS NULL) OR" +
+        "      (:paymentStatus = 2))" +
+        " ORDER BY " +
         " CASE WHEN :orderBy = 'Date Created' AND :sortDirection = 'ASC' THEN jo.created_at END ASC, " +
         " CASE WHEN :orderBy = 'Date Paid' AND :sortDirection = 'ASC' THEN pa.created_at END ASC, " +
         " CASE WHEN :orderBy = 'Customer Name' AND :sortDirection = 'ASC' THEN cu.name END ASC, " +
@@ -98,16 +106,23 @@ interface DaoJobOrder {
         " CASE WHEN :orderBy = 'Customer Name' AND :sortDirection = 'DESC' THEN cu.name END DESC, " +
         " CASE WHEN :orderBy = 'Job Order Number' AND :sortDirection = 'DESC' THEN jo.job_order_number END DESC " +
         " LIMIT 20 OFFSET :offset")
-    fun load(keyword: String?, orderBy: String?, sortDirection: String?, offset: Int): List<JobOrderListItem>
+    fun load(keyword: String?, orderBy: String?, sortDirection: String?, offset: Int, paymentStatus: EnumPaymentStatus?): List<JobOrderListItem>
 
-    @Query("SELECT COUNT(*) FROM job_orders jo JOIN customers cu ON jo.customer_id = cu.id WHERE cu.name LIKE '%' || :keyword || '%'")
-    fun count(keyword: String?): Int
+    @Query("SELECT COUNT(*) FROM job_orders jo JOIN customers cu ON jo.customer_id = cu.id WHERE " +
+            " (cu.name LIKE '%' || :keyword || '%'" +
+            "       OR jo.job_order_number LIKE '%' || :keyword || '%'" +
+            "       OR cu.crn LIKE '%' || :keyword || '%') " +
+            " AND (jo.deleted_at IS NULL AND jo.void_date IS NULL) " +
+            " AND ((:paymentStatus = 0 AND jo.payment_id IS NOT NULL) OR" +
+            "      (:paymentStatus = 1 AND jo.payment_id IS NULL) OR" +
+            "      (:paymentStatus = 2))")
+    fun count(keyword: String?, paymentStatus: EnumPaymentStatus?): Int
 
     @Transaction
-    suspend fun queryResult(keyword: String?, orderBy: String?, sortDirection: String?, offset: Int) : JobOrderQueryResult {
+    suspend fun queryResult(keyword: String?, orderBy: String?, sortDirection: String?, offset: Int, paymentStatus: EnumPaymentStatus?) : JobOrderQueryResult {
         return JobOrderQueryResult(
-            load(keyword, orderBy, sortDirection, offset),
-            count(keyword)
+            load(keyword, orderBy, sortDirection, offset, paymentStatus),
+            count(keyword, paymentStatus)
         )
     }
 

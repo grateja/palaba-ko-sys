@@ -1,5 +1,7 @@
 package com.csi.palabakosys.util
 
+import android.app.AlertDialog
+import android.content.Context
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.RadioGroup
@@ -13,6 +15,7 @@ import com.csi.palabakosys.model.EnumDiscountType
 import com.csi.palabakosys.model.EnumPaymentMethod
 import com.csi.palabakosys.model.EnumProductType
 import com.csi.palabakosys.model.EnumWashType
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import java.text.NumberFormat
@@ -208,4 +211,30 @@ fun setMomentAgo(view: TextView, dateTime: Instant?) {
     }
 
     view.text = text
+}
+
+fun Context.showDeleteConfirmationDialog(title: String? = "Delete this item", message: String? = "Are you sure you want to proceed?", onDeleteConfirmed: () -> Unit) {
+    AlertDialog.Builder(this).apply {
+        setTitle(title)
+        setMessage(message)
+        setPositiveButton("Yes") { _, _ ->
+            onDeleteConfirmed()
+        }
+        setNegativeButton("Cancel") { _, _ ->
+
+        }
+        create()
+    }.show()
+}
+
+fun View.showSnackBar(message: String, duration: Int = Snackbar.LENGTH_SHORT, actionText: String? = null, actionCallback: (() -> Unit)? = null) {
+    val snackBar = Snackbar.make(this, message, duration)
+
+    actionText?.let {
+        snackBar.setAction(actionText) {
+            actionCallback?.invoke()
+        }
+    }
+
+    snackBar.show()
 }

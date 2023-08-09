@@ -95,6 +95,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Packages" />
+            <Button
+                android:id="@+id/btn_cam"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Packages" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </layout>

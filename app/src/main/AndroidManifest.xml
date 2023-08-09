@@ -15,6 +15,12 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28"/>
+
+    <uses-feature android:name="android.hardware.camera" />
 
     <application
         android:name=".di.MyApplication"
@@ -25,6 +31,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LMS2022">
+        <activity
+            android:name=".app.image_browser.ImageBrowserActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <activity
             android:name=".app.remote.queues.RemoteQueuesActivity"
             android:exported="false"
@@ -108,21 +121,20 @@
         <activity
             android:name=".app.customers.list.CustomersActivity"
             android:exported="false"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
-            android:label="Customers">
+            android:label="Customers"
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
-        </activity>
-<!--        <activity-->
-<!--            android:name=".app.shared_ui.AdvancedSearchDialogActivity"-->
-<!--            android:exported="false"-->
-<!--            android:theme="@style/Theme.MaterialComponents.Light.Dialog"-->
-<!--            android:windowSoftInputMode="stateHidden|adjustPan">-->
-<!--            <meta-data-->
-<!--                android:name="android.app.lib_name"-->
-<!--                android:value="" />-->
-<!--        </activity>-->
+        </activity> <!-- <activity -->
+        <!-- android:name=".app.shared_ui.AdvancedSearchDialogActivity" -->
+        <!-- android:exported="false" -->
+        <!-- android:theme="@style/Theme.MaterialComponents.Light.Dialog" -->
+        <!-- android:windowSoftInputMode="stateHidden|adjustPan"> -->
+        <!-- <meta-data -->
+        <!-- android:name="android.app.lib_name" -->
+        <!-- android:value="" /> -->
+        <!-- </activity> -->
         <activity
             android:name=".app.preferences.printer.browser.SettingsPrinterBrowserActivity"
             android:exported="false"
@@ -142,8 +154,8 @@
         <activity
             android:name=".app.extras.ExtrasActivity"
             android:exported="false"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
-            android:label="Extras Services">
+            android:label="Extras Services"
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -159,8 +171,8 @@
         <activity
             android:name=".app.products.ProductsActivity"
             android:exported="false"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
-            android:label="Products">
+            android:label="Products"
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -176,8 +188,8 @@
         <activity
             android:name=".app.discounts.DiscountsActivity"
             android:exported="false"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
-            android:label="Discounts">
+            android:label="Discounts"
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -193,8 +205,8 @@
         <activity
             android:name=".app.expenses.ExpensesActivity"
             android:exported="false"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
-            android:label="Expenses">
+            android:label="Expenses"
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -210,8 +222,8 @@
         <activity
             android:name=".app.joborders.cancel.JobOrderCancelActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize"
-            android:label="Cancel Job Order">
+            android:label="Cancel Job Order"
+            android:windowSoftInputMode="adjustResize">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -219,8 +231,8 @@
         <activity
             android:name=".app.joborders.list.JobOrderListActivity"
             android:exported="false"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
-            android:label="Job Orders">
+            android:label="Job Orders"
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -236,9 +248,9 @@
         <activity
             android:name=".app.remote.activate.RemoteActivationPreviewActivity"
             android:exported="false"
+            android:label="Remote Activation"
             android:theme="@style/Theme.MaterialComponents.Light.Dialog"
-            android:windowSoftInputMode="stateHidden|adjustPan"
-            android:label="Remote Activation">
+            android:windowSoftInputMode="stateHidden|adjustPan">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -269,10 +281,10 @@
         <activity
             android:name=".app.auth.AuthActionDialogActivity"
             android:exported="false"
+            android:label="Authentication required"
             android:launchMode="singleInstance"
             android:theme="@style/Theme.MaterialComponents.Light.Dialog"
-            android:windowSoftInputMode="stateHidden|adjustPan"
-            android:label="Authorization">
+            android:windowSoftInputMode="stateHidden|adjustPan">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -395,8 +407,8 @@
         <activity
             android:name=".app.joborders.create.customer.SelectCustomerActivity"
             android:exported="false"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
-            android:label="Select Customer"/>
+            android:label="Select Customer"
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar" />
         <activity
             android:name=".app.MainActivity"
             android:exported="true"
@@ -417,6 +429,15 @@
                 android:name="androidx.work.WorkManagerInitializer"
                 android:value="androidx.startup"
                 tools:node="remove" />
+        </provider>
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.csi.lms2020.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
         </provider>
     </application>
 

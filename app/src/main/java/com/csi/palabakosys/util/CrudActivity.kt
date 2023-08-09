@@ -67,17 +67,20 @@ abstract class CrudActivity : BaseActivity(), CrudActivityInterface {
     }
 
     private fun showDeleteDialog() {
-        AlertDialog.Builder(this).apply {
-            setTitle("Delete this item")
-            setMessage("Are you sure you want to proceed?")
-            setPositiveButton("Yes") { _, _ ->
-                authenticate(ACTION_DELETE)
-            }
-            setNegativeButton("Cancel") { _, _ ->
-
-            }
-            create()
-        }.show()
+        showDeleteConfirmationDialog {
+            authenticate(ACTION_DELETE)
+        }
+//        AlertDialog.Builder(this).apply {
+//            setTitle("Delete this item")
+//            setMessage("Are you sure you want to proceed?")
+//            setPositiveButton("Yes") { _, _ ->
+//                authenticate(ACTION_DELETE)
+//            }
+//            setNegativeButton("Cancel") { _, _ ->
+//
+//            }
+//            create()
+//        }.show()
     }
 
     override fun onStop() {

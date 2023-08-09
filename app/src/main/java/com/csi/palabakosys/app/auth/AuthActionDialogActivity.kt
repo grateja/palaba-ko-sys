@@ -4,16 +4,22 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
+import android.view.ViewGroup
+import android.widget.PopupWindow
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.RecyclerView
 import com.csi.palabakosys.R
 import com.csi.palabakosys.adapters.Adapter
 import com.csi.palabakosys.databinding.ActivityAuthActionDialogBinding
 import com.csi.palabakosys.model.EnumActionPermission
+import com.csi.palabakosys.model.EnumAuthMethod
 import com.csi.palabakosys.util.DataState
+import com.csi.palabakosys.util.showSnackBar
+import com.itsxtt.patternlock.PatternLockView
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.ArrayList
 
 @AndroidEntryPoint
 class AuthActionDialogActivity : AppCompatActivity() {
@@ -27,17 +33,14 @@ class AuthActionDialogActivity : AppCompatActivity() {
     
     private lateinit var binding: ActivityAuthActionDialogBinding
     private val viewModel: AuthDialogViewModel by viewModels()
-    private val adapter = Adapter<String>(R.layout.recycler_item_simple_item)
+    private val privilegeAdapter = Adapter<String>(R.layout.recycler_item_simple_item)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        title = "Authentication Required"
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_auth_action_dialog)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
-        binding.recyclerPermissions.adapter = adapter
 
         subscribeEvents()
         subscribeListeners()
@@ -53,16 +56,35 @@ class AuthActionDialogActivity : AppCompatActivity() {
 
     private fun subscribeEvents() {
         binding.buttonOk.setOnClickListener {
-            viewModel.validate()
+            viewModel.validate(AuthDialogViewModel.AuthMethod.AuthByPassword)
         }
         binding.buttonCancel.setOnClickListener {
             finish()
         }
+        binding.buttonAuthMethodPassword.setOnClickListener {
+            viewModel.setAuthMethod(EnumAuthMethod.AUTH_BY_PASSWORD)
+        }
+        binding.buttonAuthMethodPattern.setOnClickListener {
+            viewModel.setAuthMethod(EnumAuthMethod.AUTH_BY_PATTERN)
+        }
+//        binding.buttonAuthMethodBiometric.setOnClickListener {
+//            viewModel.setAuthMethod(EnumAuthMethod.AUTH_BY_BIOMETRIC)
+//        }
+        binding.buttonPrivilege.setOnClickListener {
+            val requiredAuthPrivilegesFragment = RequiredAuthPrivilegesFragment.newInstance()
+            requiredAuthPrivilegesFragment.show(supportFragmentManager, "privilege")
+        }
+        binding.patternLock.setOnPatternListener(object : PatternLockView.OnPatternListener {
+            override fun onComplete(ids: ArrayList<Int>): Boolean {
+                viewModel.validate(AuthDialogViewModel.AuthMethod.AuthByPattern(ids))
+                return true
+            }
+        })
     }
 
     private fun subscribeListeners() {
         viewModel.permissions.observe(this, Observer {
-            adapter.setData(it.map {
+            privilegeAdapter.setData(it.map {
                 it.description
             })
         })
@@ -76,7 +98,7 @@ class AuthActionDialogActivity : AppCompatActivity() {
                     finish()
                 }
                 is DataState.Invalidate -> {
-                    Toast.makeText(applicationContext, it.message, Toast.LENGTH_LONG).show()
+                    binding.root.showSnackBar(it.message)
                 }
             }
         })

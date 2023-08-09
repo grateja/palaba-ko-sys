@@ -8,6 +8,7 @@ import com.csi.palabakosys.room.db.seeder.DatabaseSeeder
 import com.csi.palabakosys.room.entities.*
 import com.csi.palabakosys.room.migrations.AddColumnPackageItemDeletedAt
 import com.csi.palabakosys.room.migrations.AddColumnPackagePrice
+import com.csi.palabakosys.room.migrations.AddColumnPatternIds
 import com.csi.palabakosys.room.migrations.AddForeignKeysPackageId
 import com.csi.palabakosys.util.converters.*
 
@@ -38,7 +39,7 @@ import com.csi.palabakosys.util.converters.*
     EntityInventoryLog::class,
     EntityDiscount::class,
 //    EntityCashlessProvider::class
-], version = 4,
+], version = 5,
     exportSchema = true,
 )
 @TypeConverters(
@@ -55,6 +56,8 @@ import com.csi.palabakosys.util.converters.*
     DiscountApplicableConverter::class,
     DiscountTypeConverter::class,
     ActionPermissionConverter::class,
+    PaymentStatusConverter::class,
+    ArrayListConverter::class
 )
 abstract class MainDatabase : RoomDatabase() {
     abstract fun daoUser() : DaoUser
@@ -94,7 +97,8 @@ abstract class MainDatabase : RoomDatabase() {
                     .addMigrations(
                         AddColumnPackagePrice(),
                         AddColumnPackageItemDeletedAt(),
-                        AddForeignKeysPackageId()
+                        AddForeignKeysPackageId(),
+                        AddColumnPatternIds(),
 //                        AddColumnPaymentVoid(),
 //                        CreateTablePackage(),
 //                        CreateTablePackageService(),
