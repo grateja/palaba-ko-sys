@@ -30,12 +30,14 @@
             app:layout_constraintTop_toBottomOf="@id/lockedPrompt"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            android:clipToPadding="false"
             app:layout_constraintBottom_toTopOf="@id/controls">
 <!--            Container -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:clipToPadding="false"
                 android:layout_marginHorizontal="@dimen/activity_horizontal_margin">
 
                 <LinearLayout
@@ -80,82 +82,13 @@
                         android:layout_height="wrap_content"
                         tools:text="Feb 29, 2023 5:00 PM"/>
                 </LinearLayout>
-<!--                <TableLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content">-->
-<!--                    <TableRow-->
-<!--                        android:gravity="center">-->
-<!--                        <TextView-->
-<!--                            android:text="JobOrder Number:"-->
-<!--                            android:textAlignment="textEnd"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"/>-->
-<!--                        <com.google.android.material.card.MaterialCardView-->
-<!--                            style="@style/CardSpan"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_margin="8dp">-->
 
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:fontFamily="sans-serif"-->
-<!--                                android:text="@{viewModel.jobOrderNumber}"-->
-<!--                                android:textColor="#00685F"-->
-<!--                                android:textFontWeight="900"-->
-<!--                                android:textSize="24sp"-->
-<!--                                tools:text="#00685F"/>-->
-<!--                        </com.google.android.material.card.MaterialCardView>-->
-<!--                    </TableRow>-->
-<!--                    <TableRow-->
-<!--                        android:gravity="center">-->
-<!--                        <TextView-->
-<!--                            android:textAlignment="textEnd"-->
-<!--                            android:text="Customer name:"/>-->
-<!--                        <com.google.android.material.card.MaterialCardView-->
-<!--                            style="@style/CardSpan"-->
-<!--                            android:layout_margin="8dp"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content">-->
-
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:fontFamily="sans-serif"-->
-<!--                                android:text="@{viewModel.currentCustomer.name}"-->
-<!--                                android:textColor="#000000"-->
-<!--                                android:textFontWeight="900"-->
-<!--                                android:textSize="20sp"-->
-<!--                                tools:text="Chris Pratt"/>-->
-<!--                        </com.google.android.material.card.MaterialCardView>-->
-
-<!--                    </TableRow>-->
-<!--                    <TableRow-->
-<!--                        android:gravity="center">-->
-<!--                        <TextView-->
-<!--                            android:id="@+id/labelCreatedAt"-->
-<!--                            android:textAlignment="textEnd"-->
-<!--                            android:text="Date created:"/>-->
-<!--                        <com.google.android.material.card.MaterialCardView-->
-<!--                            android:enabled="@{!viewModel.locked}"-->
-<!--                            android:id="@+id/cardCreatedAt"-->
-<!--                            style="@style/CardSpan"-->
-<!--                            android:layout_margin="8dp"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content">-->
-
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:fontFamily="sans-serif"-->
-<!--                                android:text="@{viewModel.createdAt}"-->
-<!--                                android:textColor="#000000"-->
-<!--                                android:textFontWeight="900"-->
-<!--                                android:textSize="20sp"-->
-<!--                                tools:text="Feb 29, 2023 5:00 PM"/>-->
-<!--                        </com.google.android.material.card.MaterialCardView>-->
-<!--                    </TableRow>-->
-<!--                </TableLayout>-->
+                <androidx.fragment.app.FragmentContainerView
+                    android:id="@+id/job_order_gallery"
+                    android:name="com.csi.palabakosys.app.joborders.create.gallery.JobOrderGalleryFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:layout="@layout/fragment_job_order_gallery"/>
 
                 <com.google.android.material.divider.MaterialDivider
                     android:layout_marginTop="10dp"

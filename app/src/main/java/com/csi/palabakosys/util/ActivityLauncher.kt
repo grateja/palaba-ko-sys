@@ -11,6 +11,8 @@ class ActivityLauncher(activity: AppCompatActivity) {
     private var active = false
     private var resultLauncher =
         activity.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            println("ACTIVITY ACTION")
+            println(result?.data?.action)
             if(result.resultCode == AppCompatActivity.RESULT_OK) {
                 onOk?.invoke(result)
             } else if(result.resultCode == AppCompatActivity.RESULT_CANCELED) {

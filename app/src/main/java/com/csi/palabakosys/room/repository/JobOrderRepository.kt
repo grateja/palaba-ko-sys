@@ -9,10 +9,7 @@ import com.csi.palabakosys.app.joborders.list.JobOrderQueryResult
 import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentMinimal
 import com.csi.palabakosys.model.EnumPaymentStatus
 import com.csi.palabakosys.room.dao.DaoJobOrder
-import com.csi.palabakosys.room.entities.EntityJobOrder
-import com.csi.palabakosys.room.entities.EntityJobOrderListItem
-import com.csi.palabakosys.room.entities.EntityJobOrderVoid
-import com.csi.palabakosys.room.entities.EntityJobOrderWithItems
+import com.csi.palabakosys.room.entities.*
 import com.csi.palabakosys.util.EnumSortDirection
 import java.lang.Exception
 import java.util.UUID
@@ -94,4 +91,20 @@ constructor (
     suspend fun cancelJobOrder(jobOrderWithItem: EntityJobOrderWithItems, jobOrderVoid: EntityJobOrderVoid) {
         return daoJobOrder.cancelJobOrder(jobOrderWithItem, jobOrderVoid)
     }
+
+    fun getPictures(jobOrderId: UUID?) = daoJobOrder.getPictures(jobOrderId)
+
+    suspend fun attachPicture(jobOrderPictures: EntityJobOrderPictures) {
+        return daoJobOrder.attachPicture(jobOrderPictures)
+    }
+
+    suspend fun removePicture(uriId: UUID) {
+        daoJobOrder.removePicture(uriId)
+    }
+//
+//    suspend fun removePicture(uriId: UUID) {
+//        daoJobOrder.removePicture(uriId)
+//    }
+
+    suspend fun attachPictures(jobOrderPictures: List<EntityJobOrderPictures>) = daoJobOrder.attachPictures(jobOrderPictures)
 }

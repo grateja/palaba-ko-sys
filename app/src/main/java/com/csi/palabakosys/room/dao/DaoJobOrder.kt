@@ -1,5 +1,6 @@
 package com.csi.palabakosys.room.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.csi.palabakosys.app.joborders.list.JobOrderListItem
 import com.csi.palabakosys.app.joborders.list.JobOrderQueryResult
@@ -167,4 +168,16 @@ interface DaoJobOrder {
         clearDeliveryCharges(jobOrderId)
         clearDiscounts(jobOrderId)
     }
+
+    @Query("SELECT * FROM job_order_pictures WHERE job_order_id = :jobOrderId ORDER BY created_at DESC")
+    fun getPictures(jobOrderId: UUID?): LiveData<List<EntityJobOrderPictures>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun attachPicture(jobOrderPictures: EntityJobOrderPictures)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun attachPictures(jobOrderPictures: List<EntityJobOrderPictures>)
+
+    @Query("DELETE FROM job_order_pictures WHERE id = :uriId")
+    suspend fun removePicture(uriId: UUID)
 }

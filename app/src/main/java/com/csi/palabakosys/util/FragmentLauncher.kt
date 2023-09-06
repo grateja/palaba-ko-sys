@@ -7,18 +7,23 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 
 class FragmentLauncher(fragment: Fragment) {
-    var onOk: ((ActivityResult) -> Unit) ? = null
+    var onOk: ((Intent?) -> Unit) ? = null
     var onCancel: (() -> Unit) ? = null
+    private var active = false
     private var resultLauncher =
         fragment.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if(result.resultCode == AppCompatActivity.RESULT_OK) {
-                onOk?.invoke(result)
+                onOk?.invoke(result.data)
             } else if(result.resultCode == AppCompatActivity.RESULT_CANCELED) {
                 onCancel?.invoke()
             }
+            active = false
         }
 
     fun launch(intent: Intent) {
-        resultLauncher.launch(intent)
+        if(!active) {
+            resultLauncher.launch(intent)
+            active = true
+        }
     }
 }

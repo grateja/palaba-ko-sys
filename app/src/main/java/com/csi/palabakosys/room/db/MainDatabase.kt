@@ -6,10 +6,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.csi.palabakosys.room.dao.*
 import com.csi.palabakosys.room.db.seeder.DatabaseSeeder
 import com.csi.palabakosys.room.entities.*
-import com.csi.palabakosys.room.migrations.AddColumnPackageItemDeletedAt
-import com.csi.palabakosys.room.migrations.AddColumnPackagePrice
-import com.csi.palabakosys.room.migrations.AddColumnPatternIds
-import com.csi.palabakosys.room.migrations.AddForeignKeysPackageId
+import com.csi.palabakosys.room.migrations.*
 import com.csi.palabakosys.util.converters.*
 
 @Database(entities = [
@@ -30,6 +27,8 @@ import com.csi.palabakosys.util.converters.*
     EntityJobOrderDeliveryCharge::class,
     EntityJobOrderDiscount::class,
     EntityJobOrderPayment::class,
+    EntityJobOrderPictures::class,
+    EntityClaimReceiptPictures::class,
     EntityPackage::class,
     EntityPackageService::class,
     EntityPackageExtras::class,
@@ -39,7 +38,7 @@ import com.csi.palabakosys.util.converters.*
     EntityInventoryLog::class,
     EntityDiscount::class,
 //    EntityCashlessProvider::class
-], version = 5,
+], version = 12,
     exportSchema = true,
 )
 @TypeConverters(
@@ -99,6 +98,13 @@ abstract class MainDatabase : RoomDatabase() {
                         AddColumnPackageItemDeletedAt(),
                         AddForeignKeysPackageId(),
                         AddColumnPatternIds(),
+                        CreateTableJobOrderPicture(),
+                        AddColumnUriId(),
+                        AddColumnJobOrderPicturesCreatedAt(),
+                        CreateTableClaimReceiptPicture(),
+                        DropColumnJobOrderPicturesFilename(),
+                        DropColumnJobOrderPicturesUri(),
+                        DropColumnClaimReceiptPicturesUri()
 //                        AddColumnPaymentVoid(),
 //                        CreateTablePackage(),
 //                        CreateTablePackageService(),

@@ -2,6 +2,7 @@ package com.csi.palabakosys.app.joborders.create
 
 import android.app.Activity.RESULT_CANCELED
 import android.app.Activity.RESULT_OK
+import android.content.ContentUris
 import androidx.lifecycle.*
 import com.csi.palabakosys.app.customers.CustomerMinimal
 import com.csi.palabakosys.app.joborders.create.delivery.DeliveryCharge
@@ -10,7 +11,6 @@ import com.csi.palabakosys.app.joborders.create.extras.MenuExtrasItem
 import com.csi.palabakosys.app.joborders.create.packages.MenuJobOrderPackage
 import com.csi.palabakosys.app.joborders.create.products.MenuProductItem
 import com.csi.palabakosys.app.joborders.create.services.MenuServiceItem
-import com.csi.palabakosys.app.joborders.list.JobOrderListItem
 import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentMinimal
 import com.csi.palabakosys.model.EnumDiscountType
 import com.csi.palabakosys.model.EnumDiscountApplicable
@@ -49,6 +49,9 @@ constructor(
         data class RequestExit(val canExit: Boolean, val resultCode: Int, val jobOrderId: UUID?) : DataState()
         data class RequestCancel(val jobOrderId: UUID?) : DataState()
         data class ModifyDateTime(val createdAt: Instant) : DataState()
+        data class OpenCamera(val jobOrderId: UUID) : DataState()
+        data class OpenPictures(val ids: List<String>, val currentId: String) : DataState()
+
         object ProceedToSaveJO: DataState()
     }
 
@@ -80,6 +83,8 @@ constructor(
     val jobOrderExtras = MutableLiveData<List<MenuExtrasItem>>()
     val discount = MutableLiveData<MenuDiscount>()
     val unpaidJobOrders = MutableLiveData<List<JobOrderPaymentMinimal>>()
+
+    val jobOrderPictures = jobOrderId.switchMap { jobOrderRepository.getPictures(it) }
 //    val createdAt = MutableLiveData(Instant.now())
 
     private val _payment = MutableLiveData<EntityJobOrderPayment>()
@@ -610,6 +615,18 @@ constructor(
         _dataState.value = DataState.OpenPayment(currentCustomer.value!!.id, payment.value?.id)
     }
 
+    fun openCamera() {
+        jobOrderId.value?.let {
+            _dataState.value = DataState.OpenCamera(it)
+        }
+    }
+
+    fun openPictures(currentId: UUID) {
+        jobOrderPictures.value?.let {
+            _dataState.value = DataState.OpenPictures(it.map { it.id.toString() }, currentId.toString())
+        }
+    }
+
 //    fun openUnpaidJobOrdersPayment() {
 //        _dataState.value = DataState.OpenPayment(currentCustomer.value!!.id, payment.value?.id)
 //    }
@@ -789,6 +806,39 @@ constructor(
             _saved.value = true
 
             prepare(jobOrderWithItem)
+        }
+    }
+
+    fun attachPicture(id: UUID) {
+        val jobOrderId = jobOrderId.value ?: return
+//        val fileName = uri.path?.let { File(it).name } ?: return
+
+        viewModelScope.launch {
+
+            val jobOrderPictures = EntityJobOrderPictures(
+                jobOrderId,
+                id
+            )
+            jobOrderRepository.attachPicture(jobOrderPictures)
+        }
+    }
+
+    fun attachPictures(ids: List<UUID>) {
+        val jobOrderId = jobOrderId.value ?: return
+        viewModelScope.launch {
+            val jobOrderPictures = ids.map {
+                EntityJobOrderPictures(
+                    jobOrderId,
+                    it
+                )
+            }
+            jobOrderRepository.attachPictures(jobOrderPictures)
+        }
+    }
+
+    fun removePicture(uriId: UUID) {
+        viewModelScope.launch {
+            jobOrderRepository.removePicture(uriId)
         }
     }
 }

@@ -2,6 +2,13 @@ package com.csi.palabakosys.util
 
 import android.app.AlertDialog
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.media.ThumbnailUtils
+import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
+import android.util.Size
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.RadioGroup
@@ -237,4 +244,27 @@ fun View.showSnackBar(message: String, duration: Int = Snackbar.LENGTH_SHORT, ac
     }
 
     snackBar.show()
+}
+
+fun Context.loadThumbnailOrBitmap(uri: Uri, dimension: Int): Bitmap? {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        println("get thumbnail")
+        contentResolver.loadThumbnail(uri, Size(dimension, dimension), null)
+    } else {
+        val projection = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor = contentResolver.query(uri, projection, null, null, null)
+
+        var bitmap: Bitmap? = null
+
+        cursor?.use {
+            if (it.moveToFirst()) {
+                val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+                val imagePath = it.getString(columnIndex)
+                bitmap = BitmapFactory.decodeFile(imagePath)
+            }
+        }
+
+        cursor?.close()
+        bitmap
+    }
 }

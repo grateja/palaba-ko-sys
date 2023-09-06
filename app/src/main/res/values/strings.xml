@@ -64,6 +64,7 @@
     <string name="Continue">Continue</string>
     <string name="create_new">Create New</string>
     <string name="privilege_prompt">Required privilege for this operation</string>
+    <string name="discard">Discard</string>
     <string-array name="sort_direction">
         <item>DESC</item>
         <item>ASC</item>

@@ -2,23 +2,19 @@ package com.csi.palabakosys.app
 
 import android.Manifest
 import android.content.BroadcastReceiver
+import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.PackageManager
-import android.net.ConnectivityManager
-import android.net.Network
-import android.net.NetworkCapabilities
-import android.net.NetworkRequest
+import android.net.*
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.provider.MediaStore
+import android.util.Size
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.window.layout.WindowMetricsCalculator
@@ -27,7 +23,7 @@ import com.csi.palabakosys.app.customers.list.CustomersActivity
 import com.csi.palabakosys.app.discounts.DiscountsActivity
 import com.csi.palabakosys.app.expenses.ExpensesActivity
 import com.csi.palabakosys.app.extras.ExtrasActivity
-import com.csi.palabakosys.app.image_browser.ImageBrowserActivity
+import com.csi.palabakosys.app.gallery.picture_browser.PictureCaptureActivity
 import com.csi.palabakosys.app.joborders.create.customer.SelectCustomerActivity
 import com.csi.palabakosys.app.joborders.list.JobOrderListActivity
 import com.csi.palabakosys.app.machines.MachinesActivity
@@ -36,24 +32,19 @@ import com.csi.palabakosys.app.preferences.ip.SettingsIPAddressActivity
 import com.csi.palabakosys.app.preferences.printer.SettingsPrinterActivity
 import com.csi.palabakosys.app.products.ProductsActivity
 import com.csi.palabakosys.app.remote.RemotePanelActivity
-import com.csi.palabakosys.app.remote.shared_ui.RemoteActivationActivity
 import com.csi.palabakosys.app.services.ServicesActivity
-import com.csi.palabakosys.broadcast_receiver.ConnectivityReceiver
 import com.csi.palabakosys.databinding.ActivityMainBinding
-import com.csi.palabakosys.model.EnumMachineType
-import com.csi.palabakosys.services.MachineActivationService
+import com.csi.palabakosys.util.ActivityLauncher
 import com.csi.palabakosys.viewmodels.MainViewModel
 //import com.csi.palabakosys.worker.RemoteWorker
-import com.google.gson.JsonObject
 import dagger.hilt.android.AndroidEntryPoint
-import java.net.InetAddress
-import kotlin.system.exitProcess
 
 @AndroidEntryPoint
 class MainActivity : EndingActivity() {
     private val mainViewModel: MainViewModel by viewModels()
 
     private lateinit var binding: ActivityMainBinding
+    private var launcher = ActivityLauncher(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,8 +53,6 @@ class MainActivity : EndingActivity() {
             ActivityCompat.requestPermissions(this,
                 arrayOf(Manifest.permission.POST_NOTIFICATIONS), 0)
         }
-
-        mainViewModel
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.btnTest.setOnClickListener {
@@ -145,9 +134,38 @@ class MainActivity : EndingActivity() {
             startActivity(intent)
         }
 
+        launcher.onOk = {
+//            val imageUris = mutableListOf<Uri>()
+            val uri = it.data?.data
+
+
+
+
+//            it.data?.clipData?.let { clipData ->
+//                for (i in 0 until clipData.itemCount) {
+//                    val uri = clipData.getItemAt(i).uri
+//                    imageUris.add(uri)
+//                }
+//            }
+//            println("Image uris")
+//            println(imageUris)
+//            imageUris.forEach {
+            uri?.let {
+                println(ContentUris.parseId(it))
+            }
+//            }
+        }
+
         binding.btnCam?.setOnClickListener {
-            val intent = Intent(this, ImageBrowserActivity::class.java)
-            startActivity(intent)
+            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                type = "image/*"
+                putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+            }
+            launcher.launch(intent)
+
+//            val command = "avrdude -C/path/to/avrdude.conf -v -patmega328p -carduino -P/dev/ttyUSB0 -b115200 -D -Uflash:w:$sketchPath:i"
+//            val process = Runtime.getRuntime().exec(command)
+//            val exitCode = process.waitFor()
         }
 
         computeWindowSizeClasses()
@@ -158,6 +176,47 @@ class MainActivity : EndingActivity() {
             .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
             .build()
         connectivityManager.requestNetwork(networkRequest, networkCallback)
+
+//        val filePath = "/storage/emulated/0/Pictures/CameraX-Image/2023-08-14-21-09-49-625.jpg"
+//        val file = File(filePath)
+//        if(file.exists()) {
+//            println("file exists")
+//            println(file.toUri())
+//            val uri = FileProvider.getUriForFile(this, "com.csi.lms2020.fileprovider", file)
+//            binding.imageView?.setImageURI(uri)
+//        }
+
+        val id :Long = 24727
+        val uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+
+//        return
+//        val uri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//            // For Android Q and above, use MediaStore API to get a content URI
+//            MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
+//                .buildUpon()
+//                .appendPath(file.name)
+//                .build()
+//        } else {
+//            // For older versions, you might need to use a FileProvider
+//            // For this example, I'll assume that your FileProvider authority is "com.csi.lms2022.fileprovider"
+//            FileProvider.getUriForFile(this, "com.csi.lms2022.fileprovider", file)
+//        }
+
+        binding.imageView?.let {
+//            it.setImageURI(uri)
+//            val imageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+//                .buildUpon()
+//                .appendPath("CameraX-Image")
+//                .appendPath("2023-08-14-21-09-49-625.jpg")
+//                .build()
+
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//                val thumbnail = contentResolver.loadThumbnail(uri, Size(100, 100), null)
+//                it.setImageBitmap(thumbnail)
+//            } else {
+//                // Handle older versions
+//            }
+        }
     }
 
     private val receiver = object: BroadcastReceiver() {
