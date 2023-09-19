@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.csi.palabakosys.room.repository.JobOrderRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,17 +19,17 @@ constructor(
     private val _dataState = MutableLiveData<DataState>()
     val dataState: LiveData<DataState> = _dataState
 
-    private val _uriId = MutableLiveData<List<String>>()
-    val uriIds: LiveData<List<String>> = _uriId
+    private val _uriId = MutableLiveData<List<PhotoItem>>()
+    val uriIds: LiveData<List<PhotoItem>> = _uriId
 
-    fun setUriIds(id: List<String>) {
+    fun setUriIds(id: List<PhotoItem>) {
         _uriId.value = id
     }
 
-    fun deletePicture(uriId: String) {
+    fun deletePicture(photoItem: PhotoItem) {
         viewModelScope.launch {
-            jobOrderRepository.removePicture(UUID.fromString(uriId))
-            _dataState.value = DataState.RemovePicture(uriId)
+            jobOrderRepository.removePicture(photoItem.id)
+            _dataState.value = DataState.RemovePicture(photoItem)
         }
     }
 
@@ -40,6 +39,6 @@ constructor(
 
     sealed class DataState {
         object StateLess: DataState()
-        data class RemovePicture(val uriId: String): DataState()
+        data class RemovePicture(val photoItem: PhotoItem): DataState()
     }
 }

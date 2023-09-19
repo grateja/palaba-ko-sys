@@ -20,8 +20,8 @@ constructor(
     private val _navigationState = MutableLiveData<NavigationState>()
     val dataState: LiveData<NavigationState> = _navigationState
 
-    private val _uri = MutableLiveData<String>()
-    val uri: LiveData<String> = _uri
+    private val _uri = MutableLiveData<String?>()
+    val uri: LiveData<String?> = _uri
 
     private val _capturing = MutableLiveData(false)
     val capturing: LiveData<Boolean> = _capturing
@@ -47,12 +47,15 @@ constructor(
     fun discard() {
         _uri.value?.let { uri ->
             try {
-//                getApplication<Application>().contentResolver.delete(uri, null, null)
-                File(uri).delete()
+                File(getApplication<Application>().filesDir, uri).let { _file ->
+                    if(_file.exists()) {
+                        _file.delete()
+                    }
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
             } finally {
-                _uri.value = ""
+                _uri.value = null
                 _navigationState.value = NavigationState.Discard
             }
 //            val file = uri.path?.let { File(it) }

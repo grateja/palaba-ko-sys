@@ -78,9 +78,9 @@ class JobOrderCreateActivity : BaseActivity() {
     private val viewModel: CreateJobOrderViewModel by viewModels()
 
     private val launcher = ActivityLauncher(this)
-    private val dateTimePicker: DateTimePicker by lazy {
-        DateTimePicker(this)
-    }
+//    private val dateTimePicker: DateTimePicker by lazy {
+//        DateTimePicker(this)
+//    }
 
     private val servicesAdapter = JobOrderServiceItemAdapter()
     private val productsAdapter = JobOrderProductsItemAdapter()
@@ -111,49 +111,49 @@ class JobOrderCreateActivity : BaseActivity() {
             }
         }
 
-        binding.serviceItems.adapter = servicesAdapter
-        binding.productItems.adapter = productsAdapter
-        binding.extrasItems.adapter = extrasAdapter
+        binding.inclServicesLegend.recycler.adapter = servicesAdapter
+        binding.inclProductsLegend.recycler.adapter = productsAdapter
+        binding.inclExtrasLegend.recycler.adapter = extrasAdapter
 //        binding.packageItems.adapter = packageAdapter
 
         subscribeEvents()
     }
 
-    private fun showDateTimePickerDialog(currentDateTime: Instant) {
-        dateTimePicker.show(currentDateTime)
-
-//        val _currentDateTime = currentDateTime.atZone(ZoneId.systemDefault())
+//    private fun showDateTimePickerDialog(currentDateTime: Instant) {
+//        dateTimePicker.show(currentDateTime)
 //
-//        val datePickerDialog = DatePickerDialog(
-//            this,
-//            { _, selectedYear, selectedMonth, selectedDayOfMonth ->
-//                val timePickerDialog = TimePickerDialog(
-//                    this,
-//                    { _, selectedHourOfDay, selectedMinute ->
-//                        val localDateTime = LocalDateTime.of(selectedYear, selectedMonth + 1, selectedDayOfMonth, selectedHourOfDay, selectedMinute)
-//                        val instant = localDateTime.atZone(ZoneId.systemDefault()).toInstant()
-//
-//                        val dateTime = DateTimeFormatter.ofPattern("d/M/yyyy HH:mm").format(localDateTime)
-//
-//                        Toast.makeText(this, "Selected date and time: $dateTime", Toast.LENGTH_LONG).show()
-//
-//                        viewModel.applyDateTime(instant)
-//                    },
-//                    _currentDateTime.hour,
-//                    _currentDateTime.minute,
-//                    false
-//                )
-//
-//                timePickerDialog.show()
-//            },
-//            _currentDateTime.year,
-//            _currentDateTime.monthValue - 1,
-//            _currentDateTime.dayOfMonth
-//        )
-//
-//        datePickerDialog.setCanceledOnTouchOutside(false)
-//        datePickerDialog.show()
-    }
+////        val _currentDateTime = currentDateTime.atZone(ZoneId.systemDefault())
+////
+////        val datePickerDialog = DatePickerDialog(
+////            this,
+////            { _, selectedYear, selectedMonth, selectedDayOfMonth ->
+////                val timePickerDialog = TimePickerDialog(
+////                    this,
+////                    { _, selectedHourOfDay, selectedMinute ->
+////                        val localDateTime = LocalDateTime.of(selectedYear, selectedMonth + 1, selectedDayOfMonth, selectedHourOfDay, selectedMinute)
+////                        val instant = localDateTime.atZone(ZoneId.systemDefault()).toInstant()
+////
+////                        val dateTime = DateTimeFormatter.ofPattern("d/M/yyyy HH:mm").format(localDateTime)
+////
+////                        Toast.makeText(this, "Selected date and time: $dateTime", Toast.LENGTH_LONG).show()
+////
+////                        viewModel.applyDateTime(instant)
+////                    },
+////                    _currentDateTime.hour,
+////                    _currentDateTime.minute,
+////                    false
+////                )
+////
+////                timePickerDialog.show()
+////            },
+////            _currentDateTime.year,
+////            _currentDateTime.monthValue - 1,
+////            _currentDateTime.dayOfMonth
+////        )
+////
+////        datePickerDialog.setCanceledOnTouchOutside(false)
+////        datePickerDialog.show()
+//    }
 
     private fun subscribeEvents() {
 //        packageLauncher.onOk = { result ->
@@ -167,15 +167,15 @@ class JobOrderCreateActivity : BaseActivity() {
 //                viewModel.syncProducts(it)
 //            }
 //        }
-        dateTimePicker.setOnDateTimeSelectedListener {
-            viewModel.applyDateTime(it)
-        }
+//        dateTimePicker.setOnDateTimeSelectedListener {
+//            viewModel.applyDateTime(it)
+//        }
         binding.buttonPackages.setOnClickListener {
             viewModel.openPackages()
         }
-        binding.textCreatedAt.setOnClickListener {
-            openAuthRequestModifyDateTime()
-        }
+//        binding.textCreatedAt.setOnClickListener {
+//            openAuthRequestModifyDateTime()
+//        }
         binding.lockedPrompt.setOnClickListener {
             openAuthRequestUnlock()
         }
@@ -197,9 +197,9 @@ class JobOrderCreateActivity : BaseActivity() {
                         viewModel.syncPackages(it)
                     }
                 }
-                ACTION_MODIFY_DATETIME -> {
-                    viewModel.requestModifyDateTime()
-                }
+//                ACTION_MODIFY_DATETIME -> {
+//                    viewModel.requestModifyDateTime()
+//                }
                 ACTION_SYNC_SERVICES -> {
                     data.getParcelableArrayListExtra<MenuServiceItem>(PAYLOAD_EXTRA)?.toList().let {
                         viewModel.syncServices(it)
@@ -299,13 +299,13 @@ class JobOrderCreateActivity : BaseActivity() {
             viewModel.openExtras(null)
         }
 
-        binding.inclDeliveryLegend.cardLegend.setOnClickListener {
-            viewModel.openDelivery()
-        }
+//        binding.inclDeliveryLegend.cardLegend.setOnClickListener {
+//            viewModel.openDelivery()
+//        }
 
-        binding.inclDiscountLegend.cardLegend.setOnClickListener {
-            viewModel.openDiscount()
-        }
+//        binding.inclDiscountLegend.cardLegend.setOnClickListener {
+//            viewModel.openDiscount()
+//        }
 
 //        viewModel.jobOrderPackage.observe(this, Observer {
 //            packageAdapter.setData(it)
@@ -400,12 +400,12 @@ class JobOrderCreateActivity : BaseActivity() {
                     confirmExit(it.canExit, it.resultCode, it.jobOrderId)
                     viewModel.resetState()
                 }
-                is CreateJobOrderViewModel.DataState.ModifyDateTime -> {
-                    Handler(Looper.getMainLooper()).postDelayed(Runnable {
-                        showDateTimePickerDialog(it.createdAt)
-                        viewModel.resetState()
-                    }, 100)
-                }
+//                is CreateJobOrderViewModel.DataState.ModifyDateTime -> {
+//                    Handler(Looper.getMainLooper()).postDelayed(Runnable {
+//                        showDateTimePickerDialog(it.createdAt)
+//                        viewModel.resetState()
+//                    }, 100)
+//                }
             }
         })
     }
@@ -490,16 +490,16 @@ class JobOrderCreateActivity : BaseActivity() {
         launcher.launch(intent)
     }
 
-    private fun openAuthRequestModifyDateTime() {
-        val intent = Intent(this, AuthActionDialogActivity::class.java).apply {
-            action = ACTION_MODIFY_DATETIME
-            putExtra(AuthActionDialogActivity.PERMISSIONS_EXTRA, arrayListOf(
-                EnumActionPermission.MODIFY_JOB_ORDERS,
-                EnumActionPermission.MODIFY_SERVICES
-            ))
-        }
-        launcher.launch(intent)
-    }
+//    private fun openAuthRequestModifyDateTime() {
+//        val intent = Intent(this, AuthActionDialogActivity::class.java).apply {
+//            action = ACTION_MODIFY_DATETIME
+//            putExtra(AuthActionDialogActivity.PERMISSIONS_EXTRA, arrayListOf(
+//                EnumActionPermission.MODIFY_JOB_ORDERS,
+//                EnumActionPermission.MODIFY_SERVICES
+//            ))
+//        }
+//        launcher.launch(intent)
+//    }
 
     private fun openAuthRequestUnlock() {
         val intent = Intent(this, AuthActionDialogActivity::class.java).apply {

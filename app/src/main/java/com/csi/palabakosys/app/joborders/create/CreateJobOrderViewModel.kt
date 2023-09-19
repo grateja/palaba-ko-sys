@@ -2,9 +2,9 @@ package com.csi.palabakosys.app.joborders.create
 
 import android.app.Activity.RESULT_CANCELED
 import android.app.Activity.RESULT_OK
-import android.content.ContentUris
 import androidx.lifecycle.*
 import com.csi.palabakosys.app.customers.CustomerMinimal
+import com.csi.palabakosys.app.gallery.picture_preview.PhotoItem
 import com.csi.palabakosys.app.joborders.create.delivery.DeliveryCharge
 import com.csi.palabakosys.app.joborders.create.discount.MenuDiscount
 import com.csi.palabakosys.app.joborders.create.extras.MenuExtrasItem
@@ -50,7 +50,7 @@ constructor(
         data class RequestCancel(val jobOrderId: UUID?) : DataState()
         data class ModifyDateTime(val createdAt: Instant) : DataState()
         data class OpenCamera(val jobOrderId: UUID) : DataState()
-        data class OpenPictures(val ids: List<String>, val currentId: String) : DataState()
+        data class OpenPictures(val ids: List<PhotoItem>, val position: Int) : DataState()
 
         object ProceedToSaveJO: DataState()
     }
@@ -622,8 +622,11 @@ constructor(
     }
 
     fun openPictures(currentId: UUID) {
-        jobOrderPictures.value?.let {
-            _dataState.value = DataState.OpenPictures(it.map { it.id.toString() }, currentId.toString())
+        jobOrderPictures.value?.let { _list ->
+            val index = _list.indexOfFirst { it.id == currentId }
+            _dataState.value = DataState.OpenPictures(_list.map {
+                 PhotoItem(it.id, it.createdAt)
+            }, index)
         }
     }
 
@@ -811,10 +814,7 @@ constructor(
 
     fun attachPicture(id: UUID) {
         val jobOrderId = jobOrderId.value ?: return
-//        val fileName = uri.path?.let { File(it).name } ?: return
-
         viewModelScope.launch {
-
             val jobOrderPictures = EntityJobOrderPictures(
                 jobOrderId,
                 id

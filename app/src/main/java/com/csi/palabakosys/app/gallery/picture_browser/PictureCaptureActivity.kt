@@ -23,6 +23,7 @@ import androidx.work.await
 import com.bumptech.glide.Glide
 import com.csi.palabakosys.R
 import com.csi.palabakosys.databinding.ActivityPictureCaptureBinding
+import com.csi.palabakosys.util.Constants.Companion.PICTURES_DIR
 import com.csi.palabakosys.util.DataState
 import com.csi.palabakosys.util.showDeleteConfirmationDialog
 import com.csi.palabakosys.util.showSnackBar
@@ -53,30 +54,11 @@ class PictureCaptureActivity : AppCompatActivity() {
             activityResultLauncher.launch(REQUIRED_PERMISSIONS)
         } else {
             startCameraController()
-//            lifecycleScope.launch {
-//                startCameraProvider()
-//            }
         }
     }
 
     private fun takePhoto() {
-//        val name = SimpleDateFormat(FILENAME_FORMAT, Locale.getDefault())
-//            .format(System.currentTimeMillis()) + ".jpg"
-//        val contentValues = ContentValues().apply {
-//            put(MediaStore.MediaColumns.DISPLAY_NAME, name)
-//            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-//                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CameraX-Image")
-//            }
-//        }
-//
-//        val outputOptions = ImageCapture.OutputFileOptions
-//            .Builder(contentResolver,
-//                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-//                contentValues
-//            ).build()
-
-        val mediaDir = File(filesDir, "pictures")
+        val mediaDir = File(filesDir, PICTURES_DIR)
         val name = UUID.randomUUID().toString()
 
         val outputOptions = ImageCapture.OutputFileOptions.Builder(File(mediaDir, name)).build()
@@ -120,15 +102,15 @@ class PictureCaptureActivity : AppCompatActivity() {
             })
     }
 
-    private fun getOutputDirectory(): File {
-        val mediaDir = File(filesDir, "pictures")
-
-        if (!mediaDir.exists() && !mediaDir.mkdirs()) {
-            // Handle directory creation failure
-        }
-
-        return mediaDir
-    }
+//    private fun getOutputDirectory(): File {
+//        val mediaDir = File(filesDir, PICTURES_DIR)
+//
+//        if (!mediaDir.exists() && !mediaDir.mkdirs()) {
+//            // Handle directory creation failure
+//        }
+//
+//        return mediaDir
+//    }
 
     private fun startCameraController() {
         cameraController = LifecycleCameraController(baseContext)
@@ -137,25 +119,25 @@ class PictureCaptureActivity : AppCompatActivity() {
         binding.cameraView.controller = cameraController
     }
 
-    private suspend fun startCameraProvider() {
-        val cameraProvider = ProcessCameraProvider.getInstance(this).await()
-
-        val preview = Preview.Builder().build().apply {
-            setSurfaceProvider(binding.cameraView.surfaceProvider)
-        }
-
-        imageCapture = ImageCapture.Builder().build()
-
-        val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-        try {
-            cameraProvider.unbindAll()
-            val camera = cameraProvider.bindToLifecycle(
-                this, cameraSelector, preview, imageCapture
-            )
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
+//    private suspend fun startCameraProvider() {
+//        val cameraProvider = ProcessCameraProvider.getInstance(this).await()
+//
+//        val preview = Preview.Builder().build().apply {
+//            setSurfaceProvider(binding.cameraView.surfaceProvider)
+//        }
+//
+//        imageCapture = ImageCapture.Builder().build()
+//
+//        val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+//        try {
+//            cameraProvider.unbindAll()
+//            val camera = cameraProvider.bindToLifecycle(
+//                this, cameraSelector, preview, imageCapture
+//            )
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
+//    }
 
     private val activityResultLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
         var permissionGranted = true
@@ -175,7 +157,7 @@ class PictureCaptureActivity : AppCompatActivity() {
     companion object {
 //        const val JOB_ORDER_ID_EXTRA = "jobOrderId"
         const val URI_EXTRA = "uri"
-        private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
+//        private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
         private val REQUIRED_PERMISSIONS =
             mutableListOf(
                 Manifest.permission.CAMERA
@@ -200,7 +182,9 @@ class PictureCaptureActivity : AppCompatActivity() {
         }
 
         binding.buttonDiscard.setOnClickListener {
-            viewModel.discard()
+            showDeleteConfirmationDialog("You have unsaved picture", "Do you want to discard them?") {
+                viewModel.discard()
+            }
         }
     }
 
@@ -213,14 +197,13 @@ class PictureCaptureActivity : AppCompatActivity() {
 
     private fun subscribeListeners() {
         viewModel.uri.observe(this, Observer {
-            loadImage(it)
-//            binding.imagePreview.setImageURI(it)
+            if(it != null) {
+                loadImage(it)
+            }
         })
         viewModel.dataState.observe(this, Observer {
             when(it) {
                 is PictureCaptureViewModel.NavigationState.Capture -> {
-                    println("URI")
-                    println(it.uri)
                     setResult(RESULT_OK, Intent().apply {
                         putExtra(URI_EXTRA, it.uri)
                     })

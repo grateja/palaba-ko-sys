@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".app.joborders.create.shared_ui.CreateJobOrderDiscountFragment">
+    <data>
+        <variable
+            name="viewModel"
+            type="com.csi.palabakosys.app.joborders.create.CreateJobOrderViewModel" />
+    </data>
+    <com.google.android.material.card.MaterialCardView
+        style="@style/CardPrimary"
+        android:id="@+id/fragment_discount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    style="@style/Caption.Term"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="DISCOUNT"/>
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="20dp"
+                    app:srcCompat="@drawable/browse_right"
+                    android:layout_gravity="center"/>
+            </LinearLayout>
+            <TextView
+                style="@style/Caption.Definition.Warning"
+                android:text="No selected discount"
+                android:visibility="@{!viewModel.hasDiscount}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <LinearLayout
+                style="@style/Caption.Definition"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="@{viewModel.hasDiscount}">
+                <TextView
+                    android:text="@{viewModel.discount.name + ` - ` + viewModel.discount.value + `%`}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Birthday discount - 5.0%"/>
+                <TextView
+                    android:text="@{viewModel.discount.applicableToStr()}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Applicable to: Wash &amp; Dry Services"/>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+</layout>

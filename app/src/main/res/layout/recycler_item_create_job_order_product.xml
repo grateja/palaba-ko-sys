@@ -55,7 +55,6 @@
 
                 <TextView
                     android:id="@+id/textTitle"
-                    android:textColor="@color/black"
                     android:textSize="20sp"
                     android:layout_width="0dp"
                     android:layout_weight="3"

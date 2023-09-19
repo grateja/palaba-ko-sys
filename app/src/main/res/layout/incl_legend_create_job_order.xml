@@ -17,57 +17,66 @@
             type="Boolean" />
     </data>
     <com.google.android.material.card.MaterialCardView
+        android:layout_marginVertical="10dp"
+        android:layout_marginHorizontal="20dp"
+        app:cardBackgroundColor="@color/white"
+        app:contentPadding="16dp"
         android:id="@+id/cardLegend"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="1dp"
+        app:cardCornerRadius="20dp"
         android:visibility="@{hasItems || (!hasItems &amp;&amp; !locked)}"
-        app:cardElevation="0dp"
-        app:cardBackgroundColor="@color/secondary_background">
-        <androidx.constraintlayout.widget.ConstraintLayout
+        android:shadowColor="@color/teal_700"
+        app:cardElevation="0dp">
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp">
-            <TextView
-                android:id="@+id/textLegendTitle"
-                android:layout_margin="4dp"
-                android:textSize="18sp"
-                android:textColor="#848585"
-                android:layout_width="0dp"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@{title}"
-                tools:text="Some Title"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
-            <TextView
-                style="@style/TileSubTitle"
-                android:text="+"
-                android:layout_marginEnd="8dp"
-                android:textSize="24sp"
-                android:layout_width="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/textLegendTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{title}"
+                    tools:text="SOME TITLE"
+                    style="@style/Caption.Term"
+                    android:layout_gravity="center"/>
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="20dp"
+                    app:srcCompat="@drawable/browse_right"
+                    android:layout_gravity="center"/>
+            </LinearLayout>
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:dividerColor="@color/border_primary" />
 
             <TextView
+                style="@style/Caption.Definition.Warning"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="18dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="8dp"
-                android:fontFamily="sans-serif-black"
-                android:gravity="center"
                 android:text="@{@string/symbol_bullet + ` ` + prompt}"
-                android:textColor="#BCBBBB"
                 android:visibility="@{!hasItems}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/textLegendTitle"
-                app:layout_constraintTop_toBottomOf="@id/textLegendTitle"
                 tools:text="No data" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler"
+                android:visibility="@{hasItems}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:nestedScrollingEnabled="false"
+                android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 </layout>

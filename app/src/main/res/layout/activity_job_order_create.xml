@@ -9,7 +9,7 @@
             type="com.csi.palabakosys.app.joborders.create.CreateJobOrderViewModel" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:background="@color/secondary_background"
+        android:background="@drawable/background_gradient_primary"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <TextView
@@ -37,58 +37,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:clipToPadding="false"
-                android:layout_marginHorizontal="@dimen/activity_horizontal_margin">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                    <TextView
-                        style="@style/Caption.Term"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="JOB ORDER NUMBER:"/>
-                    <TextView
-                        style="@style/Caption.Definition"
-                        android:text="@{viewModel.jobOrderNumber}"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:text="#09230"/>
-
-                    <TextView
-                        style="@style/Caption.Term"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="CUSTOMER NAME:"/>
-                    <TextView
-                        style="@style/Caption.Definition"
-                        android:text="@{viewModel.currentCustomer.name}"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:text="Chris Pratt"/>
-
-                    <TextView
-                        style="@style/Caption.Term"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Date/Time::"/>
-                    <TextView
-                        android:enabled="@{!viewModel.locked}"
-                        android:id="@+id/text_created_at"
-                        style="@style/Caption.Definition"
-                        android:text="@{viewModel.createdAt}"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:text="Feb 29, 2023 5:00 PM"/>
-                </LinearLayout>
+                android:clipToPadding="false">
 
                 <androidx.fragment.app.FragmentContainerView
-                    android:id="@+id/job_order_gallery"
-                    android:name="com.csi.palabakosys.app.joborders.create.gallery.JobOrderGalleryFragment"
+                    android:id="@+id/job_order_info"
+                    android:name="com.csi.palabakosys.app.joborders.create.shared_ui.CreateJobOrderInfoFragment"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginVertical="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    tools:layout="@layout/fragment_job_order_gallery"/>
+                    tools:layout="@layout/fragment_create_job_order_info"/>
 
                 <com.google.android.material.divider.MaterialDivider
                     android:layout_marginTop="10dp"
@@ -101,6 +59,7 @@
                     android:id="@+id/button_packages"
                     style="@style/RoundButtonNeutral.Small"
                     android:text="Packages"
+                    android:layout_marginHorizontal="20dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 
@@ -111,17 +70,16 @@
                     app:title="@{`SERVICES`}"
                     app:hasItems="@{viewModel.hasServices}"
                     app:prompt="@{`No Services selected`}"/>
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/serviceItems"
-                    android:layout_marginStart="12dp"
-                    android:visibility="@{viewModel.hasServices}"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clipToPadding="false"
-                    android:nestedScrollingEnabled="false"
-                    android:orientation="vertical"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:layout_height="50dp"/>
+<!--                <androidx.recyclerview.widget.RecyclerView-->
+<!--                    android:id="@+id/serviceItems"-->
+<!--                    android:visibility="@{viewModel.hasServices}"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:clipToPadding="false"-->
+<!--                    android:nestedScrollingEnabled="false"-->
+<!--                    android:orientation="vertical"-->
+<!--                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
+<!--                    tools:layout_height="50dp"/>-->
 
 <!--                Products -->
                 <include android:id="@+id/inclProductsLegend"
@@ -130,17 +88,16 @@
                     app:title="@{`PRODUCTS / CHEMICALS`}"
                     app:hasItems="@{viewModel.hasProducts}"
                     app:prompt="@{`(No selected products/chemicals)`}"/>
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/productItems"
-                    android:layout_marginStart="12sp"
-                    android:visibility="@{viewModel.hasProducts}"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clipToPadding="false"
-                    android:nestedScrollingEnabled="false"
-                    android:orientation="vertical"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:layout_height="50dp"/>
+<!--                <androidx.recyclerview.widget.RecyclerView-->
+<!--                    android:id="@+id/productItems"-->
+<!--                    android:visibility="@{viewModel.hasProducts}"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:clipToPadding="false"-->
+<!--                    android:nestedScrollingEnabled="false"-->
+<!--                    android:orientation="vertical"-->
+<!--                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
+<!--                    tools:layout_height="50dp"/>-->
                 <!--                Extras -->
                 <include
                     android:id="@+id/inclExtrasLegend"
@@ -149,163 +106,154 @@
                     app:title="@{`EXTRAS`}"
                     app:hasItems="@{viewModel.hasExtras}"
                     app:prompt="@{`No Services selected`}"/>
-                <androidx.recyclerview.widget.RecyclerView
-                    android:layout_marginStart="12dp"
-                    android:visibility="@{viewModel.hasExtras}"
-                    android:id="@+id/extrasItems"
+<!--                <androidx.recyclerview.widget.RecyclerView-->
+<!--                    android:visibility="@{viewModel.hasExtras}"-->
+<!--                    android:id="@+id/extrasItems"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:clipToPadding="false"-->
+<!--                    android:nestedScrollingEnabled="false"-->
+<!--                    android:orientation="vertical"-->
+<!--                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
+<!--                    tools:layout_height="50dp"/>-->
+<!--                <include-->
+<!--                    android:id="@+id/inclDeliveryLegend"-->
+<!--                    android:visibility="@{!viewModel.hasDelivery}"-->
+<!--                    layout="@layout/incl_legend_create_job_order"-->
+<!--                    app:locked="@{viewModel.locked}"-->
+<!--                    app:title="@{`PICKUP / DELIVERY`}"-->
+<!--                    app:hasItems="@{viewModel.hasDelivery}"-->
+<!--                    app:prompt="@{`No Pickup/Delivery charge`}"/>-->
+
+                <androidx.fragment.app.FragmentContainerView
+                    android:id="@+id/job_order_delivery"
+                    android:name="com.csi.palabakosys.app.joborders.create.shared_ui.CreateJobOrderDeliveryFragment"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginVertical="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:clipToPadding="false"
-                    android:nestedScrollingEnabled="false"
-                    android:orientation="vertical"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:layout_height="50dp"/>
-                <include
-                    android:id="@+id/inclDeliveryLegend"
-                    layout="@layout/incl_legend_create_job_order"
-                    app:locked="@{viewModel.locked}"
-                    app:title="@{`PICKUP / DELIVERY`}"
-                    app:hasItems="@{viewModel.hasDelivery}"
-                    app:prompt="@{`No Pickup/Delivery charge`}"/>
-                <com.google.android.material.card.MaterialCardView
-                    android:visibility="@{viewModel.hasDelivery}"
+                    tools:layout="@layout/fragment_create_job_order_delivery"/>
+
+
+                <!--                <com.google.android.material.card.MaterialCardView-->
+<!--                    android:visibility="@{viewModel.hasDelivery}"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_margin="8dp"-->
+<!--                    app:contentPadding="8dp">-->
+<!--                    <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content">-->
+<!--                        <androidx.appcompat.widget.AppCompatImageView-->
+<!--                            android:id="@+id/iconVehicle"-->
+<!--                            app:imageResource="@{viewModel.deliveryCharge.vehicle.icon}"-->
+<!--                            android:layout_width="50dp"-->
+<!--                            android:layout_height="50dp"-->
+<!--                            app:layout_constraintTop_toTopOf="parent"-->
+<!--                            app:layout_constraintStart_toStartOf="parent"-->
+<!--                            android:src="@drawable/icon_delivery_motorcycle" />-->
+<!--                        <TextView-->
+<!--                            android:id="@+id/textDeliveryTitle"-->
+<!--                            android:textSize="20sp"-->
+<!--                            android:textColor="@color/black"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:text="@{viewModel.deliveryCharge.vehicle.value}"-->
+<!--                            android:layout_marginStart="8dp"-->
+<!--                            app:layout_constraintTop_toTopOf="@id/iconVehicle"-->
+<!--                            app:layout_constraintStart_toEndOf="@id/iconVehicle"-->
+<!--                            tools:text="Tricycle"/>-->
+<!--                        <TextView-->
+<!--                            android:id="@+id/textDistance"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            tools:text="1KM"-->
+<!--                            app:layout_constraintTop_toBottomOf="@id/textDeliveryTitle"-->
+<!--                            app:layout_constraintStart_toStartOf="@id/textDeliveryTitle"/>-->
+<!--                        <com.google.android.material.card.MaterialCardView-->
+<!--                            android:id="@+id/textDeliveryPrice"-->
+<!--                            style="@style/CardSpan"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            app:layout_constraintEnd_toEndOf="parent"-->
+<!--                            app:layout_constraintTop_toTopOf="parent">-->
+
+<!--                            <TextView-->
+<!--                                style="@style/TextPrimary"-->
+<!--                                android:textSize="20sp"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:peso="@{viewModel.deliveryCharge.price}"-->
+<!--                                tools:text="P 70.00" />-->
+<!--                        </com.google.android.material.card.MaterialCardView>-->
+<!--                        <TextView-->
+<!--                            android:id="@+id/textDeliveryOption"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:text="@{viewModel.deliveryCharge.deliveryOption.value}"-->
+<!--                            tools:text="Pickup and Delivery"-->
+<!--                            app:layout_constraintEnd_toEndOf="parent"-->
+<!--                            app:layout_constraintTop_toBottomOf="@id/textDeliveryPrice"/>-->
+<!--                    </androidx.constraintlayout.widget.ConstraintLayout>-->
+<!--                </com.google.android.material.card.MaterialCardView>-->
+
+                <androidx.fragment.app.FragmentContainerView
+                    android:id="@+id/job_order_discount"
+                    android:name="com.csi.palabakosys.app.joborders.create.shared_ui.CreateJobOrderDiscountFragment"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginVertical="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    app:contentPadding="8dp">
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/iconVehicle"
-                            app:imageResource="@{viewModel.deliveryCharge.vehicle.icon}"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            android:src="@drawable/icon_delivery_motorcycle" />
-                        <TextView
-                            android:id="@+id/textDeliveryTitle"
-                            android:textSize="20sp"
-                            android:textColor="@color/black"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@{viewModel.deliveryCharge.vehicle.value}"
-                            android:layout_marginStart="8dp"
-                            app:layout_constraintTop_toTopOf="@id/iconVehicle"
-                            app:layout_constraintStart_toEndOf="@id/iconVehicle"
-                            tools:text="Tricycle"/>
-                        <TextView
-                            android:id="@+id/textDistance"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            tools:text="1KM"
-                            app:layout_constraintTop_toBottomOf="@id/textDeliveryTitle"
-                            app:layout_constraintStart_toStartOf="@id/textDeliveryTitle"/>
-                        <com.google.android.material.card.MaterialCardView
-                            android:id="@+id/textDeliveryPrice"
-                            style="@style/CardSpan"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent">
+                    tools:layout="@layout/fragment_create_job_order_discount"/>
 
-                            <TextView
-                                style="@style/TextPrimary"
-                                android:textSize="20sp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:peso="@{viewModel.deliveryCharge.price}"
-                                tools:text="P 70.00" />
-                        </com.google.android.material.card.MaterialCardView>
-                        <TextView
-                            android:id="@+id/textDeliveryOption"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@{viewModel.deliveryCharge.deliveryOption.value}"
-                            tools:text="Pickup and Delivery"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/textDeliveryPrice"/>
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <include
-                    android:id="@+id/inclDiscountLegend"
-                    layout="@layout/incl_legend_create_job_order"
-                    app:locked="@{viewModel.locked}"
-                    app:title="@{`DISCOUNTS`}"
-                    app:hasItems="@{viewModel.hasDiscount}"
-                    app:prompt="@{`No discount applied`}"/>
-                <LinearLayout
-                    android:visibility="@{viewModel.hasDiscount}"
+                <androidx.fragment.app.FragmentContainerView
+                    android:id="@+id/job_order_summary"
+                    android:name="com.csi.palabakosys.app.joborders.create.shared_ui.CreateJobOrderSummaryFragment"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginVertical="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                    <TextView
-                        android:text="@{viewModel.discount.name + ` - ` + viewModel.discount.value + `%`}"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:text="Birthday discount - 5.0%"/>
-                    <TextView
-                        android:text="@{viewModel.discount.applicableToStr()}"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:text="Applicable to: Wash &amp; Dry Services"/>
-                </LinearLayout>
+                    tools:layout="@layout/fragment_create_job_order_summary"/>
 
-                <TableLayout
+                <!--                <include-->
+<!--                    android:id="@+id/inclDiscountLegend"-->
+<!--                    layout="@layout/incl_legend_create_job_order"-->
+<!--                    app:locked="@{viewModel.locked}"-->
+<!--                    app:title="@{`DISCOUNTS`}"-->
+<!--                    app:hasItems="@{viewModel.hasDiscount}"-->
+<!--                    app:prompt="@{`No discount applied`}"/>-->
+<!--                <LinearLayout-->
+<!--                    android:visibility="@{viewModel.hasDiscount}"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="vertical">-->
+<!--                    <TextView-->
+<!--                        android:text="@{viewModel.discount.name + ` - ` + viewModel.discount.value + `%`}"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        tools:text="Birthday discount - 5.0%"/>-->
+<!--                    <TextView-->
+<!--                        android:text="@{viewModel.discount.applicableToStr()}"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        tools:text="Applicable to: Wash &amp; Dry Services"/>-->
+<!--                </LinearLayout>-->
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:layout_marginVertical="10dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <TableRow>
-                        <TextView
-                            android:layout_weight="1"
-                            android:text="SUBTOTAL"/>
-                        <TextView
-                            android:textAlignment="textEnd"
-                            android:peso="@{viewModel.subtotal}"
-                            tools:text="P 500.0"/>
-                    </TableRow>
-                    <TableRow android:visibility="@{viewModel.hasDiscount}">
-                        <TextView
-                            android:layout_weight="1"
-                            android:text="DISCOUNT"/>
-                        <TextView
-                            android:textAlignment="textEnd"
-                            android:peso="@{viewModel.discountInPeso}"
-                            tools:text="P 500.0"/>
-                    </TableRow>
-                    <TableRow android:visibility="@{viewModel.hasDiscount}">
-                        <TextView
-                            android:layout_weight="1"
-                            android:text="DISCOUNTED AMOUNT"/>
-                        <TextView
-                            android:textAlignment="textEnd"
-                            android:peso="@{viewModel.discountedAmount}"
-                            tools:text="P 500.0"/>
-                    </TableRow>
-                    <TableRow android:visibility="@{viewModel.payment == null}">
-                        <TextView
-                            android:layout_weight="1"
-                            android:text="PREVIOUS UNPAID JO"/>
-                        <TextView
-                            android:textAlignment="textEnd"
-                            android:peso="@{viewModel.previousBalance}"
-                            tools:text="P 500.0"/>
-                    </TableRow>
-                    <TableRow android:visibility="@{viewModel.payment == null}">
-                        <TextView
-                            android:layout_weight="1"
-                            android:text="TOTAL AMOUNT DUE"/>
-                        <TextView
-                            android:textAlignment="textEnd"
-                            android:peso="@{viewModel.totalAmountDue}"
-                            tools:text="P 500.0"/>
-                    </TableRow>
-                </TableLayout>
+                    android:layout_height="wrap_content"/>
+
                 <include
                     android:visibility="@{viewModel.payment != null}"
                     app:viewModel="@{viewModel.payment}"
                     layout="@layout/incl_job_order_payment"/>
+                <androidx.fragment.app.FragmentContainerView
+                    android:id="@+id/job_order_gallery"
+                    android:name="com.csi.palabakosys.app.joborders.create.gallery.JobOrderGalleryFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:layout="@layout/fragment_job_order_gallery"/>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
