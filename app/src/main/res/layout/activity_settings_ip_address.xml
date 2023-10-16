@@ -2,11 +2,11 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".app.preferences.ip.SettingsIPAddressActivity">
+    tools:context=".app.app_settings.ip.SettingsIPAddressActivity">
     <data>
         <variable
             name="viewModel"
-            type="com.csi.palabakosys.app.preferences.ip.IPAddressSettingsViewModel" />
+            type="com.csi.palabakosys.app.app_settings.ip.IPAddressSettingsViewModel" />
     </data>
     <LinearLayout
         android:layout_margin="18dp"

@@ -14,4 +14,8 @@ data class EntityCashless(
 
     @ColumnInfo(name ="cashless_amount")
     var amount: Float?
-): Parcelable
+): Parcelable {
+    override fun toString(): String {
+        return "$provider (REF#: $refNumber) P $amount"
+    }
+}

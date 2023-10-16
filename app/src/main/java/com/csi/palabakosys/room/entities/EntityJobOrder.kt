@@ -11,9 +11,6 @@ open class EntityJobOrder(
     @ColumnInfo(name = "customer_id")
     var customerId: UUID,
 
-//    @ColumnInfo(name = "customer_name")
-//    var customerName: String?,
-
     @ColumnInfo(name = "user_id")
     var userId: UUID,
 

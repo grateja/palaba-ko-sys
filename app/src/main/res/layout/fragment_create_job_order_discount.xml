@@ -37,6 +37,9 @@
                     app:srcCompat="@drawable/browse_right"
                     android:layout_gravity="center"/>
             </LinearLayout>
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
             <TextView
                 style="@style/Caption.Definition.Warning"
                 android:text="No selected discount"

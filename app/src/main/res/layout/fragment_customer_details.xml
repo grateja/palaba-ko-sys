@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".app.customers.preview.CustomerDetailsFragment">
+    <data>
+        <variable
+            name="viewModel"
+            type="com.csi.palabakosys.app.customers.preview.CustomerPreviewViewModel" />
+    </data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <com.google.android.material.card.MaterialCardView
+            style="@style/CardPrimary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    style="@style/Caption.Term.Parent"
+                    android:text="CUSTOMER DETAILS"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <LinearLayout
+                    style="@style/Caption.Definition.Parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <include layout="@layout/incl_legend"
+                        app:term="@{`NAME`}"
+                        app:definition="@{viewModel.customer.name}"/>
+                    <include layout="@layout/incl_legend"
+                        app:term="@{`CRN`}"
+                        app:definition="@{viewModel.customer.crn}"/>
+                    <include layout="@layout/incl_legend"
+                        android:visibility="@{viewModel.customer.contactNumber != null}"
+                        app:term="@{`CONTACT NUMBER`}"
+                        app:definition="@{viewModel.customer.contactNumber}"/>
+                    <include layout="@layout/incl_legend"
+                        android:visibility="@{viewModel.customer.address != null}"
+                        app:term="@{`ADDRESS`}"
+                        app:definition="@{viewModel.customer.address}"/>
+                    <include layout="@layout/incl_legend"
+                        android:visibility="@{viewModel.customer.email != null}"
+                        app:term="@{`EMAIL`}"
+                        app:definition="@{viewModel.customer.email}"/>
+                    <include layout="@layout/incl_legend"
+                        android:visibility="@{viewModel.customer.remarks != null}"
+                        app:term="@{`REMARKS`}"
+                        app:definition="@{viewModel.customer.remarks}"/>
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
+</layout>

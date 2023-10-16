@@ -42,15 +42,22 @@ data class EntityJobOrderWithItems (
     )
     var customer: EntityCustomer? = null
 
-    @Relation(
-        parentColumn = "payment_id",
-        entityColumn = "id"
-    )
-    var payment: EntityJobOrderPayment? = null
+//    @Relation(
+//        parentColumn = "payment_id",
+//        entityColumn = "id"
+//    )
+//    var payment: EntityJobOrderPayment? = null
 
     @Relation(
         parentColumn = "user_id",
         entityColumn = "id"
     )
     var user: EntityUser? = null
+
+    @Relation(
+        parentColumn = "payment_id",
+        entityColumn = "id",
+        entity = EntityJobOrderPayment::class
+    )
+    var paymentWithUser: EntityPaymentWithUser? = null
 }

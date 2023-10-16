@@ -1,10 +1,12 @@
 package com.csi.palabakosys.room.repository
 
 import androidx.lifecycle.LiveData
+import com.csi.palabakosys.app.dashboard.data.DateFilter
 import com.csi.palabakosys.app.remote.panel.MachineTile
 import com.csi.palabakosys.model.EnumMachineType
 import com.csi.palabakosys.room.dao.DaoMachine
 import com.csi.palabakosys.room.entities.EntityMachine
+import com.csi.palabakosys.room.entities.EntityMachineUsageDetails
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -36,4 +38,11 @@ class MachineRepository
     fun getListAsLiveData(machineType: EnumMachineType) = daoMachine.getListAllAsLiveData(machineType)
 
     fun getMachineLiveData(id: UUID?) = daoMachine.getMachineLiveData(id)
+
+    fun getDashboard(dateFilter: DateFilter) = daoMachine.getDashboard(dateFilter.dateFrom, dateFilter.dateTo)
+
+    suspend fun getMachineUsage(machineId: UUID, page: Int, dateFilter: DateFilter?): List<EntityMachineUsageDetails> {
+        val offset = (20 * page) - 20
+        return daoMachine.getMachineUsage(machineId, offset, dateFilter?.dateFrom, dateFilter?.dateTo)
+    }
 }

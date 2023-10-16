@@ -48,4 +48,6 @@ constructor (
     suspend fun getByEmailAndPattern(email: String, patternIds: ArrayList<Int>): EntityUser? {
         return daoUser.getByEmailAndPattern(email, patternIds)
     }
+
+    fun getAllEmails() = daoUser.getAllEmails()
 }

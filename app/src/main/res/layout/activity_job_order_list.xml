@@ -18,7 +18,6 @@
             android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"
             app:elevation="24dp"
             android:fitsSystemWindows="true">
-
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
@@ -26,6 +25,18 @@
                 android:background="@color/teal_700"
                 android:animateLayoutChanges="true"
                 app:layout_scrollFlags="scroll|enterAlways|snap" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/card_add_new"
+                style="@style/RoundButtonPrimary"
+                app:icon="@android:drawable/ic_menu_add"
+                app:iconSize="30dp"
+                app:iconGravity="textStart"
+                android:layout_margin="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Create new Job Order"
+                app:cornerRadius="25dp"
+                app:layout_scrollFlags="scroll|enterAlways|snap"/>
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -58,13 +69,27 @@
                         android:layout_height="wrap_content"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
+<!--            <com.google.android.material.card.MaterialCardView-->
+<!--                android:id="@+id/card_add_new"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:layout_scrollFlags="scroll|enterAlways|snap">-->
+<!--                <TextView-->
+<!--                    android:textColor="@color/teal_700"-->
+<!--                    android:textStyle="bold"-->
+<!--                    android:layout_margin="12dp"-->
+<!--                    android:textAlignment="center"-->
+<!--                    android:text="+ CREATE NEW JOB ORDER"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content" />-->
+<!--            </com.google.android.material.card.MaterialCardView>-->
         </com.google.android.material.appbar.AppBarLayout>
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerJobOrders"
+                android:id="@+id/recycler_job_order_list"
                 android:orientation="vertical"
                 android:layout_width="0dp"
                 android:layout_height="0dp"

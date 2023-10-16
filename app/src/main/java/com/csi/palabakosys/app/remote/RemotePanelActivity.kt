@@ -8,22 +8,23 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.csi.palabakosys.R
-import com.csi.palabakosys.adapters.Adapter
+import com.csi.palabakosys.app.machines.options.BottomSheetMachineOptionsFragment
 import com.csi.palabakosys.app.machines.MachineListItem
 import com.csi.palabakosys.app.remote.activate.RemoteActivationPreviewActivity
 import com.csi.palabakosys.app.remote.customer.RemoteCustomerActivity
 import com.csi.palabakosys.app.remote.panel.RemotePanelAdapter
 import com.csi.palabakosys.app.remote.running.RemoteRunningActivity
 import com.csi.palabakosys.databinding.ActivityRemotePanelBinding
-import com.csi.palabakosys.model.EnumMachineType
 import com.csi.palabakosys.util.ActivityLauncher
 import com.csi.palabakosys.util.Constants
+import com.csi.palabakosys.util.calculateSpanCount
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class RemotePanelActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRemotePanelBinding
+    private lateinit var machineOption: BottomSheetMachineOptionsFragment
     private val viewModel: RemotePanelViewModel by viewModels()
 
     private val adapter = RemotePanelAdapter() //Adapter<MachineListItem>(R.layout.recycler_item_machine_tile)
@@ -57,6 +58,7 @@ class RemotePanelActivity : AppCompatActivity() {
 
     private fun subscribeEvents() {
         adapter.onItemClick = { selectMachine(it) }
+        adapter.onOptionClick = { showOptions(it) }
         binding.tabMachineType.tabMachineType.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener{
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 viewModel.setMachineType(tab?.text.toString())
@@ -82,6 +84,11 @@ class RemotePanelActivity : AppCompatActivity() {
         })
     }
 
+    private fun showOptions(item: MachineListItem) {
+        machineOption = BottomSheetMachineOptionsFragment.getInstance(item.machine.id)
+        machineOption.show(supportFragmentManager, null)
+    }
+
     private fun selectMachine(item: MachineListItem) {
         val intent = if(item.machine.activationRef?.running() == true) {
             Intent(this, RemoteRunningActivity::class.java).apply {
@@ -100,12 +107,13 @@ class RemotePanelActivity : AppCompatActivity() {
     }
 
     private val spanCount: Int by lazy {
-        val columnWidth = resources.getDimensionPixelSize(R.dimen.machine_tile_width)
-        val margin = resources.getDimension(R.dimen.activity_horizontal_margin)
-        val displayMetrics = resources.displayMetrics
-        val parentWidth = displayMetrics.widthPixels - (margin * 2).toInt()
-
-        val spanCount = parentWidth / columnWidth
-        if (spanCount > 0) spanCount else 1
+//        val columnWidth = resources.getDimensionPixelSize(R.dimen.machine_tile_width)
+//        val margin = resources.getDimension(R.dimen.activity_horizontal_margin)
+        applicationContext.calculateSpanCount(R.dimen.machine_tile_width)
+//        val displayMetrics = resources.displayMetrics`
+//        val parentWidth = displayMetrics.widthPixels - (margin * 2).toInt()
+//
+//        val spanCount = parentWidth / columnWidth
+//        if (spanCount > 0) spanCount else 1
     }
 }

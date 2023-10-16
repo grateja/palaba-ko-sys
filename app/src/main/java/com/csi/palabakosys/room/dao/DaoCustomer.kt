@@ -8,6 +8,7 @@ import com.csi.palabakosys.app.customers.CustomerMinimal
 import com.csi.palabakosys.app.customers.list.CustomerListItem
 import com.csi.palabakosys.app.customers.list.CustomerQueryResult
 import com.csi.palabakosys.room.entities.EntityCustomer
+import java.time.LocalDate
 import java.util.UUID
 
 @Dao
@@ -28,8 +29,11 @@ interface DaoCustomer : BaseDao<EntityCustomer> {
     @Query("SELECT cu.*, " +
             "SUM(CASE WHEN jo.payment_id IS NOT NULL THEN 1 ELSE 0 END) AS paid_count, " +
             "COUNT(jo.id) as total_jo, MIN(jo.created_at) AS first_visit, MAX(jo.created_at) AS last_visit FROM customers cu LEFT JOIN job_orders jo ON jo.customer_id = cu.id WHERE " +
-            "(:hideAllWithoutJO = 1 AND cu.id IN (SELECT DISTINCT customer_id FROM job_orders)) OR " +
-            "(:hideAllWithoutJO = 0) AND (cu.name LIKE '%' || :keyword || '%' OR cu.crn LIKE '%' || :keyword || '%') AND cu.deleted_at IS NULL " +
+            "((:hideAllWithoutJO = 1 AND cu.id IN (SELECT DISTINCT customer_id FROM job_orders)) OR " +
+            "(:hideAllWithoutJO = 0) AND (cu.name LIKE '%' || :keyword || '%' OR cu.crn LIKE '%' || :keyword || '%') AND cu.deleted_at IS NULL) " +
+            "AND ((:dateFrom IS NULL AND :dateTo IS NULL) OR " +
+            "(:dateFrom IS NOT NULL AND :dateTo IS NULL AND strftime('%Y-%m-%d', cu.created_at / 1000, 'unixepoch') = :dateFrom) OR " +
+            "(:dateFrom IS NOT NULL AND :dateTo IS NOT NULL AND strftime('%Y-%m-%d', cu.created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo)) " +
             "GROUP BY cu.id " +
             "ORDER BY " +
             "CASE WHEN :orderBy = 'Name' AND :sortDirection = 'ASC' THEN cu.name END ASC, " +
@@ -41,16 +45,21 @@ interface DaoCustomer : BaseDao<EntityCustomer> {
             "CASE WHEN :orderBy = 'Number of Job Orders' AND :sortDirection = 'ASC' THEN total_jo END ASC, " +
             "CASE WHEN :orderBy = 'Number of Job Orders' AND :sortDirection = 'DESC' THEN total_jo END DESC " +
             "LIMIT 20 OFFSET :offset")
-    fun load(keyword: String?, orderBy: String?, sortDirection: String?, offset: Int, hideAllWithoutJO: Boolean): List<CustomerListItem>
+    fun load(keyword: String?, orderBy: String?, sortDirection: String?, offset: Int, hideAllWithoutJO: Boolean, dateFrom: LocalDate?, dateTo: LocalDate?): List<CustomerListItem>
 
-    @Query("SELECT COUNT(*) FROM customers WHERE name LIKE '%' || :keyword || '%' OR crn like '%' || :keyword || '%' AND deleted_at IS NULL")
-    fun count(keyword: String?) : Int
+
+    @Query("SELECT COUNT(*) FROM customers WHERE (name LIKE '%' || :keyword || '%' OR crn like '%' || :keyword || '%' AND deleted_at IS NULL) " +
+        "AND ((:dateFrom IS NULL AND :dateTo IS NULL) OR " +
+                "(:dateFrom IS NOT NULL AND :dateTo IS NULL AND strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') = :dateFrom) OR " +
+                "(:dateFrom IS NOT NULL AND :dateTo IS NOT NULL AND strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo)) "
+    )
+    fun count(keyword: String?, dateFrom: LocalDate?, dateTo: LocalDate?) : Int
 
     @Transaction
-    suspend fun getListItem(keyword: String?, orderBy: String?, sortDirection: String?, offset: Int, hideAllWithoutJO: Boolean): CustomerQueryResult {
+    suspend fun getListItem(keyword: String?, orderBy: String?, sortDirection: String?, offset: Int, hideAllWithoutJO: Boolean, dateFrom: LocalDate?, dateTo: LocalDate?): CustomerQueryResult {
         return CustomerQueryResult(
-            load(keyword, orderBy, sortDirection, offset, hideAllWithoutJO),
-            count(keyword)
+            load(keyword, orderBy, sortDirection, offset, hideAllWithoutJO, dateFrom, dateTo),
+            count(keyword, dateFrom, dateTo)
         )
     }
 
@@ -59,4 +68,7 @@ interface DaoCustomer : BaseDao<EntityCustomer> {
 
     @Query("SELECT * FROM customers WHERE crn LIKE :crn AND deleted_at IS NULL LIMIT 1")
     suspend fun getCustomerMinimalByCRN(crn: String?): CustomerMinimal?
+
+    @Query("SELECT COUNT(*) FROM customers WHERE strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') = :dateFrom OR ( :dateTo IS NOT NULL AND strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo )")
+    fun getDashboardCustomer(dateFrom: LocalDate, dateTo: LocalDate?): LiveData<Int>
 }

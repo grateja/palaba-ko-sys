@@ -61,4 +61,12 @@ data class MenuDiscount(
 
         return compute(amount)
     }
+
+    override fun toString(): String {
+        return if(discountType == EnumDiscountType.PERCENTAGE) {
+            "$name ($value %)"
+        } else {
+            "$name ($value)"
+        }
+    }
 }

@@ -4,7 +4,6 @@ import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.media.ThumbnailUtils
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
@@ -80,6 +79,20 @@ fun setDate(view: TextView, dateTime: Instant?) {
         val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy")
             .withZone(ZoneId.systemDefault())
         view.text = formatter.format(dateTime)
+    }
+}
+
+@BindingAdapter("android:localDate")
+fun setDate(view: TextView, date: LocalDate?) {
+    try {
+        if(date != null) {
+//            val date = LocalDate.parse(dateTime)
+            val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy")
+                .withZone(ZoneId.systemDefault())
+            view.text = formatter.format(date)
+        }
+    } catch (e: Exception) {
+        e.printStackTrace()
     }
 }
 
@@ -267,4 +280,18 @@ fun Context.loadThumbnailOrBitmap(uri: Uri, dimension: Int): Bitmap? {
         cursor?.close()
         bitmap
     }
+}
+
+fun Context.calculateSpanCount(
+    columnWidthId: Int,
+    horizontalMarginId: Int? = null
+): Int {
+    val columnWidth = resources.getDimensionPixelSize(columnWidthId)
+
+    val margin = if(horizontalMarginId == null) 0 else (resources.getDimension(horizontalMarginId) * 2)
+
+    val parentWidthDp = resources.displayMetrics.widthPixels - margin.toInt()
+
+    val spanCount = (parentWidthDp / columnWidth)
+    return if (spanCount > 0) spanCount else 1
 }

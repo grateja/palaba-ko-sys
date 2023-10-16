@@ -29,4 +29,7 @@ abstract class DaoUser : BaseDao<EntityUser> {
 
     @Query("SELECT * FROM users WHERE email = :email AND pattern_ids = :patternIds AND deleted_at IS NULL LIMIT 1")
     abstract suspend fun getByEmailAndPattern(email: String, patternIds: ArrayList<Int>): EntityUser?
+
+    @Query("SELECT email FROM users WHERE deleted_at IS NULL")
+    abstract fun getAllEmails(): LiveData<List<String>>
 }

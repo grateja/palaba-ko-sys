@@ -33,7 +33,6 @@ constructor(
     private val jobOrderRepository: JobOrderRepository,
     private val paymentRepository: PaymentRepository,
     private val productsRepository: ProductRepository,
-//    private val packageRepository: JobOrderPackageRepository,
 ) : ViewModel() {
     sealed class DataState {
         object StateLess: DataState()
@@ -85,10 +84,12 @@ constructor(
     val unpaidJobOrders = MutableLiveData<List<JobOrderPaymentMinimal>>()
 
     val jobOrderPictures = jobOrderId.switchMap { jobOrderRepository.getPictures(it) }
-//    val createdAt = MutableLiveData(Instant.now())
 
-    private val _payment = MutableLiveData<EntityJobOrderPayment>()
-    val payment: LiveData<EntityJobOrderPayment> = _payment
+    private val _preparedBy = MutableLiveData("")
+    val preparedBy: LiveData<String> = _preparedBy
+
+    private val _payment = MutableLiveData<EntityPaymentWithUser>()
+    val payment: LiveData<EntityPaymentWithUser> = _payment
 
     /** region mediator live data */
 
@@ -190,22 +191,43 @@ constructor(
         addSource(unpaidJobOrders) {update()}
     }
 
-    val totalAmountDue = MediatorLiveData<Float>().apply {
-        fun update() {
-            val discountedAmount = discountedAmount.value ?: 0f
-            val previousBalance = previousBalance.value ?: 0f
-            value = discountedAmount + previousBalance
-        }
+//    val totalAmountDue = MediatorLiveData<Float>().apply {
+//        fun update() {
+//            val discountedAmount = discountedAmount.value ?: 0f
+//            val previousBalance = previousBalance.value ?: 0f
+//            value = discountedAmount + previousBalance
+//        }
+//
+//        addSource(discountedAmount) {update()}
+//        addSource(previousBalance) {update()}
+//    }
+//
+//    val hasPreviousBalance = MediatorLiveData<Boolean>().apply {
+//        fun update() {
+//            value = unpaidJobOrders.value?.isNotEmpty()
+//        }
+//        addSource(unpaidJobOrders) {update()}
+//    }
 
-        addSource(discountedAmount) {update()}
-        addSource(previousBalance) {update()}
+    val servicesTotal = MediatorLiveData<Float>().apply {
+        fun update() {
+            value = serviceSubTotal()
+        }
+        addSource(jobOrderServices) { update() }
     }
 
-    val hasPreviousBalance = MediatorLiveData<Boolean>().apply {
+    val productsTotal = MediatorLiveData<Float>().apply {
         fun update() {
-            value = unpaidJobOrders.value?.isNotEmpty()
+            value = productSubTotal()
         }
-        addSource(unpaidJobOrders) {update()}
+        addSource(jobOrderProducts) { update() }
+    }
+
+    val extrasTotal = MediatorLiveData<Float>().apply {
+        fun update() {
+            value = extrasSubTotal()
+        }
+        addSource(jobOrderExtras) { update() }
     }
 
     /** endregion mediator live data */
@@ -286,6 +308,7 @@ constructor(
     }
 
     private fun prepare(jobOrder: EntityJobOrderWithItems) {
+        _preparedBy.value = jobOrder.user?.name
         jobOrder.services?.let { services ->
             jobOrderServices.value = services.map { joSvc ->
                 MenuServiceItem(
@@ -354,7 +377,7 @@ constructor(
                 entity.deletedAt,
             )
         }
-        jobOrder.payment?.let {
+        jobOrder.paymentWithUser?.let {
             _locked.value = true
             _payment.value = it
         }
@@ -612,7 +635,7 @@ constructor(
         if(saved.value != true) {
             _dataState.value = DataState.InvalidOperation("The Job Order has not been saved yet!")
         }
-        _dataState.value = DataState.OpenPayment(currentCustomer.value!!.id, payment.value?.id)
+        _dataState.value = DataState.OpenPayment(currentCustomer.value!!.id, payment.value?.payment?.id)
     }
 
     fun openCamera() {
@@ -699,9 +722,6 @@ constructor(
     fun save(userId: UUID) {
         if(isLocked()) return
         viewModelScope.launch {
-
-//            val currentJobOrder = currentJobOrder.value
-
             val jobOrderNumber = jobOrderNumber.value
             val customerId = currentCustomer.value?.id ?: return@launch
 
@@ -710,7 +730,7 @@ constructor(
             val discountedAmount = subtotal - discountInPeso
             val createdAt = createdAt.value!!
             val jobOrderId = jobOrderId.value!!
-            val paymentId = payment.value?.id
+            val paymentId = payment.value?.payment?.id
 
             val jobOrderServices = jobOrderServices.value
             val jobOrderProducts = jobOrderProducts.value
@@ -747,6 +767,7 @@ constructor(
                     it.joServiceItemId ?: UUID.randomUUID()
                 ).apply {
                     deletedAt = it.deletedAt
+                    this.createdAt = createdAt
                 }
             }
 
@@ -763,6 +784,7 @@ constructor(
                     it.joProductItemId ?: UUID.randomUUID()
                 ).apply {
                     deletedAt = it.deletedAt
+                    this.createdAt = createdAt
                 }
             }
             val extras = jobOrderExtras?.map {
@@ -776,6 +798,7 @@ constructor(
                     it.joExtrasItemId ?: UUID.randomUUID()
                 ).apply {
                     deletedAt = it.deletedAt
+                    this.createdAt = createdAt
                 }
             }
             val delivery = deliveryCharge?.let {
@@ -788,6 +811,7 @@ constructor(
                     jobOrder.id
                 ).apply {
                     deletedAt = it.deletedAt
+                    this.createdAt = createdAt
                 }
             }
             val discount = jobOrderDiscount?.let {
@@ -800,6 +824,7 @@ constructor(
                     jobOrder.id
                 ).apply {
                     deletedAt = it.deletedAt
+                    this.createdAt = createdAt
                 }
             }
             val jobOrderWithItem = EntityJobOrderWithItems(jobOrder, services, extras, products, delivery, discount)

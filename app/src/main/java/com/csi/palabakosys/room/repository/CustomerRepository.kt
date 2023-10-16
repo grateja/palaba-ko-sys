@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import com.csi.palabakosys.app.customers.CustomerMinimal
 import com.csi.palabakosys.app.customers.list.CustomerListItem
 import com.csi.palabakosys.app.customers.list.CustomerQueryResult
+import com.csi.palabakosys.app.dashboard.data.DateFilter
 import com.csi.palabakosys.room.dao.DaoCustomer
 import com.csi.palabakosys.room.entities.EntityCustomer
 import com.csi.palabakosys.util.EnumSortDirection
@@ -41,12 +42,14 @@ constructor (
         return daoCustomer.getCustomersMinimal(keyword, 20, offset)
     }
 
-    suspend fun getListItems(keyword: String?, orderBy: String?, sortDirection: EnumSortDirection?, page: Int, hideAllWithoutJO: Boolean): CustomerQueryResult {
+    suspend fun getListItems(keyword: String?, orderBy: String?, sortDirection: EnumSortDirection?, page: Int, hideAllWithoutJO: Boolean, dateFilter: DateFilter?): CustomerQueryResult {
         val offset = (20 * page) - 20
-        return daoCustomer.getListItem(keyword, orderBy, sortDirection.toString(), offset, hideAllWithoutJO)
+        return daoCustomer.getListItem(keyword, orderBy, sortDirection.toString(), offset, hideAllWithoutJO, dateFilter?.dateFrom, dateFilter?.dateTo)
     }
 
     suspend fun getCustomerMinimalByCRN(crn: String?): CustomerMinimal? {
         return daoCustomer.getCustomerMinimalByCRN(crn)
     }
+
+    fun getDashboard(dateFilter: DateFilter) = daoCustomer.getDashboardCustomer(dateFilter.dateFrom, dateFilter.dateTo)
 }

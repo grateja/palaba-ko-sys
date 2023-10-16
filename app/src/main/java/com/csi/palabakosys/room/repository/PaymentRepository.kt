@@ -1,6 +1,7 @@
 package com.csi.palabakosys.room.repository
 
 import androidx.lifecycle.LiveData
+import com.csi.palabakosys.app.dashboard.data.DateFilter
 import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentMinimal
 import com.csi.palabakosys.room.dao.DaoJobOrderPayment
 import com.csi.palabakosys.room.entities.EntityJobOrderPayment
@@ -27,11 +28,13 @@ constructor (
         return daoPayment.save(payment, jobOrderIds)
     }
 
-    suspend fun getByJobOrderId(jobOrderId: UUID?) : EntityJobOrderPayment? {
-        return daoPayment.getByJobOrderId(jobOrderId)
-    }
+    suspend fun getByJobOrderId(jobOrderId: UUID?) = daoPayment.getByJobOrderId(jobOrderId)
 
     fun getCashlessProviders(): LiveData<List<String>> {
         return daoPayment.getCashlessProviders()
     }
+
+    fun cashCollection(dateFilter: DateFilter) = daoPayment.getCashCollections(dateFilter.dateFrom, dateFilter.dateTo)
+
+    fun cashlessPayments(dateFilter: DateFilter) = daoPayment.getCashlessPayments(dateFilter.dateFrom, dateFilter.dateTo)
 }

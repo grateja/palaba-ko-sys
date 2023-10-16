@@ -2,12 +2,15 @@ package com.csi.palabakosys.room.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.csi.palabakosys.app.dashboard.data.JobOrderCounts
 import com.csi.palabakosys.app.joborders.list.JobOrderListItem
 import com.csi.palabakosys.app.joborders.list.JobOrderQueryResult
 import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentMinimal
+import com.csi.palabakosys.model.EnumJoFilterBy
 import com.csi.palabakosys.model.EnumPaymentStatus
 import com.csi.palabakosys.room.entities.*
 import java.time.Instant
+import java.time.LocalDate
 import java.util.*
 
 @Dao
@@ -97,6 +100,12 @@ interface DaoJobOrder {
         " AND ((:paymentStatus = 0 AND pa.created_at IS NOT NULL) OR" +
         "      (:paymentStatus = 1 AND pa.created_at IS NULL) OR" +
         "      (:paymentStatus = 2))" +
+        " AND (:customerId IS NULL OR cu.id = :customerId)" +
+        " AND ((:dateFrom IS NULL AND :dateTo IS NULL) OR " +
+        " (:filterBy = 'created' AND :dateFrom IS NOT NULL AND :dateTo IS NULL AND strftime('%Y-%m-%d', jo.created_at / 1000, 'unixepoch') = :dateFrom) OR " +
+        " (:filterBy = 'created' AND :dateFrom IS NOT NULL AND :dateTo IS NOT NULL AND strftime('%Y-%m-%d', jo.created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo) OR" +
+        " (:filterBy = 'paid' AND :dateFrom IS NOT NULL AND :dateTo IS NULL AND strftime('%Y-%m-%d', pa.created_at / 1000, 'unixepoch') = :dateFrom) OR" +
+        " (:filterBy = 'paid' AND :dateFrom IS NOT NULL AND :dateTo IS NOT NULL AND strftime('%Y-%m-%d', pa.created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo)) " +
         " ORDER BY " +
         " CASE WHEN :orderBy = 'Date Created' AND :sortDirection = 'ASC' THEN jo.created_at END ASC, " +
         " CASE WHEN :orderBy = 'Date Paid' AND :sortDirection = 'ASC' THEN pa.created_at END ASC, " +
@@ -107,23 +116,33 @@ interface DaoJobOrder {
         " CASE WHEN :orderBy = 'Customer Name' AND :sortDirection = 'DESC' THEN cu.name END DESC, " +
         " CASE WHEN :orderBy = 'Job Order Number' AND :sortDirection = 'DESC' THEN jo.job_order_number END DESC " +
         " LIMIT 20 OFFSET :offset")
-    fun load(keyword: String?, orderBy: String?, sortDirection: String?, offset: Int, paymentStatus: EnumPaymentStatus?): List<JobOrderListItem>
+    fun load(keyword: String?, orderBy: String?, sortDirection: String?, offset: Int, paymentStatus: EnumPaymentStatus?, customerId: UUID?, filterBy: EnumJoFilterBy?, dateFrom: LocalDate?, dateTo: LocalDate?): List<JobOrderListItem>
 
-    @Query("SELECT COUNT(*) FROM job_orders jo JOIN customers cu ON jo.customer_id = cu.id WHERE " +
+    @Query("SELECT COUNT(*) FROM job_orders jo JOIN customers cu ON jo.customer_id = cu.id LEFT JOIN job_order_payments pa ON jo.payment_id = pa.id WHERE " +
             " (cu.name LIKE '%' || :keyword || '%'" +
             "       OR jo.job_order_number LIKE '%' || :keyword || '%'" +
             "       OR cu.crn LIKE '%' || :keyword || '%') " +
             " AND (jo.deleted_at IS NULL AND jo.void_date IS NULL) " +
             " AND ((:paymentStatus = 0 AND jo.payment_id IS NOT NULL) OR" +
             "      (:paymentStatus = 1 AND jo.payment_id IS NULL) OR" +
-            "      (:paymentStatus = 2))")
-    fun count(keyword: String?, paymentStatus: EnumPaymentStatus?): Int
+            "      (:paymentStatus = 2))" +
+            " AND (:customerId IS NULL OR cu.id = :customerId)" +
+            " AND ((:dateFrom IS NULL AND :dateTo IS NULL) OR " +
+            " (:filterBy = 'created' AND :dateFrom IS NOT NULL AND :dateTo IS NULL AND strftime('%Y-%m-%d', jo.created_at / 1000, 'unixepoch') = :dateFrom) OR " +
+            " (:filterBy = 'created' AND :dateFrom IS NOT NULL AND :dateTo IS NOT NULL AND strftime('%Y-%m-%d', jo.created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo) OR" +
+            " (:filterBy = 'paid' AND :dateFrom IS NOT NULL AND :dateTo IS NULL AND strftime('%Y-%m-%d', pa.created_at / 1000, 'unixepoch') = :dateFrom) OR" +
+            " (:filterBy = 'paid' AND :dateFrom IS NOT NULL AND :dateTo IS NOT NULL AND strftime('%Y-%m-%d', pa.created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo)) "
+//            " AND ((:dateFrom IS NULL AND :dateTo IS NULL) OR " +
+//            " (:dateFrom IS NOT NULL AND :dateTo IS NULL AND strftime('%Y-%m-%d', jo.created_at / 1000, 'unixepoch') = :dateFrom) OR " +
+//            " (:dateFrom IS NOT NULL AND :dateTo IS NOT NULL AND strftime('%Y-%m-%d', jo.created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo)) "
+    )
+    fun count(keyword: String?, paymentStatus: EnumPaymentStatus?, customerId: UUID?, filterBy: EnumJoFilterBy?, dateFrom: LocalDate?, dateTo: LocalDate?): Int
 
     @Transaction
-    suspend fun queryResult(keyword: String?, orderBy: String?, sortDirection: String?, offset: Int, paymentStatus: EnumPaymentStatus?) : JobOrderQueryResult {
+    suspend fun queryResult(keyword: String?, orderBy: String?, sortDirection: String?, offset: Int, paymentStatus: EnumPaymentStatus?, customerId: UUID?, filterBy: EnumJoFilterBy?, dateFrom: LocalDate?, dateTo: LocalDate?) : JobOrderQueryResult {
         return JobOrderQueryResult(
-            load(keyword, orderBy, sortDirection, offset, paymentStatus),
-            count(keyword, paymentStatus)
+            load(keyword, orderBy, sortDirection, offset, paymentStatus, customerId, filterBy, dateFrom, dateTo),
+            count(keyword, paymentStatus, customerId, filterBy, dateFrom, dateTo)
         )
     }
 
@@ -155,7 +174,7 @@ interface DaoJobOrder {
     @Transaction
     suspend fun cancelJobOrder(jobOrderWithItems: EntityJobOrderWithItems, jobOrderVoid: EntityJobOrderVoid) {
         val jobOrderId = jobOrderWithItems.jobOrder.id
-        val paymentId = jobOrderWithItems.payment?.id
+        val paymentId = jobOrderWithItems.paymentWithUser?.payment?.id
 
         voidJobOrder(jobOrderId, jobOrderVoid.voidByUserId, jobOrderVoid.remarks)
         voidPayment(paymentId, jobOrderVoid.voidByUserId, jobOrderVoid.remarks)
@@ -180,4 +199,7 @@ interface DaoJobOrder {
 
     @Query("DELETE FROM job_order_pictures WHERE id = :uriId")
     suspend fun removePicture(uriId: UUID)
+
+    @Query("SELECT SUM(CASE WHEN payment_id IS NOT NULL THEN 1 ELSE 0 END) AS paid_count, SUM(CASE WHEN payment_id IS NULL THEN 1 ELSE 0 END) AS unpaid_count FROM job_orders WHERE strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') = :dateFrom OR ( :dateTo IS NOT NULL AND strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo )")
+    fun getDashboardJobOrders(dateFrom: LocalDate, dateTo: LocalDate?): LiveData<JobOrderCounts>
 }

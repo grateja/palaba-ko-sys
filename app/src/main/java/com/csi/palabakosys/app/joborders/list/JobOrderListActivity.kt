@@ -11,16 +11,24 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
 import com.csi.palabakosys.adapters.Adapter
+import com.csi.palabakosys.app.dashboard.data.DateFilter
 import com.csi.palabakosys.app.joborders.create.JobOrderCreateActivity
+import com.csi.palabakosys.app.joborders.create.customer.SelectCustomerActivity
 import com.csi.palabakosys.app.shared_ui.AdvancedSearchDialogActivity
 import com.csi.palabakosys.databinding.ActivityJobOrderListBinding
+import com.csi.palabakosys.model.EnumJoFilterBy
 import com.csi.palabakosys.model.EnumPaymentStatus
+import com.csi.palabakosys.util.Constants
 import com.csi.palabakosys.util.FilterActivity
 import com.csi.palabakosys.viewmodels.ListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class JobOrderListActivity : FilterActivity() {
+    companion object {
+        const val FILTER_BY = "filterBy"
+    }
+
     private lateinit var binding: ActivityJobOrderListBinding
     private val viewModel: JobOrderListViewModel by viewModels()
 
@@ -34,12 +42,21 @@ class JobOrderListActivity : FilterActivity() {
         super.onCreate(savedInstanceState)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-        binding.recyclerJobOrders.adapter = adapter
+        binding.recyclerJobOrderList.adapter = adapter
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         subscribeEvents()
         subscribeListeners()
+
+        intent.getParcelableExtra<DateFilter>(Constants.DATE_RANGE_FILTER)?.let {
+            viewModel.setDateRange(it)
+        }
+        intent.getParcelableExtra<EnumJoFilterBy>(FILTER_BY)?.let {
+            viewModel.setFilterBy(it)
+            println("filter by")
+            println(it)
+        }
     }
 
     override fun onQuery(keyword: String?) {
@@ -60,8 +77,15 @@ class JobOrderListActivity : FilterActivity() {
         adapter.onScrollAtTheBottom = {
             viewModel.loadMore()
         }
+        binding.cardAddNew.setOnClickListener {
+            selectCustomer()
+        }
     }
-    
+
+    private fun selectCustomer() {
+        val intent = Intent(this, SelectCustomerActivity::class.java)
+        startActivity(intent)
+    }
 
     private fun subscribeListeners() {
         viewModel.dataState.observe(this, Observer {

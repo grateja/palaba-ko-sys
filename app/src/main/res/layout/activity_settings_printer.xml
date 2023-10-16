@@ -5,12 +5,12 @@
     <data>
         <variable
             name="viewModel"
-            type="com.csi.palabakosys.app.preferences.printer.PrinterSettingsViewModel" />
+            type="com.csi.palabakosys.app.app_settings.printer.PrinterSettingsViewModel" />
     </data>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".app.preferences.printer.SettingsPrinterActivity"
+        tools:context=".app.app_settings.printer.SettingsPrinterActivity"
         android:orientation="vertical">
 
         <com.google.android.material.card.MaterialCardView

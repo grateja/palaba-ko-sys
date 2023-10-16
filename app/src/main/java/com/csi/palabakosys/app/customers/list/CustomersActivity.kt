@@ -11,7 +11,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.csi.palabakosys.R
 import com.csi.palabakosys.adapters.Adapter
 import com.csi.palabakosys.app.customers.preview.CustomerPreviewActivity
+import com.csi.palabakosys.app.dashboard.data.DateFilter
 import com.csi.palabakosys.databinding.ActivityCustomersBinding
+import com.csi.palabakosys.util.Constants
 import com.csi.palabakosys.util.FilterActivity
 import com.csi.palabakosys.viewmodels.ListViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,6 +34,10 @@ class CustomersActivity : FilterActivity() {
 
         subscribeEvents()
         subscribeListeners()
+
+        intent.getParcelableExtra<DateFilter>(Constants.DATE_RANGE_FILTER)?.let {
+            viewModel.setDateRange(it)
+        }
     }
 
     private fun subscribeEvents() {

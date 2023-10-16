@@ -244,10 +244,19 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 
-                <include
-                    android:visibility="@{viewModel.payment != null}"
-                    app:viewModel="@{viewModel.payment}"
-                    layout="@layout/incl_job_order_payment"/>
+                <androidx.fragment.app.FragmentContainerView
+                    android:layout_marginVertical="10dp"
+                    android:layout_marginHorizontal="20dp"
+                    android:id="@+id/job_order_payment"
+                    android:name="com.csi.palabakosys.app.joborders.create.shared_ui.CreateJobOrderPaymentFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:layout="@layout/fragment_create_job_order_payment"/>
+
+                <!--                <include-->
+<!--                    android:visibility="@{viewModel.payment != null}"-->
+<!--                    app:viewModel="@{viewModel.payment}"-->
+<!--                    layout="@layout/incl_job_order_payment"/>-->
                 <androidx.fragment.app.FragmentContainerView
                     android:id="@+id/job_order_gallery"
                     android:name="com.csi.palabakosys.app.joborders.create.gallery.JobOrderGalleryFragment"

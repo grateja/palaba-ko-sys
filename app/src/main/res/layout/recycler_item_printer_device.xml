@@ -5,7 +5,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.csi.palabakosys.app.preferences.printer.browser.PrinterDevice" />
+            type="com.csi.palabakosys.app.app_settings.printer.browser.PrinterDevice" />
     </data>
     <com.google.android.material.card.MaterialCardView
         style="@style/CardItem"

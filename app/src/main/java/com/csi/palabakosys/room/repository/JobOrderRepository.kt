@@ -1,5 +1,6 @@
 package com.csi.palabakosys.room.repository
 
+import com.csi.palabakosys.app.dashboard.data.DateFilter
 import com.csi.palabakosys.app.joborders.create.delivery.DeliveryCharge
 import com.csi.palabakosys.app.joborders.create.discount.MenuDiscount
 import com.csi.palabakosys.app.joborders.create.extras.MenuExtrasItem
@@ -7,6 +8,7 @@ import com.csi.palabakosys.app.joborders.create.products.MenuProductItem
 import com.csi.palabakosys.app.joborders.create.services.MenuServiceItem
 import com.csi.palabakosys.app.joborders.list.JobOrderQueryResult
 import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentMinimal
+import com.csi.palabakosys.model.EnumJoFilterBy
 import com.csi.palabakosys.model.EnumPaymentStatus
 import com.csi.palabakosys.room.dao.DaoJobOrder
 import com.csi.palabakosys.room.entities.*
@@ -83,9 +85,9 @@ constructor (
 //        return daoJobOrder.getPreviousUnpaidByCustomerId(customerId, jobOrderId)
 //    }
 
-    suspend fun load(keyword: String?, orderBy: String?, sortDirection: EnumSortDirection?, page: Int, paymentStatus: EnumPaymentStatus?): JobOrderQueryResult {
+    suspend fun load(keyword: String?, orderBy: String?, sortDirection: EnumSortDirection?, page: Int, paymentStatus: EnumPaymentStatus?, customerId: UUID?, filterBy: EnumJoFilterBy?, dateFilter: DateFilter?): JobOrderQueryResult {
         val offset = (20 * page) - 20
-        return daoJobOrder.queryResult(keyword, orderBy, sortDirection.toString(), offset, paymentStatus)
+        return daoJobOrder.queryResult(keyword, orderBy, sortDirection.toString(), offset, paymentStatus, customerId, filterBy, dateFilter?.dateFrom, dateFilter?.dateTo)
     }
 
     suspend fun cancelJobOrder(jobOrderWithItem: EntityJobOrderWithItems, jobOrderVoid: EntityJobOrderVoid) {
@@ -107,4 +109,6 @@ constructor (
 //    }
 
     suspend fun attachPictures(jobOrderPictures: List<EntityJobOrderPictures>) = daoJobOrder.attachPictures(jobOrderPictures)
+
+    fun getDashboard(dateFilter: DateFilter) = daoJobOrder.getDashboardJobOrders(dateFilter.dateFrom, dateFilter.dateTo)
 }

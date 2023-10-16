@@ -2,6 +2,7 @@ package com.csi.palabakosys.app.expenses.edit
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.ArrayAdapter
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -55,6 +56,14 @@ class ExpenseAddEditActivity(
         dateTimePicker.onDateTimeSelected = {
             viewModel.setDateCreated(it)
         }
+
+        binding.textTag.setOnFocusChangeListener { view, hasFocus ->
+            if (hasFocus) {
+                view.post {
+                    binding.textTag.selectAll()
+                }
+            }
+        }
     }
 
     private fun subscribeListeners() {
@@ -77,6 +86,12 @@ class ExpenseAddEditActivity(
                     viewModel.resetState()
                 }
             }
+        })
+
+        viewModel.tags.observe(this, Observer {
+            val adapter = ArrayAdapter(applicationContext, android.R.layout.simple_dropdown_item_1line, it)
+            binding.textTag.setAdapter(adapter)
+
         })
     }
 

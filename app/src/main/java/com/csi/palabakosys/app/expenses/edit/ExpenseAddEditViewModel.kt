@@ -19,6 +19,9 @@ class ExpenseAddEditViewModel
 constructor(
     private val expensesRepository: ExpensesRepository
 ) : CreateViewModel<EntityExpense>(expensesRepository) {
+
+    val tags = expensesRepository.getTags()
+
     fun get(id: UUID?) {
         viewModelScope.launch {
             super.get(id, EntityExpense())

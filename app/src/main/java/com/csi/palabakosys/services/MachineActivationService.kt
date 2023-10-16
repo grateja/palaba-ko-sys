@@ -222,7 +222,7 @@ class MachineActivationService : Service() {
                         jobOrderService.serviceName,
                         machine.machineName(),
                         MachineConnectionStatus.CONNECTING,
-                        "Machine activation enqueue..."
+                        "Connecting to ${machine.machineName()}..."
                     )
                     LocalBroadcastManager.getInstance(context).sendBroadcast(Intent(MACHINE_ACTIVATION).apply {
                         putExtra(PENDING_QUEUES_EXTRA, queue)

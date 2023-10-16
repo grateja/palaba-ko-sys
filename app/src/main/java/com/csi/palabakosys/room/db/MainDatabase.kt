@@ -56,7 +56,9 @@ import com.csi.palabakosys.util.converters.*
     DiscountTypeConverter::class,
     ActionPermissionConverter::class,
     PaymentStatusConverter::class,
-    ArrayListConverter::class
+    ArrayListConverter::class,
+    LocalDateConverters::class,
+    JoFilterByConverter::class
 )
 abstract class MainDatabase : RoomDatabase() {
     abstract fun daoUser() : DaoUser
@@ -78,6 +80,10 @@ abstract class MainDatabase : RoomDatabase() {
 //    abstract fun daoCashlessProvider() : DaoCashlessProvider
     abstract fun daoJobOrderQueues() : DaoJobOrderQueues
     abstract fun daoRemote() : DaoRemote
+    abstract fun daoJobOrderService(): DaoJobOrderService
+    abstract fun daoJobOrderProduct(): DaoJobOrderProduct
+    abstract fun daoJobOrderExtras(): DaoJobOrderExtras
+    abstract fun daoJobOrderPickupDelivery(): DaoJobOrderPickupDelivery
 
     companion object {
         private const val DATABASE_NAME: String = "main_db"

@@ -3,7 +3,7 @@ package com.csi.palabakosys.preferences
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.csi.palabakosys.app.preferences.user.CurrentUser
+import com.csi.palabakosys.app.app_settings.user.CurrentUser
 import com.csi.palabakosys.model.Role
 import com.csi.palabakosys.room.entities.EntityUser
 import com.google.gson.Gson

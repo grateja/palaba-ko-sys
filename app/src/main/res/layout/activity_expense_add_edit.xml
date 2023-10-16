@@ -57,6 +57,26 @@
                     android:maxLines="1" />
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/label_tag"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Tag"
+                app:errorEnabled="true"
+                app:errorText="@{viewModel.validation.get(`tag`)}">
+
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/text_tag"
+                    android:completionThreshold="0"
+                    android:padding="12dp"
+                    android:text="@={viewModel.model.tag}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textNoSuggestions"
+                    android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`tag`)}"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/labelAmount"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"

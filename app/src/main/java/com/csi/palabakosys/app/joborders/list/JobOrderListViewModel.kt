@@ -1,13 +1,17 @@
 package com.csi.palabakosys.app.joborders.list
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.csi.palabakosys.app.dashboard.data.DateFilter
+import com.csi.palabakosys.model.EnumJoFilterBy
 import com.csi.palabakosys.model.EnumPaymentStatus
 import com.csi.palabakosys.room.repository.JobOrderRepository
 import com.csi.palabakosys.viewmodels.ListViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,6 +25,15 @@ constructor(
     val paymentStatus = MutableLiveData(EnumPaymentStatus.ALL)
     val total = MutableLiveData(0)
     val hideDeleted = MutableLiveData(true)
+    val customerId = MutableLiveData<UUID?>()
+
+    private val _dateFilter = MutableLiveData<DateFilter>()
+    val dateFilter: LiveData<DateFilter> = _dateFilter
+    private val _filterBy = MutableLiveData<EnumJoFilterBy>()
+
+    fun setFilterBy(filterBy: EnumJoFilterBy) {
+        _filterBy.value = filterBy
+    }
 
     override fun filter(reset: Boolean) {
         println("filtering $reset")
@@ -42,8 +55,11 @@ constructor(
             val sortDirection = sortDirection.value
             val page = page.value ?: 1
             val paymentStatus = paymentStatus.value
+            val customerId = customerId.value
 
-            val result = jobOrderRepository.load(keyword, orderBy, sortDirection, page, paymentStatus)
+            val dateFilter = _dateFilter.value
+
+            val result = jobOrderRepository.load(keyword, orderBy, sortDirection, page, paymentStatus, customerId, _filterBy.value, dateFilter)
 
             total.value = result.count
 
@@ -54,5 +70,13 @@ constructor(
     fun loadMore() {
         page.value = page.value?.plus(1)
         filter(false)
+    }
+
+    fun setCustomerId(customerId: UUID?) {
+        this.customerId.value = customerId
+    }
+
+    fun setDateRange(dateFilter: DateFilter) {
+        _dateFilter.value = dateFilter
     }
 }

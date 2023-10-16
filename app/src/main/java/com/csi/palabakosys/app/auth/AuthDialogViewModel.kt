@@ -5,11 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.csi.palabakosys.app.preferences.user.AuthRepository
+import com.csi.palabakosys.app.app_settings.user.AuthRepository
 import com.csi.palabakosys.model.EnumActionPermission
 import com.csi.palabakosys.model.EnumAuthMethod
 import com.csi.palabakosys.model.Rule
-import com.csi.palabakosys.room.entities.EntityUser
+import com.csi.palabakosys.room.repository.UserRepository
 import com.csi.palabakosys.util.DataState
 import com.csi.palabakosys.util.InputValidation
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,9 +22,10 @@ class AuthDialogViewModel
 
 @Inject
 constructor(
+    private val userRepository: UserRepository,
     private val authRepository: AuthRepository
 ): ViewModel() {
-    private val _authMethod = MutableLiveData(EnumAuthMethod.AUTH_BY_PASSWORD)
+    private val _authMethod = MutableLiveData(EnumAuthMethod.AUTH_BY_PATTERN)
     val authMethod: LiveData<EnumAuthMethod> = _authMethod
 
     private val _dataState = MutableLiveData<DataState<LoginCredentials>>()
@@ -33,11 +34,13 @@ constructor(
     private val _inputValidation = MutableLiveData(InputValidation())
     val validation: LiveData<InputValidation> = _inputValidation
 
-    val email = MutableLiveData(authRepository.getLastEmail())
+    val userName = MutableLiveData(authRepository.getLastEmail())
     val password = MutableLiveData("")
 
     private val _permissions = MutableLiveData<List<EnumActionPermission>>()
     val permissions: LiveData<List<EnumActionPermission>> = _permissions
+
+    val emails = userRepository.getAllEmails()
 
     fun setAuthMethod(authMethod: EnumAuthMethod) {
         _authMethod.value = authMethod
@@ -70,10 +73,10 @@ constructor(
     fun validate(method: AuthMethod) {
         viewModelScope.launch {
             InputValidation().apply {
-                val email = email.value
                 val password = password.value
+                val email = userName.value
 
-                this.addRule("email", email, arrayOf(Rule.Required, Rule.IsEmail))
+                this.addRule("userName", email, arrayOf(Rule.Required, Rule.IsEmail))
                 if(method is AuthMethod.AuthByPassword) {
                     this.addRule("password", password, arrayOf(Rule.Required))
                 }

@@ -7,6 +7,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
 import com.csi.palabakosys.adapters.Adapter
+import com.csi.palabakosys.app.dashboard.data.DateFilter
 import com.csi.palabakosys.app.expenses.edit.ExpenseAddEditActivity
 import com.csi.palabakosys.databinding.ActivityExpensesBinding
 import com.csi.palabakosys.util.*
@@ -32,6 +33,10 @@ class ExpensesActivity : FilterActivity() {
 
         subscribeEvents()
         subscribeListeners()
+
+        intent.getParcelableExtra<DateFilter>(Constants.DATE_RANGE_FILTER)?.let {
+            viewModel.setDates(it)
+        }
     }
 
     override fun onResume() {

@@ -13,7 +13,9 @@ class UsersSeeder(private val daoUser: DaoUser) : EntitySeederImpl<EntityUser>(d
                 arrayListOf(4)
             ),
             EntityUser(Role.ADMIN, "Admin", "admin@dev.com", "123",
-                listOf(EnumActionPermission.ALL),"",
+                listOf(
+                    EnumActionPermission.ALL,
+                ),"",
                 arrayListOf(4)
             ),
             EntityUser(Role.STAFF, "Staff 1", "staff1@dev.com", "123",

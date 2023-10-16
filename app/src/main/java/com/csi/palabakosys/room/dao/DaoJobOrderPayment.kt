@@ -3,8 +3,8 @@ package com.csi.palabakosys.room.dao
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentMinimal
-import com.csi.palabakosys.room.entities.EntityJobOrderPayment
-import com.csi.palabakosys.room.entities.EntityJobOrderPaymentFull
+import com.csi.palabakosys.room.entities.*
+import java.time.LocalDate
 import java.util.*
 
 @Dao
@@ -35,5 +35,33 @@ interface DaoJobOrderPayment {
     fun getCashlessProviders(): LiveData<List<String>>
 
     @Query("SELECT jop.* FROM job_order_payments jop JOIN job_orders jo ON jop.id = jo.payment_id WHERE jo.id = :jobOrderId AND jo.deleted_at IS NULL")
-    suspend fun getByJobOrderId(jobOrderId: UUID?) : EntityJobOrderPayment?
+    suspend fun getByJobOrderId(jobOrderId: UUID?) : EntityPaymentWithUser?
+
+    @Query("SELECT SUM(amount_due) FROM job_order_payments WHERE payment_method = 1 AND deleted_at IS NULL AND void_date IS NULL AND strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') = :dateFrom OR ( :dateTo IS NOT NULL AND strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo )")
+    fun getCashCollections(dateFrom: LocalDate, dateTo: LocalDate?) : LiveData<Float>
+
+//    @Query("SELECT cashless_provider, COUNT(*) as count, SUM(cashless_amount) as amount FROM job_order_payments WHERE payment_method = 2 AND deleted_at IS NULL AND void_date IS NULL AND strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') = :dateFrom OR ( :dateTo IS NOT NULL AND strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo ) GROUP BY cashless_provider")
+//    @Query("SELECT cashless_provider, COUNT(*) as count, SUM(cashless_amount) as amount FROM job_order_payments WHERE payment_method = 2 AND deleted_at IS NULL AND void_date IS NULL AND strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') = :dateFrom OR ( :dateTo IS NOT NULL AND strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo ) GROUP BY cashless_provider " +
+//            " UNION " +
+//            " SELECT 'Total', COUNT(*), SUM(cashless_amount) FROM job_order_payments WHERE payment_method = 2 AND deleted_at IS NULL AND void_date IS NULL AND strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') = :dateFrom OR ( :dateTo IS NOT NULL AND strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo )")
+//    fun getCashlessPayments(dateFrom: LocalDate, dateTo: LocalDate?): LiveData<List<EntityCashlessPaymentAggrResult>>
+    @Query("SELECT cashless_provider, COUNT(*) as count, SUM(cashless_amount) as amount " +
+            "FROM job_order_payments " +
+            "WHERE payment_method = 2 " +
+            "AND deleted_at IS NULL " +
+            "AND void_date IS NULL " +
+            "AND (strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') = :dateFrom " +
+            "OR (:dateTo IS NOT NULL " +
+            "AND strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo)) " +
+            "GROUP BY cashless_provider " +
+            "UNION " +
+            "SELECT 'Total', COUNT(*), SUM(cashless_amount) " +
+            "FROM job_order_payments " +
+            "WHERE payment_method = 2 " +
+            "AND deleted_at IS NULL " +
+            "AND void_date IS NULL " +
+            "AND (strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') = :dateFrom " +
+            "OR (:dateTo IS NOT NULL " +
+            "AND strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo))")
+    fun getCashlessPayments(dateFrom: LocalDate, dateTo: LocalDate?): LiveData<List<EntityCashlessPaymentAggrResult>>
 }

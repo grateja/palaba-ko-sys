@@ -9,6 +9,7 @@
             type="com.csi.palabakosys.app.joborders.unpaid.prompt.JobOrdersUnpaidPromptViewModel" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:background="@drawable/background_gradient_primary"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <com.google.android.material.card.MaterialCardView
@@ -61,7 +62,7 @@
             android:layout_height="0dp"
             android:orientation="vertical"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/controls"
+            app:layout_constraintBottom_toTopOf="@id/text_amount_to_pay"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
             <TextView
@@ -78,6 +79,34 @@
                 android:layout_height="wrap_content"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
         </LinearLayout>
+
+
+        <com.google.android.material.card.MaterialCardView
+            style="@style/CardPrimary"
+            android:id="@+id/text_amount_to_pay"
+            app:layout_constraintBottom_toTopOf="@id/controls"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    style="@style/TileTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="TOTAL"/>
+                <TextView
+                    android:peso="@{viewModel.amountToPay}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/TileTitle"
+                    tools:text="P230.0"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
         <LinearLayout
             android:id="@+id/controls"
             android:layout_width="match_parent"

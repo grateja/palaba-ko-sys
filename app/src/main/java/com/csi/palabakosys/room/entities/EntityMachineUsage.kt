@@ -14,9 +14,4 @@ class EntityMachineUsage(
 
     @ColumnInfo(name = "customer_id")
     val customerId: UUID?
-) : BaseEntity() {
-//    @ColumnInfo(name = "customer_name")
-//    var customerName: String? = null
-//    var minutes: Int = 0
-//    var price: Float = 0f
-}
+) : BaseEntity()

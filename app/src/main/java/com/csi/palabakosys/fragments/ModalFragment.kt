@@ -10,6 +10,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 open class ModalFragment<T> : BaseModalFragment() {
+    companion object {
+        const val PAYLOAD = "payload"
+    }
 //    protected var dismissed = true
     var onOk: ((T) -> Unit) ? = null
 

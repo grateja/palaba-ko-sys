@@ -45,6 +45,30 @@ object RoomModule {
     fun provideDaoWashService(mainDatabase: MainDatabase) : DaoService {
         return mainDatabase.daoWashService()
     }
+
+    @Singleton
+    @Provides
+    fun provideDaoJobOrderService(mainDatabase: MainDatabase) : DaoJobOrderService {
+        return mainDatabase.daoJobOrderService()
+    }
+
+    @Singleton
+    @Provides
+    fun provideDaoJobOrderProduct(mainDatabase: MainDatabase) : DaoJobOrderProduct {
+        return mainDatabase.daoJobOrderProduct()
+    }
+
+    @Singleton
+    @Provides
+    fun provideDaoJobOrderExtras(mainDatabase: MainDatabase) : DaoJobOrderExtras {
+        return mainDatabase.daoJobOrderExtras()
+    }
+
+    @Singleton
+    @Provides
+    fun provideDaoJobOrderPickupDelivery(mainDatabase: MainDatabase) : DaoJobOrderPickupDelivery {
+        return mainDatabase.daoJobOrderPickupDelivery()
+    }
 //    @Provides
 //    fun provideDaoDryService(mainDatabase: MainDatabase) : DaoDryService {
 //        return mainDatabase.daoDryService()

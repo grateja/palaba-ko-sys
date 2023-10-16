@@ -41,6 +41,9 @@ class RemoteCustomerActivity : AppCompatActivity() {
         customerQueuesAdapter.onItemClick = {
             viewModel.openQueueServices(it)
         }
+        binding.buttonClose.setOnClickListener {
+            finish()
+        }
     }
 
     private fun subscribeListeners() {

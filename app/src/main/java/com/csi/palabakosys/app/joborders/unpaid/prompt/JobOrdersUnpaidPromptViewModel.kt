@@ -1,6 +1,7 @@
 package com.csi.palabakosys.app.joborders.unpaid.prompt
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -27,6 +28,13 @@ constructor(
 
     private val _jobOrders = MutableLiveData<List<JobOrderPaymentMinimal>>()
     val jobOrders: LiveData<List<JobOrderPaymentMinimal>> = _jobOrders
+
+    val amountToPay = MediatorLiveData<Float>().apply {
+        fun update() {
+            value = _jobOrders.value?.sumOf { it.discountedAmount.toDouble() }?.toFloat()
+        }
+        addSource(jobOrders) { update() }
+    }
 
     fun load(customerId: UUID) {
         viewModelScope.launch {

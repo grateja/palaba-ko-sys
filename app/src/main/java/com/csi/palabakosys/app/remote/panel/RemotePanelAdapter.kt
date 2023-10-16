@@ -4,6 +4,7 @@ import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.csi.palabakosys.BR
@@ -14,6 +15,7 @@ import com.csi.palabakosys.databinding.RecyclerItemMachineTileBinding
 class RemotePanelAdapter : RecyclerView.Adapter<RemotePanelAdapter.ViewHolder>() {
     var list = emptyList<MachineListItem>()
     var onItemClick: ((MachineListItem) -> Unit) ? = null
+    var onOptionClick: ((MachineListItem) -> Unit) ? = null
     class ViewHolder(private val binding: RecyclerItemMachineTileBinding) : RecyclerView.ViewHolder(binding.root) {
         var ended: (() -> Unit)? = null
 
@@ -75,6 +77,9 @@ class RemotePanelAdapter : RecyclerView.Adapter<RemotePanelAdapter.ViewHolder>()
         holder.itemView.setOnClickListener {
             onItemClick?.invoke(r)
         }
+        holder.itemView.setOnLongClickListener(View.OnLongClickListener {
+            onOptionClick?.invoke(r) != null
+        })
         holder.end()
         holder.ended = {
             notifyItemChanged(position)

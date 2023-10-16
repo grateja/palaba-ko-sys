@@ -3,6 +3,7 @@ package com.csi.palabakosys.app.customers.list
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.csi.palabakosys.app.dashboard.data.DateFilter
 import com.csi.palabakosys.room.repository.CustomerRepository
 import com.csi.palabakosys.viewmodels.ListViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +19,14 @@ constructor(
     private val repository: CustomerRepository
 ) : ListViewModel<CustomerListItem>() {
     val total = MutableLiveData(0)
-    val hideAllWithoutJo = MutableLiveData(true)
+    val hideAllWithoutJo = MutableLiveData(false)
+
+    private val _dateFilter = MutableLiveData<DateFilter?>()
+    val dateFilter: LiveData<DateFilter?> = _dateFilter
+
+    fun setDateRange(dateFilter: DateFilter?) {
+        _dateFilter.value = dateFilter
+    }
 
     override fun filter(reset: Boolean) {
         job?.cancel()
@@ -38,8 +46,7 @@ constructor(
             val orderBy = orderBy.value
             val sortDirection = sortDirection.value
             val hideAllWithoutJo = hideAllWithoutJo.value ?: true
-
-            println("-order by--$orderBy-$sortDirection-")
+            val dateFilter = _dateFilter.value
 
             loading.value = true
 
@@ -48,7 +55,8 @@ constructor(
                 orderBy,
                 sortDirection,
                 page,
-                hideAllWithoutJo
+                hideAllWithoutJo,
+                dateFilter
             )
             _dataState.value = DataState.LoadItems(items.result, reset)
             total.value = items.count
