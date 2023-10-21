@@ -9,6 +9,7 @@ import com.csi.palabakosys.R
 import com.csi.palabakosys.adapters.Adapter
 import com.csi.palabakosys.app.dashboard.data.DateFilter
 import com.csi.palabakosys.app.expenses.edit.ExpenseAddEditActivity
+import com.csi.palabakosys.app.shared_ui.BottomSheetDateRangePickerFragment
 import com.csi.palabakosys.databinding.ActivityExpensesBinding
 import com.csi.palabakosys.util.*
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,7 +19,7 @@ class ExpensesActivity : FilterActivity() {
     private lateinit var binding: ActivityExpensesBinding
     private val viewModel: ExpensesViewModel by viewModels()
     private val adapter = Adapter<ExpenseItemFull>(R.layout.recycler_item_expenses_full)
-//    private val addEditLauncher = ActivityLauncher(this)
+    private lateinit var dateRangeDialog: BottomSheetDateRangePickerFragment
 
     override var filterHint = "Search Expenses Remarks"
 
@@ -36,6 +37,15 @@ class ExpensesActivity : FilterActivity() {
 
         intent.getParcelableExtra<DateFilter>(Constants.DATE_RANGE_FILTER)?.let {
             viewModel.setDates(it)
+        }
+    }
+
+    private fun openDateFilter(dateFilter: DateFilter) {
+        dateRangeDialog = BottomSheetDateRangePickerFragment.getInstance(dateFilter)
+        dateRangeDialog.show(supportFragmentManager, null)
+        dateRangeDialog.onOk = {
+            viewModel.setDates(it)
+            viewModel.filter(true)
         }
     }
 
@@ -58,6 +68,12 @@ class ExpensesActivity : FilterActivity() {
         addEditLauncher.onOk = {
             val expenseId = it.data?.getStringExtra(CrudActivity.ENTITY_ID).toUUID()
         }
+        binding.cardDateRange.setOnClickListener {
+            viewModel.showDatePicker()
+        }
+        binding.buttonClearDateFilter.setOnClickListener {
+            viewModel.clearDates()
+        }
     }
 
     private fun openAddEdit(item: ExpenseItemFull?) {
@@ -70,6 +86,17 @@ class ExpensesActivity : FilterActivity() {
     private fun subscribeListeners() {
         viewModel.items.observe(this, Observer {
             adapter.setData(it)
+        })
+        viewModel.navigationState.observe(this, Observer {
+            when(it) {
+                is ExpensesViewModel.NavigationState.OpenDateFilter -> {
+                    openDateFilter(it.dateFilter)
+                    viewModel.clearState()
+                }
+            }
+        })
+        viewModel.dateFilter.observe(this, Observer {
+            viewModel.filter(true)
         })
     }
 }

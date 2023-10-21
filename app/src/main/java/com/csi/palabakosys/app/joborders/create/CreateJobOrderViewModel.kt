@@ -3,7 +3,6 @@ package com.csi.palabakosys.app.joborders.create
 import android.app.Activity.RESULT_CANCELED
 import android.app.Activity.RESULT_OK
 import androidx.lifecycle.*
-import com.csi.palabakosys.app.customers.CustomerMinimal
 import com.csi.palabakosys.app.gallery.picture_preview.PhotoItem
 import com.csi.palabakosys.app.joborders.create.delivery.DeliveryCharge
 import com.csi.palabakosys.app.joborders.create.discount.MenuDiscount
@@ -15,6 +14,7 @@ import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentMinimal
 import com.csi.palabakosys.model.EnumDiscountType
 import com.csi.palabakosys.model.EnumDiscountApplicable
 import com.csi.palabakosys.room.entities.*
+import com.csi.palabakosys.room.repository.CustomerRepository
 import com.csi.palabakosys.room.repository.JobOrderRepository
 import com.csi.palabakosys.room.repository.PaymentRepository
 import com.csi.palabakosys.room.repository.ProductRepository
@@ -33,6 +33,7 @@ constructor(
     private val jobOrderRepository: JobOrderRepository,
     private val paymentRepository: PaymentRepository,
     private val productsRepository: ProductRepository,
+    private val customerRepository: CustomerRepository
 ) : ViewModel() {
     sealed class DataState {
         object StateLess: DataState()
@@ -50,7 +51,7 @@ constructor(
         data class ModifyDateTime(val createdAt: Instant) : DataState()
         data class OpenCamera(val jobOrderId: UUID) : DataState()
         data class OpenPictures(val ids: List<PhotoItem>, val position: Int) : DataState()
-
+        data class EditCustomer(val customerId: UUID) : DataState()
         object ProceedToSaveJO: DataState()
     }
 
@@ -60,6 +61,8 @@ constructor(
     private val _saved = MutableLiveData(false)
     val saved: LiveData<Boolean> = _saved
 
+    private val _customerId = MutableLiveData<UUID>()
+
     private val _dataState = MutableLiveData<DataState>()
     fun dataState(): MutableLiveData<DataState> {
         return _dataState
@@ -68,13 +71,10 @@ constructor(
         _dataState.value = DataState.StateLess
     }
 
-//    val currentJobOrder = MutableLiveData<EntityJobOrder>()
-
     private val jobOrderId = MutableLiveData<UUID>()
-//    private val paymentId = MutableLiveData<UUID>()
     val createdAt = MutableLiveData<Instant>()
     val jobOrderNumber = MutableLiveData("")
-    val currentCustomer = MutableLiveData<CustomerMinimal>()
+    val currentCustomer = _customerId.switchMap { customerRepository.getCustomerAsLiveData(it) } //MutableLiveData<CustomerMinimal>()
     val deliveryCharge = MutableLiveData<DeliveryCharge?>()
     val jobOrderPackages = MutableLiveData<List<MenuJobOrderPackage>?>()
     val jobOrderServices = MutableLiveData<List<MenuServiceItem>>()
@@ -88,8 +88,8 @@ constructor(
     private val _preparedBy = MutableLiveData("")
     val preparedBy: LiveData<String> = _preparedBy
 
-    private val _payment = MutableLiveData<EntityPaymentWithUser>()
-    val payment: LiveData<EntityPaymentWithUser> = _payment
+    private val _payment = MutableLiveData<EntityJobOrderPaymentFull>()
+    val payment: LiveData<EntityJobOrderPaymentFull> = _payment
 
     /** region mediator live data */
 
@@ -391,13 +391,14 @@ constructor(
         if(currentCustomer.value != null) return
         viewModelScope.launch {
             jobOrderRepository.getJobOrderWithItems(joId).let {
+                _customerId.value = it?.jobOrder?.customerId
                 jobOrderId.value = it?.jobOrder?.id
                 createdAt.value = it?.jobOrder?.createdAt
                 jobOrderNumber.value = it?.jobOrder?.jobOrderNumber
                 if(it != null) {
-                    currentCustomer.value = CustomerMinimal(
-                        it.customer?.id!!, it.customer?.name!!, it.customer?.crn!!, it.customer?.address, null, null
-                    )
+//                    currentCustomer.value = CustomerMinimal(
+//                        it.customer?.id!!, it.customer?.name!!, it.customer?.crn!!, it.customer?.address, null, null
+//                    )
                     prepare(it)
                     loadUnpaidJobOrders(it.customer?.id!!/*, it.jobOrder.id*/)
                 } else {
@@ -407,15 +408,16 @@ constructor(
         }
     }
 
-    fun setCustomer(customer: CustomerMinimal) {
+    fun setCustomerId(customerId: UUID) {
         if(currentCustomer.value != null) return
-        currentCustomer.value = customer
+        _customerId.value = customerId
+//        currentCustomer.value = customer
         viewModelScope.launch {
-            jobOrderRepository.getCurrentJobOrder(customer.id).let { jobOrderWithItems ->
+            jobOrderRepository.getCurrentJobOrder(customerId).let { jobOrderWithItems ->
                 jobOrderId.value = jobOrderWithItems?.jobOrder?.id ?: UUID.randomUUID()
                 createdAt.value = jobOrderWithItems?.jobOrder?.createdAt ?: Instant.now()
                 jobOrderNumber.value = jobOrderWithItems?.jobOrder?.jobOrderNumber ?: jobOrderRepository.getNextJONumber()
-                loadUnpaidJobOrders(customer.id)
+                loadUnpaidJobOrders(customerId)
                 if(jobOrderWithItems != null) {
                     prepare(jobOrderWithItems)
                 }// else {
@@ -864,6 +866,12 @@ constructor(
     fun removePicture(uriId: UUID) {
         viewModelScope.launch {
             jobOrderRepository.removePicture(uriId)
+        }
+    }
+
+    fun editCustomer() {
+        currentCustomer.value?.id?.let {
+            _dataState.value = DataState.EditCustomer(it)
         }
     }
 }

@@ -41,8 +41,8 @@ class MachineRepository
 
     fun getDashboard(dateFilter: DateFilter) = daoMachine.getDashboard(dateFilter.dateFrom, dateFilter.dateTo)
 
-    suspend fun getMachineUsage(machineId: UUID, page: Int, dateFilter: DateFilter?): List<EntityMachineUsageDetails> {
+    suspend fun getMachineUsage(machineId: UUID, keyword: String?, page: Int, dateFilter: DateFilter?): List<EntityMachineUsageDetails> {
         val offset = (20 * page) - 20
-        return daoMachine.getMachineUsage(machineId, offset, dateFilter?.dateFrom, dateFilter?.dateTo)
+        return daoMachine.getMachineUsage(machineId, keyword, offset, dateFilter?.dateFrom, dateFilter?.dateTo)
     }
 }

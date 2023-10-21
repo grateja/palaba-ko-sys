@@ -6,7 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
+import com.csi.palabakosys.R
+import com.csi.palabakosys.adapters.Adapter
 import com.csi.palabakosys.app.joborders.create.CreateJobOrderViewModel
+import com.csi.palabakosys.app.joborders.list.JobOrderListItem
 import com.csi.palabakosys.databinding.FragmentCreateJobOrderPaymentBinding
 
 class CreateJobOrderPaymentFragment : Fragment() {
@@ -21,6 +25,15 @@ class CreateJobOrderPaymentFragment : Fragment() {
         binding = FragmentCreateJobOrderPaymentBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
+
+        subscribeEvents()
+
         return binding.root
+    }
+
+    private fun subscribeEvents() {
+        binding.cardPayment.setOnClickListener {
+            viewModel.openPayment()
+        }
     }
 }

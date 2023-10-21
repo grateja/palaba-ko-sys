@@ -86,10 +86,11 @@ fun setDate(view: TextView, dateTime: Instant?) {
 fun setDate(view: TextView, date: LocalDate?) {
     try {
         if(date != null) {
-//            val date = LocalDate.parse(dateTime)
             val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy")
                 .withZone(ZoneId.systemDefault())
             view.text = formatter.format(date)
+        } else {
+            view.text = ""
         }
     } catch (e: Exception) {
         e.printStackTrace()
@@ -294,4 +295,11 @@ fun Context.calculateSpanCount(
 
     val spanCount = (parentWidthDp / columnWidth)
     return if (spanCount > 0) spanCount else 1
+}
+
+fun LocalDate.toHumanReadableString(): String {
+    val today = LocalDate.now()
+    val yearFormat = if(this.year != today.year) { ", yyyy" } else { "" }
+    val formatter = DateTimeFormatter.ofPattern("MMM dd$yearFormat") // You can change the pattern to your desired format
+    return this.format(formatter)
 }

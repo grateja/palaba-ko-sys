@@ -57,6 +57,14 @@ class BottomSheetDateRangePickerFragment : ModalFragment<DateFilter>() {
                 viewModel.setDateTo(localDate)
             }
         }
+
+        binding.buttonSwitchDates.setOnClickListener {
+            viewModel.switchDates()
+        }
+
+        binding.buttonClear.setOnClickListener {
+            viewModel.clearTo()
+        }
     }
 
     private fun subscribeListeners() {

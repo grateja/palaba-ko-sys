@@ -2,6 +2,8 @@ package com.csi.palabakosys.app.joborders.create.customer
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -18,7 +20,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SelectCustomerActivity : FilterActivity() {
-//    private var searchBar: SearchView? = null
     private val viewModel: SelectCustomerViewModel by viewModels()
     private lateinit var binding: ActivitySelectCustomerBinding
     private lateinit var customerModal: AddEditCustomerFragment
@@ -35,8 +36,6 @@ class SelectCustomerActivity : FilterActivity() {
         binding.recyclerCustomersMinimal.adapter = customersAdapter
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-//        setSupportActionBar(binding.toolbar)
 
         subscribeListeners()
         subscribeEvents()
@@ -79,9 +78,6 @@ class SelectCustomerActivity : FilterActivity() {
         customersAdapter.onScrollAtTheBottom = {
             viewModel.loadMore()
         }
-//        viewModel.items.observe(this, Observer {
-//            customersAdapter.setData(it)
-//        })
     }
 
     private fun open(customer: CustomerMinimal) {
@@ -103,7 +99,7 @@ class SelectCustomerActivity : FilterActivity() {
     private fun openCreateJobOrderActivity(customer: CustomerMinimal) {
         val intent = Intent(this, JobOrderCreateActivity::class.java).apply {
             action = JobOrderCreateActivity.ACTION_LOAD_BY_CUSTOMER_ID
-            putExtra(JobOrderCreateActivity.CUSTOMER_EXTRA, customer)
+            putExtra(JobOrderCreateActivity.CUSTOMER_EXTRA, customer.id.toString())
         }
         startActivity(intent)
     }
@@ -118,32 +114,4 @@ class SelectCustomerActivity : FilterActivity() {
     override fun onQuery(keyword: String?) {
         viewModel.setKeyword(keyword)
     }
-
-//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        menuInflater.inflate(R.menu.menu_search, menu)
-//        searchBar = menu?.findItem(R.id.menu_search)?.actionView as SearchView
-//        searchBar?.apply {
-//            maxWidth = Integer.MAX_VALUE
-//            queryHint = "Search Customer name or CRN"
-//            setOnQueryTextFocusChangeListener { view, b ->
-//                if(b) {
-//                    binding.toolbar.setBackgroundColor(applicationContext.getColor(R.color.white))
-//                } else {
-//                    binding.toolbar.setBackgroundColor(applicationContext.getColor(R.color.teal_700))
-//                }
-//            }
-//        }
-//        searchBar?.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
-//            override fun onQueryTextSubmit(query: String?): Boolean {
-//                searchBar?.clearFocus()
-//                return true
-//            }
-//
-//            override fun onQueryTextChange(newText: String?): Boolean {
-//                viewModel.setKeyword(newText)
-//                return true
-//            }
-//        })
-//        return super.onCreateOptionsMenu(menu)
-//    }
 }

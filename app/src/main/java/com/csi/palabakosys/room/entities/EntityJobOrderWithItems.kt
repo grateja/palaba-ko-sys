@@ -59,5 +59,5 @@ data class EntityJobOrderWithItems (
         entityColumn = "id",
         entity = EntityJobOrderPayment::class
     )
-    var paymentWithUser: EntityPaymentWithUser? = null
+    var paymentWithUser: EntityJobOrderPaymentFull? = null
 }

@@ -34,8 +34,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LMS2022">
         <activity
-            android:name=".app.machines.usage.MachineUsageActivity"
+            android:name=".app.joborders.payment.preview.PaymentPreviewActivity"
             android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".app.machines.usage.MachineUsageActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar.Bridge">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

@@ -144,7 +144,7 @@ class MainActivity : EndingActivity() {
                         menuItems = listOf(
                             MenuItem("Job Orders", "Configure Job Order format", null),
                             MenuItem("Claim Stub", "Configure Claim stub format", null),
-                            MenuItem("Machine Stub", "Configure Machine stub format", null),
+                            MenuItem("Machine Activation Stub", "Configure Machine activation stub format", null),
                         )
                     ),
                     MenuItem(

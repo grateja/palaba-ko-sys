@@ -1,10 +1,6 @@
 package com.csi.palabakosys.app.joborders.payment
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.csi.palabakosys.model.EnumPaymentMethod
 import com.csi.palabakosys.model.Rule
 import com.csi.palabakosys.preferences.AppPreferenceRepository
@@ -12,6 +8,7 @@ import com.csi.palabakosys.room.entities.EntityCashless
 //import com.csi.palabakosys.room.entities.EntityCashlessProvider
 import com.csi.palabakosys.room.entities.EntityJobOrderPayment
 import com.csi.palabakosys.room.entities.EntityJobOrderPaymentFull
+import com.csi.palabakosys.room.repository.CustomerRepository
 import com.csi.palabakosys.room.repository.JobOrderRepository
 import com.csi.palabakosys.room.repository.PaymentRepository
 import com.csi.palabakosys.util.InputValidation
@@ -29,6 +26,7 @@ constructor(
     private val jobOrderRepository: JobOrderRepository,
     private val paymentRepository: PaymentRepository,
     private val appPreferenceRepository: AppPreferenceRepository,
+    private val customerRepository: CustomerRepository
 ) : ViewModel() {
     sealed class DataState {
         object StateLess : DataState()
@@ -48,10 +46,13 @@ constructor(
     val orNumber = MutableLiveData("")
     val cashlessProviders = paymentRepository.getCashlessProviders()
     val datePaid = MutableLiveData(Instant.now())
-//    val cashless = MutableLiveData<EntityCashless?>()
 
-    private val _payment = MutableLiveData<EntityJobOrderPaymentFull>()
-    val payment: LiveData<EntityJobOrderPaymentFull> = _payment
+    private val _customerId = MutableLiveData<UUID>()
+    val customer = _customerId.switchMap { customerRepository.getCustomerAsLiveData(it) }
+
+    private val _paymentId = MutableLiveData<UUID>()
+    val payment = _paymentId.switchMap { paymentRepository.getPaymentWithJobOrders(it) } //MutableLiveData<EntityJobOrderPaymentFull>()
+//    val payment: LiveData<EntityJobOrderPaymentFull> = _payment
 
     private val _inputValidation = MutableLiveData(InputValidation())
     val inputValidation: LiveData<InputValidation> = _inputValidation
@@ -104,14 +105,16 @@ constructor(
     }
 
     fun getPayment(paymentId: UUID) {
-        viewModelScope.launch {
-            paymentRepository.getPaymentWithJobOrders(paymentId)?.let {
-                _payment.value = it
-            }
-        }
+        _paymentId.value = paymentId
+//        viewModelScope.launch {
+//            paymentRepository.getPaymentWithJobOrders(paymentId)?.let {
+//                _payment.value = it
+//            }
+//        }
     }
 
-    fun getUnpaidByCustomerId(customerId: UUID?) {
+    fun getUnpaidByCustomerId(customerId: UUID) {
+        _customerId.value = customerId
         viewModelScope.launch {
             jobOrderRepository.getAllUnpaidByCustomerId(customerId).let { jo->
                 _payableJobOrders.value = jo

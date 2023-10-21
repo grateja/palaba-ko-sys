@@ -44,8 +44,7 @@ class JobOrdersUnpaidPromptActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        val customer = intent.getParcelableExtra<CustomerMinimal>(CUSTOMER_EXTRA)
-        customer?.let {
+        intent.getParcelableExtra<CustomerMinimal>(CUSTOMER_EXTRA)?.let {
             viewModel.setCustomer(it)
         }
     }
@@ -84,6 +83,9 @@ class JobOrdersUnpaidPromptActivity : AppCompatActivity() {
                 }
             }
         })
+        viewModel.customer.observe(this, Observer {
+            title = "${it.name} - [${it.crn}]"
+        })
     }
 
     private fun openPayment(customerId: UUID) {
@@ -97,7 +99,7 @@ class JobOrdersUnpaidPromptActivity : AppCompatActivity() {
     private fun openCreateJobOrderActivity(customer: CustomerMinimal) {
         val intent = Intent(this, JobOrderCreateActivity::class.java).apply {
             action = JobOrderCreateActivity.ACTION_LOAD_BY_CUSTOMER_ID
-            putExtra(JobOrderCreateActivity.CUSTOMER_EXTRA, customer)
+            putExtra(JobOrderCreateActivity.CUSTOMER_EXTRA, customer.id.toString())
         }
         launcher.launch(intent)
     }

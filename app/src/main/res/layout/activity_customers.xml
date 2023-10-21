@@ -57,21 +57,65 @@
                         android:layout_height="wrap_content"/>
                 </LinearLayout>
             </HorizontalScrollView>
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_date_range"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_scrollFlags="scroll|enterAlways|snap">
+                <LinearLayout
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_margin="12dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:visibility="@{viewModel.dateFilter != null}"
+                        android:textColor="@color/teal_700"
+                        android:textStyle="bold"
+                        android:textAlignment="center"
+                        android:text="@{viewModel.dateFilter.toString()}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+                    <TextView
+                        android:visibility="@{viewModel.dateFilter == null}"
+                        android:textColor="@color/teal_700"
+                        android:textStyle="bold"
+                        android:textAlignment="center"
+                        android:text="Select dates"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+                    <ImageButton
+                        android:visibility="@{viewModel.dateFilter != null}"
+                        android:id="@+id/button_clear_date_filter"
+                        android:background="@color/transparent"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:scaleType="center"
+                        android:src="@android:drawable/ic_menu_close_clear_cancel" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
         </com.google.android.material.appbar.AppBarLayout>
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler"
-                android:orientation="vertical"
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swipe_refresh"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/statusBar"/>
+                app:layout_constraintBottom_toTopOf="@id/statusBar">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/statusBar"
                 android:layout_width="match_parent"
@@ -84,22 +128,5 @@
                     tools:text="Total page"/>
             </com.google.android.material.card.MaterialCardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
-<!--        <androidx.core.widget.NestedScrollView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
-<!--            <LinearLayout-->
-<!--                android:orientation="vertical"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
-<!--                <androidx.recyclerview.widget.RecyclerView-->
-<!--                    android:id="@+id/recycler"-->
-<!--                    android:orientation="vertical"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>-->
-<!--            </LinearLayout>-->
-<!--        </androidx.core.widget.NestedScrollView>-->
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

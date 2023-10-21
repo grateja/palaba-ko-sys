@@ -82,6 +82,7 @@
 
 
         <com.google.android.material.card.MaterialCardView
+            android:visibility="@{viewModel.amountToPay > 0}"
             style="@style/CardPrimary"
             android:id="@+id/text_amount_to_pay"
             app:layout_constraintBottom_toTopOf="@id/controls"

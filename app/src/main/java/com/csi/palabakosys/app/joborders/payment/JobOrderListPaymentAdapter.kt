@@ -13,10 +13,14 @@ class JobOrderListPaymentAdapter : RecyclerView.Adapter<JobOrderListPaymentAdapt
             binding.checkboxSelected.setOnClickListener {
                 onSelectionChange?.invoke(jobOrder)
             }
+            binding.card.setOnClickListener {
+                onItemClick?.invoke(jobOrder)
+            }
         }
     }
 
     var onSelectionChange: ((JobOrderPaymentMinimal) -> Unit) ? = null
+    var onItemClick: ((JobOrderPaymentMinimal) -> Unit) ? = null
 
     private var list: MutableList<JobOrderPaymentMinimal> = mutableListOf()
 

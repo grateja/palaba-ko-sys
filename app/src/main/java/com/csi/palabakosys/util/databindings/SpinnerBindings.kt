@@ -3,6 +3,7 @@ package com.csi.palabakosys.util.databindings
 import android.widget.Spinner
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
+import com.csi.palabakosys.model.EnumJoFilterBy
 import com.csi.palabakosys.model.EnumMeasureUnit
 import com.csi.palabakosys.model.EnumPaymentStatus
 import com.csi.palabakosys.util.EnumSortDirection
@@ -41,6 +42,24 @@ fun getSortDirection(spinner: Spinner): EnumSortDirection? {
         it.itemIndex == spinner.selectedItemPosition
     }
 }
+
+@BindingAdapter("app:joFilterBy")
+fun setJoFilterBy(spinner: Spinner, joFilterBy: EnumJoFilterBy?) {
+    joFilterBy?.itemIndex?.let {
+        spinner.setSelection(it)
+    }
+}
+
+@InverseBindingAdapter(
+    attribute = "app:joFilterBy",
+    event = "android:selectedItemPositionAttrChanged"
+)
+fun getJoFilterBy(spinner: Spinner): EnumJoFilterBy? {
+    return EnumJoFilterBy.values().find {
+        it.itemIndex == spinner.selectedItemPosition
+    }
+}
+
 
 
 @BindingAdapter("app:measureUnit")

@@ -22,11 +22,18 @@
             <include layout="@layout/incl_legend"
                 app:term="@{`JOB ORDER NUMBER`}"
                 app:definition="@{viewModel.jobOrderNumber}"/>
-            <include layout="@layout/incl_legend"
-                app:term="@{`CUSTOMER NAME`}"
-                app:definition="@{viewModel.currentCustomer.name}"/>
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/text_created_at"
+                android:id="@+id/card_customer"
+                app:cardElevation="0dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <include layout="@layout/incl_legend"
+                    app:term="@{`CUSTOMER NAME`}"
+                    app:definition="@{viewModel.currentCustomer.name}"/>
+            </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.card.MaterialCardView
+                android:clickable="@{!viewModel.locked}"
+                android:id="@+id/card_created_at"
                 app:cardCornerRadius="0dp"
                 app:cardElevation="0dp"
                 android:layout_width="match_parent"
@@ -41,11 +48,13 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         tools:layout_height="80dp"/>
+
                     <ImageView
-                        android:layout_gravity="center"
-                        android:src="@drawable/browse_right"
                         android:layout_width="20dp"
-                        android:layout_height="20dp"/>
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:src="@{viewModel.locked ? @android:drawable/ic_lock_lock : @drawable/browse_right}"
+                        tools:srcCompat="@android:drawable/ic_lock_lock" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
             <include layout="@layout/incl_legend"

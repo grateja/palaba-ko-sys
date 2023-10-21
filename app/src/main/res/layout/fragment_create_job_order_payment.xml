@@ -9,6 +9,7 @@
             type="com.csi.palabakosys.app.joborders.create.CreateJobOrderViewModel" />
     </data>
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_payment"
         android:visibility="@{viewModel.payment != null}"
         app:cardBackgroundColor="@color/white"
         app:cardElevation="0dp"
@@ -20,11 +21,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <TextView
-                style="@style/Caption.Term"
-                android:text="PAYMENT"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    style="@style/Caption.Term"
+                    android:text="PAYMENT"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"/>
+                <ImageView
+                    android:layout_marginStart="20dp"
+                    android:src="@drawable/browse_right"
+                    android:layout_width="20dp"
+                    android:layout_height="30dp"/>
+            </LinearLayout>
             <TableLayout
                 style="@style/Caption.Definition"
                 android:layout_width="match_parent"
@@ -39,6 +50,19 @@
                         android:textAlignment="textEnd"
                         android:text="@{viewModel.payment.payment.createdAt}"
                         tools:text="Jan 1, 2023 5:20 PM"/>
+                </TableRow>
+
+                <TableRow
+                    android:layout_marginVertical="8dp"
+                    android:gravity="center">
+                    <TextView
+                        android:text="JO REFERENCE"
+                        android:layout_weight="1"/>
+                    <TextView
+                        style="@style/Bold"
+                        android:textAlignment="textEnd"
+                        android:text="@{viewModel.payment.jobOrderReferences()}"
+                        tools:text="0101,1022"/>
                 </TableRow>
                 <TableRow
                     android:layout_marginVertical="8dp"

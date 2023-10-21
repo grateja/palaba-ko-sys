@@ -52,4 +52,6 @@ constructor (
     }
 
     fun getDashboard(dateFilter: DateFilter) = daoCustomer.getDashboardCustomer(dateFilter.dateFrom, dateFilter.dateTo)
+
+    fun getCustomerAsLiveData(customerId: UUID?) = daoCustomer.getCustomerAsLiveData(customerId)
 }

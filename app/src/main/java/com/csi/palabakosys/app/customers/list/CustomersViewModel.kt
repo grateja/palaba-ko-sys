@@ -9,6 +9,7 @@ import com.csi.palabakosys.viewmodels.ListViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,11 +22,18 @@ constructor(
     val total = MutableLiveData(0)
     val hideAllWithoutJo = MutableLiveData(false)
 
+    private val _navigationState = MutableLiveData<NavigationState>()
+    val navigationState: LiveData<NavigationState> = _navigationState
+
     private val _dateFilter = MutableLiveData<DateFilter?>()
     val dateFilter: LiveData<DateFilter?> = _dateFilter
 
     fun setDateRange(dateFilter: DateFilter?) {
         _dateFilter.value = dateFilter
+    }
+
+    fun clearDates() {
+        _dateFilter.value = null
     }
 
     override fun filter(reset: Boolean) {
@@ -67,5 +75,22 @@ constructor(
     fun loadMore() {
         page.value = page.value?.plus(1)
         filter(false)
+    }
+
+    fun showDatePicker() {
+        _dateFilter.value.let {
+            val dateFilter = it ?: DateFilter(LocalDate.now(), null)
+            _navigationState.value = NavigationState.OpenDateFilter(dateFilter)
+        }
+    }
+
+    override fun clearState() {
+        _navigationState.value = NavigationState.StateLess
+        super.clearState()
+    }
+
+    sealed class NavigationState {
+        object StateLess: NavigationState()
+        data class OpenDateFilter(val dateFilter: DateFilter): NavigationState()
     }
 }

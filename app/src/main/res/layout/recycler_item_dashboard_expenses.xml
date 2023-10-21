@@ -13,7 +13,7 @@
             android:layout_margin="8dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@{viewModel.tag}"
+            android:text="@{viewModel.toString()}"
             tools:text="Detergent"
             android:layout_weight="1"/>
         <TextView

@@ -1,25 +1,19 @@
 package com.csi.palabakosys.app.joborders.create
 
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.MotionEvent
-import android.view.inputmethod.InputMethodManager
-import android.widget.DatePicker
-import android.widget.TimePicker
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
 import com.csi.palabakosys.adapters.Adapter
 import com.csi.palabakosys.app.auth.AuthActionDialogActivity
 import com.csi.palabakosys.app.auth.LoginCredentials
-import com.csi.palabakosys.app.customers.CustomerMinimal
+import com.csi.palabakosys.app.customers.create.AddEditCustomerFragment
+import com.csi.palabakosys.app.customers.preview.CustomerPreviewActivity
 import com.csi.palabakosys.app.joborders.cancel.JobOrderCancelActivity
 import com.csi.palabakosys.app.joborders.create.delivery.DeliveryCharge
 import com.csi.palabakosys.app.joborders.create.delivery.JOSelectDeliveryActivity
@@ -36,18 +30,12 @@ import com.csi.palabakosys.app.joborders.create.products.MenuProductItem
 import com.csi.palabakosys.app.joborders.create.services.JOSelectWashDryActivity
 import com.csi.palabakosys.app.joborders.create.services.JobOrderServiceItemAdapter
 import com.csi.palabakosys.app.joborders.create.services.MenuServiceItem
-import com.csi.palabakosys.app.joborders.list.JobOrderListItem
-import com.csi.palabakosys.app.joborders.payment.JobOrderListPaymentAdapter
 import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentActivity
 import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentMinimal
+import com.csi.palabakosys.app.joborders.payment.preview.PaymentPreviewActivity
 import com.csi.palabakosys.databinding.ActivityJobOrderCreateBinding
-import com.csi.palabakosys.model.EnumActionPermission
 import com.csi.palabakosys.util.*
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -96,27 +84,25 @@ class JobOrderCreateActivity : BaseActivity() {
         binding.lifecycleOwner = this
 
 
-        if(intent.action == ACTION_LOAD_BY_JOB_ORDER_ID) {
-            intent.getStringExtra(JOB_ORDER_ID).toUUID()?.let {
-                viewModel.setJobOrder(it)
-            }
-//            val payload = intent.getParcelableExtra<JobOrderListItem>(PAYLOAD_EXTRA)
-//            if(payload != null) {
-//                viewModel.setJobOrder(payload)
-//            }
-        } else if(intent.action == ACTION_LOAD_BY_CUSTOMER_ID) {
-            val payload = intent.getParcelableExtra<CustomerMinimal>(CUSTOMER_EXTRA)
-            if(payload != null) {
-                viewModel.setCustomer(payload)
-            }
-        }
-
         binding.inclServicesLegend.recycler.adapter = servicesAdapter
         binding.inclProductsLegend.recycler.adapter = productsAdapter
         binding.inclExtrasLegend.recycler.adapter = extrasAdapter
 //        binding.packageItems.adapter = packageAdapter
 
         subscribeEvents()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(intent.action == ACTION_LOAD_BY_JOB_ORDER_ID) {
+            intent.getStringExtra(JOB_ORDER_ID).toUUID()?.let {
+                viewModel.setJobOrder(it)
+            }
+        } else if(intent.action == ACTION_LOAD_BY_CUSTOMER_ID) {
+            intent.getStringExtra(CUSTOMER_EXTRA)?.toUUID()?.let {
+                viewModel.setCustomerId(it)
+            }
+        }
     }
 
 //    private fun showDateTimePickerDialog(currentDateTime: Instant) {
@@ -400,6 +386,19 @@ class JobOrderCreateActivity : BaseActivity() {
                     confirmExit(it.canExit, it.resultCode, it.jobOrderId)
                     viewModel.resetState()
                 }
+                is CreateJobOrderViewModel.DataState.EditCustomer -> {
+//                    if(callingActivity?.className == CustomerPreviewActivity::class.java.name) {
+//                        finish()
+//                    } else {
+//                        val intent = Intent(this, CustomerPreviewActivity::class.java).apply {
+//                            putExtra(CustomerPreviewActivity.CUSTOMER_ID_EXTRA, it.customerId.toString())
+//                        }
+//                        launcher.launch(intent)
+//                    }
+                    AddEditCustomerFragment.getInstance(it.customerId.toString())
+                        .show(supportFragmentManager, null)
+                    viewModel.resetState()
+                }
 //                is CreateJobOrderViewModel.DataState.ModifyDateTime -> {
 //                    Handler(Looper.getMainLooper()).postDelayed(Runnable {
 //                        showDateTimePickerDialog(it.createdAt)
@@ -482,10 +481,15 @@ class JobOrderCreateActivity : BaseActivity() {
     }
 
     private fun openPayment(customerId: UUID, paymentId: UUID?) {
-        val intent = Intent(this, JobOrderPaymentActivity::class.java).apply {
-            action = ACTION_SYNC_PAYMENT
-            putExtra(JobOrderPaymentActivity.CUSTOMER_ID, customerId.toString())
-            putExtra(JobOrderPaymentActivity.PAYMENT_ID, paymentId.toString())
+        val intent = if(paymentId != null) {
+            Intent(this, PaymentPreviewActivity::class.java).apply {
+                putExtra(JobOrderPaymentActivity.PAYMENT_ID, paymentId.toString())
+            }
+        } else {
+            Intent(this, JobOrderPaymentActivity::class.java).apply {
+                action = ACTION_SYNC_PAYMENT
+                putExtra(JobOrderPaymentActivity.CUSTOMER_ID, customerId.toString())
+            }
         }
         launcher.launch(intent)
     }

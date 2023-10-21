@@ -34,7 +34,7 @@
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="20dp"
-                    app:srcCompat="@drawable/browse_right"
+                    android:src="@{viewModel.locked ? @android:drawable/ic_lock_lock : @drawable/browse_right}"
                     android:layout_gravity="center"/>
             </LinearLayout>
             <com.google.android.material.divider.MaterialDivider

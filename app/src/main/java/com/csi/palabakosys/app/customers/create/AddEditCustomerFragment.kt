@@ -96,6 +96,7 @@ class AddEditCustomerFragment : ModalFragment<CustomerMinimal?>() {
 
 
     companion object {
+        const val CUSTOMER_ID_EXTRA = "data"
         var instance: AddEditCustomerFragment? = null
         fun getInstance(model: String?) : AddEditCustomerFragment {
             if(instance == null || instance?.dismissed == true) {

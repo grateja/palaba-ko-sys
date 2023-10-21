@@ -15,6 +15,7 @@ import com.csi.palabakosys.app.dashboard.data.DateFilter
 import com.csi.palabakosys.app.joborders.create.JobOrderCreateActivity
 import com.csi.palabakosys.app.joborders.create.customer.SelectCustomerActivity
 import com.csi.palabakosys.app.shared_ui.AdvancedSearchDialogActivity
+import com.csi.palabakosys.app.shared_ui.BottomSheetDateRangePickerFragment
 import com.csi.palabakosys.databinding.ActivityJobOrderListBinding
 import com.csi.palabakosys.model.EnumJoFilterBy
 import com.csi.palabakosys.model.EnumPaymentStatus
@@ -35,6 +36,7 @@ class JobOrderListActivity : FilterActivity() {
     override var filterHint = "Search customer name or CRN"
 
     private val adapter = Adapter<JobOrderListItem>(R.layout.recycler_item_job_order_list_item)
+    private lateinit var dateRangeDialog: BottomSheetDateRangePickerFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         title = "Job Orders"
@@ -54,8 +56,6 @@ class JobOrderListActivity : FilterActivity() {
         }
         intent.getParcelableExtra<EnumJoFilterBy>(FILTER_BY)?.let {
             viewModel.setFilterBy(it)
-            println("filter by")
-            println(it)
         }
     }
 
@@ -80,11 +80,25 @@ class JobOrderListActivity : FilterActivity() {
         binding.cardAddNew.setOnClickListener {
             selectCustomer()
         }
+        binding.cardDateRange.setOnClickListener {
+            viewModel.showDatePicker()
+        }
+        binding.buttonClearDateFilter.setOnClickListener {
+            viewModel.clearDates()
+        }
     }
 
     private fun selectCustomer() {
         val intent = Intent(this, SelectCustomerActivity::class.java)
         startActivity(intent)
+    }
+
+    private fun openDateFilter(dateFilter: DateFilter) {
+        dateRangeDialog = BottomSheetDateRangePickerFragment.getInstance(dateFilter)
+        dateRangeDialog.show(supportFragmentManager, null)
+        dateRangeDialog.onOk = {
+            viewModel.setDateRange(it)
+        }
     }
 
     private fun subscribeListeners() {
@@ -96,6 +110,16 @@ class JobOrderListActivity : FilterActivity() {
                     } else {
                         adapter.addItems(it.items)
                     }
+                    viewModel.clearState()
+                }
+            }
+        })
+
+        viewModel.navigationState.observe(this, Observer {
+            when(it) {
+                is JobOrderListViewModel.NavigationState.OpenDateFilter -> {
+                    openDateFilter(it.dateFilter)
+                    viewModel.clearState()
                 }
             }
         })
@@ -109,6 +133,14 @@ class JobOrderListActivity : FilterActivity() {
         })
 
         viewModel.paymentStatus.observe(this, Observer {
+            viewModel.filter(true)
+        })
+
+        viewModel.filterBy.observe(this, Observer {
+            viewModel.filter(true)
+        })
+
+        viewModel.dateFilter.observe(this, Observer {
             viewModel.filter(true)
         })
     }

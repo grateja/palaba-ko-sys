@@ -50,8 +50,11 @@ class CreateJobOrderInfoFragment : Fragment() {
         launcher.onOk = {
             viewModel.requestModifyDateTime()
         }
-        binding.textCreatedAt.setOnClickListener {
+        binding.cardCreatedAt.setOnClickListener {
             openAuthRequestModifyDateTime()
+        }
+        binding.cardCustomer.setOnClickListener {
+            viewModel.editCustomer()
         }
         dateTimePicker.setOnDateTimeSelectedListener {
             viewModel.applyDateTime(it)

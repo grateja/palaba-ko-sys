@@ -89,20 +89,6 @@
                         android:peso="@{viewModel.remainingBalance}"
                         tools:text="P 250.0"/>
 
-                    <TextView
-                        style="@style/Caption.Term"
-                        android:visibility="@{viewModel.change > 0}"
-                        android:text="Change: "
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                    <TextView
-                        style="@style/Caption.Definition"
-                        android:visibility="@{viewModel.change > 0}"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:peso="@{viewModel.change}"
-                        tools:text="P 50.0"/>
-
                     <com.google.android.material.divider.MaterialDivider
                         android:layout_width="wrap_content"
                         android:layout_height="1dp"
@@ -145,6 +131,20 @@
                             android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`cashReceived`)}"
                             android:maxLines="1" />
                     </com.google.android.material.textfield.TextInputLayout>
+
+                    <TextView
+                        style="@style/Caption.Term"
+                        android:visibility="@{viewModel.change > 0}"
+                        android:text="Change: "
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <TextView
+                        style="@style/Caption.Definition"
+                        android:visibility="@{viewModel.change > 0}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:peso="@{viewModel.change}"
+                        tools:text="P 50.0"/>
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:visibility="@{viewModel.paymentMethod == com.csi.palabakosys.model.EnumPaymentMethod.CASHLESS}"

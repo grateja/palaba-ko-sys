@@ -37,7 +37,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 style="@style/TextItemTitle"
-                android:text="@{viewModel.customer.name + ` ` + viewModel.paidJo}"
+                android:text="@{viewModel.customer.name}"
                 app:layout_constraintTop_toBottomOf="@id/labelCRN"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:text="Chris Hemsworth"/>
@@ -51,6 +51,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 tools:text="Sa dako paroon. Malayo sa kabihasnan"/>
             <LinearLayout
+                android:visibility="@{viewModel.totalJo > 0}"
                 android:id="@+id/labelVisits"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

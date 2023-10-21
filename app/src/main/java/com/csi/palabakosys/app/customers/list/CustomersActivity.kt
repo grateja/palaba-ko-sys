@@ -12,6 +12,7 @@ import com.csi.palabakosys.R
 import com.csi.palabakosys.adapters.Adapter
 import com.csi.palabakosys.app.customers.preview.CustomerPreviewActivity
 import com.csi.palabakosys.app.dashboard.data.DateFilter
+import com.csi.palabakosys.app.shared_ui.BottomSheetDateRangePickerFragment
 import com.csi.palabakosys.databinding.ActivityCustomersBinding
 import com.csi.palabakosys.util.Constants
 import com.csi.palabakosys.util.FilterActivity
@@ -23,6 +24,7 @@ class CustomersActivity : FilterActivity() {
     private lateinit var binding: ActivityCustomersBinding
     private val viewModel: CustomersViewModel by viewModels()
     private val adapter = Adapter<CustomerListItem>(R.layout.recycler_item_customers_list_item)
+    private lateinit var dateRangeDialog: BottomSheetDateRangePickerFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         title = "Customers"
@@ -40,6 +42,14 @@ class CustomersActivity : FilterActivity() {
         }
     }
 
+    private fun openDateFilter(dateFilter: DateFilter) {
+        dateRangeDialog = BottomSheetDateRangePickerFragment.getInstance(dateFilter)
+        dateRangeDialog.show(supportFragmentManager, null)
+        dateRangeDialog.onOk = {
+            viewModel.setDateRange(it)
+        }
+    }
+
     private fun subscribeEvents() {
         adapter.onScrollAtTheBottom = {
             viewModel.loadMore()
@@ -49,6 +59,15 @@ class CustomersActivity : FilterActivity() {
                 putExtra(CustomerPreviewActivity.CUSTOMER_ID_EXTRA, it.customer.id.toString())
             }
             addEditLauncher.launch(intent)
+        }
+        binding.swipeRefresh.setOnRefreshListener {
+            viewModel.filter(true)
+        }
+        binding.cardDateRange.setOnClickListener {
+            viewModel.showDatePicker()
+        }
+        binding.buttonClearDateFilter.setOnClickListener {
+            viewModel.clearDates()
         }
     }
 
@@ -61,6 +80,15 @@ class CustomersActivity : FilterActivity() {
                     } else {
                         adapter.addItems(it.items)
                     }
+                    binding.swipeRefresh.isRefreshing = false
+                }
+            }
+        })
+        viewModel.navigationState.observe(this, Observer {
+            when(it) {
+                is CustomersViewModel.NavigationState.OpenDateFilter -> {
+                    openDateFilter(it.dateFilter)
+                    viewModel.clearState()
                 }
             }
         })
@@ -68,6 +96,9 @@ class CustomersActivity : FilterActivity() {
             viewModel.filter(true)
         })
         viewModel.sortDirection.observe(this, Observer {
+            viewModel.filter(true)
+        })
+        viewModel.dateFilter.observe(this, Observer {
             viewModel.filter(true)
         })
     }

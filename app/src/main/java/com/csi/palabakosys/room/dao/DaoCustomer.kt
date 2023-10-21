@@ -71,4 +71,7 @@ interface DaoCustomer : BaseDao<EntityCustomer> {
 
     @Query("SELECT COUNT(*) FROM customers WHERE strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') = :dateFrom OR ( :dateTo IS NOT NULL AND strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo )")
     fun getDashboardCustomer(dateFrom: LocalDate, dateTo: LocalDate?): LiveData<Int>
+
+    @Query("SELECT * FROM customers WHERE id = :customerId AND deleted_at IS NULL")
+    fun getCustomerAsLiveData(customerId: UUID?): LiveData<EntityCustomer>
 }

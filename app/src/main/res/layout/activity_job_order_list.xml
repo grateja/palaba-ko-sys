@@ -69,20 +69,55 @@
                         android:layout_height="wrap_content"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-<!--            <com.google.android.material.card.MaterialCardView-->
-<!--                android:id="@+id/card_add_new"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                app:layout_scrollFlags="scroll|enterAlways|snap">-->
-<!--                <TextView-->
-<!--                    android:textColor="@color/teal_700"-->
-<!--                    android:textStyle="bold"-->
-<!--                    android:layout_margin="12dp"-->
-<!--                    android:textAlignment="center"-->
-<!--                    android:text="+ CREATE NEW JOB ORDER"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content" />-->
-<!--            </com.google.android.material.card.MaterialCardView>-->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_date_range"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_scrollFlags="scroll|enterAlways|snap">
+                <LinearLayout
+                    android:layout_gravity="center"
+                    android:layout_margin="12dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="FILTER BY:"/>
+                    <Spinner
+                        android:id="@+id/spinner_filter_by"
+                        app:joFilterBy="@={viewModel.filterBy}"
+                        android:entries="@array/jo_filter_by"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <TextView
+                        android:visibility="@{viewModel.dateFilter != null}"
+                        android:textColor="@color/teal_700"
+                        android:textStyle="bold"
+                        android:textAlignment="center"
+                        android:text="@{viewModel.dateFilter.toString()}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+                    <TextView
+                        android:visibility="@{viewModel.dateFilter == null}"
+                        android:textColor="@color/teal_700"
+                        android:textStyle="bold"
+                        android:textAlignment="center"
+                        android:text="Select dates"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+
+                    <ImageButton
+                        android:visibility="@{viewModel.dateFilter != null}"
+                        android:id="@+id/button_clear_date_filter"
+                        android:background="@color/transparent"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:scaleType="center"
+                        android:src="@android:drawable/ic_menu_close_clear_cancel" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
         </com.google.android.material.appbar.AppBarLayout>
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

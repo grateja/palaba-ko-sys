@@ -53,14 +53,20 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/buttonEdit"
                 tools:text="10 unpaid"/>
+            <androidx.constraintlayout.widget.Group
+                android:visibility="@{viewModel.lastJobOrder != null}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="label_last_job_order,text_last_job_order"/>
             <TextView
                 android:id="@+id/label_last_job_order"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Last visit "
+                android:text="Last J.O. "
                 app:layout_constraintTop_toBottomOf="@id/labelUnpaid"
                 app:layout_constraintStart_toStartOf="@id/labelUnpaid"/>
             <TextView
+                android:id="@+id/text_last_job_order"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:momentAgo="@{viewModel.lastJobOrder}"

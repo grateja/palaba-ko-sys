@@ -11,6 +11,7 @@ import com.csi.palabakosys.viewmodels.ListViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import java.util.*
 import javax.inject.Inject
 
@@ -26,13 +27,15 @@ constructor(
     val total = MutableLiveData(0)
     val hideDeleted = MutableLiveData(true)
     val customerId = MutableLiveData<UUID?>()
+    private val _navigationState = MutableLiveData<NavigationState>()
+    val navigationState: LiveData<NavigationState> = _navigationState
 
-    private val _dateFilter = MutableLiveData<DateFilter>()
-    val dateFilter: LiveData<DateFilter> = _dateFilter
-    private val _filterBy = MutableLiveData<EnumJoFilterBy>()
+    private val _dateFilter = MutableLiveData<DateFilter?>()
+    val dateFilter: LiveData<DateFilter?> = _dateFilter
+    val filterBy = MutableLiveData<EnumJoFilterBy>()
 
     fun setFilterBy(filterBy: EnumJoFilterBy) {
-        _filterBy.value = filterBy
+        this.filterBy.value = filterBy
     }
 
     override fun filter(reset: Boolean) {
@@ -56,10 +59,13 @@ constructor(
             val page = page.value ?: 1
             val paymentStatus = paymentStatus.value
             val customerId = customerId.value
+            val filterBy = filterBy.value
 
             val dateFilter = _dateFilter.value
 
-            val result = jobOrderRepository.load(keyword, orderBy, sortDirection, page, paymentStatus, customerId, _filterBy.value, dateFilter)
+            val result = jobOrderRepository.load(keyword, orderBy, sortDirection, page, paymentStatus, customerId, filterBy, dateFilter)
+            println("filter by")
+            println(filterBy)
 
             total.value = result.count
 
@@ -78,5 +84,27 @@ constructor(
 
     fun setDateRange(dateFilter: DateFilter) {
         _dateFilter.value = dateFilter
+        filter(true)
+    }
+
+    fun showDatePicker() {
+        _dateFilter.value.let {
+            val dateFilter = it ?: DateFilter(LocalDate.now(), null)
+            _navigationState.value = NavigationState.OpenDateFilter(dateFilter)
+        }
+    }
+
+    override fun clearState() {
+        _navigationState.value = NavigationState.StateLess
+        super.clearState()
+    }
+
+    fun clearDates() {
+        _dateFilter.value = null
+    }
+
+    sealed class NavigationState {
+        object StateLess: NavigationState()
+        data class OpenDateFilter(val dateFilter: DateFilter): NavigationState()
     }
 }

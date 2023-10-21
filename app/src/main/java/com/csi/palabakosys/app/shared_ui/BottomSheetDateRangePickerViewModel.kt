@@ -9,7 +9,7 @@ import java.time.LocalDate
 class BottomSheetDateRangePickerViewModel: ViewModel() {
     private val _navigationState = MutableLiveData<NavigationState>()
     val navigationState: LiveData<NavigationState> = _navigationState
-    val dateFrom = MutableLiveData<LocalDate>()
+    val dateFrom = MutableLiveData<LocalDate?>()
     val dateTo = MutableLiveData<LocalDate?>()
 
     fun setInitialDates(dateFilter: DateFilter) {
@@ -18,9 +18,13 @@ class BottomSheetDateRangePickerViewModel: ViewModel() {
     }
 
     fun browseDateFrom() {
-        dateFrom.value?.let {
-            _navigationState.value = NavigationState.BrowseDateFrom(it)
-        }
+        val from = dateFrom.value ?: LocalDate.now()
+        _navigationState.value = NavigationState.BrowseDateFrom(from)
+    }
+
+    fun browseDateTo() {
+        val to = dateTo.value ?: dateFrom.value ?: LocalDate.now()
+        _navigationState.value = NavigationState.BrowseDateTo(to)
     }
 
     fun resetState() {
@@ -35,14 +39,12 @@ class BottomSheetDateRangePickerViewModel: ViewModel() {
         dateTo.value = localDate
     }
 
-    fun browseDateTo() {
-        val to = dateTo.value ?: dateFrom.value ?: LocalDate.now()
-        _navigationState.value = NavigationState.BrowseDateTo(to)
-    }
-
     fun submit() {
-        val dateFrom = dateFrom.value ?: return
-        val dateTo = dateTo.value ?: dateFrom
+        val dateFrom = dateFrom.value ?: dateTo.value ?: return
+        var dateTo = dateTo.value
+        if(dateTo != null && dateTo.isEqual(dateFrom)) {
+            dateTo = null
+        }
 
         _navigationState.value = NavigationState.Submit(
             DateFilter(
@@ -50,6 +52,18 @@ class BottomSheetDateRangePickerViewModel: ViewModel() {
                 dateTo
             )
         )
+    }
+
+    fun switchDates() {
+        val from = dateFrom.value
+        val to = dateTo.value
+
+        dateFrom.value = to
+        dateTo.value = from
+    }
+
+    fun clearTo() {
+        dateTo.value = null
     }
 
     sealed class NavigationState {

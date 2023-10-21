@@ -132,9 +132,6 @@ interface DaoJobOrder {
             " (:filterBy = 'created' AND :dateFrom IS NOT NULL AND :dateTo IS NOT NULL AND strftime('%Y-%m-%d', jo.created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo) OR" +
             " (:filterBy = 'paid' AND :dateFrom IS NOT NULL AND :dateTo IS NULL AND strftime('%Y-%m-%d', pa.created_at / 1000, 'unixepoch') = :dateFrom) OR" +
             " (:filterBy = 'paid' AND :dateFrom IS NOT NULL AND :dateTo IS NOT NULL AND strftime('%Y-%m-%d', pa.created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo)) "
-//            " AND ((:dateFrom IS NULL AND :dateTo IS NULL) OR " +
-//            " (:dateFrom IS NOT NULL AND :dateTo IS NULL AND strftime('%Y-%m-%d', jo.created_at / 1000, 'unixepoch') = :dateFrom) OR " +
-//            " (:dateFrom IS NOT NULL AND :dateTo IS NOT NULL AND strftime('%Y-%m-%d', jo.created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo)) "
     )
     fun count(keyword: String?, paymentStatus: EnumPaymentStatus?, customerId: UUID?, filterBy: EnumJoFilterBy?, dateFrom: LocalDate?, dateTo: LocalDate?): Int
 

@@ -21,7 +21,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:divider="@drawable/divider_20"
+                android:divider="@drawable/divider_5"
                 android:showDividers="middle">
                 <TextView
                     style="@style/TextMenuItemTitle"
@@ -43,21 +43,48 @@
                         android:focusable="false"
                         android:maxLines="1" />
                 </com.google.android.material.textfield.TextInputLayout>
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                    android:layout_width="match_parent"
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/button_switch_dates"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:hint="To">
+                    android:layout_gravity="end">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/date_to"
-                        android:localDate="@{viewModel.dateTo}"
-                        android:layout_width="match_parent"
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:rotation="90"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/icon_switch" />
+                </com.google.android.material.card.MaterialCardView>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:inputType="none"
-                        android:focusable="false"
-                        android:maxLines="1" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:layout_weight="1"
+                        android:hint="To"
+                        app:helperTextEnabled="true">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/date_to"
+                            android:localDate="@{viewModel.dateTo}"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="none"
+                            android:focusable="false"
+                            android:maxLines="1" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <ImageButton
+                        android:id="@+id/button_clear"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+                        android:background="@color/transparent"
+                        android:src="@android:drawable/ic_menu_close_clear_cancel" />
+                </LinearLayout>
                 <Button
                     android:id="@+id/button_apply"
                     android:text="Apply"

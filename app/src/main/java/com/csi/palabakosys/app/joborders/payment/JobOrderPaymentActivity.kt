@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
 import com.csi.palabakosys.app.auth.AuthActionDialogActivity
 import com.csi.palabakosys.app.auth.LoginCredentials
+import com.csi.palabakosys.app.joborders.create.JobOrderCreateActivity
 import com.csi.palabakosys.app.joborders.payment.cashless.PaymentJoCashlessModalFragment
 import com.csi.palabakosys.databinding.ActivityJobOrderPaymentBinding
 import com.csi.palabakosys.util.ActivityLauncher
@@ -55,14 +56,9 @@ class JobOrderPaymentActivity : AppCompatActivity() {
 
         if(paymentId != null) {
             viewModel.getPayment(paymentId)
-        } else {
+        } else if(customerId != null) {
             viewModel.getUnpaidByCustomerId(customerId)
         }
-
-//        val suggestions = arrayOf("G-Cash", "PayMaya", "BPI", "BDO", "Cheque")
-//        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, suggestions)
-//
-//        binding.textInputCashlessProvider.setAdapter(adapter)
     }
 
     private fun auth(action: String) {
@@ -76,22 +72,23 @@ class JobOrderPaymentActivity : AppCompatActivity() {
         adapter.onSelectionChange = {
             viewModel.selectItem(it)
         }
+        adapter.onItemClick = {
+            val intent = Intent(this, JobOrderCreateActivity::class.java).apply {
+                action = JobOrderCreateActivity.ACTION_LOAD_BY_JOB_ORDER_ID
+                putExtra(JobOrderCreateActivity.JOB_ORDER_ID, it.id.toString())
+            }
+            startActivity(intent)
+        }
         binding.buttonSave.setOnClickListener {
             viewModel.validate()
-//            prepareSubmit()
         }
         binding.textDatePaid.setOnClickListener {
             auth(AUTH_REQUEST_MODIFY_DATE_ACTION)
         }
-//        binding.buttonOpenCashless.setOnClickListener {
-//            viewModel.openCashless()
-//        }
         dateTimePicker.setOnDateTimeSelectedListener {
             viewModel.setDateTime(it)
         }
         authLauncher.onOk = { result ->
-//            val email = it.data?.getStringExtra(AuthActionDialogActivity.EMAIL_EXTRA)
-//            val password = it.data?.getStringExtra(AuthActionDialogActivity.PASSWORD_EXTRA)
             when(result.data?.action) {
                 AUTH_REQUEST_SAVE -> {
                     result.data?.getParcelableExtra<LoginCredentials>(AuthActionDialogActivity.RESULT)?.let {
@@ -106,6 +103,9 @@ class JobOrderPaymentActivity : AppCompatActivity() {
     }
 
     private fun subscribeListeners() {
+        viewModel.customer.observe(this, Observer {
+            title = "${it.name} - [${it.crn}]"
+        })
         viewModel.cashlessProviders.observe(this, Observer {
             val adapter = ArrayAdapter(applicationContext, android.R.layout.simple_dropdown_item_1line, it)
             binding.textInputCashlessProvider.setAdapter(adapter)

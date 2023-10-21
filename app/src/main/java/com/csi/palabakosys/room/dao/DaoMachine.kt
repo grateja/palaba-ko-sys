@@ -42,10 +42,11 @@ abstract class DaoMachine : BaseDao<EntityMachine> {
         "            LEFT JOIN job_order_services jos ON mu.job_order_service_id = jos.id " +
         "            LEFT JOIN job_orders jo ON jos.job_order_id = jo.id " +
         "WHERE mu.machine_id = :machineId "+
+        "AND customer_name LIKE '%' || :keyword || '%' "+
         "AND ((:dateFrom IS NULL AND :dateTo IS NULL) OR " +
         "   (:dateFrom IS NOT NULL AND :dateTo IS NULL AND strftime('%Y-%m-%d', ma.created_at / 1000, 'unixepoch') = :dateFrom) OR " +
         "   (:dateFrom IS NOT NULL AND :dateTo IS NOT NULL AND strftime('%Y-%m-%d', ma.created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo)) " +
         "ORDER BY activated DESC " +
         "LIMIT 20 OFFSET :offset ")
-    abstract suspend fun getMachineUsage(machineId: UUID, offset: Int, dateFrom: LocalDate?, dateTo: LocalDate?) : List<EntityMachineUsageDetails>
+    abstract suspend fun getMachineUsage(machineId: UUID, keyword: String?, offset: Int, dateFrom: LocalDate?, dateTo: LocalDate?) : List<EntityMachineUsageDetails>
 }

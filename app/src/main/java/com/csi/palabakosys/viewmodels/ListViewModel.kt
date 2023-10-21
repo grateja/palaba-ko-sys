@@ -22,7 +22,12 @@ abstract class ListViewModel<T> : ViewModel(), ListViewModelInterface {
 
     protected var job: Job? = null
 
+    open fun clearState() {
+        _dataState.value = DataState.StateLess
+    }
+
     sealed class DataState<out R> {
         data class LoadItems<R>(val items: List<R>, val reset: Boolean) : DataState<R>()
+        object StateLess: DataState<Nothing>()
     }
 }

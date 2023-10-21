@@ -7,6 +7,7 @@ import com.csi.palabakosys.viewmodels.ListViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -16,7 +17,10 @@ class ExpensesViewModel
 constructor(
     private val repository: ExpensesRepository
 ) : ListViewModel<ExpenseItemFull>() {
-    private val _dateFilter = MutableLiveData<DateFilter>()
+    private val _dateFilter = MutableLiveData<DateFilter?>()
+    val dateFilter: LiveData<DateFilter?> = _dateFilter
+    private val _navigationState = MutableLiveData<NavigationState>()
+    val navigationState: LiveData<NavigationState> = _navigationState
 
     override fun filter(reset: Boolean) {
         job?.let {
@@ -35,5 +39,26 @@ constructor(
 
     fun setDates(dateFilter: DateFilter) {
         _dateFilter.value = dateFilter
+    }
+
+    fun clearDates() {
+        _dateFilter.value = null
+    }
+
+    fun showDatePicker() {
+        _dateFilter.value.let {
+            val dateFilter = it ?: DateFilter(LocalDate.now(), null)
+            _navigationState.value = NavigationState.OpenDateFilter(dateFilter)
+        }
+    }
+
+    override fun clearState() {
+        _navigationState.value = NavigationState.StateLess
+        super.clearState()
+    }
+
+    sealed class NavigationState {
+        object StateLess: NavigationState()
+        data class OpenDateFilter(val dateFilter: DateFilter): NavigationState()
     }
 }
