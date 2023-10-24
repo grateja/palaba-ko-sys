@@ -84,6 +84,12 @@ constructor(
         }
     }
 
+    fun openPayments() {
+        _dateFilter.value?.let {
+            _navigationState.value = NavigationState.OpenJobOrdersPayments(it)
+        }
+    }
+
     fun openExpenses() {
         _dateFilter.value?.let {
             _navigationState.value = NavigationState.OpenExpenses(it)
@@ -106,6 +112,7 @@ constructor(
         data class OpenDateRangePicker(val dateFilter: DateFilter) : NavigationState()
         data class OpenCustomers(val dateFilter: DateFilter) : NavigationState()
         data class OpenJobOrders(val dateFilter: DateFilter, val filterBy: EnumJoFilterBy) : NavigationState()
+        data class OpenJobOrdersPayments(val dateFilter: DateFilter) : NavigationState()
         data class OpenExpenses(val dateFilter: DateFilter) : NavigationState()
         data class SwitchDates(val dateFilter: DateFilter) : NavigationState()
     }

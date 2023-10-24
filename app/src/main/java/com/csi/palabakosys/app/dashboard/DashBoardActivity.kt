@@ -19,6 +19,7 @@ import com.csi.palabakosys.app.dashboard.data.DateFilter
 import com.csi.palabakosys.app.expenses.ExpensesActivity
 import com.csi.palabakosys.app.joborders.list.JobOrderListActivity
 import com.csi.palabakosys.app.machines.usage.MachineUsageActivity
+import com.csi.palabakosys.app.payment_list.PaymentListActivity
 import com.csi.palabakosys.app.shared_ui.BottomSheetDateRangePickerFragment
 import com.csi.palabakosys.databinding.ActivityDashboardBinding
 import com.csi.palabakosys.model.EnumJoFilterBy
@@ -69,7 +70,7 @@ class DashBoardActivity : AppCompatActivity() {
             viewModel.openJobOrders(EnumJoFilterBy.DATE_CREATED)
         }
         binding.cardPaidJobOrders.setOnClickListener {
-            viewModel.openJobOrders(EnumJoFilterBy.DATE_PAID)
+            viewModel.openPayments()
         }
         binding.dashboardExpenses.card.setOnClickListener {
             viewModel.openExpenses()
@@ -122,6 +123,13 @@ class DashBoardActivity : AppCompatActivity() {
                     val intent = Intent(this, JobOrderListActivity::class.java).apply {
                         putExtra(Constants.DATE_RANGE_FILTER, it.dateFilter)
                         putExtra(JobOrderListActivity.FILTER_BY, it.filterBy as Parcelable)
+                    }
+                    startActivity(intent)
+                    viewModel.resetState()
+                }
+                is DashboardViewModel.NavigationState.OpenJobOrdersPayments -> {
+                    val intent = Intent(this, PaymentListActivity::class.java).apply {
+                        putExtra(Constants.DATE_RANGE_FILTER, it.dateFilter)
                     }
                     startActivity(intent)
                     viewModel.resetState()

@@ -2,7 +2,9 @@ package com.csi.palabakosys.room.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.csi.palabakosys.app.dashboard.data.DateFilter
 import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentMinimal
+import com.csi.palabakosys.app.payment_list.PaymentQueryResult
 import com.csi.palabakosys.room.entities.*
 import java.time.Instant
 import java.time.LocalDate
@@ -32,16 +34,16 @@ interface DaoJobOrderPayment {
         return entityJobOrderPayment
     }
 
-    @Query("UPDATE job_order_payments SET deleted_at = :deletedAt WHERE id = :paymentId")
-    fun unlinkPayment(paymentId: UUID, deletedAt: Instant = Instant.now())
+    @Query("UPDATE job_order_payments SET void_by = :voidBy, void_remarks = :remarks, void_date = :deletedAt WHERE id = :paymentId")
+    fun unlinkPayment(paymentId: UUID, voidBy: UUID, remarks: String, deletedAt: Instant = Instant.now())
 
     @Query("UPDATE job_orders SET payment_id = null WHERE payment_id = :paymentId")
     fun unlinkJobOrders(paymentId: UUID)
 
     @Transaction
-    suspend fun deletePayment(paymentId: UUID) {
+    suspend fun deletePayment(paymentId: UUID, voidBy: UUID, remarks: String) {
         unlinkJobOrders(paymentId)
-        unlinkPayment(paymentId)
+        unlinkPayment(paymentId, voidBy, remarks)
     }
 
     @Query("SELECT DISTINCT cashless_provider FROM job_order_payments WHERE cashless_provider IS NOT NULL ORDER BY cashless_provider")
@@ -72,4 +74,42 @@ interface DaoJobOrderPayment {
             "OR (:dateTo IS NOT NULL " +
             "AND strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo))")
     fun getCashlessPayments(dateFrom: LocalDate, dateTo: LocalDate?): LiveData<List<EntityCashlessPaymentAggrResult>>
+
+    @Query("SELECT * FROM job_orders WHERE payment_id = :paymentId AND deleted_at IS NULL ORDER BY created_at DESC")
+    fun getJobOrdersByPaymentId(paymentId: UUID): LiveData<List<JobOrderPaymentMinimal>>
+
+    @Query("SELECT " +
+            "    p.id, payment_method, amount_due, or_number, cashless_provider, c.name, p.created_at, " +
+            "    GROUP_CONCAT(jo.job_order_number, ', ') AS job_order_reference " +
+            "FROM job_order_payments AS p " +
+            "LEFT JOIN job_orders AS jo ON p.id = jo.payment_id " +
+            "LEFT JOIN customers AS c ON jo.customer_id = c.id " +
+            "WHERE (or_number LIKE '%' || :keyword || '%' OR c.name LIKE '%' || :keyword || '%')" +
+            "AND ((:dateFrom IS NULL AND :dateTo IS NULL) OR " +
+            "(:dateFrom IS NOT NULL AND :dateTo IS NULL AND strftime('%Y-%m-%d', p.created_at / 1000, 'unixepoch') = :dateFrom) OR " +
+            "(:dateFrom IS NOT NULL AND :dateTo IS NOT NULL AND strftime('%Y-%m-%d', p.created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo)) " +
+            "GROUP BY p.id " +
+            "ORDER BY p.created_at DESC " +
+            " LIMIT 20 OFFSET :offset ")
+    fun load(keyword: String?, offset: Int, dateFrom: LocalDate?, dateTo: LocalDate?): List<EntityJobOrderPaymentListItem>
+
+    @Query("SELECT COUNT(DISTINCT p.id) as total_count, SUM(jo.discounted_amount) as total_sum " +
+            "    ,GROUP_CONCAT(jo.job_order_number, ', ') AS job_order_reference " +
+            "FROM job_order_payments AS p " +
+            "LEFT JOIN job_orders AS jo ON p.id = jo.payment_id " +
+            "LEFT JOIN customers AS c ON jo.customer_id = c.id " +
+            "WHERE (or_number LIKE '%' || :keyword || '%' OR c.name LIKE '%' || :keyword || '%')" +
+            "AND p.deleted_at IS NULL " +
+            "AND ((:dateFrom IS NULL AND :dateTo IS NULL) OR " +
+            "(:dateFrom IS NOT NULL AND :dateTo IS NULL AND strftime('%Y-%m-%d', p.created_at / 1000, 'unixepoch') = :dateFrom) OR " +
+            "(:dateFrom IS NOT NULL AND :dateTo IS NOT NULL AND strftime('%Y-%m-%d', p.created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo)) ")
+    fun count(keyword: String?, dateFrom: LocalDate?, dateTo: LocalDate?): QueryAggrResult?
+
+    @Transaction
+    suspend fun queryResult(keyword: String?, offset: Int, dateFilter: DateFilter?): PaymentQueryResult {
+        return PaymentQueryResult(
+            load(keyword, offset, dateFilter?.dateFrom, dateFilter?.dateTo),
+            count(keyword, dateFilter?.dateFrom, dateFilter?.dateTo)
+        )
+    }
 }

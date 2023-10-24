@@ -59,6 +59,9 @@ class CreateJobOrderInfoFragment : Fragment() {
         dateTimePicker.setOnDateTimeSelectedListener {
             viewModel.applyDateTime(it)
         }
+        binding.cardDatePaid.setOnClickListener {
+            viewModel.openPayment()
+        }
     }
 
     private fun subscribeListeners() {

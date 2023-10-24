@@ -15,6 +15,12 @@ class PaymentPreviewViewModel
 constructor(
     private val paymentRepository: PaymentRepository
 ) : ViewModel() {
+    fun setPaymentId(paymentId: UUID) {
+        _paymentId.value = paymentId
+    }
+
     private val _paymentId = MutableLiveData<UUID>()
     val payment = _paymentId.switchMap { paymentRepository.getPaymentWithJobOrders(it) }
+
+    val jobOrders = _paymentId.switchMap { paymentRepository.getJobOrdersByPaymentId(it) }
 }

@@ -32,6 +32,7 @@
                     app:definition="@{viewModel.currentCustomer.name}"/>
             </com.google.android.material.card.MaterialCardView>
             <com.google.android.material.card.MaterialCardView
+                android:layout_margin="4dp"
                 android:clickable="@{!viewModel.locked}"
                 android:id="@+id/card_created_at"
                 app:cardCornerRadius="0dp"
@@ -61,6 +62,37 @@
                 android:visibility="@{!viewModel.preparedBy.isEmpty() }"
                 app:term="@{`PREPARED BY`}"
                 app:definition="@{viewModel.preparedBy}"/>
+            <com.google.android.material.card.MaterialCardView
+                android:layout_margin="4dp"
+                android:id="@+id/card_date_paid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+                    <include layout="@layout/incl_legend"
+                        android:visibility="@{viewModel.payment != null}"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        app:term="@{`DATE PAID`}"
+                        app:date="@{viewModel.payment.payment.createdAt}"
+                        tools:layout_height="80dp"/>
+                    <TextView
+                        android:visibility="@{viewModel.payment == null}"
+                        style="@style/Caption.Definition.Warning"
+                        android:layout_margin="0dp"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="Not yet paid"/>
+                    <ImageView
+                        android:src="@drawable/browse_right"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 </layout>

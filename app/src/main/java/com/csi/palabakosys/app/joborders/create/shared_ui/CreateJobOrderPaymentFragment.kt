@@ -11,10 +11,11 @@ import com.csi.palabakosys.R
 import com.csi.palabakosys.adapters.Adapter
 import com.csi.palabakosys.app.joborders.create.CreateJobOrderViewModel
 import com.csi.palabakosys.app.joborders.list.JobOrderListItem
+import com.csi.palabakosys.app.joborders.payment.preview.PaymentPreviewViewModel
 import com.csi.palabakosys.databinding.FragmentCreateJobOrderPaymentBinding
 
 class CreateJobOrderPaymentFragment : Fragment() {
-    private val viewModel: CreateJobOrderViewModel by activityViewModels()
+    private val viewModel: PaymentPreviewViewModel by activityViewModels()
     private lateinit var binding: FragmentCreateJobOrderPaymentBinding
 
     override fun onCreateView(
@@ -26,14 +27,6 @@ class CreateJobOrderPaymentFragment : Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
-        subscribeEvents()
-
         return binding.root
-    }
-
-    private fun subscribeEvents() {
-        binding.cardPayment.setOnClickListener {
-            viewModel.openPayment()
-        }
     }
 }

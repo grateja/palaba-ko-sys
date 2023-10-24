@@ -12,6 +12,36 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
+        <com.google.android.material.card.MaterialCardView
+            app:cardBackgroundColor="@color/white"
+            app:cardElevation="0dp"
+            app:contentPadding="12dp"
+            app:cardCornerRadius="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    style="@style/Caption.Term"
+                    android:text="JOB ORDER REFERENCES"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_job_order_list"
+                    style="@style/Caption.Definition"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/job_order_payment"
+            android:name="com.csi.palabakosys.app.joborders.create.shared_ui.CreateJobOrderPaymentFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:layout="@layout/fragment_create_job_order_payment"/>
     </LinearLayout>
 </layout>
