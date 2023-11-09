@@ -14,10 +14,7 @@ import com.csi.palabakosys.app.auth.LoginCredentials
 import com.csi.palabakosys.app.joborders.create.JobOrderCreateActivity
 import com.csi.palabakosys.app.joborders.payment.cashless.PaymentJoCashlessModalFragment
 import com.csi.palabakosys.databinding.ActivityJobOrderPaymentBinding
-import com.csi.palabakosys.util.ActivityLauncher
-import com.csi.palabakosys.util.DateTimePicker
-import com.csi.palabakosys.util.showSnackBar
-import com.csi.palabakosys.util.toUUID
+import com.csi.palabakosys.util.*
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -59,6 +56,8 @@ class JobOrderPaymentActivity : AppCompatActivity() {
         } else if(customerId != null) {
             viewModel.getUnpaidByCustomerId(customerId)
         }
+
+        binding.textInputCashReceived.selectAllOnFocus()
     }
 
     private fun auth(action: String) {

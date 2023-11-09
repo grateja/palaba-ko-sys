@@ -59,10 +59,11 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
             <include layout="@layout/incl_legend"
-                android:visibility="@{!viewModel.preparedBy.isEmpty() }"
+                android:visibility="@{viewModel.preparedBy != null }"
                 app:term="@{`PREPARED BY`}"
                 app:definition="@{viewModel.preparedBy}"/>
             <com.google.android.material.card.MaterialCardView
+                android:visibility="@{viewModel.saved}"
                 android:layout_margin="4dp"
                 android:id="@+id/card_date_paid"
                 android:layout_width="match_parent"

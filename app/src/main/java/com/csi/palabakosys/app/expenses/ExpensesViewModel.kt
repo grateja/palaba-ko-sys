@@ -2,6 +2,7 @@ package com.csi.palabakosys.app.expenses
 
 import androidx.lifecycle.*
 import com.csi.palabakosys.app.dashboard.data.DateFilter
+import com.csi.palabakosys.model.BaseFilterParams
 import com.csi.palabakosys.room.repository.ExpensesRepository
 import com.csi.palabakosys.viewmodels.ListViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +17,7 @@ class ExpensesViewModel
 @Inject
 constructor(
     private val repository: ExpensesRepository
-) : ListViewModel<ExpenseItemFull>() {
+) : ListViewModel<ExpenseItemFull, BaseFilterParams>() {
     private val _dateFilter = MutableLiveData<DateFilter?>()
     val dateFilter: LiveData<DateFilter?> = _dateFilter
     private val _navigationState = MutableLiveData<NavigationState>()

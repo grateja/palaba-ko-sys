@@ -88,4 +88,15 @@ constructor (@ApplicationContext context: Context) {
     fun requireORNumber(): Boolean {
         return sharedPreferences.getBoolean("requireORNumber", true)
     }
+
+    fun testFakeConnect(): Boolean {
+        return sharedPreferences.getBoolean("testConnectMode", true)
+    }
+
+    fun setFakeConnectionMode(value: Boolean) {
+        with(sharedPreferences.edit()) {
+            putBoolean("testConnectMode", value)
+            apply()
+        }
+    }
 }

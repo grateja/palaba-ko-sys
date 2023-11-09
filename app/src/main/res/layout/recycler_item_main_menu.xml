@@ -16,11 +16,11 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <ImageView
-                app:imageResource="@{viewModel.imageResource}"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:src="@drawable/icon_sales_report"/>
+<!--            <ImageView-->
+<!--                app:imageResource="@{viewModel.imageResource}"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                tools:src="@drawable/icon_sales_report"/>-->
             <TextView
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

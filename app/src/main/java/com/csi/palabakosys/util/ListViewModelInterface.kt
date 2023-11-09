@@ -1,6 +1,7 @@
 package com.csi.palabakosys.util
 
 import androidx.lifecycle.MutableLiveData
+import com.csi.palabakosys.model.FilterParamsInterface
 
 interface ListViewModelInterface {
     val keyword: MutableLiveData<String>

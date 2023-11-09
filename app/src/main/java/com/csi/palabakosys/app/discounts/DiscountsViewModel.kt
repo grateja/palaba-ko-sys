@@ -16,7 +16,7 @@ class DiscountsViewModel
 @Inject
 constructor(
     private val repository: DiscountsRepository
-) : ListViewModel<EntityDiscount>() {
+) : ListViewModel<EntityDiscount, Nothing>() {
 
     override fun filter(reset: Boolean) {
         job?.let {

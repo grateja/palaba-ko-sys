@@ -27,6 +27,9 @@ constructor(
     private val jobOrderQueuesRepository: JobOrderQueuesRepository,
     private val remoteRepository: RemoteRepository
 ): ViewModel() {
+    private val _validationMessage = MutableLiveData<String?>()
+    val validationMessage: LiveData<String?> = _validationMessage
+
     private val _machineActivationQueue = MutableLiveData<MachineActivationQueues>()
     val machineActivationQueue: LiveData<MachineActivationQueues> = _machineActivationQueue
 
@@ -47,6 +50,10 @@ constructor(
 //
 //    private val _message = MutableLiveData<String>()
 //    val message: LiveData<String> = _message
+
+    fun setValidationMessage(message: String?) {
+        _validationMessage.value = message
+    }
 
     fun setMachineId(id: UUID) {
         machineId.value = id

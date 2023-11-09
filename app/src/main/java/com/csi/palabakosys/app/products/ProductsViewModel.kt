@@ -1,7 +1,7 @@
 package com.csi.palabakosys.app.products
 
 import androidx.lifecycle.*
-import com.csi.palabakosys.room.entities.EntityProduct
+import com.csi.palabakosys.model.BaseFilterParams
 import com.csi.palabakosys.room.repository.ProductRepository
 import com.csi.palabakosys.viewmodels.ListViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +15,7 @@ class ProductsViewModel
 @Inject
 constructor(
     private val repository: ProductRepository
-) : ListViewModel<ProductItemFull>() {
+) : ListViewModel<ProductItemFull, BaseFilterParams>() {
 
     override fun filter(reset: Boolean) {
         job?.let {

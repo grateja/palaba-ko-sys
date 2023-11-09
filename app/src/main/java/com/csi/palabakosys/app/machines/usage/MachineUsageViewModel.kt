@@ -19,7 +19,7 @@ class MachineUsageViewModel
 @Inject
 constructor(
     private val machineRepository: MachineRepository
-): ListViewModel<EntityMachineUsageDetails>() {
+): ListViewModel<EntityMachineUsageDetails, Nothing>() {
     private val _machineId = MutableLiveData<UUID>()
 
     private val _dateFilter = MutableLiveData<DateFilter?>()

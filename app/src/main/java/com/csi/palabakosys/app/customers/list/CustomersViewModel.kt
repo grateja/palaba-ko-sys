@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.csi.palabakosys.app.dashboard.data.DateFilter
+import com.csi.palabakosys.model.BaseFilterParams
+import com.csi.palabakosys.model.FilterParamsInterface
 import com.csi.palabakosys.room.repository.CustomerRepository
 import com.csi.palabakosys.viewmodels.ListViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +20,7 @@ class CustomersViewModel
 @Inject
 constructor(
     private val repository: CustomerRepository
-) : ListViewModel<CustomerListItem>() {
+) : ListViewModel<CustomerListItem, BaseFilterParams>() {
     val total = MutableLiveData(0)
     val hideAllWithoutJo = MutableLiveData(false)
 
@@ -49,10 +51,11 @@ constructor(
             if(reset) {
                 page.value = 1
             }
+            val filterParams = filterParams.value
             val keyword = keyword.value
             val page = page.value ?: 1
-            val orderBy = orderBy.value
-            val sortDirection = sortDirection.value
+            val orderBy = filterParams?.orderBy
+            val sortDirection = filterParams?.sortDirection
             val hideAllWithoutJo = hideAllWithoutJo.value ?: true
             val dateFilter = _dateFilter.value
 

@@ -92,12 +92,12 @@ class CustomersActivity : FilterActivity() {
                 }
             }
         })
-        viewModel.orderBy.observe(this, Observer {
-            viewModel.filter(true)
-        })
-        viewModel.sortDirection.observe(this, Observer {
-            viewModel.filter(true)
-        })
+//        viewModel.orderBy.observe(this, Observer {
+//            viewModel.filter(true)
+//        })
+//        viewModel.sortDirection.observe(this, Observer {
+//            viewModel.filter(true)
+//        })
         viewModel.dateFilter.observe(this, Observer {
             viewModel.filter(true)
         })

@@ -10,6 +10,8 @@ import com.csi.palabakosys.R
 
 abstract class FilterActivity : AppCompatActivity(), FilterActivityInterface {
     protected var searchBar: SearchView? = null
+    override var enableAdvancedFilter: Boolean = true
+
     private lateinit var toolbar: Toolbar
     protected lateinit var addEditLauncher: ActivityLauncher
 
@@ -23,6 +25,8 @@ abstract class FilterActivity : AppCompatActivity(), FilterActivityInterface {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_search, menu)
+
+        menu?.findItem(R.id.menu_advanced_option)?.isVisible = enableAdvancedFilter
 
         searchBar = menu?.findItem(R.id.menu_search)?.actionView as SearchView
         searchBar?.apply {
@@ -55,6 +59,9 @@ abstract class FilterActivity : AppCompatActivity(), FilterActivityInterface {
         if(item.itemId == android.R.id.home) {
             finish()
             return true
+        } else if(item.itemId == R.id.menu_advanced_option) {
+            onAdvancedSearchClick()
+            return true;
         }
         return super.onOptionsItemSelected(item)
     }

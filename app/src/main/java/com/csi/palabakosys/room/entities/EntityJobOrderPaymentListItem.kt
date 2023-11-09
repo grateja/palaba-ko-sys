@@ -29,4 +29,8 @@ data class EntityJobOrderPaymentListItem(
 
     @ColumnInfo("job_order_reference")
     val jobOrderReference: String
-)
+) {
+    fun paymentOption() : String {
+        return cashlessProvider ?: "Cash"
+    }
+}

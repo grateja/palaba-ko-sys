@@ -26,6 +26,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{viewModel.machineActivationQueue.message}"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.validationMessage}"/>
             <Button
                 android:id="@+id/buttonActivate"
                 android:visibility="gone"

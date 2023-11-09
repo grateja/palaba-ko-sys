@@ -3,6 +3,7 @@ package com.csi.palabakosys.app.joborders.list
 import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Ignore
+import com.csi.palabakosys.model.EnumPaymentMethod
 import kotlinx.parcelize.Parcelize
 import java.time.Instant
 import java.util.*
@@ -34,11 +35,14 @@ data class JobOrderListItem(
 
     @ColumnInfo("date_paid")
     val datePaid: Instant?,
+
+    @ColumnInfo("cashless_provider")
+    val cashlessProvider: String?
 ) : Parcelable {
     fun paymentStatus() : String {
         return if(datePaid == null)
             "UNPAID"
         else
-            "PAID"
+            cashlessProvider ?: "Cash"
     }
 }

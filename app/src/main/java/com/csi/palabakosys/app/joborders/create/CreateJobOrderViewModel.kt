@@ -85,7 +85,7 @@ constructor(
 
     val jobOrderPictures = jobOrderId.switchMap { jobOrderRepository.getPictures(it) }
 
-    private val _preparedBy = MutableLiveData("")
+    private val _preparedBy = MutableLiveData<String>()
     val preparedBy: LiveData<String> = _preparedBy
 
     private val _payment = MutableLiveData<EntityJobOrderPaymentFull>()

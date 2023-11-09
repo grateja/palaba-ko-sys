@@ -66,16 +66,16 @@ class JobOrderListFragment : Fragment() {
             }
         })
 
-        viewModel.sortDirection.observe(viewLifecycleOwner, Observer {
-            viewModel.filter(true)
-        })
-
-        viewModel.orderBy.observe(viewLifecycleOwner, Observer {
-            viewModel.filter(true)
-        })
-
-        viewModel.paymentStatus.observe(viewLifecycleOwner, Observer {
-            viewModel.filter(true)
-        })
+//        viewModel.sortDirection.observe(viewLifecycleOwner, Observer {
+//            viewModel.filter(true)
+//        })
+//
+//        viewModel.orderBy.observe(viewLifecycleOwner, Observer {
+//            viewModel.filter(true)
+//        })
+//
+//        viewModel.paymentStatus.observe(viewLifecycleOwner, Observer {
+//            viewModel.filter(true)
+//        })
     }
 }

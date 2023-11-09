@@ -1,8 +1,8 @@
 package com.csi.palabakosys.app.joborders.create.customer
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.csi.palabakosys.app.customers.CustomerMinimal
+import com.csi.palabakosys.model.BaseFilterParams
 import com.csi.palabakosys.room.repository.CustomerRepository
 import com.csi.palabakosys.viewmodels.ListViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +15,7 @@ class SelectCustomerViewModel
 @Inject
 constructor(
     private val repository: CustomerRepository
-) : ListViewModel<CustomerMinimal>() {
+) : ListViewModel<CustomerMinimal, BaseFilterParams>() {
 //    val items = MutableLiveData<List<CustomerMinimal>>()
 
 //    private val _loading = MutableLiveData(false)
@@ -43,9 +43,11 @@ constructor(
                 page.value = 1
             }
 
+            val filterParams = filterParams.value
+
             val keyword = keyword.value
-            val orderBy = orderBy.value
-            val sortDirection = sortDirection.value
+            val orderBy = filterParams?.orderBy
+            val sortDirection = filterParams?.sortDirection
             val page = page.value ?: 1
 
             val result = repository.getCustomersMinimal(

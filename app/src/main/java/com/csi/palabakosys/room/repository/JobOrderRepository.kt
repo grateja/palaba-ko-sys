@@ -10,6 +10,7 @@ import com.csi.palabakosys.app.joborders.list.JobOrderQueryResult
 import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentMinimal
 import com.csi.palabakosys.model.EnumJoFilterBy
 import com.csi.palabakosys.model.EnumPaymentStatus
+import com.csi.palabakosys.model.JobOrderAdvancedFilter
 import com.csi.palabakosys.room.dao.DaoJobOrder
 import com.csi.palabakosys.room.entities.*
 import com.csi.palabakosys.util.EnumSortDirection
@@ -85,10 +86,35 @@ constructor (
 //        return daoJobOrder.getPreviousUnpaidByCustomerId(customerId, jobOrderId)
 //    }
 
-    suspend fun load(keyword: String?, orderBy: String?, sortDirection: EnumSortDirection?, page: Int, paymentStatus: EnumPaymentStatus?, customerId: UUID?, filterBy: EnumJoFilterBy?, dateFilter: DateFilter?): JobOrderQueryResult {
+    suspend fun load(
+        keyword: String?,
+        af: JobOrderAdvancedFilter,
+//        orderBy: String?,
+//        sortDirection: EnumSortDirection?,
+        page: Int,
+//        paymentStatus: EnumPaymentStatus?,
+        customerId: UUID?,
+//        filterBy: EnumJoFilterBy,
+//        includeVoid: Boolean,
+//        dateFilter: DateFilter?
+    ): JobOrderQueryResult {
         val offset = (20 * page) - 20
-        return daoJobOrder.queryResult(keyword, orderBy, sortDirection.toString(), offset, paymentStatus, customerId, filterBy, dateFilter?.dateFrom, dateFilter?.dateTo)
+        return daoJobOrder.queryResult(keyword, af, offset, customerId)
     }
+//    suspend fun load(
+//        keyword: String?,
+//        orderBy: String?,
+//        sortDirection: EnumSortDirection?,
+//        page: Int,
+//        paymentStatus: EnumPaymentStatus?,
+//        customerId: UUID?,
+//        filterBy: EnumJoFilterBy,
+//        includeVoid: Boolean,
+//        dateFilter: DateFilter?
+//    ): JobOrderQueryResult {
+//        val offset = (20 * page) - 20
+//        return daoJobOrder.queryResult(keyword, orderBy, sortDirection, offset, paymentStatus, customerId, filterBy, includeVoid, dateFilter?.dateFrom, dateFilter?.dateTo)
+//    }
 
     suspend fun cancelJobOrder(jobOrderWithItem: EntityJobOrderWithItems, jobOrderVoid: EntityJobOrderVoid) {
         return daoJobOrder.cancelJobOrder(jobOrderWithItem, jobOrderVoid)

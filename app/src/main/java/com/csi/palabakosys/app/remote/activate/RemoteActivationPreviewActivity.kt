@@ -118,6 +118,10 @@ class RemoteActivationPreviewActivity : AppCompatActivity() {
     private val receiver = object: BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val action = intent?.action
+            if(action == MachineActivationService.INPUT_INVALID_ACTION) {
+                viewModel.setValidationMessage(intent.getStringExtra(MachineActivationService.MESSAGE_EXTRA))
+            }
+
             if(action == MachineActivationService.MACHINE_ACTIVATION_READY) {
                 binding.buttonActivate.visibility = View.VISIBLE
             } else if(action == MachineActivationService.MACHINE_ACTIVATION) {

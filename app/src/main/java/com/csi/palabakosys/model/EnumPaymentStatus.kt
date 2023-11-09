@@ -12,4 +12,8 @@ enum class EnumPaymentStatus(val id: Int, val prompt: String) {
             }
         }
     }
+
+    override fun toString(): String {
+        return prompt
+    }
 }

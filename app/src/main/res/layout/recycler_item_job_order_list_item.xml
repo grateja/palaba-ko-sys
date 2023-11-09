@@ -10,6 +10,7 @@
     <com.google.android.material.card.MaterialCardView
         app:cardBackgroundColor="@color/secondary_background"
         app:cardCornerRadius="12dp"
+        app:cardElevation="0dp"
         android:layout_margin="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -49,7 +50,7 @@
                 app:layout_constraintTop_toTopOf="@id/iconCustomer"
                 app:layout_constraintStart_toEndOf="@id/iconCustomer"
                 app:layout_constraintBottom_toBottomOf="@id/iconCustomer"
-                tools:text="Marideth Luciano"/>
+                tools:text="Tony Stark"/>
 
             <TextView
                 android:id="@+id/labelCRN"

@@ -303,3 +303,13 @@ fun LocalDate.toHumanReadableString(): String {
     val formatter = DateTimeFormatter.ofPattern("MMM dd$yearFormat") // You can change the pattern to your desired format
     return this.format(formatter)
 }
+
+fun TextInputEditText.selectAllOnFocus() {
+    this.setOnFocusChangeListener { view, hasFocus ->
+        if (hasFocus) {
+            view.post {
+                this.selectAll()
+            }
+        }
+    }
+}

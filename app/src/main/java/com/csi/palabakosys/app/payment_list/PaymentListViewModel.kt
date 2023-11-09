@@ -22,7 +22,7 @@ class PaymentListViewModel
 @Inject
 constructor (
     private val repository: PaymentRepository
-): ListViewModel<EntityJobOrderPaymentListItem>() {
+): ListViewModel<EntityJobOrderPaymentListItem, Nothing>() {
     private val _navigationState = MutableLiveData<NavigationState>()
     val navigationState: LiveData<NavigationState> = _navigationState
 

@@ -23,6 +23,7 @@ import com.csi.palabakosys.app.payment_list.PaymentListActivity
 import com.csi.palabakosys.app.shared_ui.BottomSheetDateRangePickerFragment
 import com.csi.palabakosys.databinding.ActivityDashboardBinding
 import com.csi.palabakosys.model.EnumJoFilterBy
+import com.csi.palabakosys.model.JobOrderAdvancedFilter
 import com.csi.palabakosys.room.entities.*
 import com.csi.palabakosys.util.Constants
 import com.csi.palabakosys.util.DatePicker
@@ -121,8 +122,12 @@ class DashBoardActivity : AppCompatActivity() {
                 }
                 is DashboardViewModel.NavigationState.OpenJobOrders -> {
                     val intent = Intent(this, JobOrderListActivity::class.java).apply {
-                        putExtra(Constants.DATE_RANGE_FILTER, it.dateFilter)
-                        putExtra(JobOrderListActivity.FILTER_BY, it.filterBy as Parcelable)
+                        val advancedFilter = JobOrderAdvancedFilter(filterBy = it.filterBy, dateFilter = it.dateFilter)
+                        putExtra(JobOrderListActivity.ADVANCED_FILTER, advancedFilter)
+                        println("datefilter")
+                        println(it.dateFilter)
+//                        putExtra(Constants.DATE_RANGE_FILTER, it.dateFilter)
+//                        putExtra(JobOrderListActivity.FILTER_BY, it.filterBy as Parcelable)
                     }
                     startActivity(intent)
                     viewModel.resetState()

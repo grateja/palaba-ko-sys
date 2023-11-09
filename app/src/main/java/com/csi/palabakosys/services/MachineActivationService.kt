@@ -21,7 +21,6 @@ import com.csi.palabakosys.util.toUUID
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
-import okhttp3.Cache
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -234,7 +233,7 @@ class MachineActivationService : Service() {
 
                     remoteRepository.preActivate(machine.id, jobOrderService.id)
 
-                    if (activate(machine, jobOrderService)) {
+                    if (connect(machine, jobOrderService)) {
 
                         val machineUsage = EntityMachineUsage(machineId, jobOrderServiceId, customerId)
                         val activationRef = EntityActivationRef(
@@ -262,6 +261,7 @@ class MachineActivationService : Service() {
         val intent = Intent(INPUT_INVALID_ACTION)
         intent.putExtra(MESSAGE_EXTRA, message)
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+        safeStop()
     }
 
     private fun validate(machine: EntityMachine?, jobOrderService: EntityJobOrderService?, customer: EntityCustomer?) : Boolean {
@@ -298,7 +298,12 @@ class MachineActivationService : Service() {
         return true
     }
 
-    private suspend fun activate(machine: EntityMachine, jobOrderService: EntityJobOrderService) : Boolean {
+    private suspend fun connect(machine: EntityMachine, jobOrderService: EntityJobOrderService) : Boolean {
+        if(appPreferences.testFakeConnect()) {
+            delay(15000)
+            finishQueue(machine.id, MachineConnectionStatus.SUCCESS, "${machine.machineName()} Test Activation success")
+            return true
+        }
 
         val token = "${jobOrderService.id}-${(jobOrderService.quantity - jobOrderService.used)}"
         val pulse = jobOrderService.serviceRef.pulse()

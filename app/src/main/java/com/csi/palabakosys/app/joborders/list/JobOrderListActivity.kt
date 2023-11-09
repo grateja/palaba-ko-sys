@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -19,6 +20,7 @@ import com.csi.palabakosys.app.shared_ui.BottomSheetDateRangePickerFragment
 import com.csi.palabakosys.databinding.ActivityJobOrderListBinding
 import com.csi.palabakosys.model.EnumJoFilterBy
 import com.csi.palabakosys.model.EnumPaymentStatus
+import com.csi.palabakosys.model.JobOrderAdvancedFilter
 import com.csi.palabakosys.util.Constants
 import com.csi.palabakosys.util.FilterActivity
 import com.csi.palabakosys.viewmodels.ListViewModel
@@ -27,7 +29,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class JobOrderListActivity : FilterActivity() {
     companion object {
-        const val FILTER_BY = "filterBy"
+        const val ADVANCED_FILTER = "advanced_filter"
     }
 
     private lateinit var binding: ActivityJobOrderListBinding
@@ -51,12 +53,23 @@ class JobOrderListActivity : FilterActivity() {
         subscribeEvents()
         subscribeListeners()
 
-        intent.getParcelableExtra<DateFilter>(Constants.DATE_RANGE_FILTER)?.let {
-            viewModel.setDateRange(it)
+//        intent.getParcelableExtra<DateFilter>(Constants.DATE_RANGE_FILTER)?.let {
+//            viewModel.setDateRange(it)
+//        }
+//        intent.getParcelableExtra<EnumJoFilterBy>(FILTER_BY)?.let {
+//            viewModel.setFilterBy(it)
+//        }
+
+        intent.extras?.getParcelable<JobOrderAdvancedFilter>(ADVANCED_FILTER).let {
+            Toast.makeText(this, it?.dateFilter.toString(), Toast.LENGTH_LONG).show()
+            println("advanced filter")
+            println(it?.dateFilter)
+            viewModel.setAdvancedFilter(it ?: JobOrderAdvancedFilter())
         }
-        intent.getParcelableExtra<EnumJoFilterBy>(FILTER_BY)?.let {
-            viewModel.setFilterBy(it)
-        }
+    }
+
+    override fun onAdvancedSearchClick() {
+        viewModel.showAdvancedFilter()
     }
 
     override fun onQuery(keyword: String?) {
@@ -80,11 +93,8 @@ class JobOrderListActivity : FilterActivity() {
         binding.cardAddNew.setOnClickListener {
             selectCustomer()
         }
-        binding.cardDateRange.setOnClickListener {
-            viewModel.showDatePicker()
-        }
-        binding.buttonClearDateFilter.setOnClickListener {
-            viewModel.clearDates()
+        binding.statusBar.setOnClickListener {
+            viewModel.showAdvancedFilter()
         }
     }
 
@@ -97,7 +107,7 @@ class JobOrderListActivity : FilterActivity() {
         dateRangeDialog = BottomSheetDateRangePickerFragment.getInstance(dateFilter)
         dateRangeDialog.show(supportFragmentManager, null)
         dateRangeDialog.onOk = {
-            viewModel.setDateRange(it)
+//            viewModel.setDateRange(it)
         }
     }
 
@@ -121,27 +131,45 @@ class JobOrderListActivity : FilterActivity() {
                     openDateFilter(it.dateFilter)
                     viewModel.clearState()
                 }
+                is JobOrderListViewModel.NavigationState.ShowAdvancedFilter -> {
+                    println("advanced filter date")
+                    println(it.advancedFilter.dateFilter)
+                    val fragment = JobOrderListAdvancedFilterFragment.getInstance(it.advancedFilter)
+                    fragment.show(supportFragmentManager, null)
+                    fragment.onOk = {
+                        viewModel.setAdvancedFilter(it)
+                    }
+                    viewModel.clearState()
+                }
             }
         })
 
-        viewModel.sortDirection.observe(this, Observer {
+        viewModel.filterParams.observe(this, Observer {
             viewModel.filter(true)
+            println("awesome")
         })
 
-        viewModel.orderBy.observe(this, Observer {
-            viewModel.filter(true)
-        })
-
-        viewModel.paymentStatus.observe(this, Observer {
-            viewModel.filter(true)
-        })
-
-        viewModel.filterBy.observe(this, Observer {
-            viewModel.filter(true)
-        })
-
-        viewModel.dateFilter.observe(this, Observer {
-            viewModel.filter(true)
-        })
+//        viewModel.sortDirection.observe(this, Observer {
+//            viewModel.filter(true)
+//        })
+//
+//        viewModel.orderBy.observe(this, Observer {
+//            viewModel.filter(true)
+//        })
+//
+//        viewModel.paymentStatus.observe(this, Observer {
+//            viewModel.filter(true)
+//        })
+//
+//        viewModel.filterBy.observe(this, Observer {
+//            viewModel.filter(true)
+//        })
+//
+//        viewModel.dateFilter.observe(this, Observer {
+//            viewModel.filter(true)
+//        })
+//        viewModel.includeVoid.observe(this, Observer {
+//            viewModel.filter(true)
+//        })
     }
 }

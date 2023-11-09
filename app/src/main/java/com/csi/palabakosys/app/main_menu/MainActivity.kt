@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.csi.palabakosys.R
 import com.csi.palabakosys.adapters.Adapter
 import com.csi.palabakosys.app.EndingActivity
+import com.csi.palabakosys.app.app_settings.developer.DeveloperSettingsActivity
 import com.csi.palabakosys.app.customers.list.CustomersActivity
 import com.csi.palabakosys.app.discounts.DiscountsActivity
 import com.csi.palabakosys.app.expenses.ExpensesActivity
@@ -25,6 +26,7 @@ import com.csi.palabakosys.app.pickup_and_deliveries.PickupAndDeliveriesActivity
 import com.csi.palabakosys.app.products.ProductsActivity
 import com.csi.palabakosys.app.remote.RemotePanelActivity
 import com.csi.palabakosys.app.dashboard.DashBoardActivity
+import com.csi.palabakosys.app.payment_list.PaymentListActivity
 import com.csi.palabakosys.app.services.ServicesActivity
 import com.csi.palabakosys.databinding.ActivityMainBinding
 import com.csi.palabakosys.model.EnumActionPermission
@@ -65,6 +67,11 @@ class MainActivity : EndingActivity() {
                 "Access and control remote machines.",
                 RemotePanelActivity::class.java,
                 R.drawable.icon_machines
+            ),
+            MenuItem(
+                "Payments",
+                "View Payments",
+                PaymentListActivity::class.java
             ),
             MenuItem(
                 "Customers",
@@ -140,7 +147,7 @@ class MainActivity : EndingActivity() {
                         "Printer",
                         "Configure printer settings.",
                         SettingsPrinterActivity::class.java,
-                        permissions = listOf(EnumActionPermission.MODIFY_SETTINGS_PRINTERS),
+//                        permissions = listOf(EnumActionPermission.MODIFY_SETTINGS_PRINTERS),
                         menuItems = listOf(
                             MenuItem("Job Orders", "Configure Job Order format", null),
                             MenuItem("Claim Stub", "Configure Claim stub format", null),
@@ -157,6 +164,12 @@ class MainActivity : EndingActivity() {
                         "Network",
                         "Configure network and IP address settings.",
                         SettingsIPAddressActivity::class.java,
+                        permissions = listOf(EnumActionPermission.MODIFY_SETTINGS_IPADDRESS)
+                    ),
+                    MenuItem(
+                        "Developer",
+                        "Technical properties and settings of the shop. Do not modify unless adviced.",
+                        DeveloperSettingsActivity::class.java,
                         permissions = listOf(EnumActionPermission.MODIFY_SETTINGS_IPADDRESS)
                     ),
                 )

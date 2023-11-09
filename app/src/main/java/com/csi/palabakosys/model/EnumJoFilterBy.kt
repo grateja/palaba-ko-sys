@@ -15,4 +15,8 @@ enum class EnumJoFilterBy(val itemIndex: Int, val value: String) : Parcelable {
             }
         }
     }
+
+    override fun toString(): String {
+        return value
+    }
 }

@@ -5,10 +5,13 @@ import androidx.room.*
 import com.csi.palabakosys.app.dashboard.data.JobOrderCounts
 import com.csi.palabakosys.app.joborders.list.JobOrderListItem
 import com.csi.palabakosys.app.joborders.list.JobOrderQueryResult
+import com.csi.palabakosys.app.joborders.list.JobOrderResultSummary
 import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentMinimal
 import com.csi.palabakosys.model.EnumJoFilterBy
 import com.csi.palabakosys.model.EnumPaymentStatus
+import com.csi.palabakosys.model.JobOrderAdvancedFilter
 import com.csi.palabakosys.room.entities.*
+import com.csi.palabakosys.util.EnumSortDirection
 import java.time.Instant
 import java.time.LocalDate
 import java.util.*
@@ -92,14 +95,18 @@ interface DaoJobOrder {
     @Query("SELECT * FROM job_orders WHERE customer_id = :customerId AND payment_id IS NULL AND deleted_at IS NULL AND void_date IS NULL AND (:jobOrderId IS NULL OR (id IS NOT NULL AND id <> :jobOrderId))")
     suspend fun getPreviousUnpaidByCustomerId(customerId: UUID, jobOrderId: UUID?): List<JobOrderPaymentMinimal>
 
-    @Query("SELECT jo.id, jo.job_order_number, jo.discounted_amount, jo.payment_id, jo.customer_id, jo.created_at, cu.name, cu.crn, pa.created_at as date_paid FROM job_orders jo JOIN customers cu ON jo.customer_id = cu.id LEFT JOIN job_order_payments pa ON jo.payment_id = pa.id WHERE " +
+    @Query("SELECT jo.id, jo.job_order_number, jo.discounted_amount, jo.payment_id, jo.customer_id, jo.created_at, cu.name, cu.crn, pa.created_at as date_paid, pa.cashless_provider" +
+        " FROM job_orders jo JOIN customers cu ON jo.customer_id = cu.id LEFT JOIN job_order_payments pa ON jo.payment_id = pa.id " +
+        " WHERE " +
         " (cu.name LIKE '%' || :keyword || '%'" +
         "       OR jo.job_order_number LIKE '%' || :keyword || '%'" +
         "       OR cu.crn LIKE '%' || :keyword || '%') " +
-        " AND (jo.deleted_at IS NULL AND jo.void_date IS NULL) " +
         " AND ((:paymentStatus = 0 AND pa.created_at IS NOT NULL) OR" +
         "      (:paymentStatus = 1 AND pa.created_at IS NULL) OR" +
         "      (:paymentStatus = 2))" +
+        " AND (jo.deleted_at IS NULL " +
+        " AND ((:includeVoid = 1) OR " +
+        "      (:includeVoid = 0 AND jo.void_date IS NULL))) " +
         " AND (:customerId IS NULL OR cu.id = :customerId)" +
         " AND ((:dateFrom IS NULL AND :dateTo IS NULL) OR " +
         " (:filterBy = 'created' AND :dateFrom IS NOT NULL AND :dateTo IS NULL AND strftime('%Y-%m-%d', jo.created_at / 1000, 'unixepoch') = :dateFrom) OR " +
@@ -116,16 +123,26 @@ interface DaoJobOrder {
         " CASE WHEN :orderBy = 'Customer Name' AND :sortDirection = 'DESC' THEN cu.name END DESC, " +
         " CASE WHEN :orderBy = 'Job Order Number' AND :sortDirection = 'DESC' THEN jo.job_order_number END DESC " +
         " LIMIT 20 OFFSET :offset")
-    fun load(keyword: String?, orderBy: String?, sortDirection: String?, offset: Int, paymentStatus: EnumPaymentStatus?, customerId: UUID?, filterBy: EnumJoFilterBy?, dateFrom: LocalDate?, dateTo: LocalDate?): List<JobOrderListItem>
+    fun load(keyword: String?, orderBy: String?, sortDirection: EnumSortDirection?, offset: Int, paymentStatus: EnumPaymentStatus?, customerId: UUID?, filterBy: EnumJoFilterBy?, includeVoid: Boolean, dateFrom: LocalDate?, dateTo: LocalDate?): List<JobOrderListItem>
 
-    @Query("SELECT COUNT(*) FROM job_orders jo JOIN customers cu ON jo.customer_id = cu.id LEFT JOIN job_order_payments pa ON jo.payment_id = pa.id WHERE " +
+    @Query(//"SELECT COUNT(*) as totalCount FROM job_orders jo JOIN customers cu ON jo.customer_id = cu.id LEFT JOIN job_order_payments pa ON jo.payment_id = pa.id WHERE " +
+            "SELECT " +
+            "SUM(CASE WHEN pa.id IS NOT NULL THEN 1 ELSE 0 END) AS paidCount, " +
+            "SUM(CASE WHEN pa.id IS NULL THEN 1 ELSE 0 END) AS unpaidCount, " +
+            "COUNT(jo.id) AS totalResultCount, " +
+            "SUM(CASE WHEN pa.id IS NOT NULL THEN jo.discounted_amount ELSE 0 END) AS paidSum, " +
+            "SUM(CASE WHEN pa.id IS NULL THEN jo.discounted_amount ELSE 0 END) AS unpaidSum, " +
+            "SUM(jo.discounted_amount) AS totalSum " +
+            " FROM job_orders jo JOIN customers cu ON jo.customer_id = cu.id LEFT JOIN job_order_payments pa ON jo.payment_id = pa.id WHERE " +
             " (cu.name LIKE '%' || :keyword || '%'" +
             "       OR jo.job_order_number LIKE '%' || :keyword || '%'" +
             "       OR cu.crn LIKE '%' || :keyword || '%') " +
-            " AND (jo.deleted_at IS NULL AND jo.void_date IS NULL) " +
             " AND ((:paymentStatus = 0 AND jo.payment_id IS NOT NULL) OR" +
             "      (:paymentStatus = 1 AND jo.payment_id IS NULL) OR" +
             "      (:paymentStatus = 2))" +
+            " AND (jo.deleted_at IS NULL " +
+            " AND ((:includeVoid = 1) OR " +
+            "      (:includeVoid = 0 AND jo.void_date IS NULL))) " +
             " AND (:customerId IS NULL OR cu.id = :customerId)" +
             " AND ((:dateFrom IS NULL AND :dateTo IS NULL) OR " +
             " (:filterBy = 'created' AND :dateFrom IS NOT NULL AND :dateTo IS NULL AND strftime('%Y-%m-%d', jo.created_at / 1000, 'unixepoch') = :dateFrom) OR " +
@@ -133,13 +150,13 @@ interface DaoJobOrder {
             " (:filterBy = 'paid' AND :dateFrom IS NOT NULL AND :dateTo IS NULL AND strftime('%Y-%m-%d', pa.created_at / 1000, 'unixepoch') = :dateFrom) OR" +
             " (:filterBy = 'paid' AND :dateFrom IS NOT NULL AND :dateTo IS NOT NULL AND strftime('%Y-%m-%d', pa.created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo)) "
     )
-    fun count(keyword: String?, paymentStatus: EnumPaymentStatus?, customerId: UUID?, filterBy: EnumJoFilterBy?, dateFrom: LocalDate?, dateTo: LocalDate?): Int
+    fun count(keyword: String?, paymentStatus: EnumPaymentStatus?, customerId: UUID?, filterBy: EnumJoFilterBy?, includeVoid: Boolean, dateFrom: LocalDate?, dateTo: LocalDate?): JobOrderResultSummary?
 
     @Transaction
-    suspend fun queryResult(keyword: String?, orderBy: String?, sortDirection: String?, offset: Int, paymentStatus: EnumPaymentStatus?, customerId: UUID?, filterBy: EnumJoFilterBy?, dateFrom: LocalDate?, dateTo: LocalDate?) : JobOrderQueryResult {
+    suspend fun queryResult(keyword: String?, af: JobOrderAdvancedFilter, offset: Int, customerId: UUID?) : JobOrderQueryResult {
         return JobOrderQueryResult(
-            load(keyword, orderBy, sortDirection, offset, paymentStatus, customerId, filterBy, dateFrom, dateTo),
-            count(keyword, paymentStatus, customerId, filterBy, dateFrom, dateTo)
+            load(keyword, af.orderBy, af.sortDirection, offset, af.paymentStatus, customerId, af.filterBy, af.includeVoid, af.dateFilter?.dateFrom, af.dateFilter?.dateTo),
+            count(keyword, af.paymentStatus, customerId, af.filterBy, af.includeVoid, af.dateFilter?.dateFrom, af.dateFilter?.dateTo)
         )
     }
 

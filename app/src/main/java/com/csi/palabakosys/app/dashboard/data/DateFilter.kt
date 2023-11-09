@@ -19,9 +19,9 @@ data class DateFilter(
         val dateToString = dateTo?.toHumanReadableString()
 
         return if (dateTo != null) {
-            "Date from: $dateFromString to $dateToString"
+            "Dates from $dateFromString to $dateToString"
         } else {
-            "Date: $dateFromString"
+            "Date from $dateFromString"
         } + (
             dateTo?.let {
                 dateTo?.let {
