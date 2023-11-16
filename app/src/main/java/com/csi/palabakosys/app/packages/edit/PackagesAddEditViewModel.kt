@@ -29,6 +29,6 @@ constructor(
             addRule("packageName", model.value?.packageName, arrayOf(Rule.Required))
         }
 
-        super.validate(inputValidation)
+        super.isInvalid(inputValidation)
     }
 }

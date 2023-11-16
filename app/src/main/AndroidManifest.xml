@@ -34,6 +34,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LMS2022">
         <activity
+            android:name=".app.pickup_and_deliveries.add_edit.AddEditDeliveryProfileActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".app.app_settings.developer.DeveloperSettingsActivity"
             android:exported="false">
             <meta-data
@@ -355,7 +362,6 @@
             android:enabled="true"
             android:exported="false"
             android:stopWithTask="false" />
-
         <service
             android:name=".services.PrinterService"
             android:enabled="true"
@@ -420,15 +426,14 @@
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
-        </activity>
-<!--        <activity-->
-<!--            android:name=".app.remote.shared_ui.RemoteActivationActivity"-->
-<!--            android:exported="false"-->
-<!--            android:label="Remote Activation">-->
-<!--            <meta-data-->
-<!--                android:name="android.app.lib_name"-->
-<!--                android:value="" />-->
-<!--        </activity> &lt;!&ndash; <activity &ndash;&gt;-->
+        </activity> <!-- <activity -->
+        <!-- android:name=".app.remote.shared_ui.RemoteActivationActivity" -->
+        <!-- android:exported="false" -->
+        <!-- android:label="Remote Activation"> -->
+        <!-- <meta-data -->
+        <!-- android:name="android.app.lib_name" -->
+        <!-- android:value="" /> -->
+        <!-- </activity> &lt;!&ndash; <activity &ndash;&gt; -->
         <!-- android:name="RemoteQueuesActivity" -->
         <!-- android:exported="false" > -->
         <!-- <meta-data -->

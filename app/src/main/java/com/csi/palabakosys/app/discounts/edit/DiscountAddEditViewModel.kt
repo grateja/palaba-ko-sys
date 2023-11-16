@@ -63,7 +63,7 @@ constructor(
             }
 
         }
-        super.validate(inputValidation)
+        super.isInvalid(inputValidation)
     }
 
     override fun save() {

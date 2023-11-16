@@ -1,8 +1,6 @@
 package com.csi.palabakosys.app.products.edit
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.csi.palabakosys.model.EnumMeasureUnit
 import com.csi.palabakosys.model.Rule
 import com.csi.palabakosys.room.entities.EntityProduct
 import com.csi.palabakosys.room.repository.ProductRepository
@@ -36,7 +34,7 @@ constructor(
             addRule("price", model.value?.price, arrayOf(Rule.Required, Rule.IsNumeric))
             addRule("unitPerServe", model.value?.unitPerServe, arrayOf(Rule.Required, Rule.IsNumeric))
         }
-        super.validate(inputValidation)
+        super.isInvalid(inputValidation)
     }
 
 //    override fun save() {

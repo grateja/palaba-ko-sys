@@ -6,14 +6,16 @@ import com.csi.palabakosys.model.EnumDeliveryVehicle
 
 @Entity(tableName = "delivery_profiles")
 data class EntityDeliveryProfile(
-    val vehicle: EnumDeliveryVehicle,
+    var vehicle: EnumDeliveryVehicle,
 
     @ColumnInfo(name = "base_fare")
-    val baseFare: Float,
+    var baseFare: Float,
 
     @ColumnInfo(name = "price_per_km")
-    val pricePerKm: Float = 0f,
+    var pricePerKm: Float = 0f,
 
     @ColumnInfo(name = "min_distance")
-    val minDistance: Float = 1f,
-) : BaseEntity()
+    var minDistance: Float = 1f,
+) : BaseEntity() {
+    constructor(): this(EnumDeliveryVehicle.MOTORCYCLE, 0f, 0f)
+}

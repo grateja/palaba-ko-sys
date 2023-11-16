@@ -43,7 +43,7 @@ constructor(
             )
         }
 
-        super.validate(inputValidation)
+        super.isInvalid(inputValidation)
     }
 
     fun save(userId: UUID?) {

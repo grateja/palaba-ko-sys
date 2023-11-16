@@ -12,36 +12,57 @@
         android:id="@+id/cardVehicle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:divider="@drawable/divider_10"
             android:showDividers="middle"
             android:orientation="horizontal">
             <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/icon"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:src="@drawable/icon_delivery_motorcycle"
-                app:imageResource="@{viewModel.vehicle.icon}"/>
-            <LinearLayout
-                android:layout_width="match_parent"
+                app:imageResource="@{viewModel.vehicle.icon}"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+            <TextView
+                style="@style/TileSubTitle"
+                android:id="@+id/textTitle"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:divider="@drawable/divider_10"
-                android:showDividers="middle"
-                android:orientation="vertical">
-                <TextView
-                    style="@style/TileSubTitle"
-                    android:id="@+id/textTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    tools:text="Motorcycle"
-                    android:text="@{viewModel.vehicle.toString()}"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    tools:text="Some description"
-                    android:text="@{viewModel.vehicle.description}"/>
-            </LinearLayout>
-        </LinearLayout>
+                android:layout_marginStart="20dp"
+                tools:text="Motorcycle"
+                android:text="@{viewModel.vehicle.toString()}"
+                app:layout_constraintTop_toTopOf="@id/icon"
+                app:layout_constraintStart_toEndOf="@id/icon"/>
+            <TextView
+                android:id="@+id/text_base_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintStart_toStartOf="@id/text_description"
+                app:layout_constraintTop_toBottomOf="@id/text_description"
+                tools:text="P20.P Base Price"
+                android:text="@{`P ` + viewModel.baseFare + ` Base fare`}"/>
+            <TextView
+                android:id="@+id/text_price_per_km"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/text_description"
+                tools:text="P20.P Addtl./KM"
+                android:text="@{`P ` + viewModel.baseFare + ` Addtl charge every KM`}"/>
+            <TextView
+                android:fontFamily="sans-serif-thin"
+                android:id="@+id/text_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Some description"
+                android:text="@{viewModel.vehicle.description}"
+                app:layout_constraintTop_toBottomOf="@id/textTitle"
+                app:layout_constraintStart_toStartOf="@id/textTitle"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 </layout>

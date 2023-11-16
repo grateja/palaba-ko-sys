@@ -31,7 +31,7 @@ constructor(
             addRule("name", model.value?.name, arrayOf(Rule.Required))
             addRule("price", model.value?.price, arrayOf(Rule.Required, Rule.IsNumeric))
         }
-        super.validate(inputValidation)
+        super.isInvalid(inputValidation)
     }
 //
 //    override fun save() {

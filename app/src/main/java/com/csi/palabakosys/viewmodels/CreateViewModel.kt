@@ -2,7 +2,6 @@ package com.csi.palabakosys.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.csi.palabakosys.model.CRUDActionEnum
 import com.csi.palabakosys.room.entities.BaseEntity
@@ -37,7 +36,7 @@ open class CreateViewModel<T : BaseEntity> (private val iRepository: IRepository
         dataState.value = DataState.RequestExit(promptPass)
     }
 
-    protected fun validate(inputValidation: InputValidation) : Boolean {
+    protected fun isInvalid(inputValidation: InputValidation) : Boolean {
         val isInvalid = inputValidation.isInvalid()
 
         dataState.value = if (isInvalid)
