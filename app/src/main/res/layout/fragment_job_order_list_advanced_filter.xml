@@ -163,16 +163,18 @@
                 </com.google.android.material.card.MaterialCardView>
 
             <!-- TableRow 4 -->
-                <CheckBox
-                    app:layout_constraintTop_toBottomOf="@id/button_select_date_range"
-                    app:layout_constraintBottom_toTopOf="@id/button_apply"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    android:id="@+id/checkbox_include_void"
-                    android:checked="@={viewModel.advancedFilter.includeVoid}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Show Void JobOrder"/>
+<!--                <ToggleButton-->
+<!--                    app:layout_constraintTop_toBottomOf="@id/button_select_date_range"-->
+<!--                    app:layout_constraintBottom_toTopOf="@id/button_apply"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    android:textOff="VOID ONLY"-->
+<!--                    android:textOn="NON VOID ONLY"-->
+<!--                    android:id="@+id/checkbox_include_void"-->
+<!--                    android:checked="@={viewModel.advancedFilter.nonVoidOnly}"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Exclude void Job Orders"/>-->
                 <Button
                     style="@style/RoundButtonNeutral"
                     android:id="@+id/button_apply"

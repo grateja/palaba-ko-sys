@@ -94,12 +94,13 @@ constructor (
         page: Int,
 //        paymentStatus: EnumPaymentStatus?,
         customerId: UUID?,
+        nonVoidOnly: Boolean,
 //        filterBy: EnumJoFilterBy,
 //        includeVoid: Boolean,
 //        dateFilter: DateFilter?
     ): JobOrderQueryResult {
         val offset = (20 * page) - 20
-        return daoJobOrder.queryResult(keyword, af, offset, customerId)
+        return daoJobOrder.queryResult(keyword, af, offset, customerId, nonVoidOnly)
     }
 //    suspend fun load(
 //        keyword: String?,

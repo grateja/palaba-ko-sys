@@ -20,12 +20,12 @@ constructor(
 {
     private var originalName: String? = null
     private var originalCRN: String? = null
-    fun get(id: UUID?) {
+    fun get(id: UUID?, presetName: String?) {
         model.value.let {
             if(it != null) return
             viewModelScope.launch {
                 val crn = repository.getNextJONumber()
-                super.get(id, EntityCustomer(crn)).let { customer ->
+                super.get(id, EntityCustomer(crn, presetName)).let { customer ->
                     originalName = customer.name
                     originalCRN = customer.crn
                 }
@@ -52,6 +52,10 @@ constructor(
             }
             super.isInvalid(inputValidation)
         }
+    }
+
+    fun presetCustomerName(name: String?) {
+
     }
 
 //    override fun save() {

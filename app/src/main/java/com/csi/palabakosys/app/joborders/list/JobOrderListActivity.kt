@@ -24,6 +24,7 @@ import com.csi.palabakosys.model.JobOrderAdvancedFilter
 import com.csi.palabakosys.util.Constants
 import com.csi.palabakosys.util.FilterActivity
 import com.csi.palabakosys.viewmodels.ListViewModel
+import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -49,6 +50,20 @@ class JobOrderListActivity : FilterActivity() {
         binding.recyclerJobOrderList.adapter = adapter
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        binding.tabRegularAndTrashed.apply {
+            this.addTab(this.newTab().setText("Active"))
+            this.addTab(this.newTab().setText("Deleted"))
+            this.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener {
+                override fun onTabSelected(tab: TabLayout.Tab?) {
+                    viewModel.setView(tab?.position == 0)
+                }
+
+                override fun onTabUnselected(tab: TabLayout.Tab?) { }
+
+                override fun onTabReselected(tab: TabLayout.Tab?) { }
+            })
+        }
 
         subscribeEvents()
         subscribeListeners()

@@ -395,7 +395,7 @@ class JobOrderCreateActivity : BaseActivity() {
 //                        }
 //                        launcher.launch(intent)
 //                    }
-                    AddEditCustomerFragment.getInstance(it.customerId.toString())
+                    AddEditCustomerFragment.getInstance(it.customerId.toString(), null)
                         .show(supportFragmentManager, null)
                     viewModel.resetState()
                 }

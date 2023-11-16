@@ -28,6 +28,7 @@ constructor(
     val total = MutableLiveData<JobOrderResultSummary?>()
 //    val hideDeleted = MutableLiveData(true)
     val customerId = MutableLiveData<UUID?>()
+    val nonVoidOnly = MutableLiveData(true)
     private val _navigationState = MutableLiveData<NavigationState>()
     val navigationState: LiveData<NavigationState> = _navigationState
 //    val includeVoid = MutableLiveData(false)
@@ -72,8 +73,9 @@ constructor(
 
             val page = page.value ?: 1
             val customerId = customerId.value
+            val nonVoidOnly = nonVoidOnly.value ?: true
 
-            val result = jobOrderRepository.load(keyword, filterParams, page, customerId)
+            val result = jobOrderRepository.load(keyword, filterParams, page, customerId, nonVoidOnly)
 
             total.value = result.count
 
@@ -140,6 +142,11 @@ constructor(
             println("date range")
             println(it?.dateFilter)
         }
+    }
+
+    fun setView(nonVoidOnly: Boolean) {
+        this.nonVoidOnly.value = nonVoidOnly
+        filter(true)
     }
 
     sealed class NavigationState {

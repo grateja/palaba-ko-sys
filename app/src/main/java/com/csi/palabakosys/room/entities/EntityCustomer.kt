@@ -6,10 +6,11 @@ import androidx.room.Entity
 @Entity(tableName = "customers")
 data class EntityCustomer(
     @ColumnInfo(name = "crn")
-    var crn: String?
-) : BaseEntity() {
+    var crn: String?,
+
     @ColumnInfo(name = "name")
     var name: String? = null
+) : BaseEntity() {
 
     @ColumnInfo(name = "contact_number")
     var contactNumber: String? = null

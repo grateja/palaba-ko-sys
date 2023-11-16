@@ -89,7 +89,7 @@ class SelectCustomerActivity : FilterActivity() {
     }
 
     private fun editCustomer(customerId: String?) {
-        customerModal = AddEditCustomerFragment.getInstance(customerId)
+        customerModal = AddEditCustomerFragment.getInstance(customerId, searchBar?.query.toString())
         customerModal.show(supportFragmentManager, "KEME")
         customerModal.onOk = {
             open(it!!)

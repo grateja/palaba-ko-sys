@@ -35,7 +35,8 @@ class AddEditCustomerFragment : ModalFragment<CustomerMinimal?>() {
         subscribeListeners()
 
         arguments?.getString("data").let {
-            viewModel.get(it.toUUID())
+            val name = arguments?.getString("name")
+            viewModel.get(it.toUUID(), name)
         }
         return binding.root
     }
@@ -98,11 +99,12 @@ class AddEditCustomerFragment : ModalFragment<CustomerMinimal?>() {
     companion object {
         const val CUSTOMER_ID_EXTRA = "data"
         var instance: AddEditCustomerFragment? = null
-        fun getInstance(model: String?) : AddEditCustomerFragment {
+        fun getInstance(model: String?, presetName: String?) : AddEditCustomerFragment {
             if(instance == null || instance?.dismissed == true) {
                 instance = AddEditCustomerFragment().apply {
                     arguments = Bundle().apply {
                         putString("data", model)
+                        putString("name", presetName)
                     }
                 }
             }
