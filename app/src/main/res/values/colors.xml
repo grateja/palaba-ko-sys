@@ -23,7 +23,7 @@
     <color name="border_primary">#ECECEC</color>
     <color name="fill_primary">#FFEB3B</color>
     <color name="text_warning">#F66539</color>
-    <color name="jo_paid">#00C14D</color>
-    <color name="jo_not_paid">#B3172E</color>
+    <color name="jo_paid">#1443FF00</color>
+    <color name="jo_not_paid">#1AF80025</color>
     <color name="jo_void">#858585</color>
 </resources>

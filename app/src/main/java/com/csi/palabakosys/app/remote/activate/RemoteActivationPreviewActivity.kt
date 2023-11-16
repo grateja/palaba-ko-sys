@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -17,9 +16,8 @@ import com.csi.palabakosys.model.MachineActivationQueues
 import com.csi.palabakosys.model.MachineConnectionStatus
 import com.csi.palabakosys.services.MachineActivationService
 import com.csi.palabakosys.util.Constants
-import com.csi.palabakosys.util.toUUID
+import com.csi.palabakosys.util.Constants.Companion.CASCADE_CLOSE
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.UUID
 
 @AndroidEntryPoint
 class RemoteActivationPreviewActivity : AppCompatActivity() {
@@ -108,6 +106,11 @@ class RemoteActivationPreviewActivity : AppCompatActivity() {
 
         binding.buttonFix.setOnClickListener {
             viewModel.fix()
+        }
+
+        binding.buttonHide.setOnClickListener {
+            setResult(RESULT_OK, Intent(CASCADE_CLOSE))
+            finish()
         }
     }
 

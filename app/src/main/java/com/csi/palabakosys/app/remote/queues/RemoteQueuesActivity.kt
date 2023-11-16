@@ -15,6 +15,7 @@ import com.csi.palabakosys.room.entities.EntityCustomerQueueService
 import com.csi.palabakosys.services.MachineActivationService
 import com.csi.palabakosys.util.ActivityLauncher
 import com.csi.palabakosys.util.Constants
+import com.csi.palabakosys.util.Constants.Companion.CASCADE_CLOSE
 import com.csi.palabakosys.util.toUUID
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -49,6 +50,13 @@ class RemoteQueuesActivity : AppCompatActivity() {
         serviceQueuesAdapter.onItemClick = {
             it.id?.let { joServiceId ->
                 viewModel.openActivationPreview(joServiceId)
+            }
+        }
+
+        launcher.onOk = {
+            if(it.data?.action == CASCADE_CLOSE) {
+                setResult(RESULT_OK, Intent(CASCADE_CLOSE))
+                finish()
             }
         }
     }

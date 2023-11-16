@@ -11,6 +11,7 @@
         app:cardBackgroundColor="@color/secondary_background"
         app:cardCornerRadius="12dp"
         app:cardElevation="0dp"
+        app:strokeWidth="1dp"
         android:layout_margin="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -98,9 +99,12 @@
                 android:layout_height="wrap_content"
                 app:constraint_referenced_ids="iconDatePaid, labelDatePaid"/>
             <TextView
+                android:textColor='@{viewModel.datePaid != null ? @android:color/holo_blue_dark : @android:color/holo_red_dark}'
                 android:text="@{viewModel.paymentStatus()}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textFontWeight="900"
+                android:fontFamily="sans-serif"
                 app:layout_constraintTop_toBottomOf="@id/labelDiscountedAmount"
                 app:layout_constraintEnd_toEndOf="@id/labelDatePaid"
                 app:layout_constraintBottom_toTopOf="@id/iconDatePaid"

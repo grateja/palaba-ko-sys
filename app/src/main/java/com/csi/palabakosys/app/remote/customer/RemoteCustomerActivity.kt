@@ -41,6 +41,13 @@ class RemoteCustomerActivity : AppCompatActivity() {
         customerQueuesAdapter.onItemClick = {
             viewModel.openQueueServices(it)
         }
+
+        launcher.onOk = {
+            if(it.data?.action == Constants.CASCADE_CLOSE) {
+                setResult(RESULT_OK, Intent(Constants.CASCADE_CLOSE))
+                finish()
+            }
+        }
     }
 
     private fun subscribeListeners() {
