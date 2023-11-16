@@ -11,7 +11,7 @@ abstract class DaoDiscount : BaseDao<EntityDiscount> {
     @Query("SELECT * FROM discounts WHERE id = :id AND deleted_at IS NULL")
     abstract suspend fun get(id: UUID) : EntityDiscount?
 
-    @Query("SELECT * FROM discounts WHERE name LIKE '%' || :keyword || '%' AND deleted_at IS NULL ORDER BY name")
+    @Query("SELECT *, 0 as void FROM discounts WHERE name LIKE '%' || :keyword || '%' AND deleted_at IS NULL ORDER BY name")
     abstract suspend fun getAll(keyword: String) : List<MenuDiscount>
 
     @Query("SELECT * FROM discounts WHERE name LIKE '%' || :keyword || '%' AND deleted_at IS NULL ORDER BY name")

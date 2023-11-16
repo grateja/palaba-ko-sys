@@ -23,6 +23,9 @@ data class EntityJobOrderService(
     @ColumnInfo(name = "used")
     var used: Int = 0,
 
+    @ColumnInfo(name = "void")
+    var isVoid: Boolean = false,
+
     @Embedded
     var serviceRef: EntityServiceRef,
 

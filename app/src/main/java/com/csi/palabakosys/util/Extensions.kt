@@ -10,6 +10,7 @@ import android.provider.MediaStore
 import android.util.Size
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -247,6 +248,31 @@ fun Context.showDeleteConfirmationDialog(title: String? = "Delete this item", me
         create()
     }.show()
 }
+
+fun Context.showTextInputDialog(title: String?, message: String?, initialValue: String?, onOk: (value: String) -> Unit) {
+    val context = this
+    val input = EditText(context).apply {
+        setText(initialValue)
+    }
+    val textInputLayout = TextInputLayout(context, null, R.style.Widget_MaterialComponents_TextInputLayout_OutlinedBox_Dense).apply {
+        addView(input)
+        hint = message
+    }
+
+    AlertDialog.Builder(context).apply {
+        setTitle(title)
+//        setMessage(message)
+        setView(textInputLayout)
+        setPositiveButton("Ok") { _, _ ->
+            onOk(input.text.toString())
+        }
+//        setNegativeButton("Cancel") { _, _ ->
+//
+//        }
+        create()
+    }.show()
+}
+
 
 fun View.showSnackBar(message: String, duration: Int = Snackbar.LENGTH_SHORT, actionText: String? = null, actionCallback: (() -> Unit)? = null) {
     val snackBar = Snackbar.make(this, message, duration)

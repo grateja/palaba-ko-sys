@@ -104,33 +104,21 @@ constructor(
 
     private lateinit var printer: EscPosPrinter
     fun testPrint() {
-        Thread(Runnable {
-            try {
-                val device = bluetoothAdapter.getRemoteDevice(macAddress.value)
-                val bluetoothConnection = BluetoothConnection(device)
-
-                val dpi = dpi.value?.toInt() ?: 203
-                val width = width.value?.toFloat() ?: 58f
-                val character = charactersPerLine.value?.toInt() ?: 32
-
-                printer = EscPosPrinter(bluetoothConnection, dpi, width, character)
-
-                printer.printFormattedTextAndCut(sampleText.value)
-                printer.disconnectPrinter()
-            } catch (e: Exception) {
-                println("Problem establishing connection")
-                e.printStackTrace()
-            } finally {
-                try {
-                    printer.disconnectPrinter()
-                } catch (_: Exception){}
-            }
-        }).start()
+        val settings = PrinterSettings(
+            printerName.value,
+            macAddress.value,
+            dpi.value?.toInt() ?: 203,
+            width.value?.toFloat() ?: 58f,
+            charactersPerLine.value?.toInt() ?: 32
+        )
+        val text = sampleText.value ?: "Sample text"
+        _dataState.value = DataState.StartTestPrint(text, settings)
     }
 
     sealed class DataState {
         object StateLess: DataState()
         data class OpenPrinterBrowser(val currentPrinter: PrinterDevice) : DataState()
+        data class StartTestPrint(val payload: String, val settings: PrinterSettings): DataState()
         object Save: DataState()
     }
 }

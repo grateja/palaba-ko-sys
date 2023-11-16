@@ -17,6 +17,7 @@ class DeliveryCharge(
     var deliveryOption: EnumDeliveryOption = EnumDeliveryOption.PICKUP_AND_DELIVERY,
     var price: Float,
     var deletedAt: Instant?,
+    var isVoid: Boolean = false,
 ) : Parcelable {
 
 //    fun price() : Float {

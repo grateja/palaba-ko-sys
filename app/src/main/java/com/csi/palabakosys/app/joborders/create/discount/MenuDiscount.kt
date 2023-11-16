@@ -26,6 +26,9 @@ data class MenuDiscount(
     @ColumnInfo(name = "discount_type")
     val discountType: EnumDiscountType,
 
+    @ColumnInfo(name = "void")
+    var isVoid: Boolean = false,
+
     @ColumnInfo(name = "deleted_at")
     var deletedAt: Instant?,
 ) : Parcelable {

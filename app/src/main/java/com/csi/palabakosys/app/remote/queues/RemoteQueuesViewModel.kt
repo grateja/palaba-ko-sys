@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.switchMap
+import com.csi.palabakosys.model.MachineActivationQueues
 import com.csi.palabakosys.room.entities.EntityCustomerQueueService
 import com.csi.palabakosys.room.repository.JobOrderQueuesRepository
 import com.csi.palabakosys.room.repository.MachineRepository
@@ -22,14 +23,14 @@ constructor(
     private val _navigationState = MutableLiveData<NavigationState>()
     val navigationState: LiveData<NavigationState> = _navigationState
 
-    val machineId = MutableLiveData<UUID>()
-    val machine = machineId.switchMap { machineRepository.getMachineLiveData(it) }
+    private val _machineId = MutableLiveData<UUID>()
+    val machine = _machineId.switchMap { machineRepository.getMachineLiveData(it) }
 
     val customerQueue = MutableLiveData<EntityCustomerQueueService>()
     val availableServices = customerQueue.switchMap { queuesRepository.getAvailableServicesByCustomerIdAsLiveData(it.customerId, it.machineType) } //MutableLiveData<List<EntityAvailableService>>()
 
     fun setMachineId(machineId: UUID) {
-        this.machineId.value = machineId
+        this._machineId.value = machineId
     }
 
     fun setCustomerQueue(customerQueue: EntityCustomerQueueService?) {
@@ -39,9 +40,10 @@ constructor(
     }
 
     fun openActivationPreview(joServiceId: UUID) {
-        val machineId = machineId.value ?: return
+        val machineId = _machineId.value ?: return
         val customerId = customerQueue.value?.customerId ?: return
-        _navigationState.value = NavigationState.OpenActivationPreview(machineId, joServiceId, customerId)
+        val queues = MachineActivationQueues(machineId, joServiceId, customerId)
+        _navigationState.value = NavigationState.OpenActivationPreview(queues)
     }
 
     fun resetNavigationState() {
@@ -50,6 +52,7 @@ constructor(
 
     sealed class NavigationState {
         object ResetState: NavigationState()
-        class OpenActivationPreview(val machineId: UUID, val joServiceId: UUID, val customerId: UUID) : NavigationState()
+//        class OpenActivationPreview(val machineId: UUID, val joServiceId: UUID, val customerId: UUID) : NavigationState()
+        class OpenActivationPreview(val queue: MachineActivationQueues) : NavigationState()
     }
 }

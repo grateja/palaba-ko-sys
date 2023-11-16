@@ -140,6 +140,7 @@ constructor(
                 it.service.serviceRef.washType,
                 it.serviceCrossRef.quantity,
                 0,
+                false,
                 it.serviceCrossRef.deletedAt
             )
         }
@@ -158,6 +159,7 @@ constructor(
                 it.productCrossRef.quantity,
                 it.product.currentStock,
                 it.product.productType ?: EnumProductType.OTHER,
+                false,
                 it.productCrossRef.deletedAt
             )
         }
@@ -173,6 +175,7 @@ constructor(
                 it.extras.price,
                 it.extras.category,
                 it.extrasCrossRef.quantity,
+                false,
                 it.extrasCrossRef.deletedAt
             )
         }

@@ -18,12 +18,12 @@ constructor (
         daoRemote.activate(activationRef, jobOrderServiceId, machineId, machineUsage)
     }
 
-    suspend fun preActivate(machineId: UUID, jobOrderServiceId: UUID) {
-        daoRemote.preActivate(machineId, jobOrderServiceId)
+    suspend fun preActivate(machineId: UUID, jobOrderServiceId: UUID, customerId: UUID) {
+        daoRemote.preActivate(machineId, jobOrderServiceId, customerId)
     }
 
     suspend fun revertActivation(machineId: UUID, jobOrderServiceId: UUID) {
-        daoRemote.cancelActivation(machineId, jobOrderServiceId)
+        daoRemote.revertActivation(machineId, jobOrderServiceId)
     }
 
     fun getRunningMachine(machineId: UUID?) = daoRemote.getActiveMachine(machineId)

@@ -38,7 +38,7 @@ import com.csi.palabakosys.util.converters.*
     EntityInventoryLog::class,
     EntityDiscount::class,
 //    EntityCashlessProvider::class
-], version = 12,
+], version = 13,
     exportSchema = true,
 )
 @TypeConverters(
@@ -110,7 +110,8 @@ abstract class MainDatabase : RoomDatabase() {
                         CreateTableClaimReceiptPicture(),
                         DropColumnJobOrderPicturesFilename(),
                         DropColumnJobOrderPicturesUri(),
-                        DropColumnClaimReceiptPicturesUri()
+                        DropColumnClaimReceiptPicturesUri(),
+                        AddColumnJobOrderItemsVoid()
 //                        AddColumnPaymentVoid(),
 //                        CreateTablePackage(),
 //                        CreateTablePackageService(),

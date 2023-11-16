@@ -9,23 +9,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.findNavController
-import androidx.work.WorkInfo
 import com.csi.palabakosys.R
 import com.csi.palabakosys.app.remote.shared_ui.RemoteActivationViewModel
 import com.csi.palabakosys.databinding.FragmentRemoteActivateBinding
 import com.csi.palabakosys.fragments.BaseModalFragment
-import com.csi.palabakosys.model.MachineActivationQueues
-import com.csi.palabakosys.model.MachineConnectionStatus
-import com.csi.palabakosys.services.MachineActivationService
-//import com.csi.palabakosys.worker.RemoteWorker
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import java.util.*
 
 @AndroidEntryPoint

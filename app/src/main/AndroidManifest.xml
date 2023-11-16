@@ -134,7 +134,7 @@
         <activity
             android:name=".app.remote.queues.RemoteQueuesActivity"
             android:exported="false"
-            android:label="Remote Activation">
+            android:label="Select Service">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -142,7 +142,7 @@
         <activity
             android:name=".app.remote.customer.RemoteCustomerActivity"
             android:exported="false"
-            android:label="Remote Activation">
+            android:label="Select customer">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -356,6 +356,12 @@
             android:exported="false"
             android:stopWithTask="false" />
 
+        <service
+            android:name=".services.PrinterService"
+            android:enabled="true"
+            android:exported="false"
+            android:stopWithTask="false" />
+
         <activity
             android:name=".app.machines.addedit.MachinesAddEditActivity"
             android:exported="false"
@@ -415,14 +421,14 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-        <activity
-            android:name=".app.remote.shared_ui.RemoteActivationActivity"
-            android:exported="false"
-            android:label="Remote Activation">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity> <!-- <activity -->
+<!--        <activity-->
+<!--            android:name=".app.remote.shared_ui.RemoteActivationActivity"-->
+<!--            android:exported="false"-->
+<!--            android:label="Remote Activation">-->
+<!--            <meta-data-->
+<!--                android:name="android.app.lib_name"-->
+<!--                android:value="" />-->
+<!--        </activity> &lt;!&ndash; <activity &ndash;&gt;-->
         <!-- android:name="RemoteQueuesActivity" -->
         <!-- android:exported="false" > -->
         <!-- <meta-data -->

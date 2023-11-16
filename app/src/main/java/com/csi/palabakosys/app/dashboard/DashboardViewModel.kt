@@ -74,24 +74,47 @@ constructor(
 
     fun openCustomers() {
         _dateFilter.value?.let {
+            if(customerCount.value == 0) {
+                _navigationState.value = NavigationState.Invalidate("No record")
+                return
+            }
             _navigationState.value = NavigationState.OpenCustomers(it)
         }
     }
 
     fun openJobOrders(filterBy: EnumJoFilterBy) {
         _dateFilter.value?.let {
+            if(jobOrderCount.value?.total() == 0) {
+                _navigationState.value = NavigationState.Invalidate("No record")
+                return
+            }
             _navigationState.value = NavigationState.OpenJobOrders(it, filterBy)
         }
     }
 
     fun openPayments() {
         _dateFilter.value?.let {
+            val collections = cashCollection.value ?: 0
+            val cashless = cashlessPayments.value?.size ?: 0
+            println("cash less")
+            println(cashless)
+            println("cash")
+            println(collections)
+
+            if(cashless.plus(collections.toInt()) == 1) {
+                _navigationState.value = NavigationState.Invalidate("No record")
+                return
+            }
             _navigationState.value = NavigationState.OpenJobOrdersPayments(it)
         }
     }
 
     fun openExpenses() {
         _dateFilter.value?.let {
+            if(expenses.value?.size == 0) {
+                _navigationState.value = NavigationState.Invalidate("No record")
+                return
+            }
             _navigationState.value = NavigationState.OpenExpenses(it)
         }
     }
@@ -115,5 +138,6 @@ constructor(
         data class OpenJobOrdersPayments(val dateFilter: DateFilter) : NavigationState()
         data class OpenExpenses(val dateFilter: DateFilter) : NavigationState()
         data class SwitchDates(val dateFilter: DateFilter) : NavigationState()
+        data class Invalidate(val message: String): NavigationState()
     }
 }

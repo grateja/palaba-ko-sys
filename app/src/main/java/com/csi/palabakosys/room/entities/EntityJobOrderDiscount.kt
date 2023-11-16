@@ -19,6 +19,9 @@ data class EntityJobOrderDiscount(
     @ColumnInfo(name = "applicable_to")
     val applicableToIds: String,
 
+    @ColumnInfo(name = "void")
+    var isVoid: Boolean = false,
+
     @PrimaryKey(autoGenerate = false)
     override var id: UUID,
 ) : BaseEntity(id)

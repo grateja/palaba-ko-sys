@@ -7,7 +7,6 @@ import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -40,15 +39,23 @@ class RemoteActivationPreviewActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        intent.getStringExtra(MachineActivationService.JO_SERVICE_ID_EXTRA).toUUID()?.let {
-            viewModel.setServiceId(it)
-        }
-        intent.getStringExtra(Constants.MACHINE_ID_EXTRA).toUUID()?.let {
-            viewModel.setMachineId(it)
-        }
-        intent.getStringExtra(MachineActivationService.CUSTOMER_ID_EXTRA).toUUID()?.let {
-            viewModel.setCustomerId(it)
-        }
+//        intent.getStringExtra(MachineActivationService.JO_SERVICE_ID_EXTRA).toUUID()?.let {
+//            viewModel.setServiceId(it)
+//        }
+//        if(intent.action == MachineActivationService.CHECK_ONLY_EXTRA) {
+//            intent.getStringExtra(Constants.MACHINE_ID_EXTRA).toUUID()?.let {
+//                checkPending(it)
+//            }
+//        } else {
+            intent.getParcelableExtra<MachineActivationQueues>(MachineActivationService.ACTIVATION_QUEUES_EXTRA)?.let {
+                viewModel.setMachineActivationQueue(it)
+                checkPending(it)
+            }
+//        }
+//        intent.getStringExtra(MachineActivationService.CUSTOMER_ID_EXTRA).toUUID()?.let {
+//            viewModel.setCustomerId(it)
+//        }
+
 
         val filter = IntentFilter(MachineActivationService.MACHINE_ACTIVATION)
             .apply {
@@ -60,17 +67,21 @@ class RemoteActivationPreviewActivity : AppCompatActivity() {
     }
 
     private fun subscribeObservers() {
+        viewModel.machineActivationQueue.observe(this, Observer {
+            setFinishOnTouchOutside(it.status != MachineConnectionStatus.CONNECTING)
+        })
         viewModel.dataState.observe(this, Observer {
             when(it) {
-                is RemoteActivationPreviewViewModel.DataState.CheckPending -> {
-                    checkPending(it.machineId)
-                    viewModel.resetState()
-                }
+//                is RemoteActivationPreviewViewModel.DataState.CheckPending -> {
+//                    checkPending(it.machineId)
+//                    viewModel.resetState()
+//                }
                 is RemoteActivationPreviewViewModel.DataState.InitiateActivation -> {
                     val intent = Intent(applicationContext, MachineActivationService::class.java).apply {
-                        putExtra(Constants.MACHINE_ID_EXTRA, it.machineId.toString())
-                        putExtra(MachineActivationService.JO_SERVICE_ID_EXTRA, it.workerId.toString())
-                        putExtra(MachineActivationService.CUSTOMER_ID_EXTRA, it.customerId.toString())
+                        putExtra(MachineActivationService.ACTIVATION_QUEUES_EXTRA, it.queue)
+//                        putExtra(Constants.MACHINE_ID_EXTRA, it.machineId.toString())
+//                        putExtra(MachineActivationService.JO_SERVICE_ID_EXTRA, it.workerId.toString())
+//                        putExtra(MachineActivationService.CUSTOMER_ID_EXTRA, it.customerId.toString())
                     }
                     startForegroundService(intent)
                     viewModel.resetState()
@@ -79,6 +90,10 @@ class RemoteActivationPreviewActivity : AppCompatActivity() {
                     setResult(it.result, Intent().apply {
                         putExtra("result", it.result)
                     })
+                    finish()
+                    viewModel.resetState()
+                }
+                is RemoteActivationPreviewViewModel.DataState.FixDataInconsistencies -> {
                     finish()
                     viewModel.resetState()
                 }
@@ -96,10 +111,10 @@ class RemoteActivationPreviewActivity : AppCompatActivity() {
         }
     }
 
-    private fun checkPending(machineId: UUID) {
+    private fun checkPending(queue: MachineActivationQueues) {
         val intent = Intent(this, MachineActivationService::class.java).apply {
             putExtra(MachineActivationService.CHECK_ONLY_EXTRA, true)
-            putExtra(Constants.MACHINE_ID_EXTRA, machineId.toString())
+            putExtra(MachineActivationService.ACTIVATION_QUEUES_EXTRA, queue)
         }
         startForegroundService(intent)
     }
@@ -118,33 +133,39 @@ class RemoteActivationPreviewActivity : AppCompatActivity() {
     private val receiver = object: BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val action = intent?.action
+            intent?.getParcelableExtra<MachineActivationQueues>(MachineActivationService.ACTIVATION_QUEUES_EXTRA)?.let {
+                viewModel.updateQueue(it)
+            }
+
             if(action == MachineActivationService.INPUT_INVALID_ACTION) {
                 viewModel.setValidationMessage(intent.getStringExtra(MachineActivationService.MESSAGE_EXTRA))
             }
 
-            if(action == MachineActivationService.MACHINE_ACTIVATION_READY) {
-                binding.buttonActivate.visibility = View.VISIBLE
-            } else if(action == MachineActivationService.MACHINE_ACTIVATION) {
-                intent.getParcelableExtra<MachineActivationQueues>(MachineActivationService.PENDING_QUEUES_EXTRA).let {
-                    if(it != null) {
-                        viewModel.setMachineActivationQueue(it)
-//                        viewModel.setMachineStatus(it.status)
-//                        viewModel.setServiceId(it.jobOrderServiceId)
-//                        viewModel.setCustomerId(it.customerId)
-//                        viewModel.setMessage(it.message)
-                        if(it.connecting() || it.status == MachineConnectionStatus.SUCCESS) {
-                            binding.buttonActivate.visibility = View.GONE
-                        } else {
-                            binding.buttonActivate.visibility = View.VISIBLE
-                        }
-//                    } else {
-//                        binding.buttonActivate.visibility = View.VISIBLE
-                    }
-                }
-            } else if(action == MachineActivationService.DATABASE_INCONSISTENCIES_ACTION) {
-                binding.buttonActivate.visibility = View.GONE
-                binding.buttonFix.visibility = View.VISIBLE
-            }
+//            if(action == MachineActivationService.MACHINE_ACTIVATION_READY) {
+//                binding.buttonActivate.visibility = View.VISIBLE
+//            } else if(action == MachineActivationService.MACHINE_ACTIVATION) {
+//                intent.getParcelableExtra<MachineActivationQueues>(MachineActivationService.ACTIVATION_QUEUES_EXTRA).let {
+//                    if(it != null) {
+////                        viewModel.setMachineActivationQueue(it)
+////                        viewModel.setMachineStatus(it.status)
+////                        viewModel.setServiceId(it.jobOrderServiceId)
+////                        viewModel.setCustomerId(it.customerId)
+////                        viewModel.setMessage(it.message)
+////                        if(it.connecting() || it.status == MachineConnectionStatus.SUCCESS) {
+////                            binding.buttonActivate.visibility = View.GONE
+////                        } else {
+////                            binding.buttonActivate.visibility = View.VISIBLE
+////                        }
+////                    } else {
+////                        binding.buttonActivate.visibility = View.VISIBLE
+//                    }
+//                }
+//            } else if(action == MachineActivationService.DATABASE_INCONSISTENCIES_ACTION) {
+////                binding.buttonActivate.visibility = View.GONE
+//                println("inconsistencies")
+//                viewModel.setValidationMessage(intent.getStringExtra(MachineActivationService.MESSAGE_EXTRA))
+//                binding.buttonFix.visibility = View.VISIBLE
+//            }
         }
     }
 }

@@ -26,5 +26,10 @@
                 android:layout_height="wrap_content"
                 android:text="Fake connection mode"/>
         </LinearLayout>
+        <TextView
+            android:id="@+id/text_fake_activation_delay"
+            android:text="Fake Activation Delay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 </layout>

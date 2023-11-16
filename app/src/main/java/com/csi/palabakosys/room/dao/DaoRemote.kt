@@ -25,6 +25,9 @@ interface DaoRemote {
     @Query("UPDATE machines SET service_activation_id = :jobOrderServiceId WHERE id = :machineId")
     fun setServiceActivationId(machineId: UUID, jobOrderServiceId: UUID?)
 
+    @Query("UPDATE machines SET customer_id = :customerId WHERE id = :machineId")
+    fun preSetCustomer(machineId: UUID, customerId: UUID?)
+
     @Query("UPDATE job_order_services SET used = used + 1 WHERE id = :jobOrderServiceId")
     fun preUseService(jobOrderServiceId: UUID)
 
@@ -32,14 +35,16 @@ interface DaoRemote {
     fun revertUsage(jobOrderServiceId: UUID)
 
     @Transaction
-    suspend fun preActivate(machineId: UUID, jobOrderServiceId: UUID) {
+    suspend fun preActivate(machineId: UUID, jobOrderServiceId: UUID, customerId: UUID) {
         setServiceActivationId(machineId, jobOrderServiceId)
         preUseService(jobOrderServiceId)
+        preSetCustomer(machineId, customerId)
     }
 
     @Transaction
-    suspend fun cancelActivation(machineId: UUID, jobOrderServiceId: UUID) {
+    suspend fun revertActivation(machineId: UUID, jobOrderServiceId: UUID) {
         setServiceActivationId(machineId, null)
+        preSetCustomer(machineId, null)
         revertUsage(jobOrderServiceId)
     }
 

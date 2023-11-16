@@ -61,6 +61,9 @@ constructor(
     private val _saved = MutableLiveData(false)
     val saved: LiveData<Boolean> = _saved
 
+    private val _deleted = MutableLiveData(false)
+    val deleted: LiveData<Boolean> = _deleted
+
     private val _customerId = MutableLiveData<UUID>()
 
     private val _dataState = MutableLiveData<DataState>()
@@ -321,6 +324,7 @@ constructor(
                     joSvc.serviceRef.washType,
                     joSvc.quantity,
                     joSvc.used,
+                    joSvc.isVoid,
                     joSvc.deletedAt).apply {
                     selected = true
                 }
@@ -335,6 +339,7 @@ constructor(
                     joExtras.price,
                     joExtras.category,
                     joExtras.quantity,
+                    joExtras.isVoid,
                     joExtras.deletedAt).apply {
                     selected = true
                 }
@@ -352,6 +357,7 @@ constructor(
                     joPrd.quantity,
                     0,
                     joPrd.productType,
+                    joPrd.isVoid,
                     joPrd.deletedAt).apply {
                     selected = true
                 }
@@ -374,6 +380,7 @@ constructor(
                 entity.value,
                 entity.applicableToIds,
                 entity.discountType,
+                entity.isVoid,
                 entity.deletedAt,
             )
         }
@@ -385,6 +392,7 @@ constructor(
             _locked.value = true
         }
         _saved.value = true
+        _deleted.value = jobOrder.jobOrder.deletedAt != null || jobOrder.jobOrder.entityJobOrderVoid != null
     }
 
     fun setJobOrder(joId: UUID) {
@@ -761,6 +769,7 @@ constructor(
                     it.price,
                     it.quantity,
                     it.used,
+                    it.isVoid,
                     EntityServiceRef(
                         it.machineType,
                         it.washType,
@@ -783,6 +792,7 @@ constructor(
                     it.unitPerServe,
                     it.quantity,
                     it.productType,
+                    it.isVoid,
                     it.joProductItemId ?: UUID.randomUUID()
                 ).apply {
                     deletedAt = it.deletedAt
@@ -797,6 +807,7 @@ constructor(
                     it.price,
                     it.quantity,
                     it.category,
+                    it.isVoid,
                     it.joExtrasItemId ?: UUID.randomUUID()
                 ).apply {
                     deletedAt = it.deletedAt
@@ -810,6 +821,7 @@ constructor(
                     it.deliveryOption,
                     it.price,
                     it.distance,
+                    it.isVoid,
                     jobOrder.id
                 ).apply {
                     deletedAt = it.deletedAt
@@ -823,6 +835,7 @@ constructor(
                     it.value,
                     it.discountType,
                     it.applicableToIds,
+                    it.isVoid,
                     jobOrder.id
                 ).apply {
                     deletedAt = it.deletedAt

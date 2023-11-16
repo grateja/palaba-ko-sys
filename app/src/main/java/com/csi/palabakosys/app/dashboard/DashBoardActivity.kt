@@ -27,6 +27,7 @@ import com.csi.palabakosys.model.JobOrderAdvancedFilter
 import com.csi.palabakosys.room.entities.*
 import com.csi.palabakosys.util.Constants
 import com.csi.palabakosys.util.DatePicker
+import com.csi.palabakosys.util.showSnackBar
 import com.google.android.material.appbar.AppBarLayout
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
@@ -144,6 +145,10 @@ class DashBoardActivity : AppCompatActivity() {
                         putExtra(Constants.DATE_RANGE_FILTER, it.dateFilter)
                     }
                     startActivity(intent)
+                    viewModel.resetState()
+                }
+                is DashboardViewModel.NavigationState.Invalidate -> {
+                    binding.root.showSnackBar(it.message)
                     viewModel.resetState()
                 }
             }

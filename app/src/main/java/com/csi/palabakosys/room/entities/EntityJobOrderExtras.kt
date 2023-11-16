@@ -26,6 +26,9 @@ data class EntityJobOrderExtras(
     @ColumnInfo(name = "category")
     var category: String?,
 
+    @ColumnInfo(name = "void")
+    var isVoid: Boolean = false,
+
     @PrimaryKey(autoGenerate = false)
     override var id: UUID,
 ) : BaseEntity(id)/* {

@@ -58,21 +58,21 @@ interface DaoJobOrderPayment {
     @Query("SELECT cashless_provider, COUNT(*) as count, SUM(cashless_amount) as amount " +
             "FROM job_order_payments " +
             "WHERE payment_method = 2 " +
-            "AND deleted_at IS NULL " +
-            "AND void_date IS NULL " +
-            "AND (strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') = :dateFrom " +
-            "OR (:dateTo IS NOT NULL " +
-            "AND strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo)) " +
+            "    AND deleted_at IS NULL " +
+            "    AND void_date IS NULL " +
+            "    AND (strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') = :dateFrom " +
+            "    OR (:dateTo IS NOT NULL " +
+            "    AND strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo)) " +
             "GROUP BY cashless_provider " +
             "UNION " +
             "SELECT 'Total', COUNT(*), SUM(cashless_amount) " +
             "FROM job_order_payments " +
             "WHERE payment_method = 2 " +
-            "AND deleted_at IS NULL " +
-            "AND void_date IS NULL " +
-            "AND (strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') = :dateFrom " +
-            "OR (:dateTo IS NOT NULL " +
-            "AND strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo))")
+            "    AND deleted_at IS NULL " +
+            "    AND void_date IS NULL " +
+            "    AND (strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') = :dateFrom " +
+            "    OR (:dateTo IS NOT NULL " +
+            "    AND strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo))")
     fun getCashlessPayments(dateFrom: LocalDate, dateTo: LocalDate?): LiveData<List<EntityCashlessPaymentAggrResult>>
 
     @Query("SELECT * FROM job_orders WHERE payment_id = :paymentId AND deleted_at IS NULL ORDER BY created_at DESC")
@@ -84,7 +84,8 @@ interface DaoJobOrderPayment {
             "FROM job_order_payments AS p " +
             "LEFT JOIN job_orders AS jo ON p.id = jo.payment_id " +
             "LEFT JOIN customers AS c ON jo.customer_id = c.id " +
-            "WHERE (or_number LIKE '%' || :keyword || '%' OR c.name LIKE '%' || :keyword || '%')" +
+            "WHERE (or_number LIKE '%' || :keyword || '%' OR c.name LIKE '%' || :keyword || '%' OR jo.job_order_number LIKE '%' || :keyword || '%')" +
+            " AND p.void_remarks IS NULL "+
             "AND ((:dateFrom IS NULL AND :dateTo IS NULL) OR " +
             "(:dateFrom IS NOT NULL AND :dateTo IS NULL AND strftime('%Y-%m-%d', p.created_at / 1000, 'unixepoch') = :dateFrom) OR " +
             "(:dateFrom IS NOT NULL AND :dateTo IS NOT NULL AND strftime('%Y-%m-%d', p.created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo)) " +
@@ -99,7 +100,7 @@ interface DaoJobOrderPayment {
             "LEFT JOIN job_orders AS jo ON p.id = jo.payment_id " +
             "LEFT JOIN customers AS c ON jo.customer_id = c.id " +
             "WHERE (or_number LIKE '%' || :keyword || '%' OR c.name LIKE '%' || :keyword || '%')" +
-            "AND p.deleted_at IS NULL " +
+            "AND p.void_remarks IS NULL " +
             "AND ((:dateFrom IS NULL AND :dateTo IS NULL) OR " +
             "(:dateFrom IS NOT NULL AND :dateTo IS NULL AND strftime('%Y-%m-%d', p.created_at / 1000, 'unixepoch') = :dateFrom) OR " +
             "(:dateFrom IS NOT NULL AND :dateTo IS NOT NULL AND strftime('%Y-%m-%d', p.created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo)) ")

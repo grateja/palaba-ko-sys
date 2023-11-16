@@ -4,6 +4,7 @@ enum class MachineConnectionStatus {
     CONNECTING,
     SUCCESS,
     FAILED,
-//    ENQUEUE,
-//    DATA_INCONSISTENT;
+    ENQUEUE,
+    READY,
+    DATA_INCONSISTENT;
 }

@@ -20,28 +20,34 @@
                 style="@style/TextPrimary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{`[CRN] : ` + viewModel.crn}"
+                android:text="@{viewModel.crn}"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                tools:text="[CRN] : #0392029"/>
+                tools:text="#03920"/>
+
             <TextView
                 android:id="@+id/labelName"
+                style="@style/TextItemTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                style="@style/TextItemTitle"
+                android:layout_marginStart="12dp"
                 android:text="@{viewModel.customerName}"
-                app:layout_constraintTop_toBottomOf="@id/labelCRN"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:text="Chris Hemsworth"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/labelCRN"
+                app:layout_constraintTop_toTopOf="@id/labelCRN"
+                tools:text="Chris Hemsworth" />
+
             <TextView
-                android:visibility="@{viewModel.address != null}"
                 android:id="@+id/labelAddress"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-thin"
                 android:text="@{viewModel.address}"
+                android:textColor="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/labelName"
                 app:layout_constraintTop_toBottomOf="@id/labelName"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:text="Sa dako paroon. Malayo sa kabihasnan"/>
+                tools:text="Sa dako paroon. Malayo sa kabihasnan" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 </layout>

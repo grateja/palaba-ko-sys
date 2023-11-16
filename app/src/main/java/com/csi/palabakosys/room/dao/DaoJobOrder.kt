@@ -79,7 +79,7 @@ interface DaoJobOrder {
     @Query("DELETE FROM job_orders WHERE id = :id")
     suspend fun delete(id: UUID)
 
-    @Query("SELECT job_order_number FROM job_orders WHERE deleted_at IS NULL AND void_date IS NULL ORDER BY job_order_number DESC")
+    @Query("SELECT job_order_number FROM job_orders ORDER BY job_order_number DESC")
     suspend fun getLastJobOrderNumber() : String?
 
 //    @Update
@@ -166,20 +166,20 @@ interface DaoJobOrder {
     @Query("UPDATE job_order_payments SET void_by = :userId, void_remarks = :remarks, void_date = :voidDate WHERE id = :paymentId")
     suspend fun voidPayment(paymentId: UUID?, userId: UUID?, remarks: String?, voidDate: Instant? = Instant.now())
 
-    @Query("UPDATE job_order_services SET deleted_at = :deletedAt WHERE job_order_id = :jobOrderId")
-    suspend fun clearServices(jobOrderId: UUID, deletedAt: Instant? = Instant.now())
+    @Query("UPDATE job_order_services SET void = 1 WHERE job_order_id = :jobOrderId")
+    suspend fun voidServices(jobOrderId: UUID)
 
-    @Query("UPDATE job_order_products SET deleted_at = :deletedAt WHERE job_order_id = :jobOrderId")
-    suspend fun clearProducts(jobOrderId: UUID, deletedAt: Instant? = Instant.now())
+    @Query("UPDATE job_order_products SET void = 1 WHERE job_order_id = :jobOrderId")
+    suspend fun voidProducts(jobOrderId: UUID)
 
-    @Query("UPDATE job_order_extras SET deleted_at = :deletedAt WHERE job_order_id = :jobOrderId")
-    suspend fun clearExtras(jobOrderId: UUID, deletedAt: Instant? = Instant.now())
+    @Query("UPDATE job_order_extras SET void = 1 WHERE job_order_id = :jobOrderId")
+    suspend fun voidExtras(jobOrderId: UUID)
 
-    @Query("UPDATE job_order_delivery_charges SET deleted_at = :deletedAt WHERE id = :jobOrderId")
-    suspend fun clearDeliveryCharges(jobOrderId: UUID, deletedAt: Instant? = Instant.now())
+    @Query("UPDATE job_order_delivery_charges SET void = 1 WHERE id = :jobOrderId")
+    suspend fun voidDeliveryCharges(jobOrderId: UUID)
 
-    @Query("UPDATE job_order_discounts SET deleted_at = :deletedAt WHERE id = :jobOrderId")
-    suspend fun clearDiscounts(jobOrderId: UUID, deletedAt: Instant? = Instant.now())
+    @Query("UPDATE job_order_discounts SET void = 1 WHERE id = :jobOrderId")
+    suspend fun voidDiscounts(jobOrderId: UUID)
 
     @Query("UPDATE products SET current_stock = (current_stock + :quantity) WHERE id = :productId")
     suspend fun returnProduct(productId: UUID, quantity: Int)
@@ -195,11 +195,11 @@ interface DaoJobOrder {
         jobOrderWithItems.products?.onEach {
             returnProduct(it.productId, it.quantity)
         }
-        clearServices(jobOrderId)
-        clearProducts(jobOrderId)
-        clearExtras(jobOrderId)
-        clearDeliveryCharges(jobOrderId)
-        clearDiscounts(jobOrderId)
+        voidServices(jobOrderId)
+        voidProducts(jobOrderId)
+        voidExtras(jobOrderId)
+        voidDeliveryCharges(jobOrderId)
+        voidDiscounts(jobOrderId)
     }
 
     @Query("SELECT * FROM job_order_pictures WHERE job_order_id = :jobOrderId ORDER BY created_at DESC")
@@ -214,6 +214,10 @@ interface DaoJobOrder {
     @Query("DELETE FROM job_order_pictures WHERE id = :uriId")
     suspend fun removePicture(uriId: UUID)
 
-    @Query("SELECT SUM(CASE WHEN payment_id IS NOT NULL THEN 1 ELSE 0 END) AS paid_count, SUM(CASE WHEN payment_id IS NULL THEN 1 ELSE 0 END) AS unpaid_count FROM job_orders WHERE strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') = :dateFrom OR ( :dateTo IS NOT NULL AND strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo )")
+    @Query("SELECT" +
+            " SUM(CASE WHEN payment_id IS NOT NULL THEN 1 ELSE 0 END) AS paid_count," +
+            " SUM(CASE WHEN payment_id IS NULL THEN 1 ELSE 0 END) AS unpaid_count " +
+            "     FROM job_orders WHERE (strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') = :dateFrom " +
+            "         OR (:dateTo IS NOT NULL AND strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo)) AND deleted_at IS NULL AND void_date IS NULL")
     fun getDashboardJobOrders(dateFrom: LocalDate, dateTo: LocalDate?): LiveData<JobOrderCounts>
 }

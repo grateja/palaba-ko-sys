@@ -15,6 +15,8 @@ import com.csi.palabakosys.app.remote.customer.RemoteCustomerActivity
 import com.csi.palabakosys.app.remote.panel.RemotePanelAdapter
 import com.csi.palabakosys.app.remote.running.RemoteRunningActivity
 import com.csi.palabakosys.databinding.ActivityRemotePanelBinding
+import com.csi.palabakosys.model.MachineActivationQueues
+import com.csi.palabakosys.services.MachineActivationService
 import com.csi.palabakosys.util.ActivityLauncher
 import com.csi.palabakosys.util.Constants
 import com.csi.palabakosys.util.calculateSpanCount
@@ -96,7 +98,11 @@ class RemotePanelActivity : AppCompatActivity() {
             }
         } else if(item.machine.serviceActivationId != null) {
             Intent(this, RemoteActivationPreviewActivity::class.java).apply {
-                putExtra(Constants.MACHINE_ID_EXTRA, item.machine.id.toString())
+                val machineId = item.machine.id
+                val joServiceId = item.machine.serviceActivationId
+                val customerId = item.customer?.id
+                val queue = MachineActivationQueues(machineId, joServiceId, customerId)
+                putExtra(MachineActivationService.ACTIVATION_QUEUES_EXTRA, queue)
             }
         } else {
             Intent(this, RemoteCustomerActivity::class.java).apply {

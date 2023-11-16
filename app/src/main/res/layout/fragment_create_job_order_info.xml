@@ -63,6 +63,7 @@
                 app:term="@{`PREPARED BY`}"
                 app:definition="@{viewModel.preparedBy}"/>
             <com.google.android.material.card.MaterialCardView
+                android:clickable="@{!viewModel.deleted}"
                 android:visibility="@{viewModel.saved}"
                 android:layout_margin="4dp"
                 android:id="@+id/card_date_paid"

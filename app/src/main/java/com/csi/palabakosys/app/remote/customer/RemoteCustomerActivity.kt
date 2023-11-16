@@ -41,17 +41,19 @@ class RemoteCustomerActivity : AppCompatActivity() {
         customerQueuesAdapter.onItemClick = {
             viewModel.openQueueServices(it)
         }
-        binding.buttonClose.setOnClickListener {
-            finish()
-        }
     }
 
     private fun subscribeListeners() {
+        viewModel.machine.observe(this, Observer {
+            title = "Select customer for  ${it?.machineName()}"
+        })
+
         viewModel.customerQueues.observe(this, Observer {
             it?.let {
                 customerQueuesAdapter.setData(it)
             }
         })
+
         viewModel.navigationState.observe(this, Observer {
             when(it) {
                 is RemoteCustomerViewModel.NavigationState.OpenQueuesServices -> {

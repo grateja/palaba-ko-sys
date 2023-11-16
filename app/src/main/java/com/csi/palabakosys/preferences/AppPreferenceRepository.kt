@@ -99,4 +99,16 @@ constructor (@ApplicationContext context: Context) {
             apply()
         }
     }
+
+    fun testFakeDelay(): Long {
+        return sharedPreferences.getLong("testFakeDelay", 1000)
+    }
+
+    fun setFakeConnectionDelay(value: Long) {
+        with(sharedPreferences.edit()) {
+            putLong("testFakeDelay", value)
+            apply()
+        }
+    }
+
 }

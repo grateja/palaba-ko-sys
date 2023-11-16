@@ -25,7 +25,7 @@ data class EntityMachine(
 ) : BaseEntity() {
 
     fun machineName() : String {
-        return machineType?.value + "" + machineNumber
+        return machineType?.value + " " + machineNumber
     }
 
     @ColumnInfo(name = "service_activation_id")

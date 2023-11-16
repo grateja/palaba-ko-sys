@@ -33,6 +33,9 @@ data class EntityJobOrderProduct(
     @ColumnInfo(name = "product_type")
     var productType: EnumProductType,
 
+    @ColumnInfo(name = "void")
+    var isVoid: Boolean = false,
+
     @PrimaryKey(autoGenerate = false)
     override var id: UUID,
 ) : BaseEntity(id)/* {

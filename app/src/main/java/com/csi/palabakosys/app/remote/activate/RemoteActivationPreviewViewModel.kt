@@ -36,14 +36,15 @@ constructor(
     private val _dataState = MutableLiveData<DataState>()
     val dataState: LiveData<DataState> = _dataState
 
-    private val machineId = MutableLiveData<UUID>()
-    val machine = machineId.switchMap { machineRepository.getMachineLiveData(it) } //: LiveData<EntityMachine> = _machine
+//    private val machineId = MutableLiveData<UUID>()
+    val machine = _machineActivationQueue.switchMap { machineRepository.getMachineLiveData(it.machineId) } //: LiveData<EntityMachine> = _machine
 
-    private val joServiceId = MutableLiveData<UUID>()
-    val jobOrderService = joServiceId.switchMap { jobOrderQueuesRepository.getAsLiveData(it) } //: LiveData<EntityJobOrderService> = _jobOrderService
+//    private val joServiceId = MutableLiveData<UUID>()
+    val jobOrderService = _machineActivationQueue.switchMap { jobOrderQueuesRepository.getAsLiveData(it.jobOrderServiceId) } //: LiveData<EntityJobOrderService> = _jobOrderService
 
-    private val _customer = MutableLiveData<EntityCustomer>()
-    val customer: LiveData<EntityCustomer> = _customer
+//    private val _customer = MutableLiveData<EntityCustomer>()
+//    val customer: LiveData<EntityCustomer> = _customer
+    val customer = _machineActivationQueue.switchMap {customerRepository.getCustomerAsLiveData(it.customerId) }
 
 //    private val _machineStatus = MutableLiveData<MachineConnectionStatus>()
 //    val machineStatus: LiveData<MachineConnectionStatus> = _machineStatus
@@ -55,20 +56,20 @@ constructor(
         _validationMessage.value = message
     }
 
-    fun setMachineId(id: UUID) {
-        machineId.value = id
-        _dataState.value = DataState.CheckPending(id)
-    }
+//    fun setMachineId(id: UUID) {
+//        machineId.value = id
+//        _dataState.value = DataState.CheckPending(id)
+//    }
 
-    fun setServiceId(id: UUID) {
-        joServiceId.value = id
-    }
+//    fun setServiceId(id: UUID) {
+//        joServiceId.value = id
+//    }
 
-    fun setCustomerId(id: UUID) {
-        viewModelScope.launch {
-            _customer.value = customerRepository.get(id)
-        }
-    }
+//    fun setCustomerId(id: UUID) {
+//        viewModelScope.launch {
+//            _customer.value = customerRepository.get(id)
+//        }
+//    }
 
 //    fun setMachineStatus(status: MachineConnectionStatus) {
 //        _machineStatus.value = status
@@ -79,17 +80,20 @@ constructor(
 //    }
 
     fun setMachineActivationQueue(machineActivationQueues: MachineActivationQueues) {
-        if(machineActivationQueues.machineId == machineId.value) {
-            _machineActivationQueue.value = machineActivationQueues
-        }
+        _machineActivationQueue.value = machineActivationQueues
+//        if(machineActivationQueues.machineId == machineId.value) {
+//            _machineActivationQueue.value = machineActivationQueues
+//            joServiceId.value = machineActivationQueues.jobOrderServiceId
+//
+//        }
     }
 
     fun prepareSubmit() {
-        val machineId = this.machine.value?.id
+        val machineId = this.machine.value?.id ?: return
         val serviceId = this.jobOrderService.value?.id
         val customerId = this.customer.value?.id
 
-        _dataState.value = DataState.InitiateActivation(machineId, serviceId, customerId)
+        _dataState.value = DataState.InitiateActivation(MachineActivationQueues(machineId, serviceId, customerId))
     }
 
     fun dismiss() {
@@ -112,14 +116,24 @@ constructor(
             val serviceId = machine?.serviceActivationId
             if(machineId != null && serviceId != null) {
                 remoteRepository.revertActivation(machineId, serviceId)
+                _dataState.value = DataState.FixDataInconsistencies
             }
+        }
+    }
+
+    fun updateQueue(queues: MachineActivationQueues) {
+        val currentQueue = _machineActivationQueue.value
+        if(currentQueue?.machineId != queues.machineId) {
+            return
+        } else {
+            _machineActivationQueue.value = queues
         }
     }
 
     sealed class DataState {
         object StateLess: DataState()
-        class CheckPending(val machineId: UUID) : DataState()
-        class InitiateActivation(val machineId: UUID?, val workerId: UUID?, val customerId: UUID?) : DataState()
+        object FixDataInconsistencies : DataState()
+        class InitiateActivation(val queue: MachineActivationQueues) : DataState()
         class Dismiss(val result: Int) : DataState()
     }
 }

@@ -33,6 +33,9 @@ class MenuServiceItem(
     var quantity: Int,
     var used: Int,
 
+    @ColumnInfo(name = "void")
+    var isVoid: Boolean = false,
+
     @ColumnInfo(name = "deleted_at")
     var deletedAt: Instant? = null,
 ) : Parcelable {

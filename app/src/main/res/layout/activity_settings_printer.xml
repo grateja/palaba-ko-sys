@@ -7,132 +7,140 @@
             name="viewModel"
             type="com.csi.palabakosys.app.app_settings.printer.PrinterSettingsViewModel" />
     </data>
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".app.app_settings.printer.SettingsPrinterActivity"
-        android:orientation="vertical">
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardPrinterBrowser"
+        android:layout_height="match_parent">
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <LinearLayout
-                android:orientation="vertical"
+            android:layout_height="match_parent"
+            tools:context=".app.app_settings.printer.SettingsPrinterActivity"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+            android:orientation="vertical">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardPrinterBrowser"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                <LinearLayout
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Printer name"
-                    app:errorEnabled="true"
-                    app:errorText="@{viewModel.validation.get(`name`)}">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/textPrinterName"
-                        android:text="@={viewModel.printerName}"
-                        android:enabled="false"
+                    android:layout_height="wrap_content">
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`name`)}"
-                        android:maxLines="1" />
-                </com.google.android.material.textfield.TextInputLayout>
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Mac Address"
-                    app:errorEnabled="true"
-                    app:errorText="@{viewModel.validation.get(`macAddress`)}">
+                        android:hint="Printer name"
+                        app:errorEnabled="true"
+                        app:errorText="@{viewModel.validation.get(`name`)}">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/textMacAddress"
-                        android:text="@={viewModel.macAddress}"
-                        android:enabled="false"
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/textPrinterName"
+                            android:text="@{viewModel.printerName + ` - ` + viewModel.macAddress}"
+                            android:inputType="none"
+                            android:focusable="false"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`name`)}"
+                            android:maxLines="1" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`macAddress`)}"
-                        android:maxLines="1" />
-                </com.google.android.material.textfield.TextInputLayout>
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="DPI"
-                    app:errorEnabled="true"
-                    app:errorText="@{viewModel.validation.get(`dpi`)}">
+                        android:hint="DPI"
+                        app:errorEnabled="true"
+                        app:errorText="@{viewModel.validation.get(`dpi`)}">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/textDpi"
-                        android:text="@={viewModel.dpi}"
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/textDpi"
+                            android:text="@={viewModel.dpi}"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="numberDecimal"
+                            android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`dpi`)}"
+                            android:maxLines="1" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="numberDecimal"
-                        android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`dpi`)}"
-                        android:maxLines="1" />
-                </com.google.android.material.textfield.TextInputLayout>
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Width (mm)"
-                    app:errorEnabled="true"
-                    app:errorText="@{viewModel.validation.get(`width`)}">
+                        android:hint="Width (mm)"
+                        app:errorEnabled="true"
+                        app:errorText="@{viewModel.validation.get(`width`)}">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/textWidth"
-                        android:text="@={viewModel.width}"
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/textWidth"
+                            android:text="@={viewModel.width}"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="numberDecimal"
+                            android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`width`)}"
+                            android:maxLines="1" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="numberDecimal"
-                        android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`width`)}"
-                        android:maxLines="1" />
-                </com.google.android.material.textfield.TextInputLayout>
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Characters per line"
-                    app:errorEnabled="true"
-                    app:errorText="@{viewModel.validation.get(`charactersPerLine`)}">
+                        android:hint="Characters per line"
+                        app:errorEnabled="true"
+                        app:errorText="@{viewModel.validation.get(`charactersPerLine`)}">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/textCharacters"
-                        android:text="@={viewModel.charactersPerLine}"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="numberDecimal"
-                        android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`charactersPerLine`)}"
-                        android:maxLines="1" />
-                </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/textCharacters"
+                            android:text="@={viewModel.charactersPerLine}"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="numberDecimal"
+                            android:onTextChanged="@{(s, start, before, count) -> viewModel.clearError(`charactersPerLine`)}"
+                            android:maxLines="1" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/labelCRN"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Test print"
-            app:errorEnabled="true">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:text="@={viewModel.sampleText}"
-                android:id="@+id/textTestPrint"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/labelCRN"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="1" />
-        </com.google.android.material.textfield.TextInputLayout>
-        <Button
-            android:id="@+id/buttonTest"
-            android:layout_width="wrap_content"
+                android:hint="Test print"
+                app:errorEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:text="@={viewModel.sampleText}"
+                    android:id="@+id/textTestPrint"
+                    android:layout_width="match_parent"
+                    android:layout_height="100sp"
+                    android:maxLines="100" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/controls"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Test"/>
-        <Button
-            android:id="@+id/buttonSave"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/save"/>
-    </LinearLayout>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <Button
+                    style="@style/RoundButtonNeutral"
+                    android:id="@+id/buttonTest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Test"/>
+                <Button
+                    style="@style/RoundButtonPrimary"
+                    android:id="@+id/buttonSave"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/save"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

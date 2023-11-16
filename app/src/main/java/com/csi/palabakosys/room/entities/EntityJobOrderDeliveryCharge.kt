@@ -19,6 +19,9 @@ data class EntityJobOrderDeliveryCharge(
 
     val distance: Float,
 
+    @ColumnInfo(name = "void")
+    var isVoid: Boolean = false,
+
     @PrimaryKey(autoGenerate = false)
     override var id: UUID,
 ) : BaseEntity(id)

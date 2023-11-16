@@ -63,9 +63,10 @@ class RemoteQueuesActivity : AppCompatActivity() {
             when(it) {
                 is RemoteQueuesViewModel.NavigationState.OpenActivationPreview -> {
                     val intent = Intent(this, RemoteActivationPreviewActivity::class.java).apply {
-                        putExtra(MachineActivationService.JO_SERVICE_ID_EXTRA, it.joServiceId.toString())
-                        putExtra(MachineActivationService.CUSTOMER_ID_EXTRA, it.customerId.toString())
-                        putExtra(Constants.MACHINE_ID_EXTRA, it.machineId.toString())
+//                        putExtra(MachineActivationService.JO_SERVICE_ID_EXTRA, it.joServiceId.toString())
+//                        putExtra(MachineActivationService.CUSTOMER_ID_EXTRA, it.customerId.toString())
+//                        putExtra(Constants.MACHINE_ID_EXTRA, it.machineId.toString())
+                        putExtra(MachineActivationService.ACTIVATION_QUEUES_EXTRA, it.queue)
                     }
                     launcher.launch(intent)
                     viewModel.resetNavigationState()

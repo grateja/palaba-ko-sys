@@ -13,7 +13,7 @@ abstract class DaoExtras : BaseDao<EntityExtras> {
     @Query("SELECT * FROM extras WHERE id = :id AND deleted_at IS NULL")
     abstract suspend fun get(id: UUID) : EntityExtras?
 
-    @Query("SELECT *, 1 as quantity FROM extras WHERE name LIKE '%' || :keyword || '%' AND deleted_at IS NULL ORDER BY name")
+    @Query("SELECT *, 1 as quantity, 0 as void FROM extras WHERE name LIKE '%' || :keyword || '%' AND deleted_at IS NULL ORDER BY name")
     abstract suspend fun getAll(keyword: String) : List<MenuExtrasItem>
 
     @Query("SELECT *, 1 as quantity FROM extras WHERE name LIKE '%' || :keyword || '%' AND deleted_at IS NULL ORDER BY name")

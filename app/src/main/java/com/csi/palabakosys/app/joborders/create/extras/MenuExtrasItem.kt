@@ -23,6 +23,9 @@ class MenuExtrasItem(
 
     var quantity: Int = 1,
 
+    @ColumnInfo(name = "void")
+    var isVoid: Boolean = false,
+
     @ColumnInfo(name = "deleted_at")
     var deletedAt: Instant? = null,
 ) : Parcelable {

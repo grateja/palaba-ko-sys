@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <TextView
+            android:clickable="@{!viewModel.deleted}"
             android:id="@+id/lockedPrompt"
             android:padding="8dp"
             android:visibility="@{viewModel.locked}"
@@ -296,7 +297,7 @@
                 android:text="@string/save" />
             <Button
                 style="@style/RoundButtonPrimary"
-                android:visibility="@{viewModel.saved &amp;&amp; viewModel.payment == null}"
+                android:visibility="@{viewModel.saved &amp;&amp; viewModel.payment == null &amp;&amp; !viewModel.deleted}"
                 android:id="@+id/buttonPayment"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
@@ -306,7 +307,7 @@
                 android:text="@string/payment"/>
             <Button
                 style="@style/RoundButtonNeutral"
-                android:visibility="@{viewModel.saved}"
+                android:visibility="@{viewModel.saved &amp;&amp; !viewModel.deleted}"
                 android:id="@+id/buttonVoid"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
