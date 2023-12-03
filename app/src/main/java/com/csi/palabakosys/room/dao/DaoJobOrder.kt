@@ -82,6 +82,10 @@ interface DaoJobOrder {
     @Query("SELECT job_order_number FROM job_orders ORDER BY job_order_number DESC")
     suspend fun getLastJobOrderNumber() : String?
 
+    @Query("SELECT * FROM job_orders WHERE id = :id")
+    fun getJobOrderWithItemsAsLiveData(id: UUID): LiveData<EntityJobOrderWithItems?>
+
+
 //    @Update
 //    suspend fun voidJobOrder(jobOrder: EntityJobOrder)
 

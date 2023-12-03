@@ -39,9 +39,11 @@ constructor (
         return null
     }
 
-    suspend fun getAllWithTotalAmount(keyword: String, includeVoid :Boolean = false) : List<EntityJobOrderListItem> {
-        return listOf() //daoJobOrder.getAllWithTotalAmount(keyword, includeVoid)
-    }
+    fun getJobOrderWithItemsAsLiveData(id: UUID) = daoJobOrder.getJobOrderWithItemsAsLiveData(id)
+
+//    suspend fun getAllWithTotalAmount(keyword: String, includeVoid :Boolean = false) : List<EntityJobOrderListItem> {
+//        return listOf() //daoJobOrder.getAllWithTotalAmount(keyword, includeVoid)
+//    }
 
     suspend fun getNextJONumber() : String {
         val currentJO = daoJobOrder.getLastJobOrderNumber()?.toInt() ?: 0
@@ -58,17 +60,17 @@ constructor (
         return null
     }
 
-    suspend fun saveAll(
-        joNumber: String,
-        customerId: UUID,
-        preparedBy: String,
-        services: List<MenuServiceItem>,
-        products: List<MenuProductItem>,
-        extras: List<MenuExtrasItem>,
-        delivery: DeliveryCharge,
-        discount: MenuDiscount) {
-
-    }
+//    suspend fun saveAll(
+//        joNumber: String,
+//        customerId: UUID,
+//        preparedBy: String,
+//        services: List<MenuServiceItem>,
+//        products: List<MenuProductItem>,
+//        extras: List<MenuExtrasItem>,
+//        delivery: DeliveryCharge,
+//        discount: MenuDiscount) {
+//
+//    }
 
 //    suspend fun void(jobOrder: EntityJobOrder) {
 //        daoJobOrder.voidJobOrder(jobOrder)

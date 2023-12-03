@@ -28,6 +28,7 @@ import com.csi.palabakosys.app.remote.RemotePanelActivity
 import com.csi.palabakosys.app.dashboard.DashBoardActivity
 import com.csi.palabakosys.app.payment_list.PaymentListActivity
 import com.csi.palabakosys.app.services.ServicesActivity
+import com.csi.palabakosys.app.shop_preferences.ShopPreferencesActivity
 import com.csi.palabakosys.databinding.ActivityMainBinding
 import com.csi.palabakosys.model.EnumActionPermission
 import com.csi.palabakosys.util.ActivityLauncher
@@ -92,6 +93,11 @@ class MainActivity : EndingActivity() {
                 R.drawable.icon_shop_preferences,
                 null,
                 arrayListOf(
+                    MenuItem(
+                        "Shop information",
+                        "Give some description for your shop.",
+                        ShopPreferencesActivity::class.java,
+                    ),
                     MenuItem(
                         "Wash & Dry Services",
                         "Manage wash & dry service offerings.",

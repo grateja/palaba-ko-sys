@@ -8,16 +8,18 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Size
+import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
+import androidx.databinding.DataBindingUtil
 import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
 import com.csi.palabakosys.R
+import com.csi.palabakosys.databinding.AlertDialogTextInputBinding
 import com.csi.palabakosys.model.EnumDiscountType
 import com.csi.palabakosys.model.EnumPaymentMethod
 import com.csi.palabakosys.model.EnumProductType
@@ -250,25 +252,22 @@ fun Context.showDeleteConfirmationDialog(title: String? = "Delete this item", me
 }
 
 fun Context.showTextInputDialog(title: String?, message: String?, initialValue: String?, onOk: (value: String) -> Unit) {
-    val context = this
-    val input = EditText(context).apply {
-        setText(initialValue)
-    }
-    val textInputLayout = TextInputLayout(context, null, R.style.Widget_MaterialComponents_TextInputLayout_OutlinedBox_Dense).apply {
-        addView(input)
-        hint = message
-    }
+    val binding: AlertDialogTextInputBinding = DataBindingUtil.inflate(
+        LayoutInflater.from(this),
+        R.layout.alert_dialog_text_input,
+        null,
+        false
+    )
 
-    AlertDialog.Builder(context).apply {
+    binding.textInput.setText(initialValue)
+    binding.textInput.hint = message
+
+    AlertDialog.Builder(this).apply {
         setTitle(title)
-//        setMessage(message)
-        setView(textInputLayout)
+        setView(binding.root)
         setPositiveButton("Ok") { _, _ ->
-            onOk(input.text.toString())
+            onOk(binding.textInput.text.toString())
         }
-//        setNegativeButton("Cancel") { _, _ ->
-//
-//        }
         create()
     }.show()
 }
@@ -323,7 +322,7 @@ fun Context.calculateSpanCount(
     return if (spanCount > 0) spanCount else 1
 }
 
-fun LocalDate.toHumanReadableString(): String {
+fun LocalDate.toShort(): String {
     val today = LocalDate.now()
     val yearFormat = if(this.year != today.year) { ", yyyy" } else { "" }
     val formatter = DateTimeFormatter.ofPattern("MMM dd$yearFormat") // You can change the pattern to your desired format
@@ -338,4 +337,10 @@ fun TextInputEditText.selectAllOnFocus() {
             }
         }
     }
+}
+
+fun Instant.toShort() : String {
+    val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm a")
+        .withZone(ZoneId.systemDefault())
+    return formatter.format(this)
 }

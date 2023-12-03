@@ -5,12 +5,12 @@ import com.csi.palabakosys.model.EnumDiscountApplicable
 
 object DiscountApplicableConverter {
     @TypeConverter
-    fun fromDiscountApplicable(discounts: List<EnumDiscountApplicable>): String {
+    fun fromDiscountApplicable(discounts: List<EnumDiscountApplicable>): String? {
         return EnumDiscountApplicable.toIds(discounts)
     }
 
     @TypeConverter
-    fun toDiscountApplicable(string: String?): List<EnumDiscountApplicable> {
+    fun toDiscountApplicable(string: String?): List<EnumDiscountApplicable>? {
         return if(string == null) {
             listOf()
         } else {

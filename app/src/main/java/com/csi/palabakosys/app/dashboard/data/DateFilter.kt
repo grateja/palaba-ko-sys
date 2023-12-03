@@ -1,7 +1,7 @@
 package com.csi.palabakosys.app.dashboard.data
 
 import android.os.Parcelable
-import com.csi.palabakosys.util.toHumanReadableString
+import com.csi.palabakosys.util.toShort
 import kotlinx.parcelize.Parcelize
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
@@ -15,8 +15,8 @@ data class DateFilter(
     constructor(localDate: LocalDate) : this(localDate, localDate)
 
     override fun toString(): String {
-        val dateFromString = dateFrom.toHumanReadableString()
-        val dateToString = dateTo?.toHumanReadableString()
+        val dateFromString = dateFrom.toShort()
+        val dateToString = dateTo?.toShort()
 
         return if (dateTo != null) {
             "Dates from $dateFromString to $dateToString"

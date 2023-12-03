@@ -28,7 +28,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class SettingsPrinterActivity : AppCompatActivity() {
     companion object {
         const val ACTION_BROWSE_PRINTER_DEVICES = "browse_printer_devices"
-
         const val PRINTER_DEVICE_EXTRA = "printer_device"
     }
 

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="viewModel"
+            type="com.csi.palabakosys.model.PrintItem" />
+    </data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            style="@style/Print"
+            android:text="@{viewModel.toString()}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+<!--        <TextView-->
+<!--            android:visibility="@{viewModel.count > 0}"-->
+<!--            style="@style/Print"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@{`(*` + viewModel.count + `)`}"-->
+<!--            tools:text="(*2)"/>-->
+<!--        <TextView-->
+<!--            style="@style/Print"-->
+<!--            android:layout_weight="1"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@{viewModel.title}"-->
+<!--            tools:text="Regular Wash"/>-->
+<!--        <TextView-->
+<!--            style="@style/Print"-->
+<!--            android:visibility="@{viewModel.price > 0}"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:peso="@{viewModel.price}"-->
+<!--            tools:text="P120.0"/>-->
+    </LinearLayout>
+</layout>

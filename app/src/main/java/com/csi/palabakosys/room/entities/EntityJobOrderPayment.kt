@@ -44,4 +44,8 @@ data class EntityJobOrderPayment(
     fun change() : Float {
         return cashReceived - amountDue
     }
+
+    fun method() : String {
+        return entityCashless?.provider ?: "CASH"
+    }
 }

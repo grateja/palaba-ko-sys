@@ -1,0 +1,44 @@
+package com.csi.palabakosys.model
+
+data class PrintItem(
+    val count: Int?,
+    val title: String?,
+    val price: Float?,
+    val characterLength: Int = 32,
+    val definition: String? = null
+) {
+    constructor(title: String?, definition: String?, characterLength: Int = 32): this(null, title, null, characterLength, definition)
+    override fun toString(): String {
+        val countStr = count?.let { "(*$it)" } ?: ""
+        val titleStr = title?.let { "$title " } ?: ""
+        val priceStr = price?.let { " P$it" } ?: ""
+        val totalLength = countStr.length + titleStr.length + priceStr.length
+        val separatorLength = characterLength - totalLength
+
+        return when {
+            definition != null -> titleStr + definition
+            totalLength <= characterLength -> "$countStr$titleStr${" ".repeat(separatorLength)}$priceStr"
+            else -> {
+                val remainingLength = characterLength - priceStr.length
+                val truncatedTitle = (countStr + titleStr).take(remainingLength)
+                "$truncatedTitle$priceStr"
+            }
+        }
+    }
+
+//    override fun toString(): String {
+//        val countStr = count?.let { "(*$it)" } ?: ""
+//        val titleStr = title ?: ""
+//        val priceStr = price?.let { "P$it" } ?: ""
+//        val separatorLength = 32 - (countStr.length + titleStr.length + priceStr.length)
+//        val separator = " ".repeat(separatorLength.coerceAtLeast(0))
+//        return "$countStr$titleStr$separator$priceStr"
+//    }
+//    override fun toString(): String {
+//        val count = if(count == null) "" else "(*$count)"
+//        val title = title ?: ""
+//        val price = if(price == null) "" else "P$price"
+//        val separator = ""
+//        return "$count$title$separator$price"
+//    }
+}

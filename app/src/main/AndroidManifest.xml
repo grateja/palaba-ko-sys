@@ -34,6 +34,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LMS2022">
         <activity
+            android:name=".app.joborders.print.JobOrderPrintActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
+        <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".app.pickup_and_deliveries.add_edit.AddEditDeliveryProfileActivity"
             android:exported="false">
             <meta-data
@@ -399,14 +407,6 @@
             android:name=".app.joborders.payment.JobOrderPaymentActivity"
             android:exported="false"
             android:label="Payment">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".app.joborders.print.PrintJoMainActivity"
-            android:exported="false"
-            android:label="Print Job Order">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

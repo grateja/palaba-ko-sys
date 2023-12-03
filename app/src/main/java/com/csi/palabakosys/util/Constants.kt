@@ -7,5 +7,6 @@ class Constants {
         const val PICTURES_DIR = "pictures/"
         const val FILE_PROVIDER = "com.csi.lms2020.fileprovider"
         const val DATE_RANGE_FILTER = "dateFilter"
+        const val ID = "id"
     }
 }

@@ -65,6 +65,7 @@
     <string name="create_new">Create New</string>
     <string name="privilege_prompt">Required privilege for this operation</string>
     <string name="discard">Discard</string>
+    <string name="print_double_line">================================</string>
     <string-array name="jo_filter_by">
         <item>Date Paid</item>
         <item>Date Created</item>

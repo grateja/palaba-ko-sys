@@ -19,9 +19,6 @@ class AppPreferenceRepository
 constructor (@ApplicationContext context: Context) {
     private val sharedPreferences = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
 
-//    private val _activeUser = MutableLiveData<EntityUser?>()
-//    val activeUser: LiveData<EntityUser?> = _activeUser
-
     var ipSettings = IpSettings(
         sharedPreferences.getString("networkPrefix", null) ?: "192.168",
         sharedPreferences.getInt("subnetId", 210)
@@ -31,23 +28,6 @@ constructor (@ApplicationContext context: Context) {
         sharedPreferences.getString("endPoint", "initiate") ?: "",
         sharedPreferences.getLong("connectionTimeout", 5)
     )
-
-//    val isAdmin = MutableLiveData<Boolean>()
-//
-//    fun setCurrentUser(user: EntityUser) {
-//        _activeUser.value = user
-//        isAdmin.value = user.role != Role.ADMIN
-//        println(Gson().toJson(user))
-//    }
-
-//    fun getId() : UUID? {
-//        return _activeUser.value?.id
-//    }
-
-//    fun logout() {
-//        _activeUser.value = null
-//        isAdmin.value = false
-//    }
 
     fun setCurrentPrinter(printerSettings: PrinterSettings) {
         with(sharedPreferences.edit()) {
@@ -110,5 +90,4 @@ constructor (@ApplicationContext context: Context) {
             apply()
         }
     }
-
 }

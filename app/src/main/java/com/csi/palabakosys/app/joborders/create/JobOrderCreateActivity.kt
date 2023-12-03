@@ -13,7 +13,6 @@ import com.csi.palabakosys.adapters.Adapter
 import com.csi.palabakosys.app.auth.AuthActionDialogActivity
 import com.csi.palabakosys.app.auth.LoginCredentials
 import com.csi.palabakosys.app.customers.create.AddEditCustomerFragment
-import com.csi.palabakosys.app.customers.preview.CustomerPreviewActivity
 import com.csi.palabakosys.app.joborders.cancel.JobOrderCancelActivity
 import com.csi.palabakosys.app.joborders.create.delivery.DeliveryCharge
 import com.csi.palabakosys.app.joborders.create.delivery.JOSelectDeliveryActivity
@@ -33,8 +32,11 @@ import com.csi.palabakosys.app.joborders.create.services.MenuServiceItem
 import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentActivity
 import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentMinimal
 import com.csi.palabakosys.app.joborders.payment.preview.PaymentPreviewActivity
+import com.csi.palabakosys.app.joborders.print.JobOrderPrintActivity
+import com.csi.palabakosys.app.joborders.print.JobOrderPrintFragment
 import com.csi.palabakosys.databinding.ActivityJobOrderCreateBinding
 import com.csi.palabakosys.util.*
+import com.csi.palabakosys.util.Constants.Companion.ID
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 import kotlin.collections.ArrayList
@@ -142,6 +144,9 @@ class JobOrderCreateActivity : BaseActivity() {
 //    }
 
     private fun subscribeEvents() {
+        binding.buttonPrint.setOnClickListener {
+            viewModel.openPrinterOptions()
+        }
 //        packageLauncher.onOk = { result ->
 //            result.data?.getParcelableArrayListExtra<MenuServiceItem>(JOSelectPackageActivity.SERVICES)?.toList().let {
 //                viewModel.syncServices(it)
@@ -399,6 +404,10 @@ class JobOrderCreateActivity : BaseActivity() {
                         .show(supportFragmentManager, null)
                     viewModel.resetState()
                 }
+                is CreateJobOrderViewModel.DataState.OpenPrinter -> {
+                    openPrinterOptions(it.jobOrderId)
+                    viewModel.resetState()
+                }
 //                is CreateJobOrderViewModel.DataState.ModifyDateTime -> {
 //                    Handler(Looper.getMainLooper()).postDelayed(Runnable {
 //                        showDateTimePickerDialog(it.createdAt)
@@ -492,6 +501,18 @@ class JobOrderCreateActivity : BaseActivity() {
             }
         }
         launcher.launch(intent)
+    }
+
+    private fun openPrinterOptions(jobOrderId: UUID) {
+        val intent = Intent(this, JobOrderPrintActivity::class.java).apply {
+            putExtra(ID, jobOrderId.toString())
+        }
+        startActivity(intent)
+//        JobOrderPrintFragment().apply {
+//            arguments = Bundle().apply {
+//                putString(ID, jobOrderId.toString())
+//            }
+//        }.show(supportFragmentManager, null)
     }
 
 //    private fun openAuthRequestModifyDateTime() {

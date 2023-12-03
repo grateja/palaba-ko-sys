@@ -1,5 +1,6 @@
 package com.csi.palabakosys.app.app_settings.printer.browser
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,14 +14,33 @@ constructor(
 
 ) : ViewModel()
 {
-    val savedDevices = MutableLiveData<List<PrinterDevice>>()
-    val foundDevices = MutableLiveData<List<PrinterDevice>>()
+    val devices = MutableLiveData<List<PrinterDevice>>()
+//    val foundDevices = MutableLiveData<List<PrinterDevice>>()
+    val bluetoothEnabled = MutableLiveData(false)
+    val locationEnabled = MutableLiveData(false)
+//    val hasBluetoothPermission = MutableLiveData(false)
+
+    fun setDevices(devices: List<PrinterDevice>) {
+        this.devices.value = devices
+    }
+
+    fun setBluetoothState(state: Boolean) {
+        bluetoothEnabled.value = state
+    }
+
+//    fun setBluetoothPermission(grant: Boolean) {
+//        hasBluetoothPermission.value = grant
+//    }
 
     fun addFoundDevice(device: PrinterDevice) {
-        val devices = (foundDevices.value ?: listOf()).toMutableList()
+        val devices = (devices.value ?: listOf()).toMutableList()
         if(!devices.any{device.macAddress == it.macAddress}) {
             devices.add(device)
         }
-        foundDevices.value = devices
+        this.devices.value = devices
+    }
+
+    fun setLocationState(state: Boolean) {
+        locationEnabled.value = state
     }
 }

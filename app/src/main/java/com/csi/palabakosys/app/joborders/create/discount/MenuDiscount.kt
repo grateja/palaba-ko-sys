@@ -21,7 +21,7 @@ data class MenuDiscount(
     val value: Float,
 
     @ColumnInfo(name = "applicable_to")
-    val applicableToIds: String,
+    val applicableTo: List<EnumDiscountApplicable>,
 
     @ColumnInfo(name = "discount_type")
     val discountType: EnumDiscountType,
@@ -36,31 +36,22 @@ data class MenuDiscount(
     @IgnoredOnParcel
     var selected: Boolean = false
 
-    private fun applicableTo() : List<EnumDiscountApplicable> {
-        return EnumDiscountApplicable.fromIds(applicableToIds)
-    }
+//    private fun applicableTo() : List<EnumDiscountApplicable> {
+//        return EnumDiscountApplicable.fromIds(applicableToIds)
+//    }
 
     fun applicableToStr() : String {
-        return "Applicable to: " + applicableTo().joinToString(",") {
+        return "Applicable to: " + applicableTo.joinToString(",") {
             it.value
         }
     }
 
     private fun compute(amount: Float) : Float {
         return (value / 100) * amount
-//        return if(discountType == DiscountTypeEnum.FIXED) {
-//            if(amount - value < 0f) {
-//                return 0f
-//            } else {
-//                return value
-//            }
-//        } else {
-//            (value / 100) * amount
-//        }
     }
 
     fun getDiscount(amount: Float, applicable: EnumDiscountApplicable) : Float {
-        if(!applicableTo().any{ it == applicable || it == EnumDiscountApplicable.TOTAL_AMOUNT}) return 0f
+        if(!applicableTo.any{ it == applicable || it == EnumDiscountApplicable.TOTAL_AMOUNT}) return 0f
 
         return compute(amount)
     }

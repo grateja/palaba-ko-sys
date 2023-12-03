@@ -24,7 +24,7 @@
                 android:layout_height="25dp"
                 app:imageResource="@{viewModel.imageResource}"/>
             <TextView
-                android:id="@+id/text_title"
+                android:id="@+id/tab"
                 app:layout_constraintTop_toTopOf="@id/icon"
                 app:layout_constraintStart_toEndOf="@id/icon"
                 style="@style/TextMenuItemTitle"
@@ -39,8 +39,8 @@
                 android:text="@{viewModel.description}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/text_title"
-                app:layout_constraintStart_toStartOf="@id/text_title"
+                app:layout_constraintTop_toBottomOf="@id/tab"
+                app:layout_constraintStart_toStartOf="@id/tab"
                 tools:text="Some description"/>
             <ImageView
                 android:visibility="@{viewModel.menuItems != null}"

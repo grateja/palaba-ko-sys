@@ -52,6 +52,7 @@ constructor(
         data class OpenCamera(val jobOrderId: UUID) : DataState()
         data class OpenPictures(val ids: List<PhotoItem>, val position: Int) : DataState()
         data class EditCustomer(val customerId: UUID) : DataState()
+        data class OpenPrinter(val jobOrderId: UUID) : DataState()
         object ProceedToSaveJO: DataState()
     }
 
@@ -378,7 +379,7 @@ constructor(
                 entity.discountId,
                 entity.name,
                 entity.value,
-                entity.applicableToIds,
+                entity.applicableTo,
                 entity.discountType,
                 entity.isVoid,
                 entity.deletedAt,
@@ -834,7 +835,7 @@ constructor(
                     it.name,
                     it.value,
                     it.discountType,
-                    it.applicableToIds,
+                    it.applicableTo,
                     it.isVoid,
                     jobOrder.id
                 ).apply {
@@ -885,6 +886,12 @@ constructor(
     fun editCustomer() {
         currentCustomer.value?.id?.let {
             _dataState.value = DataState.EditCustomer(it)
+        }
+    }
+
+    fun openPrinterOptions() {
+        jobOrderId.value?.let {
+            _dataState.value = DataState.OpenPrinter(it)
         }
     }
 }
