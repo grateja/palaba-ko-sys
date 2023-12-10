@@ -44,6 +44,8 @@ constructor(@ApplicationContext private val context: Context) {
     val address: LiveData<String?> = readData(stringPreferencesKey("address"))
     val contactNumber: LiveData<String?> = readData(stringPreferencesKey("contactNumber"))
     val email: LiveData<String?> = readData(stringPreferencesKey("email"))
+    val jobOrderDisclaimer: LiveData<String?> = readData(stringPreferencesKey("jobOrderDisclaimer"))
+
     suspend fun updateShopName(shopName: String?) {
         writeData(stringPreferencesKey("shopName"), shopName)
     }
@@ -58,5 +60,9 @@ constructor(@ApplicationContext private val context: Context) {
 
     suspend fun updateEmail(email: String?) {
         writeData(stringPreferencesKey("email"), email)
+    }
+
+    suspend fun updateDisclaimer(disclaimer: String?) {
+        writeData(stringPreferencesKey("jobOrderDisclaimer"), disclaimer)
     }
 }

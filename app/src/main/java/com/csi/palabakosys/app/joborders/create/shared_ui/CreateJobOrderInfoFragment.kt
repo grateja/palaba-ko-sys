@@ -65,7 +65,7 @@ class CreateJobOrderInfoFragment : Fragment() {
     }
 
     private fun subscribeListeners() {
-        viewModel.dataState().observe(viewLifecycleOwner, Observer {
+        viewModel.dataState.observe(viewLifecycleOwner, Observer {
             when(it) {
                 is CreateJobOrderViewModel.DataState.ModifyDateTime -> {
                     Handler(Looper.getMainLooper()).postDelayed(Runnable {

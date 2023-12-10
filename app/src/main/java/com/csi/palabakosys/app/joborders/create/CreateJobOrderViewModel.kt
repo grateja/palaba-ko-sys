@@ -10,7 +10,6 @@ import com.csi.palabakosys.app.joborders.create.extras.MenuExtrasItem
 import com.csi.palabakosys.app.joborders.create.packages.MenuJobOrderPackage
 import com.csi.palabakosys.app.joborders.create.products.MenuProductItem
 import com.csi.palabakosys.app.joborders.create.services.MenuServiceItem
-import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentMinimal
 import com.csi.palabakosys.model.EnumDiscountType
 import com.csi.palabakosys.model.EnumDiscountApplicable
 import com.csi.palabakosys.room.entities.*
@@ -68,9 +67,8 @@ constructor(
     private val _customerId = MutableLiveData<UUID>()
 
     private val _dataState = MutableLiveData<DataState>()
-    fun dataState(): MutableLiveData<DataState> {
-        return _dataState
-    }
+    val dataState: LiveData<DataState> = _dataState
+
     fun resetState() {
         _dataState.value = DataState.StateLess
     }
@@ -80,12 +78,13 @@ constructor(
     val jobOrderNumber = MutableLiveData("")
     val currentCustomer = _customerId.switchMap { customerRepository.getCustomerAsLiveData(it) } //MutableLiveData<CustomerMinimal>()
     val deliveryCharge = MutableLiveData<DeliveryCharge?>()
-    val jobOrderPackages = MutableLiveData<List<MenuJobOrderPackage>?>()
     val jobOrderServices = MutableLiveData<List<MenuServiceItem>>()
     val jobOrderProducts = MutableLiveData<List<MenuProductItem>>()
     val jobOrderExtras = MutableLiveData<List<MenuExtrasItem>>()
     val discount = MutableLiveData<MenuDiscount>()
-    val unpaidJobOrders = MutableLiveData<List<JobOrderPaymentMinimal>>()
+    val unpaidJobOrders = _customerId.switchMap { jobOrderRepository.getAllUnpaidByCustomerIdAsLiveData(it) }
+
+    private val jobOrderPackages = MutableLiveData<List<MenuJobOrderPackage>?>()
 
     val jobOrderPictures = jobOrderId.switchMap { jobOrderRepository.getPictures(it) }
 
@@ -137,25 +136,6 @@ constructor(
         }
         addSource(discount) { update() }
     }
-    val discountInPeso = MediatorLiveData<Float>().apply {
-        fun update() {
-            value = discount.value?.let {
-                if(it.deletedAt != null) return@let 0f
-                if(it.discountType == EnumDiscountType.FIXED) return@let it.value
-                var total = 0f
-                total += it.getDiscount(serviceSubTotal(), EnumDiscountApplicable.WASH_DRY_SERVICES)
-                total += it.getDiscount(productSubTotal(), EnumDiscountApplicable.PRODUCTS_CHEMICALS)
-                total += it.getDiscount(extrasSubTotal(), EnumDiscountApplicable.EXTRAS)
-                total += it.getDiscount(deliveryFee(), EnumDiscountApplicable.DELIVERY)
-                total
-            } ?: 0f
-        }
-        addSource(jobOrderServices) {update()}
-        addSource(jobOrderProducts) {update()}
-        addSource(jobOrderExtras) {update()}
-        addSource(deliveryCharge) {update()}
-        addSource(discount) {update()}
-    }
     val hasAny = MediatorLiveData<Boolean>().apply {
         fun update() {
             value = hasServices.value == true || hasProducts.value == true || hasExtras.value == true || hasDelivery.value == true
@@ -175,7 +155,25 @@ constructor(
         addSource(jobOrderExtras) {update()}
         addSource(deliveryCharge) {update()}
     }
-
+    val discountInPeso = MediatorLiveData<Float>().apply {
+        fun update() {
+            value = discount.value?.let {
+                if(it.deletedAt != null) return@let 0f
+                if(it.discountType == EnumDiscountType.FIXED) return@let it.value
+                var total = 0f
+                total += it.getDiscount(serviceSubTotal(), EnumDiscountApplicable.WASH_DRY_SERVICES)
+                total += it.getDiscount(productSubTotal(), EnumDiscountApplicable.PRODUCTS_CHEMICALS)
+                total += it.getDiscount(extrasSubTotal(), EnumDiscountApplicable.EXTRAS)
+                total += it.getDiscount(deliveryFee(), EnumDiscountApplicable.DELIVERY)
+                total
+            } ?: 0f
+        }
+        addSource(jobOrderServices) {update()}
+        addSource(jobOrderProducts) {update()}
+        addSource(jobOrderExtras) {update()}
+        addSource(deliveryCharge) {update()}
+        addSource(discount) {update()}
+    }
     val discountedAmount = MediatorLiveData<Float>().apply {
         fun update() {
             val subtotal = subtotal.value ?: 0f
@@ -187,46 +185,18 @@ constructor(
         addSource(discountInPeso) {update()}
     }
 
-    val previousBalance = MediatorLiveData<Float>().apply {
-        fun update() {
-            val jobOrderId = jobOrderId.value
-            value = unpaidJobOrders.value ?.filter { it.id != jobOrderId } ?. sumOf { it.discountedAmount.toDouble() }?.toFloat()
-        }
-        addSource(unpaidJobOrders) {update()}
-    }
-
-//    val totalAmountDue = MediatorLiveData<Float>().apply {
-//        fun update() {
-//            val discountedAmount = discountedAmount.value ?: 0f
-//            val previousBalance = previousBalance.value ?: 0f
-//            value = discountedAmount + previousBalance
-//        }
-//
-//        addSource(discountedAmount) {update()}
-//        addSource(previousBalance) {update()}
-//    }
-//
-//    val hasPreviousBalance = MediatorLiveData<Boolean>().apply {
-//        fun update() {
-//            value = unpaidJobOrders.value?.isNotEmpty()
-//        }
-//        addSource(unpaidJobOrders) {update()}
-//    }
-
     val servicesTotal = MediatorLiveData<Float>().apply {
         fun update() {
             value = serviceSubTotal()
         }
         addSource(jobOrderServices) { update() }
     }
-
     val productsTotal = MediatorLiveData<Float>().apply {
         fun update() {
             value = productSubTotal()
         }
         addSource(jobOrderProducts) { update() }
     }
-
     val extrasTotal = MediatorLiveData<Float>().apply {
         fun update() {
             value = extrasSubTotal()
@@ -295,11 +265,11 @@ constructor(
 
     /** region setter functions */
 
-    private suspend fun loadUnpaidJobOrders(customerId: UUID/*, jobOrderId: UUID?*/) : Boolean {
-        val unpaid = jobOrderRepository.getAllUnpaidByCustomerId(customerId)
-        unpaidJobOrders.value = unpaid
-        return unpaid.isNotEmpty()
-    }
+//    private suspend fun loadUnpaidJobOrders(customerId: UUID/*, jobOrderId: UUID?*/) : Boolean {
+//        val unpaid = jobOrderRepository.getAllUnpaidByCustomerId(customerId)
+//        unpaidJobOrders.value = unpaid
+//        return unpaid.isNotEmpty()
+//    }
 
     fun loadPayment() {
         viewModelScope.launch {
@@ -409,7 +379,7 @@ constructor(
 //                        it.customer?.id!!, it.customer?.name!!, it.customer?.crn!!, it.customer?.address, null, null
 //                    )
                     prepare(it)
-                    loadUnpaidJobOrders(it.customer?.id!!/*, it.jobOrder.id*/)
+//                    loadUnpaidJobOrders(it.customer?.id!!/*, it.jobOrder.id*/)
                 } else {
                     _dataState.value = DataState.InvalidOperation("Job Order maybe deleted")
                 }
@@ -426,7 +396,7 @@ constructor(
                 jobOrderId.value = jobOrderWithItems?.jobOrder?.id ?: UUID.randomUUID()
                 createdAt.value = jobOrderWithItems?.jobOrder?.createdAt ?: Instant.now()
                 jobOrderNumber.value = jobOrderWithItems?.jobOrder?.jobOrderNumber ?: jobOrderRepository.getNextJONumber()
-                loadUnpaidJobOrders(customerId)
+//                loadUnpaidJobOrders(customerId)
                 if(jobOrderWithItems != null) {
                     prepare(jobOrderWithItems)
                 }// else {

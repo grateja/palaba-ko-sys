@@ -13,13 +13,13 @@ data class EntityJobOrderPaymentFull(
         entity = EntityUser::class
     )
     val user: EntityUser,
-//
-//    @Relation(
-//        parentColumn = "id",
-//        entityColumn = "payment_id",
-//        entity = EntityJobOrder::class
-//    )
-//    val jobOrders: List<EntityJobOrderWithItems>
+
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "payment_id",
+        entity = EntityJobOrder::class
+    )
+    val jobOrders: List<EntityJobOrder>
 ) {
 //    fun jobOrderReferences() : String {
 //        return jobOrders.map { it.jobOrder.jobOrderNumber }.joinToString(",")

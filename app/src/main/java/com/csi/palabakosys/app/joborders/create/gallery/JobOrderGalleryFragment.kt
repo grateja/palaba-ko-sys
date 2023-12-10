@@ -53,7 +53,7 @@ class JobOrderGalleryFragment : Fragment() {
     }
 
     private fun subscribeListener() {
-        viewModel.dataState().observe(viewLifecycleOwner, Observer {
+        viewModel.dataState.observe(viewLifecycleOwner, Observer {
             when(it) {
                 is CreateJobOrderViewModel.DataState.OpenCamera -> {
                     openCamera()

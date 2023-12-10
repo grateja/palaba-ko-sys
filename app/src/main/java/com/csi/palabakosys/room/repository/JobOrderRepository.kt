@@ -1,19 +1,11 @@
 package com.csi.palabakosys.room.repository
 
 import com.csi.palabakosys.app.dashboard.data.DateFilter
-import com.csi.palabakosys.app.joborders.create.delivery.DeliveryCharge
-import com.csi.palabakosys.app.joborders.create.discount.MenuDiscount
-import com.csi.palabakosys.app.joborders.create.extras.MenuExtrasItem
-import com.csi.palabakosys.app.joborders.create.products.MenuProductItem
-import com.csi.palabakosys.app.joborders.create.services.MenuServiceItem
 import com.csi.palabakosys.app.joborders.list.JobOrderQueryResult
 import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentMinimal
-import com.csi.palabakosys.model.EnumJoFilterBy
-import com.csi.palabakosys.model.EnumPaymentStatus
 import com.csi.palabakosys.model.JobOrderAdvancedFilter
 import com.csi.palabakosys.room.dao.DaoJobOrder
 import com.csi.palabakosys.room.entities.*
-import com.csi.palabakosys.util.EnumSortDirection
 import java.lang.Exception
 import java.util.UUID
 import javax.inject.Inject
@@ -80,13 +72,11 @@ constructor (
         return daoJobOrder.getCurrentJobOrder(customerId)
     }
 
-    suspend fun getAllUnpaidByCustomerId(customerId: UUID?): List<JobOrderPaymentMinimal> {
-        return daoJobOrder.getAllUnpaidByCustomerId(customerId)
-    }
+    fun getAllUnpaidByCustomerIdAsLiveData(customerId: UUID?) = daoJobOrder.getAllUnpaidByCustomerId(customerId)
 
-//    suspend fun getUnpaidByCustomerId(customerId: UUID, jobOrderId: UUID?): List<JobOrderPaymentMinimal> {
-//        return daoJobOrder.getPreviousUnpaidByCustomerId(customerId, jobOrderId)
-//    }
+    suspend fun getUnpaidByCustomerId(customerId: UUID): List<JobOrderPaymentMinimal> {
+        return daoJobOrder.getUnpaidByCustomerId(customerId)
+    }
 
     suspend fun load(
         keyword: String?,

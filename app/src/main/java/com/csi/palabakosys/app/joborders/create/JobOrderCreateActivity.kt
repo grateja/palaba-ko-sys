@@ -334,7 +334,7 @@ class JobOrderCreateActivity : BaseActivity() {
             viewModel.requestCancel()
         }
 
-        viewModel.dataState().observe(this, Observer {
+        viewModel.dataState.observe(this, Observer {
             when(it) {
                 is CreateJobOrderViewModel.DataState.OpenPackages -> {
                     openPackages(it.list)

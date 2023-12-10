@@ -24,9 +24,10 @@ class JobOrderPrintActivity : AppCompatActivity() {
     private val viewModel: JobOrderPrintViewModel by viewModels()
     private lateinit var binding: ActivityJobOrderPrintBinding
 
-    private val servicesAdapter = Adapter<PrintItem>(R.layout.recycler_item_print_item)
-    private val productsAdapter = Adapter<PrintItem>(R.layout.recycler_item_print_item)
-    private val extrasAdapter = Adapter<PrintItem>(R.layout.recycler_item_print_item)
+    private val joDetailsAdapter = Adapter<PrintItem>(R.layout.recycler_item_print_item)
+    private val itemsAdapter = Adapter<PrintItem>(R.layout.recycler_item_print_item)
+    private val summaryAdapter = Adapter<PrintItem>(R.layout.recycler_item_print_item)
+    private val paymentAdapter = Adapter<PrintItem>(R.layout.recycler_item_print_item)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,9 +44,10 @@ class JobOrderPrintActivity : AppCompatActivity() {
             viewModel.setJobOrderId(it)
         }
 
-        binding.printItemsServices.items.adapter = servicesAdapter
-        binding.printItemsProducts.items.adapter = productsAdapter
-        binding.printItemsExtras.items.adapter = extrasAdapter
+        binding.recyclerJoDetails.adapter = joDetailsAdapter
+        binding.recyclerItems.adapter = itemsAdapter
+        binding.recyclerSummary.adapter = summaryAdapter
+        binding.recyclerPayment.adapter = paymentAdapter
     }
     private fun setupTab() {
         binding.printTab.apply {
@@ -88,20 +90,42 @@ class JobOrderPrintActivity : AppCompatActivity() {
                 }
             }
         })
-        viewModel.services.observe(this, Observer {
-            it?.let {
-                servicesAdapter.setData(it)
-            }
+        viewModel.joDetails.observe(this, Observer {
+            joDetailsAdapter.setData(it)
         })
-        viewModel.products.observe(this, Observer {
-            it?.let {
-                productsAdapter.setData(it)
-            }
+        viewModel.items.observe(this, Observer {
+            itemsAdapter.setData(it)
         })
-        viewModel.extras.observe(this, Observer {
-            it?.let {
-                extrasAdapter.setData(it)
-            }
+        viewModel.summary.observe(this, Observer {
+            summaryAdapter.setData(it)
         })
+        viewModel.paymentDetails.observe(this, Observer {
+            paymentAdapter.setData(it)
+        })
+//        viewModel.services.observe(this, Observer {
+//            it?.let {
+//                servicesAdapter.setData(it)
+//            }
+//        })
+//        viewModel.products.observe(this, Observer {
+//            it?.let {
+//                productsAdapter.setData(it)
+//            }
+//        })
+//        viewModel.extras.observe(this, Observer {
+//            it?.let {
+//                extrasAdapter.setData(it)
+//            }
+//        })
+//        viewModel.paymentDetails.observe(this, Observer {
+//            it?.let {
+//                paymentAdapter.setData(it)
+//            }
+//        })
+//        viewModel.unpaid.observe(this, Observer {
+//            it?.let {
+//                unpaidAdapter.setData(it)
+//            }
+//        })
     }
 }

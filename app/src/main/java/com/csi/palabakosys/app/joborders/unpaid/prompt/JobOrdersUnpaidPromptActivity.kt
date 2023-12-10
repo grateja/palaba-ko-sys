@@ -68,9 +68,9 @@ class JobOrdersUnpaidPromptActivity : AppCompatActivity() {
         viewModel.jobOrders.observe(this, Observer {
             adapter.setData(it)
         })
-        viewModel.customer.observe(this, Observer {
-            viewModel.load(it.id)
-        })
+//        viewModel.customer.observe(this, Observer {
+//            viewModel.load(it.id)
+//        })
         viewModel.dataState.observe(this, Observer {
             when(it) {
                 is JobOrdersUnpaidPromptViewModel.DataState.OpenPayment -> {

@@ -7,7 +7,6 @@ import com.csi.palabakosys.preferences.AppPreferenceRepository
 import com.csi.palabakosys.room.entities.EntityCashless
 //import com.csi.palabakosys.room.entities.EntityCashlessProvider
 import com.csi.palabakosys.room.entities.EntityJobOrderPayment
-import com.csi.palabakosys.room.entities.EntityJobOrderPaymentFull
 import com.csi.palabakosys.room.repository.CustomerRepository
 import com.csi.palabakosys.room.repository.JobOrderRepository
 import com.csi.palabakosys.room.repository.PaymentRepository
@@ -116,16 +115,8 @@ constructor(
     fun getUnpaidByCustomerId(customerId: UUID) {
         _customerId.value = customerId
         viewModelScope.launch {
-            jobOrderRepository.getAllUnpaidByCustomerId(customerId).let { jo->
+            jobOrderRepository.getUnpaidByCustomerId(customerId).let { jo->
                 _payableJobOrders.value = jo
-//                paymentId = jo.firstOrNull()?.paymentId ?: UUID.randomUUID()
-
-//                if(getPayment(paymentId) != null) {
-//                    return@launch
-//                }
-
-//                _amountDue.value = jo.sumOf { it.discountedAmount.toDouble() }.toFloat()
-//                cashReceived.value = _amountDue.value?.toInt().toString()
             }
         }
     }

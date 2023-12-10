@@ -73,56 +73,75 @@
                             android:layout_height="wrap_content"
                             android:text="@{`*** ` + viewModel.selectedTab + ` ***`}"/>
 
-                        <include
-                            android:id="@+id/print_items_services"
-                            android:visibility="@{viewModel.hasServices}"
-                            layout="@layout/incl_print_items"
-                            app:header="@{`SERVICES`}"/>
-
-                        <include
-                            android:id="@+id/print_items_products"
-                            android:visibility="@{viewModel.hasProducts}"
-                            layout="@layout/incl_print_items"
-                            app:header="@{`PRODUCTS`}"/>
-
-                        <include
-                            android:id="@+id/print_items_extras"
-                            android:visibility="@{viewModel.hasExtras}"
-                            layout="@layout/incl_print_items"
-                            app:header="@{`EXTRAS`}"/>
-
                         <TextView
-                            style="@style/Print.Header"
-                            android:visibility="@{!viewModel.deliveryOption.empty}"
+                            style="@style/Print"
+                            android:text="@string/print_single_line"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@{viewModel.deliveryOption}"/>
+                            android:layout_height="wrap_content"/>
 
-<!--                        <include-->
-<!--                            android:id="@+id/print_items_delivery"-->
-<!--                            android:visibility="@{viewModel.hasPickupAndDelivery}"-->
-<!--                            layout="@layout/incl_print_items"-->
-<!--                            app:header="@{viewModel.deliveryOption}"/>-->
-
-                        <TextView
-                            style="@style/Print.Header"
-                            android:layout_width="wrap_content"
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recycler_jo_details"
+                            android:nestedScrollingEnabled="false"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="PAYMENT"/>
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
                         <TextView
                             style="@style/Print"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textAlignment="center"
-                            android:text="@string/print_double_line"/>
+                            android:text="@string/print_single_line"/>
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recycler_items"
+                            android:nestedScrollingEnabled="false"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+                        <TextView
+                            style="@style/Print"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textAlignment="center"
+                            android:text="@string/print_single_line"/>
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recycler_summary"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+                        <TextView
+                            style="@style/Print"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textAlignment="center"
+                            android:text="@string/print_single_line"/>
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:visibility="@{viewModel.hasPayment}"
+                            android:id="@+id/recycler_payment"
+                            android:nestedScrollingEnabled="false"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+                        <TextView
+                            style="@style/Print"
+                            android:visibility="@{viewModel.hasPayment}"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textAlignment="center"
+                            android:text="@string/print_single_line"/>
 
                         <TextView
                             style="@style/Print.Header"
                             android:textAlignment="center"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="THIS IS NOT AN OFFICIAL RECEIPT"/>
+                            android:text="@{viewModel.disclaimer}"/>
                         <com.google.android.material.divider.MaterialDivider
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

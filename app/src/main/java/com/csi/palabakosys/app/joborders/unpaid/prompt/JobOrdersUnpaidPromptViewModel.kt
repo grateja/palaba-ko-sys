@@ -1,15 +1,9 @@
 package com.csi.palabakosys.app.joborders.unpaid.prompt
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.csi.palabakosys.app.customers.CustomerMinimal
-import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentMinimal
 import com.csi.palabakosys.room.repository.JobOrderRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
@@ -26,21 +20,21 @@ constructor(
     private val _customer = MutableLiveData<CustomerMinimal>()
     val customer: LiveData<CustomerMinimal> = _customer
 
-    private val _jobOrders = MutableLiveData<List<JobOrderPaymentMinimal>>()
-    val jobOrders: LiveData<List<JobOrderPaymentMinimal>> = _jobOrders
+    // private val _jobOrders = MutableLiveData<List<JobOrderPaymentMinimal>>()
+    val jobOrders = _customer.switchMap { repository.getAllUnpaidByCustomerIdAsLiveData(it.id) } //: LiveData<List<JobOrderPaymentMinimal>> = _jobOrders
 
     val amountToPay = MediatorLiveData<Float>().apply {
         fun update() {
-            value = _jobOrders.value?.sumOf { it.discountedAmount.toDouble() }?.toFloat()
+            value = jobOrders.value?.sumOf { it.discountedAmount.toDouble() }?.toFloat()
         }
         addSource(jobOrders) { update() }
     }
 
-    fun load(customerId: UUID) {
-        viewModelScope.launch {
-            _jobOrders.value = repository.getAllUnpaidByCustomerId(customerId)
-        }
-    }
+//    fun load(customerId: UUID) {
+//        viewModelScope.launch {
+//            _jobOrders.value = repository.getAllUnpaidByCustomerId(customerId)
+//        }
+//    }
 
     fun openPayment() {
         customer.value?.let {
