@@ -1,13 +1,18 @@
 package com.csi.palabakosys.app.joborders.print
 
+import androidx.datastore.dataStore
 import androidx.lifecycle.*
+import com.csi.palabakosys.app.app_settings.printer.browser.PrinterDevice
 import com.csi.palabakosys.model.EnumDiscountType
 import com.csi.palabakosys.model.EnumPaymentMethod
+import com.csi.palabakosys.model.EnumPrintState
 import com.csi.palabakosys.model.PrintItem
+import com.csi.palabakosys.preferences.PrinterSettings
 import com.csi.palabakosys.room.repository.DataStoreRepository
 import com.csi.palabakosys.room.repository.JobOrderRepository
 import com.csi.palabakosys.util.toShort
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
 
@@ -19,6 +24,26 @@ constructor(
     private val jobOrderRepository: JobOrderRepository,
     private val dataStoreRepository: DataStoreRepository
 ) : ViewModel() {
+    val bluetoothEnabled = MutableLiveData(false)
+    val printerSettings = dataStoreRepository.printerSettings
+    private val _printState = MutableLiveData(EnumPrintState.READY)
+    val printState: LiveData<EnumPrintState> = _printState
+    val buttonText = MediatorLiveData<String>().apply {
+        addSource(_printState) {
+            value = _printState.value?.let {
+                if(it == EnumPrintState.STARTED) {
+                    "CANCEL"
+                } else if(it == EnumPrintState.ERROR) {
+                    "RETRY"
+                } else {
+                    "CONTINUE"
+                }
+            } ?: "CONTINUE"
+        }
+    }
+//    val printerName = dataStoreRepository.printerName
+//    val printerAddress = dataStoreRepository.printerAddress
+
     private val _dataState = MutableLiveData<DataState>()
     val dataState: LiveData<DataState> = _dataState
 
@@ -307,7 +332,11 @@ constructor(
     }
 
     fun print(tab: String) {
-        val jobOrder = jobOrderWithItems.value
+        if(_printState.value == EnumPrintState.STARTED) {
+            _dataState.value = DataState.Cancel
+            return
+        }
+
         val singleLine = "-".repeat(32) + "\n"
         val header = "[C]<font size='tall'><b>*** $tab ***</b></font>\n"
 
@@ -325,42 +354,11 @@ constructor(
 
         val joDetails = joDetails.value?.takeIf { it.isNotEmpty() }?.let {
             it.joinToString("") { it.formattedString() }
-        } ?: ""
+        }
 
         val items = items.value.let {
             it?.joinToString ("") { it.formattedString() }
         }
-//        val services = services.value?.takeIf { it.isNotEmpty() }?.let {
-//            it.joinToString("") { it.formattedString() }
-//        } ?: ""
-//
-//        val products = products.value?.takeIf { it.isNotEmpty() }?.let {
-//            it.joinToString("") { it.formattedString() }
-//        } ?: ""
-//
-//        val extras = extras.value?.takeIf { it.isNotEmpty() }?.let {
-//            it.joinToString("") { it.formattedString() }
-//        } ?: ""
-//
-//        val delivery = jobOrder?.deliveryCharge?.let {
-//            "[L]<b>${it.deliveryOption.value}</b>\n"+
-//            "[L](${it.distance}KM)${it.vehicle}[R]P${it.price}\n"
-//        } ?: ""
-//
-//        val discountInPeso = jobOrder?.discountInPeso()
-//
-//        val subtotal = PrintItem("[L]<b>SUBTOTAL [R]P${jobOrder?.subtotal()}</b>\n")
-//
-//        val discount = jobOrder?.discount?.let { discount ->
-//            val discountValue = discount.discountType.let {
-//                if(it == EnumDiscountType.PERCENTAGE) {
-//                    "(${discount.value}%)[R]-P${discountInPeso}"
-//                } else {
-//                    "[R]-P${discount.value}"
-//                }
-//            }
-//            "[L]<b>${discount.name} discount $discountValue</b>\n"
-//        } ?: ""
 
         val summary = summary.value.let {
             it?.joinToString("") { it.formattedString() }
@@ -369,11 +367,6 @@ constructor(
         val paymentDetails = paymentDetails.value?.takeIf { it.isNotEmpty() }?.let {
             it.joinToString("") { it.formattedString() }
         } ?: ""
-
-//        val unpaid = unpaid.value?.takeIf { it.isNotEmpty() }?.let {
-//            "[L]<b>OTHER UNPAID JOB ORDERS</b>\n" + it.joinToString("\n") + "\n" +
-//                    totalAmountDue.toString()
-//        } ?: ""
 
         val formattedText = "$shopName$address$contactInfo" +
                 header +
@@ -384,11 +377,10 @@ constructor(
                 summary +
                 singleLine +
                 paymentDetails
-        // current balance if not paid
-        // other job orders
-        // total balance
 
         println(formattedText)
+
+        val settings = printerSettings.value
 
          _dataState.value = DataState.Submit(formattedText)
     }
@@ -397,8 +389,24 @@ constructor(
         _dataState.value = DataState.StateLess
     }
 
+    fun setBluetoothState(state: Boolean) {
+        bluetoothEnabled.value = state
+    }
+
+    fun setDevice(device: PrinterDevice?) {
+        viewModelScope.launch {
+            dataStoreRepository.updatePrinterName(device?.deviceName)
+            dataStoreRepository.updatePrinterAddress(device?.macAddress)
+        }
+    }
+
+    fun setPrintState(printState: EnumPrintState) {
+        _printState.value = printState
+    }
+
     sealed class DataState {
         object StateLess: DataState()
+        object Cancel: DataState()
         class Submit(val formattedText: String): DataState()
     }
 }

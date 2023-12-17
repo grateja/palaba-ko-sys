@@ -33,22 +33,22 @@ constructor(
     }
 
     fun selectPrinter() {
-        viewModelScope.launch {
-            withContext(Dispatchers.Default) {
-//                val connection = BluetoothConnection(adapter.getSelectedItem()?.getItem()?.device)
-                appPreferenceRepository.printerSettings().let {
-                    try {
-                        println("Setting printer")
-                        val _printer = EscPosPrinter(connection, it.dpi, it.width, it.character)
-                        println("printer cached")
-                        printer.postValue(_printer)
-                        println("Printer set")
-                    } catch (e: Exception) {
-                        println(e.message)
-                    }
-                }
-            }
-        }
+//        viewModelScope.launch {
+//            withContext(Dispatchers.Default) {
+////                val connection = BluetoothConnection(adapter.getSelectedItem()?.getItem()?.device)
+//                appPreferenceRepository.printerSettings().let {
+//                    try {
+//                        println("Setting printer")
+//                        val _printer = EscPosPrinter(connection, it.dpi, it.width, it.character)
+//                        println("printer cached")
+//                        printer.postValue(_printer)
+//                        println("Printer set")
+//                    } catch (e: Exception) {
+//                        println(e.message)
+//                    }
+//                }
+//            }
+//        }
     }
 
     fun loadPrinters() {

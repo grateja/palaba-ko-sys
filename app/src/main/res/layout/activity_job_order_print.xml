@@ -26,7 +26,7 @@
                 app:layout_constraintTop_toBottomOf="@id/print_tab"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/button_print"
+                app:layout_constraintBottom_toTopOf="@id/controls"
                 android:layout_marginBottom="16dp">
                 <com.google.android.material.card.MaterialCardView
                     app:cardElevation="12dp"
@@ -149,16 +149,43 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </androidx.core.widget.NestedScrollView>
-            <Button
-                android:id="@+id/button_print"
-                style="@style/RoundButtonNeutral.Small"
-                android:layout_width="wrap_content"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/controls"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/Continue"
-                android:layout_gravity="center"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:gravity="center|center_vertical">
+                    <TextView
+                        android:layout_margin="18dp"
+                        android:text="@{viewModel.printerSettings.name}"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+                    <Button
+                        android:id="@+id/button_print"
+                        android:visibility="@{viewModel.bluetoothEnabled}"
+                        style="@style/RoundButtonNeutral.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{viewModel.buttonText}"
+                        android:layout_gravity="center"/>
+                    <Button
+                        android:id="@+id/button_enable_bluetooth"
+                        style="@style/RoundButtonNeutral.Small"
+                        android:visibility="@{!viewModel.bluetoothEnabled}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Turn On Bluetooth"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

@@ -113,7 +113,7 @@
     </style>
 
     <style name="RoundButtonPrimary" parent="RoundButton">
-        <item name="backgroundTint">@color/secondary_variant</item>
+        <item name="backgroundTint">@color/primary</item>
         <item name="android:textColor">@color/white</item>
     </style>
     <style name="RoundButtonDanger" parent="RoundButton">

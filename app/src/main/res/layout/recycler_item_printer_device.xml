@@ -24,6 +24,14 @@
                 app:layout_constraintStart_toStartOf="parent"
                 tools:text="JP-58EF32"/>
             <TextView
+                android:id="@+id/text_in_range"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.inRange + ``}"
+                app:layout_constraintStart_toEndOf="@id/textTitle"
+                app:layout_constraintTop_toTopOf="@id/textTitle"
+                app:layout_constraintBottom_toBottomOf="@id/textTitle"/>
+            <TextView
                 android:id="@+id/textDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

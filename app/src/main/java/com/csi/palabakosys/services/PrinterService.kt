@@ -9,11 +9,12 @@ import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
+import android.os.Parcelable
 import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.csi.palabakosys.R
-import com.csi.palabakosys.preferences.AppPreferenceRepository
-import com.csi.palabakosys.preferences.PrinterSettings
+import com.csi.palabakosys.model.EnumPrintState
+import com.csi.palabakosys.room.repository.DataStoreRepository
 import com.dantsu.escposprinter.EscPosPrinter
 import com.dantsu.escposprinter.connection.bluetooth.BluetoothConnection
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,19 +29,30 @@ class PrinterService : Service() {
         private const val CHANNEL_ID = "printer_settings_channel_id"
         private const val CHANNEL_NAME = "Printer Settings"
         private const val CHANNEL_DESCRIPTION = "Channel for printer settings notifications"
+
+//        const val PRINTER_ADDRESS = "printerAddress"
+//        const val PRINTER_WIDTH = "printerWidth"
+//        const val PRINTER_CHARACTERS_PER_LINE = "charactersPerLine"
+
         const val PAYLOAD_TEXT = "payload"
-        const val CUSTOM_SETTINGS = "customSettings"
-        const val PRINT_STARTED_ACTION = "print_started_action"
-        const val PRINT_FINISHED_ACTION = "print_finished_action"
+        const val PRINT_STATE = "state"
+//        const val PRINTER_SETTINGS = "settings"
+//        const val PRINT_STARTED_ACTION = "print_started_action"
+//        const val PRINT_FINISHED_ACTION = "print_finished_action"
         const val CANCEL_PRINT_ACTION = "print_finished_action"
-        const val PRINT_ERROR_ACTION = "print_error"
+//        const val PRINT_ERROR_ACTION = "print_error"
+        const val PRINT_ACTION = "printAction"
         const val MESSAGE = "message"
     }
 
+//    @Inject
+//    lateinit var appPreferenceRepository: AppPreferenceRepository
+
     @Inject
-    lateinit var appPreferenceRepository: AppPreferenceRepository
+    lateinit var dataStoreRepository: DataStoreRepository
 
     var printer: EscPosPrinter? = null
+    private var thread: Thread? = null
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -54,15 +66,30 @@ class PrinterService : Service() {
 
         val action = intent?.action
         if(action == CANCEL_PRINT_ACTION) {
-            stopSelf()
+            cancel()
         }
 
-        val settings = intent?.getParcelableExtra<PrinterSettings>(CUSTOM_SETTINGS)
+//        val settings = intent?.getParcelableExtra<PrinterSettings>(PRINTER_SETTINGS)
+
         intent?.getStringExtra(PAYLOAD_TEXT)?.let {
-            startPrint(it, settings)
+//            val address = intent.getStringExtra(PRINTER_ADDRESS) ?: ""
+//            val width = intent.getFloatExtra(PRINTER_WIDTH, 58f)
+//            val charactersPerLine = intent.getIntExtra(PRINTER_CHARACTERS_PER_LINE, 32)
+
+            startPrint(it)
         }
 
         return START_NOT_STICKY
+    }
+
+    private fun cancel() {
+        thread?.interrupt()
+        val intent = Intent(PRINT_ACTION).apply {
+            putExtra(PRINT_STATE, EnumPrintState.CANCELED as Parcelable)
+        }
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+        stopSelf()
+        println("canceled")
     }
 
     private val notificationManager by lazy {
@@ -101,17 +128,28 @@ class PrinterService : Service() {
         bluetoothManager.adapter
     }
 
-    private fun startPrint(text: String, customSettings: PrinterSettings?) {
-        Thread(Runnable {
+    private fun startPrint(text: String) {
+        thread = Thread(Runnable {
             try {
-                LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(PRINT_STARTED_ACTION))
 
-                val settings = customSettings ?: appPreferenceRepository.printerSettings()
-                val device = bluetoothAdapter.getRemoteDevice(settings.address)
+                val intent = Intent(PRINT_ACTION).apply {
+                    putExtra(PRINT_STATE, EnumPrintState.STARTED as Parcelable)
+                }
+                LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+
+                val address = dataStoreRepository.printerAddress.value
+                val device = bluetoothAdapter.getRemoteDevice(address)
                 val connection = BluetoothConnection(device)
 
+                val width = dataStoreRepository.printerWidth.value ?: 58f
+                val characterLength = dataStoreRepository.printerCharactersPerLine.value ?: 32
+
                 println("create printer")
-                printer = EscPosPrinter(connection, settings.dpi, settings.width, settings.character)
+                printer = EscPosPrinter(connection, 203, width, characterLength)
+
+                if(Thread.interrupted()) {
+                    return@Runnable
+                }
 
                 println("start print")
                 printer?.printFormattedTextAndCut(text)
@@ -121,16 +159,21 @@ class PrinterService : Service() {
 
             } catch (e: Exception) {
                 e.printStackTrace()
-                val intent = Intent(PRINT_ERROR_ACTION).apply {
+                val intent = Intent(PRINT_ACTION).apply {
+                    putExtra(PRINT_STATE, EnumPrintState.ERROR as Parcelable)
                     putExtra(MESSAGE, e.message)
                 }
                 LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
             } finally {
                 printer?.disconnectPrinter()
-                LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(PRINT_FINISHED_ACTION))
+                val intent = Intent(PRINT_ACTION).apply {
+                    putExtra(PRINT_STATE, EnumPrintState.FINISHED as Parcelable)
+                }
+                LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
                 safeStop()
             }
-        }).start()
+        })
+        thread?.start()
     }
 
     private fun safeStop() {

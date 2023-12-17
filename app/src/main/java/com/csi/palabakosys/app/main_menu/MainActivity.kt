@@ -55,36 +55,42 @@ class MainActivity : EndingActivity() {
                 R.drawable.icon_sales_report,
                 permissions = listOf(
                     EnumActionPermission.VIEW_DASHBOARD
-                )
+                ),
+                backgroundColor = resources.getColor(R.color.color_code_dashboard, null)
             ),
             MenuItem(
                 "Job Orders",
                 "Manage and track job orders.",
                 JobOrderListActivity::class.java,
-                R.drawable.icon_job_orders
+                R.drawable.icon_job_orders,
+                backgroundColor = resources.getColor(R.color.color_code_job_order, null)
             ),
             MenuItem(
                 "Machines",
                 "Access and control remote machines.",
                 RemotePanelActivity::class.java,
-                R.drawable.icon_machines
+                R.drawable.icon_machines,
+                backgroundColor = resources.getColor(R.color.color_code_machines, null)
             ),
             MenuItem(
                 "Payments",
                 "View Payments",
-                PaymentListActivity::class.java
+                PaymentListActivity::class.java,
+                backgroundColor = resources.getColor(R.color.color_code_payments, null)
             ),
             MenuItem(
                 "Customers",
                 "Manage customer information and profiles.",
                 CustomersActivity::class.java,
-                R.drawable.icon_customers
+                R.drawable.icon_customers,
+                backgroundColor = resources.getColor(R.color.color_code_customers, null)
             ),
             MenuItem(
                 "Expenses",
                 "Track and record business expenses.",
                 ExpensesActivity::class.java,
-                R.drawable.icon_expenses
+                R.drawable.icon_expenses,
+                backgroundColor = resources.getColor(R.color.color_code_expenses, null)
             ),
             MenuItem(
                 "Shop Preferences",
@@ -134,7 +140,8 @@ class MainActivity : EndingActivity() {
                         DiscountsActivity::class.java,
                         permissions = listOf(EnumActionPermission.MODIFY_DISCOUNTS)
                     ),
-                )
+                ),
+                backgroundColor = resources.getColor(R.color.color_code_shop_preferences, null)
             ),
             MenuItem(
                 "App Settings",
@@ -179,7 +186,8 @@ class MainActivity : EndingActivity() {
                         DeveloperSettingsActivity::class.java,
                         permissions = listOf(EnumActionPermission.MODIFY_SETTINGS_IPADDRESS)
                     ),
-                )
+                ),
+                backgroundColor = resources.getColor(R.color.color_code_app_settings, null)
             ),
         )
     }

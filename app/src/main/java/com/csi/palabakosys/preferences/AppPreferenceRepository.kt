@@ -33,7 +33,7 @@ constructor (@ApplicationContext context: Context) {
         with(sharedPreferences.edit()) {
             putString("printer_name", printerSettings.name)
             putString("printer_address", printerSettings.address)
-            putInt("printer_dpi", printerSettings.dpi)
+//            putInt("printer_dpi", printerSettings.dpi)
             putFloat("printer_width", printerSettings.width)
             putInt("printer_character", printerSettings.character)
             apply()
@@ -44,7 +44,7 @@ constructor (@ApplicationContext context: Context) {
         return PrinterSettings(
             sharedPreferences.getString("printer_name", "Tap to select printer") ?: "keme",
             sharedPreferences.getString("printer_address", "Tap to select printer"),
-            sharedPreferences.getInt("printer_dpi", 203),
+//            sharedPreferences.getInt("printer_dpi", 203),
             sharedPreferences.getFloat("printer_width", 58f),
             sharedPreferences.getInt("printer_character", 32)
         )

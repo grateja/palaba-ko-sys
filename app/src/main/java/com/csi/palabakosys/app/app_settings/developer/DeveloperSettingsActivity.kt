@@ -30,8 +30,10 @@ class DeveloperSettingsActivity : AppCompatActivity() {
     }
 
     private fun showConnectionDelayDialog(initialValue: Long) {
-        showTextInputDialog("Set activation delay", "Fake activation delay in ms", initialValue.toString()) {
-            viewModel.updateFakeConnectionDelay(it.toLong())
+        showTextInputDialog("Set activation delay", "Fake activation delay in ms", initialValue) {
+            it?.let {
+                viewModel.updateFakeConnectionDelay(it)
+            }
         }
     }
 

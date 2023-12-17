@@ -37,9 +37,9 @@ data class PrintItem(
 //        val separatorLength = characterLength - totalLength
 
         return when {
-            header != null -> "[L]<b>${header}</b>\n"
-            definition != null -> "[L]$titleStr:${definition}\n"
-            price != null -> "[L]$countStr$titleStr[R]${priceStr}\n"
+            header != null -> "[L]<b>${header}</b>"
+            definition != null -> "[L]$titleStr:${definition}"
+            price != null -> "[L]$countStr$titleStr[R]${priceStr}"
 //            totalLength <= characterLength -> "$countStr$titleStr${" ".repeat(separatorLength)}$priceStr"
             else -> {
                 ""

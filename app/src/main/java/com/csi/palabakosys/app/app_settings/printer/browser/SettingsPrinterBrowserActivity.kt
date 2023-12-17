@@ -217,6 +217,9 @@ class SettingsPrinterBrowserActivity : AppCompatActivity() {
 //    }
 
     private fun subscribeEvents() {
+        binding.swipeRefresh.setOnRefreshListener {
+            helper.startDiscovery()
+        }
         binding.cardBluetooth.setOnClickListener {
             helper.enableBluetooth()
 //            bluetoothHelper.enableBluetooth()
@@ -236,6 +239,7 @@ class SettingsPrinterBrowserActivity : AppCompatActivity() {
             }
             setOnDeviceFound {
                 viewModel.addFoundDevice(it)
+                binding.swipeRefresh.isRefreshing = false
             }
             setOnLocationStateChanged {
                 viewModel.setLocationState(it)

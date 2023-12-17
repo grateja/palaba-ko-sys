@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import android.text.InputType
 import android.util.Size
 import android.view.LayoutInflater
 import android.view.View
@@ -34,6 +35,7 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
+import kotlin.reflect.typeOf
 
 @BindingAdapter("app:errorText")
 fun setErrorText(view: TextInputLayout, errorMessage: String) {
@@ -251,7 +253,12 @@ fun Context.showDeleteConfirmationDialog(title: String? = "Delete this item", me
     }.show()
 }
 
-fun Context.showTextInputDialog(title: String?, message: String?, initialValue: String?, onOk: (value: String) -> Unit) {
+inline fun <reified T> Context.showTextInputDialog(
+    title: String?,
+    message: String?,
+    initialValue: T?,
+    crossinline onOk: (value: T?) -> Unit
+) {
     val binding: AlertDialogTextInputBinding = DataBindingUtil.inflate(
         LayoutInflater.from(this),
         R.layout.alert_dialog_text_input,
@@ -259,14 +266,41 @@ fun Context.showTextInputDialog(title: String?, message: String?, initialValue: 
         false
     )
 
-    binding.textInput.setText(initialValue)
+    // Set the inputType based on T
+    when (T::class) {
+        String::class -> {
+            binding.textInput.inputType = InputType.TYPE_CLASS_TEXT
+            println("input type text")
+        }
+        Float::class, Int::class, Long::class -> {
+            binding.textInput.inputType = InputType.TYPE_CLASS_NUMBER
+            println("input type number")
+        }
+        Boolean::class -> {
+            // For boolean, you may want to handle it differently, e.g., as a checkbox
+            // Adjust based on your specific UI design
+        }
+    }
+
+    binding.textInput.setText(initialValue?.toString())
     binding.textInput.hint = message
 
     AlertDialog.Builder(this).apply {
         setTitle(title)
         setView(binding.root)
         setPositiveButton("Ok") { _, _ ->
-            onOk(binding.textInput.text.toString())
+            val inputText = binding.textInput.text.toString()
+
+            val typedValue = when (T::class) {
+                String::class -> inputText as T
+                Float::class -> inputText.toFloatOrNull() as? T ?: initialValue
+                Int::class -> inputText.toIntOrNull() as? T ?: initialValue
+                Boolean::class -> inputText.toBoolean() as T
+                Long::class -> inputText.toLong() as T ?: initialValue
+                else -> initialValue
+            }
+
+            onOk(typedValue)
         }
         create()
     }.show()

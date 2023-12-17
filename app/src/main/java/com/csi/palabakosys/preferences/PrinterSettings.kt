@@ -7,7 +7,7 @@ import kotlinx.parcelize.Parcelize
 data class PrinterSettings(
     val name: String?,
     val address: String?,
-    val dpi: Int,
+//    val dpi: Int,
     val width: Float,
     val character: Int
 ) : Parcelable

@@ -341,7 +341,7 @@
             android:name=".app.joborders.list.JobOrderListActivity"
             android:exported="false"
             android:label="Job Orders"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
+            android:theme="@style/Theme.LMS2022.NoActionBar.JobOrder">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
