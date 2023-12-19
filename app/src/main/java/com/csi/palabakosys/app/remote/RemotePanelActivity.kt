@@ -1,8 +1,21 @@
 package com.csi.palabakosys.app.remote
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkInfo
+import android.net.wifi.WifiInfo
+import android.net.wifi.WifiManager
+import android.os.Build.VERSION.SDK_INT
+import android.os.Build.VERSION_CODES.M
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -21,6 +34,7 @@ import com.csi.palabakosys.util.ActivityLauncher
 import com.csi.palabakosys.util.Constants
 import com.csi.palabakosys.util.calculateSpanCount
 import com.google.android.material.tabs.TabLayout
+import com.sangcomz.fishbun.util.setStatusBarColor
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -36,9 +50,20 @@ class RemotePanelActivity : AppCompatActivity() {
 
     private val launcher = ActivityLauncher(this)
 
+    fun isWifiConnected(): Boolean {
+        val connectivityManager =
+            getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        val network = connectivityManager.activeNetwork
+        val networkCapabilities = connectivityManager.getNetworkCapabilities(network)
+        return networkCapabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setStatusBarColor(resources.getColor(R.color.color_code_machines, null))
         binding = DataBindingUtil.setContentView(this, R.layout.activity_remote_panel)
+        setSupportActionBar(binding.toolbar)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
@@ -56,6 +81,43 @@ class RemotePanelActivity : AppCompatActivity() {
 
         subscribeEvents()
         subscribeListeners()
+
+        println("is connected ${isWifiConnected()}")
+
+        val connectivityManager =
+            getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        connectivityManager.registerDefaultNetworkCallback(wifiStateCallback)
+    }
+
+    private val wifiStateCallback = object: ConnectivityManager.NetworkCallback() {
+
+        override fun onAvailable(network: Network) {
+            super.onAvailable(network)
+            Log.d("WifiStateCallback", "Network available")
+            checkWifiConnection()
+        }
+
+        override fun onLost(network: Network) {
+            super.onLost(network)
+            Log.d("WifiStateCallback", "Network lost")
+            runOnUiThread {
+                viewModel.setWiFiConnectionState(false)
+            }
+            // Handle Wi-Fi disconnected state
+        }
+
+        private fun checkWifiConnection() {
+            val connectivityManager =
+                getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+            val network = connectivityManager.activeNetwork
+            val networkCapabilities = connectivityManager.getNetworkCapabilities(network)
+
+            runOnUiThread {
+                viewModel.setWiFiConnectionState(networkCapabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true)
+            }
+        }
     }
 
     private fun subscribeEvents() {
@@ -80,6 +142,7 @@ class RemotePanelActivity : AppCompatActivity() {
     private fun subscribeListeners() {
         viewModel.machines.observe(this, Observer {
             adapter.setData(it)
+            adapter.startUpdatingTime()
 //            regularDryersAdapter.setData(it.filter { it.machine.machineType == EnumMachineType.REGULAR_DRYER })
 //            titanWashersAdapter.setData(it.filter { it.machine.machineType == EnumMachineType.TITAN_WASHER })
 //            titanDryersAdapter.setData(it.filter { it.machine.machineType == EnumMachineType.TITAN_DRYER })

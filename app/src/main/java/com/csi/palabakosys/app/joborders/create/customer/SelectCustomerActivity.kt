@@ -26,6 +26,7 @@ class SelectCustomerActivity : FilterActivity() {
     private val customersAdapter = CustomersAdapterMinimal()
 
     override var filterHint = "Search Customer Name/CRN"
+    override var toolbarBackground: Int = R.color.color_code_customers
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_select_customer)

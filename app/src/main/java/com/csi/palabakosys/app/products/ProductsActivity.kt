@@ -20,6 +20,7 @@ class ProductsActivity : FilterActivity() {
 //    private val addEditLauncher = ActivityLauncher(this)
 
     override var filterHint = "Search Discounts"
+    override var toolbarBackground: Int = R.color.teal_700
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_products)

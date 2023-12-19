@@ -4,8 +4,10 @@ import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import com.csi.palabakosys.room.db.MainDatabase
+import com.csi.palabakosys.util.Constants
 //import com.mazenrashed.printooth.Printooth
 import dagger.hilt.android.HiltAndroidApp
+import java.io.File
 import javax.inject.Inject
 
 @HiltAndroidApp
@@ -23,6 +25,10 @@ class MyApplication : Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
-
+        val mediaDir = File(filesDir, Constants.PICTURES_DIR)
+        if(!mediaDir.exists()) {
+            mediaDir.mkdirs()
+            println("DIR CREATED $mediaDir")
+        }
     }
 }

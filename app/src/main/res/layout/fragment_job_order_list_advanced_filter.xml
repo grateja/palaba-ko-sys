@@ -133,6 +133,7 @@
 
                 <com.google.android.material.card.MaterialCardView
                     app:layout_constraintTop_toBottomOf="@id/table_filters"
+                    app:layout_constraintBottom_toTopOf="@id/button_apply"
                     app:cardCornerRadius="20dp"
                     android:layout_marginVertical="5dp"
                     android:layout_width="match_parent"

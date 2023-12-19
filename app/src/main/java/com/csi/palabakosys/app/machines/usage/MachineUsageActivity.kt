@@ -51,6 +51,7 @@ class MachineUsageActivity : FilterActivity() {
     }
 
     override var filterHint: String = "Search customer name"
+    override var toolbarBackground: Int = R.color.teal_700
 
     override fun onQuery(keyword: String?) {
         viewModel.setKeyword(keyword)

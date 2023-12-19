@@ -53,6 +53,9 @@ class RemoteCustomerActivity : AppCompatActivity() {
     private fun subscribeListeners() {
         viewModel.machine.observe(this, Observer {
             title = "Select customer for  ${it?.machineName()}"
+            if(it?.activationRef?.running() == true) {
+                finish()
+            }
         })
 
         viewModel.customerQueues.observe(this, Observer {

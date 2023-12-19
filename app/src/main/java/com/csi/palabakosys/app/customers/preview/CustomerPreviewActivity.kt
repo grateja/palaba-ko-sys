@@ -50,11 +50,10 @@ class CustomerPreviewActivity : AppCompatActivity() {
 
         intent.getStringExtra(CUSTOMER_ID_EXTRA)?.toUUID()?.let {
             viewModel.load(it)
-            jobOrdersViewModel.setCustomerId(it)
         }
-        Handler(Looper.getMainLooper()).postDelayed({
-            jobOrdersViewModel.filter(true)
-        }, 1000)
+//        Handler(Looper.getMainLooper()).postDelayed({
+//            jobOrdersViewModel.filter(true)
+//        }, 1000)
     }
 
     private fun subscribeEvents() {
@@ -80,6 +79,10 @@ class CustomerPreviewActivity : AppCompatActivity() {
     }
 
     private fun subscribeListeners() {
+        viewModel.customer.observe(this, Observer {
+            jobOrdersViewModel.setCustomerId(it.id)
+            jobOrdersViewModel.filter(true)
+        })
         viewModel.navigationState.observe(this, Observer {
             when(it) {
                 is CustomerPreviewViewModel.NavigationState.EditCustomer -> {

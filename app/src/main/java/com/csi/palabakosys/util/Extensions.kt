@@ -253,6 +253,21 @@ fun Context.showDeleteConfirmationDialog(title: String? = "Delete this item", me
     }.show()
 }
 
+fun Context.showMessageDialog(title: String?, message: String?, onOk: (() -> Unit)?) {
+    AlertDialog.Builder(this).apply {
+        title?.let {
+            setTitle(it)
+        }
+        message?.let {
+            setMessage(it)
+        }
+        setNeutralButton("OK") { _, _ ->
+            onOk?.invoke()
+        }
+        create()
+    }.show()
+}
+
 inline fun <reified T> Context.showTextInputDialog(
     title: String?,
     message: String?,

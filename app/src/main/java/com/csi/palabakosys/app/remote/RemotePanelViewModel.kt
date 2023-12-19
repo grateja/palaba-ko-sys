@@ -1,5 +1,6 @@
 package com.csi.palabakosys.app.remote
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.switchMap
@@ -17,6 +18,13 @@ constructor(
 ) : ViewModel() {
     private val machineType = MutableLiveData(EnumMachineType.REGULAR_WASHER)
     val machines = machineType.switchMap { machineRepository.getListAsLiveData(it) } // machineRepository.getListAsLiveData()
+
+    private val _isWiFiConnected = MutableLiveData<Boolean>()
+    val isWiFiConnected: LiveData<Boolean> = _isWiFiConnected
+
+    fun setWiFiConnectionState(isConnected: Boolean) {
+        _isWiFiConnected.value = isConnected
+    }
 
     fun setMachineType(machineType: String) {
         this.machineType.value = EnumMachineType.fromName(machineType)

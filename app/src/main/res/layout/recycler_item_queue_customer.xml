@@ -16,6 +16,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
+                android:id="@+id/text_date"
+                android:date="@{viewModel.latestJobOrderDate}"
+                android:layout_marginStart="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toEndOf="@id/labelCRN"
+                tools:text="Jan 5, 2023"/>
+            <TextView
+                android:id="@+id/text_time"
+                android:time="@{viewModel.latestJobOrderDate}"
+                android:layout_marginStart="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toEndOf="@id/text_date"
+                tools:text="10:54 AM"/>
+            <TextView
                 android:id="@+id/labelCRN"
                 style="@style/TextPrimary"
                 android:layout_width="wrap_content"
@@ -34,7 +52,7 @@
                 android:text="@{viewModel.customerName}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/labelCRN"
-                app:layout_constraintTop_toTopOf="@id/labelCRN"
+                app:layout_constraintTop_toBottomOf="@id/text_date"
                 tools:text="Chris Hemsworth" />
 
             <TextView

@@ -10,7 +10,7 @@
     <com.google.android.material.card.MaterialCardView
         app:cardBackgroundColor="@{viewModel.backgroundColor}"
         app:cardCornerRadius="16dp"
-        android:layout_margin="12dp"
+        android:layout_margin="8dp"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         tools:cardBackgroundColor="@color/color_code_job_order">

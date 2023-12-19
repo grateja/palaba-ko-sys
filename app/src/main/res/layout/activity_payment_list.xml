@@ -22,7 +22,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/teal_700"
+                android:background="@color/color_code_payments"
                 android:animateLayoutChanges="true"
                 app:layout_scrollFlags="scroll|snap|enterAlways"/>
             <com.google.android.material.card.MaterialCardView

@@ -26,4 +26,8 @@ class MachineActivationQueues(
     fun isInconsistent() : Boolean {
         return status == MachineConnectionStatus.DATA_INCONSISTENT
     }
+
+    fun isSuccess() : Boolean {
+        return status == MachineConnectionStatus.SUCCESS
+    }
 }

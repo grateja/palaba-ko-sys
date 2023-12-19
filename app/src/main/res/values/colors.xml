@@ -26,7 +26,7 @@
     <color name="jo_paid">#1443FF00</color>
     <color name="jo_not_paid">#1AF80025</color>
     <color name="jo_void">#858585</color>
-    <color name="color_code_dashboard">#D53E4F</color>
+    <color name="color_code_dashboard">#E75263</color>
     <color name="color_code_job_order">#F46D43</color>
     <color name="color_code_machines">#FDAE61</color>
     <color name="color_code_payments">#FEE08B</color>

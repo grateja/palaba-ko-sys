@@ -66,6 +66,20 @@ constructor(
 
     private val _customerId = MutableLiveData<UUID>()
 
+//    val prompt = MediatorLiveData<String>().apply {
+//        fun update() {
+//            value = if (_deleted.value == true) {
+//                "Important: Job orders are automatically locked if deleted. This ensures the integrity of the records and prevents further modifications to deleted job orders. Once a job order is deleted, no additional changes, additions, or removals are permitted."
+//            } else if (_locked.value == true) {
+//                "Note: Job Orders created on the previous days are automatically locked. Any alterations to job orders created on previous days can lead to daily sales inconsistencies. Please be aware that job orders from earlier dates are automatically locked to maintain the accuracy of the sales report. Once locked, no additions, removals, or other modifications are permitted."
+//            } else {
+//                null
+//            }
+//        }
+//        addSource(_deleted) {update()}
+//        addSource(_locked) {update()}
+//    }
+
     private val _dataState = MutableLiveData<DataState>()
     val dataState: LiveData<DataState> = _dataState
 

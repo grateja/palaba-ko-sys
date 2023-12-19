@@ -36,10 +36,13 @@ class CustomersActivity : FilterActivity() {
 
         subscribeEvents()
         subscribeListeners()
+    }
 
-        intent.getParcelableExtra<DateFilter>(Constants.DATE_RANGE_FILTER)?.let {
-            viewModel.setDateRange(it)
-        }
+    override fun onResume() {
+        super.onResume()
+        intent.getParcelableExtra<DateFilter>(Constants.DATE_RANGE_FILTER)?.let { dateFilter ->
+            viewModel.setDateRange(dateFilter)
+        } ?: viewModel.filter(true)
     }
 
     private fun openDateFilter(dateFilter: DateFilter) {
@@ -105,6 +108,7 @@ class CustomersActivity : FilterActivity() {
 
 
     override var filterHint = "Search customer name or CRN"
+    override var toolbarBackground: Int = R.color.color_code_customers
 
     override fun onQuery(keyword: String?) {
         viewModel.setKeyword(keyword)

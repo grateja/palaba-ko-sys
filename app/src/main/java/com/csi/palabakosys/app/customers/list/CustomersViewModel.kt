@@ -39,6 +39,7 @@ constructor(
     }
 
     override fun filter(reset: Boolean) {
+        println("filtering keme")
         job?.cancel()
 
         job = viewModelScope.launch {

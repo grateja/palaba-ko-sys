@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import com.csi.palabakosys.R
+import com.sangcomz.fishbun.util.setStatusBarColor
 
 abstract class FilterActivity : AppCompatActivity(), FilterActivityInterface {
     protected var searchBar: SearchView? = null
@@ -19,6 +20,7 @@ abstract class FilterActivity : AppCompatActivity(), FilterActivityInterface {
         super.onCreate(savedInstanceState)
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
+        setStatusBarColor(resources.getColor(toolbarBackground, null))
 
         addEditLauncher = ActivityLauncher(this)
     }
@@ -36,7 +38,7 @@ abstract class FilterActivity : AppCompatActivity(), FilterActivityInterface {
                 if(b) {
                     toolbar.setBackgroundColor(applicationContext.getColor(R.color.white))
                 } else {
-                    toolbar.setBackgroundColor(applicationContext.getColor(R.color.teal_700))
+                    toolbar.setBackgroundColor(applicationContext.getColor(toolbarBackground))
                 }
             }
         }

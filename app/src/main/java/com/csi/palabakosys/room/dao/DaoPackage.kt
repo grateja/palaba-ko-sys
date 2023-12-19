@@ -35,7 +35,7 @@ interface DaoPackage : BaseDao<EntityPackage> {
     suspend fun getAll(keyword: String?): List<MenuJobOrderPackage>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertServices(packageServices: List<EntityPackageService>)
+    suspend fun insertServices(packageServices: List<EntityPackageService>)
 
     @Query("DELETE FROM package_services WHERE deleted_at IS NOT NULL")
     fun clearServices()
@@ -47,7 +47,7 @@ interface DaoPackage : BaseDao<EntityPackage> {
     }
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertExtras(packageExtras: List<EntityPackageExtras>)
+    suspend fun insertExtras(packageExtras: List<EntityPackageExtras>)
 
     @Query("DELETE FROM package_extras WHERE deleted_at IS NOT NULL")
     fun clearExtras()
@@ -59,7 +59,7 @@ interface DaoPackage : BaseDao<EntityPackage> {
     }
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertProducts(packageProducts: List<EntityPackageProduct>)
+    suspend fun insertProducts(packageProducts: List<EntityPackageProduct>)
 
     @Query("DELETE FROM package_products WHERE deleted_at IS NOT NULL")
     fun clearProducts()

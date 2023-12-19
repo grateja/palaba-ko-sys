@@ -22,6 +22,7 @@ class ExpensesActivity : FilterActivity() {
     private lateinit var dateRangeDialog: BottomSheetDateRangePickerFragment
 
     override var filterHint = "Search Expenses Remarks"
+    override var toolbarBackground: Int = R.color.color_code_expenses
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_expenses)

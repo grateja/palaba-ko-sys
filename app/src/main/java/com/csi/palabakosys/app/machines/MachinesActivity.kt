@@ -27,6 +27,7 @@ class MachinesActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_machines)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+        setSupportActionBar(binding.toolbar)
 
         binding.recyclerMachines.adapter = adapter
 

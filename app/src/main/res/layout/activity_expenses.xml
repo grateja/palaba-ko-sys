@@ -23,12 +23,14 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@color/teal_700"
+                android:background="@color/color_code_expenses"
                 android:animateLayoutChanges="true"
                 app:layout_scrollFlags="scroll|enterAlways|snap" />
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/buttonCreateNew"
                 style="@style/RoundButtonPrimary"
+                android:backgroundTint="@color/color_code_expenses"
+                android:textColor="@color/black"
                 app:icon="@android:drawable/ic_menu_add"
                 app:iconSize="30dp"
                 app:iconGravity="textStart"

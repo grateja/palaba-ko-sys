@@ -62,6 +62,11 @@ class RemoteQueuesActivity : AppCompatActivity() {
     }
 
     private fun subscribeListeners() {
+        viewModel.machine.observe(this, Observer {
+            if(it?.activationRef?.running() == true) {
+                finish()
+            }
+        })
         viewModel.availableServices.observe(this, Observer {
             it?.let {
                 serviceQueuesAdapter.setData(it)

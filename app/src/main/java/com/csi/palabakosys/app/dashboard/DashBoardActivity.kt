@@ -29,6 +29,7 @@ import com.csi.palabakosys.util.Constants
 import com.csi.palabakosys.util.DatePicker
 import com.csi.palabakosys.util.showSnackBar
 import com.google.android.material.appbar.AppBarLayout
+import com.sangcomz.fishbun.util.setStatusBarColor
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import kotlin.math.abs
@@ -48,6 +49,7 @@ class DashBoardActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setStatusBarColor(resources.getColor(R.color.color_code_dashboard, null))
         binding = DataBindingUtil.setContentView(this, R.layout.activity_dashboard)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this

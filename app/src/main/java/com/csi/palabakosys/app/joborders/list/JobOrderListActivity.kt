@@ -25,6 +25,7 @@ import com.csi.palabakosys.util.Constants
 import com.csi.palabakosys.util.FilterActivity
 import com.csi.palabakosys.viewmodels.ListViewModel
 import com.google.android.material.tabs.TabLayout
+import com.sangcomz.fishbun.util.setStatusBarColor
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -37,6 +38,7 @@ class JobOrderListActivity : FilterActivity() {
     private val viewModel: JobOrderListViewModel by viewModels()
 
     override var filterHint = "Search customer name or CRN"
+    override var toolbarBackground: Int = R.color.color_code_job_order
 
     private val adapter = Adapter<JobOrderListItem>(R.layout.recycler_item_job_order_list_item)
     private lateinit var dateRangeDialog: BottomSheetDateRangePickerFragment

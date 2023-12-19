@@ -80,7 +80,7 @@ class JobOrderCreateActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        title = "Create Job Order "
+//        title = "Create Job Order "
         binding = DataBindingUtil.setContentView(this, R.layout.activity_job_order_create)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
@@ -167,9 +167,9 @@ class JobOrderCreateActivity : BaseActivity() {
 //        binding.textCreatedAt.setOnClickListener {
 //            openAuthRequestModifyDateTime()
 //        }
-        binding.lockedPrompt.setOnClickListener {
-            openAuthRequestUnlock()
-        }
+//        binding.lockedPrompt.setOnClickListener {
+//            openAuthRequestUnlock()
+//        }
 
         launcher.onOk = { result ->
             val data = result.data

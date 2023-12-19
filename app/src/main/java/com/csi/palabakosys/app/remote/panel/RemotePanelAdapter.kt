@@ -11,8 +11,12 @@ import com.csi.palabakosys.BR
 import com.csi.palabakosys.R
 import com.csi.palabakosys.app.machines.MachineListItem
 import com.csi.palabakosys.databinding.RecyclerItemMachineTileBinding
+import java.time.Duration
+import java.time.Instant
 
 class RemotePanelAdapter : RecyclerView.Adapter<RemotePanelAdapter.ViewHolder>() {
+    private val handler = Handler(Looper.getMainLooper())
+    private val updateIntervalMillis = 60 * 1000 // 1 minute
     var list = emptyList<MachineListItem>()
     var onItemClick: ((MachineListItem) -> Unit) ? = null
     var onOptionClick: ((MachineListItem) -> Unit) ? = null
@@ -69,6 +73,37 @@ class RemotePanelAdapter : RecyclerView.Adapter<RemotePanelAdapter.ViewHolder>()
         val inflater = LayoutInflater.from(parent.context)
         val binding = RecyclerItemMachineTileBinding.inflate(inflater, parent, false)
         return ViewHolder(binding)
+    }
+
+    fun startUpdatingTime() {
+        // Calculate the initial delay based on the remaining seconds within the first minute
+        val initialDelayMillis = (updateIntervalMillis - (Instant.now().epochSecond % updateIntervalMillis)) * 1000L
+        println("delay $initialDelayMillis")
+        handler.postDelayed(updateTimeRunnable, initialDelayMillis)
+    }
+
+    private val updateTimeRunnable = object : Runnable {
+        override fun run() {
+            updateRemainingTime()
+            handler.postDelayed(this, updateIntervalMillis.toLong())
+        }
+    }
+
+    private fun updateRemainingTime() {
+        for (position in 0 until itemCount) {
+            val item = list[position]
+            val currentTime = Instant.now()
+            val elapsedTime = Duration.between(item.machine.activationRef?.timeActivated, currentTime)
+            val remainingTime = item.machine.activationRef?.totalMinutes?.toLong()
+                ?.minus(elapsedTime.seconds)
+
+            // Update the remaining time for the item
+//            item.remainingTime = remainingTime
+
+            // Notify the adapter that the item at this position has changed
+            println("update time")
+            notifyItemChanged(position)
+        }
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

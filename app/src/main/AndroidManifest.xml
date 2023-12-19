@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -165,7 +166,8 @@
         <activity
             android:name=".app.remote.RemotePanelActivity"
             android:exported="false"
-            android:label="Remote Activation">
+            android:label="Remote Activation"
+            android:theme="@style/Theme.LMS2022.NoActionBar">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -222,7 +224,8 @@
         <activity
             android:name=".app.joborders.unpaid.prompt.JobOrdersUnpaidPromptActivity"
             android:exported="false"
-            android:label="Unpaid Job Orders">
+            android:label="Unpaid Job Orders"
+            android:theme="@style/Theme.LMS2022.NoActionBar">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -341,7 +344,7 @@
             android:name=".app.joborders.list.JobOrderListActivity"
             android:exported="false"
             android:label="Job Orders"
-            android:theme="@style/Theme.LMS2022.NoActionBar.JobOrder">
+            android:theme="@style/Theme.LMS2022.NoActionBar">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -387,7 +390,8 @@
         <activity
             android:name=".app.machines.MachinesActivity"
             android:exported="false"
-            android:label="Machines">
+            android:label="Machines"
+            android:theme="@style/Theme.LMS2022.NoActionBar">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -504,7 +508,8 @@
         <activity
             android:name=".app.joborders.create.JobOrderCreateActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/Theme.LMS2022.NoActionBar">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -517,10 +522,10 @@
         <activity
             android:name=".app.main_menu.MainActivity"
             android:exported="true"
-            android:noHistory="false">
+            android:noHistory="false"
+            android:theme="@style/Theme.LMS2022.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

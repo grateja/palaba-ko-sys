@@ -58,7 +58,7 @@
             app:constraint_referenced_ids="mainContainer,controls"/>
         <LinearLayout
             android:id="@+id/mainContainer"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="vertical"
             app:layout_constraintTop_toTopOf="parent"
@@ -66,14 +66,29 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
             <TextView
-                android:padding="5dp"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:background="@color/black"
-                android:text="@string/unpaid_prompt"
+                style="@style/TextItemTitle"
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="18dp"
+                android:text="@{viewModel.customer.name}"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Tony Stark"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.customer.address}"
+                android:layout_marginStart="18dp"
+                tools:text="Blk 5 Lot 7 Purok 9 Area C CSJDM Bulacan"/>
+            <TextView
+                android:textStyle="italic"
+                android:textColor="@color/black"
+                android:layout_marginStart="18dp"
+                android:text="@string/unpaid_prompt"
+                android:fontFamily="sans-serif-thin"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
             <androidx.recyclerview.widget.RecyclerView
+                android:layout_marginTop="18dp"
                 android:id="@+id/recyclerUnpaidJobOrders"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

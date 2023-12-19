@@ -44,6 +44,7 @@ class PaymentListActivity : FilterActivity() {
     }
 
     override var filterHint: String = "Enter OR Number or Customer name"
+    override var toolbarBackground: Int = R.color.color_code_payments
 
     override fun onQuery(keyword: String?) {
         viewModel.setKeyword(keyword)
