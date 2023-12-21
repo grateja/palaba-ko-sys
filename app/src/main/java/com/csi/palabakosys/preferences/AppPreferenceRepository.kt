@@ -40,15 +40,15 @@ constructor (@ApplicationContext context: Context) {
         }
     }
 
-    fun printerSettings(): PrinterSettings {
-        return PrinterSettings(
-            sharedPreferences.getString("printer_name", "Tap to select printer") ?: "keme",
-            sharedPreferences.getString("printer_address", "Tap to select printer"),
-//            sharedPreferences.getInt("printer_dpi", 203),
-            sharedPreferences.getFloat("printer_width", 58f),
-            sharedPreferences.getInt("printer_character", 32)
-        )
-    }
+//    fun printerSettings(): PrinterSettings {
+//        return PrinterSettings(
+//            sharedPreferences.getString("printer_name", "Tap to select printer") ?: "keme",
+//            sharedPreferences.getString("printer_address", "Tap to select printer"),
+////            sharedPreferences.getInt("printer_dpi", 203),
+//            sharedPreferences.getFloat("printer_width", 58f),
+//            sharedPreferences.getInt("printer_character", 32)
+//        )
+//    }
 
     fun saveIpSettings(ip: IpSettings) {
         with(sharedPreferences.edit()) {
@@ -69,25 +69,25 @@ constructor (@ApplicationContext context: Context) {
         return sharedPreferences.getBoolean("requireORNumber", true)
     }
 
-    fun testFakeConnect(): Boolean {
-        return sharedPreferences.getBoolean("testConnectMode", true)
-    }
-
-    fun setFakeConnectionMode(value: Boolean) {
-        with(sharedPreferences.edit()) {
-            putBoolean("testConnectMode", value)
-            apply()
-        }
-    }
-
-    fun testFakeDelay(): Long {
-        return sharedPreferences.getLong("testFakeDelay", 1000)
-    }
-
-    fun setFakeConnectionDelay(value: Long) {
-        with(sharedPreferences.edit()) {
-            putLong("testFakeDelay", value)
-            apply()
-        }
-    }
+//    fun testFakeConnect(): Boolean {
+//        return sharedPreferences.getBoolean("testConnectMode", true)
+//    }
+//
+//    fun setFakeConnectionMode(value: Boolean) {
+//        with(sharedPreferences.edit()) {
+//            putBoolean("testConnectMode", value)
+//            apply()
+//        }
+//    }
+//
+//    fun testFakeDelay(): Long {
+//        return sharedPreferences.getLong("testFakeDelay", 1000)
+//    }
+//
+//    fun setFakeConnectionDelay(value: Long) {
+//        with(sharedPreferences.edit()) {
+//            putLong("testFakeDelay", value)
+//            apply()
+//        }
+//    }
 }

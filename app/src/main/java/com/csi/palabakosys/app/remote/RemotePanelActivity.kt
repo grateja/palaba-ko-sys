@@ -120,6 +120,16 @@ class RemotePanelActivity : AppCompatActivity() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        adapter.stopUpdatingTime()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        adapter.startUpdatingTime()
+    }
+
     private fun subscribeEvents() {
         adapter.onItemClick = { selectMachine(it) }
         adapter.onOptionClick = { showOptions(it) }

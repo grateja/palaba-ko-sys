@@ -127,9 +127,10 @@
             android:id="@+id/controls"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/prompt_unpaid_limit_reached"
             android:orientation="horizontal">
             <Button
+                android:enabled="@{viewModel.canCreateJobOrder}"
                 android:id="@+id/buttonContinue"
                 style="@style/RoundButtonNeutral"
                 android:layout_weight="1"
@@ -144,5 +145,16 @@
                 android:layout_height="wrap_content"
                 android:text="@string/payment"/>
         </LinearLayout>
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/prompt_unpaid_limit_reached"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="@{!viewModel.canCreateJobOrder}"
+            app:layout_constraintBottom_toBottomOf="parent">
+            <TextView
+                android:text="@string/prompt_unpaid_limit_reached"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </com.google.android.material.card.MaterialCardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

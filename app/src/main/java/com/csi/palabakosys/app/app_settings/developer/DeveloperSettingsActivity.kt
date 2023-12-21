@@ -7,6 +7,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
 import com.csi.palabakosys.databinding.ActivityDeveloperSettingsBinding
+import com.csi.palabakosys.room.repository.DataStoreRepository
+import com.csi.palabakosys.util.SettingsNavigationState
 import com.csi.palabakosys.util.showTextInputDialog
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -24,25 +26,33 @@ class DeveloperSettingsActivity : AppCompatActivity() {
     }
 
     private fun subscribeEvents() {
-        binding.textFakeActivationDelay.setOnClickListener {
+        binding.cardActivationDelay.card.setOnClickListener {
             viewModel.openConnectionDelayDialog()
         }
-    }
-
-    private fun showConnectionDelayDialog(initialValue: Long) {
-        showTextInputDialog("Set activation delay", "Fake activation delay in ms", initialValue) {
-            it?.let {
-                viewModel.updateFakeConnectionDelay(it)
-            }
+        binding.checkboxFakeConnectionModeOn.setOnCheckedChangeListener { _, checked ->
+            viewModel.update(checked, DataStoreRepository.DEVELOPER_FAKE_CONNECTION_MODE_ON)
         }
     }
 
+//    private fun showConnectionDelayDialog(initialValue: Long) {
+//        showTextInputDialog("Set activation delay", "Fake activation delay in ms", initialValue) { result, key ->
+//            result?.let {
+//                viewModel.updateFakeConnectionDelay(it)
+//            }
+//        }
+//    }
+
     private fun subscribeListeners() {
-        viewModel.navigationState.observe(this, Observer {
+        viewModel.settingsNavigationState.observe(this, Observer {
             when(it) {
-                is DeveloperSettingsViewModel.NavigationState.OpenConnectionDelay -> {
-                    showConnectionDelayDialog(it.msDelay)
-                    viewModel.clearState()
+                is SettingsNavigationState.OpenLongSettings -> {
+                    showTextInputDialog(it.title, it.message, it.value) { result ->
+                        viewModel.update(result, it.key)
+//                        result?.let {
+////                            viewModel.updateFakeConnectionDelay(it)
+//                        }
+                    }
+                    viewModel.resetState()
                 }
             }
         })

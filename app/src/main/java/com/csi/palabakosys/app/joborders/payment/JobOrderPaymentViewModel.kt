@@ -8,6 +8,7 @@ import com.csi.palabakosys.room.entities.EntityCashless
 //import com.csi.palabakosys.room.entities.EntityCashlessProvider
 import com.csi.palabakosys.room.entities.EntityJobOrderPayment
 import com.csi.palabakosys.room.repository.CustomerRepository
+import com.csi.palabakosys.room.repository.DataStoreRepository
 import com.csi.palabakosys.room.repository.JobOrderRepository
 import com.csi.palabakosys.room.repository.PaymentRepository
 import com.csi.palabakosys.util.InputValidation
@@ -25,7 +26,8 @@ constructor(
     private val jobOrderRepository: JobOrderRepository,
     private val paymentRepository: PaymentRepository,
     private val appPreferenceRepository: AppPreferenceRepository,
-    private val customerRepository: CustomerRepository
+    private val customerRepository: CustomerRepository,
+    private val dataStoreRepository: DataStoreRepository
 ) : ViewModel() {
     sealed class DataState {
         object StateLess : DataState()
@@ -37,6 +39,7 @@ constructor(
         object ValidationPassed: DataState()
     }
 
+    val requireOrNumber = dataStoreRepository.getBooleanAsLiveData(DataStoreRepository.JOB_ORDER_REQUIRE_OR_NUMBER, false)
     val paymentMethod = MutableLiveData(EnumPaymentMethod.CASH)
     val cashReceived = MutableLiveData("")
     val cashlessAmount = MutableLiveData("")
@@ -137,7 +140,8 @@ constructor(
 
     fun validate() {
         val validation = InputValidation()
-        if(appPreferenceRepository.requireORNumber()) {
+        val requireOrNumber = requireOrNumber.value ?: false
+        if(requireOrNumber) {
             validation.addRule("orNumber", orNumber.value, arrayOf(Rule.Required))
         }
 

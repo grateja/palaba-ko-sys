@@ -13,25 +13,16 @@ import com.csi.palabakosys.app.machines.MachineListItem
 import com.csi.palabakosys.databinding.RecyclerItemMachineTileBinding
 import java.time.Duration
 import java.time.Instant
+import java.time.temporal.ChronoUnit
 
 class RemotePanelAdapter : RecyclerView.Adapter<RemotePanelAdapter.ViewHolder>() {
-    private val handler = Handler(Looper.getMainLooper())
-    private val updateIntervalMillis = 60 * 1000 // 1 minute
+    var handler = Handler(Looper.getMainLooper())
     var list = emptyList<MachineListItem>()
     var onItemClick: ((MachineListItem) -> Unit) ? = null
     var onOptionClick: ((MachineListItem) -> Unit) ? = null
+//    private val itemRunnables = mutableMapOf<MachineListItem, Runnable>()
     class ViewHolder(private val binding: RecyclerItemMachineTileBinding) : RecyclerView.ViewHolder(binding.root) {
-        var ended: (() -> Unit)? = null
-
-        private var countDownTimer: CountDownTimer? = null
-
-        fun end() {
-            countDownTimer?.cancel()
-        }
-
         fun bind(model: MachineListItem) {
-            countDownTimer?.cancel()
-
             binding.setVariable(BR.viewModel, model)
 
             val context = binding.root.context
@@ -42,20 +33,6 @@ class RemotePanelAdapter : RecyclerView.Adapter<RemotePanelAdapter.ViewHolder>()
             } else if(model.machine.activationRef?.running() == true) {
                 binding.machineTile.strokeColor = context.getColor(R.color.card_selected)
                 binding.machineTile.setCardBackgroundColor(context.getColor(R.color.span_background_selected))
-
-                model.machine.activationRef?.delayInMillis() ?.let {
-                    countDownTimer = object : CountDownTimer(it, 1000) {
-                        override fun onTick(millisUntilFinished: Long) {
-                            println("Remaining time $millisUntilFinished -- ${model.machine.machineName()}")
-                        }
-
-                        override fun onFinish() {
-                            println("finished")
-                            ended?.invoke()
-                        }
-                    }
-                    countDownTimer?.start()
-                }
             } else {
                 binding.machineTile.strokeColor = context.getColor(R.color.white)
                 binding.machineTile.setCardBackgroundColor(context.getColor(R.color.white))
@@ -64,46 +41,55 @@ class RemotePanelAdapter : RecyclerView.Adapter<RemotePanelAdapter.ViewHolder>()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-//        val binding: ViewDataBinding = DataBindingUtil.inflate(
-//            LayoutInflater.from(parent.context),
-//            R.layout.recycler_item_machine_tile,
-//            parent,
-//            false
-//        )
         val inflater = LayoutInflater.from(parent.context)
         val binding = RecyclerItemMachineTileBinding.inflate(inflater, parent, false)
         return ViewHolder(binding)
     }
 
+    private fun startTimer(item: MachineListItem) {
+//        itemRunnables[item]?.let { Handler(Looper.getMainLooper()).removeCallbacks(it) }
+//
+//        val remainingSeconds = item.machine.activationRef?.remainingSeconds() ?: 0
+//        val remainder = remainingSeconds % 60
+//        if (remainder > 0) {
+//            val runnable = Runnable {
+//                notifyItemChanged(list.indexOf(item))
+//                println("it should refresh now")
+//                startTimer(item)
+//            }
+//
+//            itemRunnables[item] = runnable
+//
+//            Handler(Looper.getMainLooper()).postDelayed(runnable, (remainder * 1000) + 1000)
+//            println("remainder $remainder")
+//        }
+        val remainingSeconds = item.machine.activationRef?.remainingSeconds() ?: 0
+        val remainder = remainingSeconds % 60
+        if(remainder > 0) {
+            handler.postDelayed({
+                notifyItemChanged(list.indexOf(item))
+                println("it should refresh now")
+                startTimer(item)
+            }, (remainder * 1000) + 1000)
+            println("remainder $remainder")
+        }
+    }
+
+    fun stopUpdatingTime() {
+        // Remove all pending Runnables when the RecyclerView is being destroyed
+        handler.removeCallbacksAndMessages(null)
+        println("runnables removed")
+    }
+
     fun startUpdatingTime() {
-        // Calculate the initial delay based on the remaining seconds within the first minute
-        val initialDelayMillis = (updateIntervalMillis - (Instant.now().epochSecond % updateIntervalMillis)) * 1000L
-        println("delay $initialDelayMillis")
-        handler.postDelayed(updateTimeRunnable, initialDelayMillis)
-    }
-
-    private val updateTimeRunnable = object : Runnable {
-        override fun run() {
-            updateRemainingTime()
-            handler.postDelayed(this, updateIntervalMillis.toLong())
+        list.forEach {
+            startTimer(it)
         }
     }
 
-    private fun updateRemainingTime() {
-        for (position in 0 until itemCount) {
-            val item = list[position]
-            val currentTime = Instant.now()
-            val elapsedTime = Duration.between(item.machine.activationRef?.timeActivated, currentTime)
-            val remainingTime = item.machine.activationRef?.totalMinutes?.toLong()
-                ?.minus(elapsedTime.seconds)
-
-            // Update the remaining time for the item
-//            item.remainingTime = remainingTime
-
-            // Notify the adapter that the item at this position has changed
-            println("update time")
-            notifyItemChanged(position)
-        }
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        stopUpdatingTime()
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -115,15 +101,6 @@ class RemotePanelAdapter : RecyclerView.Adapter<RemotePanelAdapter.ViewHolder>()
         holder.itemView.setOnLongClickListener(View.OnLongClickListener {
             onOptionClick?.invoke(r) != null
         })
-        holder.end()
-        holder.ended = {
-            notifyItemChanged(position)
-        }
-    }
-
-    override fun onViewRecycled(holder: ViewHolder) {
-        super.onViewRecycled(holder)
-        holder.end()
     }
 
     override fun getItemCount(): Int {
@@ -134,46 +111,4 @@ class RemotePanelAdapter : RecyclerView.Adapter<RemotePanelAdapter.ViewHolder>()
         this.list = list
         notifyDataSetChanged()
     }
-
-    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
-        super.onDetachedFromRecyclerView(recyclerView)
-        for (i in 0 until recyclerView.childCount) {
-            val childView = recyclerView.getChildAt(i)
-            val viewHolder = recyclerView.getChildViewHolder(childView) as? ViewHolder
-            viewHolder?.end()
-        }
-    }
-
-//    fun setConnection(connecting: Boolean, machineId: UUID?, workerId: UUID?) {
-//        list.find {it.entityMachine.id == machineId || it.entityMachine.serviceActivationId == workerId}?.apply {
-//            this.connecting = connecting
-//            notifyItemChanged(list.indexOf(this))
-//        }
-//    }
-
-//    fun initiateConnection(workerId: UUID) {
-//        list.find {it.entityMachine.workerId == workerId}?.apply {
-//            this.connecting = true
-//            notifyItemChanged(list.indexOf(this))
-//        }
-//    }
-//
-//    fun finishConnection(machineId: UUID) {
-//        list.find {it.entityMachine.id == machineId}?.apply {
-//            this.connecting = false
-//            notifyItemChanged(list.indexOf(this))
-//        }
-//    }
-
-//    fun updateStatus(workers: List<WorkInfo>) {
-//        workers.forEach {
-//            list.find { _machine -> _machine.entityMachine.workerId == it.id }?.apply {
-//                if(!it.state.isFinished) {
-//                    println("connecting")
-//                    this.status.value = MachineStatus.CONNECTING
-//                    notifyItemChanged(list.indexOf(this))
-//                }
-//            }
-//        }
-//    }
 }

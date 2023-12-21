@@ -1,9 +1,8 @@
 package com.csi.palabakosys.app.app_settings.developer
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.csi.palabakosys.preferences.AppPreferenceRepository
+import com.csi.palabakosys.app.app_settings.SettingsViewModel
+import com.csi.palabakosys.room.repository.DataStoreRepository
+import com.csi.palabakosys.util.SettingsNavigationState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -11,34 +10,34 @@ import javax.inject.Inject
 class DeveloperSettingsViewModel
 @Inject
 constructor(
-    private val appPreferenceRepository: AppPreferenceRepository
-): ViewModel() {
-    private val _navigationState = MutableLiveData<NavigationState>()
-    val navigationState: LiveData<NavigationState> = _navigationState
+    private val repository: DataStoreRepository
+): SettingsViewModel(repository) {
+    val fakeConnectionMode = repository.getBooleanAsLiveData(DataStoreRepository.DEVELOPER_FAKE_CONNECTION_MODE_ON, false)
+    val fakeConnectionDelay = repository.getLongAsLiveData(DataStoreRepository.DEVELOPER_ACTIVATION_DELAY, 3000) //MutableLiveData(appPreferenceRepository.testFakeDelay())
 
-    val fakeConnectionMode = MutableLiveData(appPreferenceRepository.testFakeConnect())
-    val fakeConnectionDelay = MutableLiveData(appPreferenceRepository.testFakeDelay())
+//    fun updateFakeConnectionMode() {
+//        val fakeModeOn = fakeConnectionMode.value ?: false
+//        appPreferenceRepository.setFakeConnectionMode(fakeModeOn)
+//    }
 
-    fun updateFakeConnectionMode() {
-        val fakeModeOn = fakeConnectionMode.value ?: false
-        appPreferenceRepository.setFakeConnectionMode(fakeModeOn)
-    }
+//    fun updateFakeConnectionDelay(msDelay: Long) {
+//        appPreferenceRepository.setFakeConnectionDelay(msDelay)
+//    }
 
-    fun updateFakeConnectionDelay(msDelay: Long) {
-        appPreferenceRepository.setFakeConnectionDelay(msDelay)
-    }
-
-    fun clearState() {
-        _navigationState.value = NavigationState.StateLess
-    }
+//    fun clearState() {
+//        _navigationState.value = SettingsNavigationState.StateLess
+//    }
 
     fun openConnectionDelayDialog() {
         val msDelay = fakeConnectionDelay.value ?: 1000
-        _navigationState.value = NavigationState.OpenConnectionDelay(msDelay)
+        navigationState.value = SettingsNavigationState.OpenLongSettings(
+            msDelay,
+            DataStoreRepository.DEVELOPER_ACTIVATION_DELAY,
+            "Activation Delay", "Delay intervals in milliseconds")
     }
-
-    sealed class NavigationState {
-        object StateLess : NavigationState()
-        data class OpenConnectionDelay(val msDelay: Long): NavigationState()
-    }
+//
+//    sealed class NavigationState {
+//        object StateLess : NavigationState()
+//        data class OpenConnectionDelay(val msDelay: Long): NavigationState()
+//    }
 }

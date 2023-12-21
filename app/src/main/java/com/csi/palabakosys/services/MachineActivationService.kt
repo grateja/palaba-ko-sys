@@ -11,14 +11,8 @@ import com.csi.palabakosys.model.MachineActivationQueues
 import com.csi.palabakosys.model.MachineConnectionStatus
 import com.csi.palabakosys.preferences.AppPreferenceRepository
 import com.csi.palabakosys.room.entities.*
-import com.csi.palabakosys.room.repository.CustomerRepository
-import com.csi.palabakosys.room.repository.JobOrderQueuesRepository
-import com.csi.palabakosys.room.repository.MachineRepository
-import com.csi.palabakosys.room.repository.RemoteRepository
-import com.csi.palabakosys.util.Constants
-import com.csi.palabakosys.util.Constants.Companion.MACHINE_ID_EXTRA
+import com.csi.palabakosys.room.repository.*
 import com.csi.palabakosys.util.MachineActivationBus
-import com.csi.palabakosys.util.toUUID
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
@@ -38,8 +32,8 @@ class MachineActivationService : Service() {
     @Inject
     lateinit var machineRepository: MachineRepository
 
-    @Inject
-    lateinit var appPreferences: AppPreferenceRepository
+//    @Inject
+//    lateinit var appPreferences: AppPreferenceRepository
 
     @Inject
     lateinit var queuesRepository: JobOrderQueuesRepository
@@ -49,6 +43,9 @@ class MachineActivationService : Service() {
 
     @Inject
     lateinit var queues: MachineActivationBus
+
+    @Inject
+    lateinit var dataStoreRepository: DataStoreRepository
 
     companion object {
         const val MACHINE_ACTIVATION = "machine_activation"
@@ -199,10 +196,11 @@ class MachineActivationService : Service() {
         this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     }
 
-    private val client: OkHttpClient by lazy {
-        OkHttpClient.Builder()
+    private suspend fun client(): OkHttpClient {
+        val timeout = dataStoreRepository.getLongValue(DataStoreRepository.MACHINE_ACTIVATION_TIMEOUT)
+        return OkHttpClient.Builder()
             .cache(null)
-            .connectTimeout(appPreferences.urlSettings.connectionTimeout, TimeUnit.SECONDS)
+            .connectTimeout(timeout, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .retryOnConnectionFailure(false)
@@ -299,8 +297,10 @@ class MachineActivationService : Service() {
     }
 
     private suspend fun connect(machine: EntityMachine, jobOrderService: EntityJobOrderService) : Boolean {
-        if(appPreferences.testFakeConnect()) {
-            delay(appPreferences.testFakeDelay())
+        val fakeConnectOn = dataStoreRepository.getBooleanValue(DataStoreRepository.DEVELOPER_FAKE_CONNECTION_MODE_ON)
+        if(fakeConnectOn) {
+            val fakeDelay = dataStoreRepository.getLongValue(DataStoreRepository.DEVELOPER_ACTIVATION_DELAY)
+            delay(fakeDelay)
             finishQueue(machine.id, MachineConnectionStatus.SUCCESS, "${machine.machineName()} Test Activation success")
             return true
         }
@@ -308,13 +308,18 @@ class MachineActivationService : Service() {
         val token = "${jobOrderService.id}-${(jobOrderService.quantity - jobOrderService.used)}"
         val pulse = jobOrderService.serviceRef.pulse()
 
-        val ipAddress = appPreferences.ipSettings.toString(machine.ipEnd)
-        val url = appPreferences.urlSettings.toString(ipAddress)
+        val endpoint = dataStoreRepository.getStringValue(DataStoreRepository.MACHINE_ACTIVATION_ENDPOINT)
+        val prefix = dataStoreRepository.getStringValue(DataStoreRepository.MACHINE_IP_PREFIX)
+        val subnet = dataStoreRepository.getStringValue(DataStoreRepository.MACHINE_IP_SUBNET_MASK)
+        val ipAddress = "$prefix.$subnet.${machine.ipEnd}" //appPreferences.ipSettings.toString(machine.ipEnd)
+        val url = "http://$ipAddress/$endpoint" //appPreferences.urlSettings.toString(ipAddress)
 
         val requestBody = FormBody.Builder()
             .add("pulse", pulse.toString())
             .add("token", token)
             .build()
+
+        println(url)
 
         val request = Request.Builder()
             .url(url)
@@ -322,11 +327,8 @@ class MachineActivationService : Service() {
             .tag(machine.id)
             .build()
 
-        println(url)
-
-
         return try {
-            val response = client.newCall(request).execute()//.body()?.string().toString()
+            val response = client().newCall(request).execute()//.body()?.string().toString()
             val body = response.body()?.string().toString()
 
             if(response.code() == 200) {

@@ -17,19 +17,19 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <CheckBox
-                android:checked="@={viewModel.fakeConnectionMode}"
+                android:id="@+id/checkbox_fake_connection_mode_on"
+                android:checked="@{viewModel.fakeConnectionMode}"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="@{() -> viewModel.updateFakeConnectionMode()}"/>
+                android:layout_height="wrap_content"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Fake connection mode"/>
         </LinearLayout>
-        <TextView
-            android:id="@+id/text_fake_activation_delay"
-            android:text="Fake Activation Delay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+        <include
+            android:id="@+id/card_activation_delay"
+            layout="@layout/incl_shop_preference_params"
+            app:label="@{`Fake activation delay`}"
+            app:value="@{viewModel.fakeConnectionDelay.toString()}"/>
     </LinearLayout>
 </layout>

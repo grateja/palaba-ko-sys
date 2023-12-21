@@ -2,6 +2,7 @@ package com.csi.palabakosys.room.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Relation
+import java.time.Duration
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.*
@@ -19,13 +20,26 @@ data class EntityActivationRef(
     @ColumnInfo(name = "customer_id")
     var customerId: UUID?,
 ) {
-    fun remainingTime() : Long {
-        val totalMinutes = this.totalMinutes ?: 0
+    fun remainingSeconds() : Long {
+        val currentTime = Instant.now()
+        val totalMinutes = totalMinutes?.toLong() ?: 0
+        val timeActivated = timeActivated?.plus(totalMinutes, ChronoUnit.MINUTES)
 
-        timeActivated?.let {
-            return ChronoUnit.MINUTES.between(Instant.now(), it.plus(totalMinutes.toLong(), ChronoUnit.MINUTES)) + 1
+        return if(timeActivated != null) {
+            Duration.between(currentTime, timeActivated).seconds
+        } else {
+            0
         }
-        return 0
+    }
+
+    fun remainingTime() : Long {
+        return remainingSeconds() / 60
+//        val totalMinutes = this.totalMinutes ?: 0
+//
+//        timeActivated?.let {
+//            return ChronoUnit.MINUTES.between(Instant.now(), it.plus(totalMinutes.toLong(), ChronoUnit.MINUTES)) + 1
+//        }
+//        return 0
     }
 
     fun delayInMillis() : Long {

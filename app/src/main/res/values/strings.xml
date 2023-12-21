@@ -68,6 +68,7 @@
     <string name="print_single_line">--------------------------------</string>
     <string name="not_official_receipt_disclaimer">Disclaimer: This document is provided for informational purposes only. It does not constitute an official receipt and should not be considered proof of payment.</string>
     <string name="prompt_no_wifi_connectivity">You are not connected to a WiFi Network</string>
+    <string name="prompt_unpaid_limit_reached">This customer already hit the maximum limit for unpaid job orders. To continue, settle outstanding balances</string>
     <string-array name="jo_filter_by">
         <item>Date Paid</item>
         <item>Date Created</item>

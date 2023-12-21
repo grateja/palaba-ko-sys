@@ -37,6 +37,7 @@ import com.csi.palabakosys.app.joborders.print.JobOrderPrintFragment
 import com.csi.palabakosys.databinding.ActivityJobOrderCreateBinding
 import com.csi.palabakosys.util.*
 import com.csi.palabakosys.util.Constants.Companion.ID
+import com.sangcomz.fishbun.util.setStatusBarColor
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 import kotlin.collections.ArrayList
@@ -82,6 +83,7 @@ class JobOrderCreateActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 //        title = "Create Job Order "
         binding = DataBindingUtil.setContentView(this, R.layout.activity_job_order_create)
+        setStatusBarColor(getColor(R.color.color_code_job_order))
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 

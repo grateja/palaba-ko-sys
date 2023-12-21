@@ -121,16 +121,16 @@ class SettingsPrinterActivity : AppCompatActivity() {
                     viewModel.resetState()
                 }
                 is PrinterSettingsViewModel.DataState.OpenPrinterWidth -> {
-                    showTextInputDialog("Paper width in mm", null, it.width) {
-                        it?.let {
+                    showTextInputDialog("Paper width in mm", null, it.width) { result ->
+                        result?.let {
                             viewModel.setPrinterWidth(it)
                         }
                     }
                     viewModel.resetState()
                 }
                 is PrinterSettingsViewModel.DataState.OpenPrinterCharactersPerLine -> {
-                    showTextInputDialog("Maximum characters per line", null, it.charactersPerLine) {
-                        it?.let {
+                    showTextInputDialog("Maximum characters per line", null, it.charactersPerLine) { result ->
+                        result?.let {
                             viewModel.setPrinterCharactersPerLine(it)
                         }
                     }

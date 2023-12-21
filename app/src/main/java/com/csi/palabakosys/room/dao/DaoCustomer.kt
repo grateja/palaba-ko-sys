@@ -74,4 +74,7 @@ interface DaoCustomer : BaseDao<EntityCustomer> {
 
     @Query("SELECT * FROM customers WHERE id = :customerId AND deleted_at IS NULL")
     fun getCustomerAsLiveData(customerId: UUID?): LiveData<EntityCustomer>
+
+    @Query("SELECT COUNT(*) < :limit OR :limit = 0 FROM job_orders WHERE customer_id = :customerId AND payment_id IS NULL AND deleted_at IS NULL AND void_date IS NULL")
+    fun canCreateJobOrder(customerId: UUID, limit: Int): LiveData<Boolean>
 }

@@ -47,6 +47,15 @@ fun setVisibility(view: View, isVisible: Boolean) {
     view.visibility = if(isVisible) { View.VISIBLE } else { View.GONE }
 }
 
+@BindingAdapter("app:required")
+fun setRequired(view: TextInputLayout, required: Boolean) {
+    val originalHint = view.hint?.toString() ?: ""
+
+    if (required && !originalHint.contains("*")) {
+        view.hint = "*$originalHint"
+    }
+}
+
 @BindingAdapter("android:text")
 fun setText(view: TextInputEditText, washType: EnumWashType?) {
     view.setText(washType?.toString())
@@ -272,7 +281,8 @@ inline fun <reified T> Context.showTextInputDialog(
     title: String?,
     message: String?,
     initialValue: T?,
-    crossinline onOk: (value: T?) -> Unit
+//    key: String? = null,
+    crossinline onOk: (value: T?/*, key: String*/) -> Unit
 ) {
     val binding: AlertDialogTextInputBinding = DataBindingUtil.inflate(
         LayoutInflater.from(this),
@@ -287,7 +297,7 @@ inline fun <reified T> Context.showTextInputDialog(
             binding.textInput.inputType = InputType.TYPE_CLASS_TEXT
             println("input type text")
         }
-        Float::class, Int::class, Long::class -> {
+        Float::class, Int::class, Long::class, Number::class -> {
             binding.textInput.inputType = InputType.TYPE_CLASS_NUMBER
             println("input type number")
         }
@@ -298,7 +308,7 @@ inline fun <reified T> Context.showTextInputDialog(
     }
 
     binding.textInput.setText(initialValue?.toString())
-    binding.textInput.hint = message
+    binding.textHint.text = message
 
     AlertDialog.Builder(this).apply {
         setTitle(title)
@@ -307,15 +317,16 @@ inline fun <reified T> Context.showTextInputDialog(
             val inputText = binding.textInput.text.toString()
 
             val typedValue = when (T::class) {
+                Number::class -> inputText as T
                 String::class -> inputText as T
                 Float::class -> inputText.toFloatOrNull() as? T ?: initialValue
                 Int::class -> inputText.toIntOrNull() as? T ?: initialValue
                 Boolean::class -> inputText.toBoolean() as T
                 Long::class -> inputText.toLong() as T ?: initialValue
-                else -> initialValue
+                else -> null
             }
 
-            onOk(typedValue)
+            onOk(typedValue/*, key ?: ""*/)
         }
         create()
     }.show()

@@ -7,6 +7,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
 import com.csi.palabakosys.databinding.ActivityShopPreferencesBinding
+import com.csi.palabakosys.util.SettingsNavigationState
 import com.csi.palabakosys.util.showTextInputDialog
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -40,32 +41,40 @@ class ShopPreferencesActivity : AppCompatActivity() {
     }
 
     private fun subscribeListeners() {
-        viewModel.dataState.observe(this, Observer {
+        viewModel.settingsNavigationState.observe(this, Observer {
             when(it) {
-                is ShopPreferencesViewModel.DataState.ShowEditShopName -> {
-                    this.showTextInputDialog("Edit Shop name", "", it.text) { input ->
-                        viewModel.updateShopName(input)
+                is SettingsNavigationState.OpenStringSettings -> {
+                    println(it.title)
+                    println("title")
+                    showTextInputDialog(it.title, it.message, it.value) { result ->
+                        viewModel.update(result, it.key)
                     }
                     viewModel.resetState()
                 }
-                is ShopPreferencesViewModel.DataState.ShowEditAddress -> {
-                    this.showTextInputDialog("Edit Address", "", it.text) { input ->
-                        viewModel.updateAddress(input)
-                    }
-                    viewModel.resetState()
-                }
-                is ShopPreferencesViewModel.DataState.ShowEditContactNumber -> {
-                    this.showTextInputDialog("Edit Contact number", "", it.text) { input ->
-                        viewModel.updateContactNumber(input)
-                    }
-                    viewModel.resetState()
-                }
-                is ShopPreferencesViewModel.DataState.ShowEditEmail -> {
-                    this.showTextInputDialog("Edit email", "", it.text) { input ->
-                        viewModel.updateEmail(input)
-                    }
-                    viewModel.resetState()
-                }
+//                is ShopPreferencesViewModel.DataState.ShowEditShopName -> {
+//                    this.showTextInputDialog("Edit Shop name", "", it.text) { input ->
+//                        viewModel.updateShopName(input)
+//                    }
+//                    viewModel.resetState()
+//                }
+//                is ShopPreferencesViewModel.DataState.ShowEditAddress -> {
+//                    this.showTextInputDialog("Edit Address", "", it.text) { input ->
+//                        viewModel.updateAddress(input)
+//                    }
+//                    viewModel.resetState()
+//                }
+//                is ShopPreferencesViewModel.DataState.ShowEditContactNumber -> {
+//                    this.showTextInputDialog("Edit Contact number", "", it.text) { input ->
+//                        viewModel.updateContactNumber(input)
+//                    }
+//                    viewModel.resetState()
+//                }
+//                is ShopPreferencesViewModel.DataState.ShowEditEmail -> {
+//                    this.showTextInputDialog("Edit email", "", it.text) { input ->
+//                        viewModel.updateEmail(input)
+//                    }
+//                    viewModel.resetState()
+//                }
             }
         })
     }
