@@ -3,7 +3,8 @@ package com.csi.palabakosys.app.app_settings.printer.browser
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.csi.palabakosys.room.repository.DataStoreRepository
+import com.csi.palabakosys.settings.PrinterSettingsRepository
+//import com.csi.palabakosys.room.repository.DataStoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -12,7 +13,7 @@ class PrinterBrowserViewModel
 
 @Inject
 constructor(
-    val dataStoreRepository: DataStoreRepository
+    val dataStoreRepository: PrinterSettingsRepository
 ) : ViewModel()
 {
     val devices = MutableLiveData<List<PrinterDevice>>()

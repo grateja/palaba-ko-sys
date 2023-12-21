@@ -7,7 +7,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
 import com.csi.palabakosys.databinding.ActivityAppSettingsJobOrdersBinding
-import com.csi.palabakosys.room.repository.DataStoreRepository
+//import com.csi.palabakosys.room.repository.DataStoreRepository
 import com.csi.palabakosys.util.SettingsNavigationState
 import com.csi.palabakosys.util.showTextInputDialog
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,7 +31,7 @@ class AppSettingsJobOrdersActivity : AppCompatActivity() {
             viewModel.showMaxUnpaidJobOrder()
         }
         binding.checkboxRequireOrNumber.setOnCheckedChangeListener { _, checked ->
-            viewModel.update(checked, DataStoreRepository.JOB_ORDER_REQUIRE_OR_NUMBER)
+            viewModel.updateRequireOrNumber(checked)
         }
     }
 

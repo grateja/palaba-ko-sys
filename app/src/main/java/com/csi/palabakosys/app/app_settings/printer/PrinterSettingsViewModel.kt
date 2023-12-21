@@ -5,16 +5,14 @@ import android.bluetooth.BluetoothManager
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.csi.palabakosys.app.app_settings.SettingsViewModel
 import com.csi.palabakosys.app.app_settings.printer.browser.PrinterDevice
 import com.csi.palabakosys.model.Rule
-import com.csi.palabakosys.preferences.AppPreferenceRepository
-import com.csi.palabakosys.preferences.PrinterSettings
-import com.csi.palabakosys.room.repository.DataStoreRepository
+import com.csi.palabakosys.settings.PrinterSettingsRepository
+//import com.csi.palabakosys.room.repository.DataStoreRepository
 import com.csi.palabakosys.util.InputValidation
 import com.dantsu.escposprinter.EscPosPrinter
-import com.dantsu.escposprinter.connection.bluetooth.BluetoothConnection
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
@@ -26,10 +24,10 @@ class PrinterSettingsViewModel
 
 @Inject
 constructor(
-    private val dataStoreRepository: DataStoreRepository,
+    private val repository: PrinterSettingsRepository,
 //    private val preferenceRepository: AppPreferenceRepository,
     @ApplicationContext context: Context
-) : ViewModel() {
+) : SettingsViewModel(repository) {
     private val MY_UUID: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB") // UUID for SPP (Serial Port Profile)
     val validation = MutableLiveData(InputValidation())
 
@@ -37,19 +35,15 @@ constructor(
     private val _dataState = MutableLiveData<DataState>()
     val dataState: LiveData<DataState> = _dataState
 
-    val printerName = dataStoreRepository.printerName //MutableLiveData(currentSettings.name)
-    val macAddress = dataStoreRepository.printerAddress //MutableLiveData(currentSettings.address)
+    val printerName = repository.printerName //MutableLiveData(currentSettings.name)
+    val macAddress = repository.printerAddress //MutableLiveData(currentSettings.address)
 //    val dpi = MutableLiveData(currentSettings.dpi.toString())
-    val width = dataStoreRepository.printerWidth //MutableLiveData(currentSettings.width.toString())
-    val charactersPerLine = dataStoreRepository.printerCharactersPerLine //MutableLiveData(currentSettings.character.toString())
+    val width = repository.printerWidth //MutableLiveData(currentSettings.width.toString())
+    val charactersPerLine = repository.printerCharactersPerLine //MutableLiveData(currentSettings.character.toString())
     val sampleText = MutableLiveData("Sample text")
 
     fun clearError(key: String = "") {
         validation.value = validation.value?.removeError(key)
-    }
-
-    fun resetState() {
-        _dataState.value = DataState.StateLess
     }
 
     fun openPrinterBrowser() {
@@ -95,8 +89,8 @@ constructor(
 
     fun setPrinterDevice(printerDevice: PrinterDevice) {
         viewModelScope.launch {
-            dataStoreRepository.updatePrinterName(printerDevice.deviceName)
-            dataStoreRepository.updatePrinterAddress(printerDevice.macAddress)
+            repository.updatePrinterName(printerDevice.deviceName)
+            repository.updatePrinterAddress(printerDevice.macAddress)
         }
 //        printerName.value = printerDevice.deviceName
 //        macAddress.value = printerDevice.macAddress
@@ -138,13 +132,13 @@ constructor(
 
     fun setPrinterWidth(width: Float) {
         viewModelScope.launch {
-            dataStoreRepository.updatePrinterWidth(width)
+            repository.updatePrinterWidth(width)
         }
     }
 
     fun setPrinterCharactersPerLine(charactersPerLine: Int) {
         viewModelScope.launch {
-            dataStoreRepository.updatePrinterCharacterLength(charactersPerLine)
+            repository.updatePrinterCharacters(charactersPerLine)
         }
     }
 

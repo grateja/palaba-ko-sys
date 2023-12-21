@@ -2,7 +2,8 @@ package com.csi.palabakosys.app.customers.preview
 
 import androidx.lifecycle.*
 import com.csi.palabakosys.room.repository.CustomerRepository
-import com.csi.palabakosys.room.repository.DataStoreRepository
+import com.csi.palabakosys.settings.JobOrderSettingsRepository
+//import com.csi.palabakosys.room.repository.DataStoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.*
 import javax.inject.Inject
@@ -13,7 +14,7 @@ class CustomerPreviewViewModel
 @Inject
 constructor(
     private val repository: CustomerRepository,
-    private val dataStoreRepository: DataStoreRepository
+    private val dataStoreRepository: JobOrderSettingsRepository
 ) : ViewModel() {
     private val unpaidCount = MutableLiveData<Int>()
 
@@ -23,7 +24,7 @@ constructor(
     private val _navigationState = MutableLiveData<NavigationState>()
     val navigationState: LiveData<NavigationState> = _navigationState
 
-    private val maxUnpaidJobOrder = dataStoreRepository.jobOrderSettingsMaxUnpaid
+    private val maxUnpaidJobOrder = dataStoreRepository.maxUnpaidJobOrderLimit
     private val argument = MediatorLiveData<Pair<UUID, Int>>().apply {
         fun update() {
             val customerId = _customerId.value

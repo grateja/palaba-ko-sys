@@ -1,7 +1,9 @@
 package com.csi.palabakosys.app.shop_preferences
 
 import com.csi.palabakosys.app.app_settings.SettingsViewModel
-import com.csi.palabakosys.room.repository.DataStoreRepository
+//import com.csi.palabakosys.room.repository.DataStoreRepository
+import com.csi.palabakosys.settings.BaseSettingsRepository
+import com.csi.palabakosys.settings.ShopPreferenceSettingsRepository
 import com.csi.palabakosys.util.SettingsNavigationState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -11,15 +13,15 @@ class ShopPreferencesViewModel
 
 @Inject
 constructor(
-    private val dataStoreRepository: DataStoreRepository
+    private val dataStoreRepository: ShopPreferenceSettingsRepository
 ) : SettingsViewModel(dataStoreRepository) {
 //    private val _dataState = MutableLiveData<DataState>()
 //    val dataState: LiveData<DataState> = _dataState
 
-    val shopName = dataStoreRepository.getStringAsLiveData(DataStoreRepository.SHOP_NAME)
-    val address = dataStoreRepository.getStringAsLiveData(DataStoreRepository.ADDRESS)
-    val contactNumber = dataStoreRepository.getStringAsLiveData(DataStoreRepository.CONTACT_NUMBER)
-    val email = dataStoreRepository.getStringAsLiveData(DataStoreRepository.EMAIL)
+    val shopName = dataStoreRepository.shopName
+    val address = dataStoreRepository.address
+    val contactNumber = dataStoreRepository.contactNumber
+    val email = dataStoreRepository.email
 
 //    fun updateShopName(shopName: String?) {
 //        viewModelScope.launch {
@@ -29,7 +31,7 @@ constructor(
 
     fun showEditShopName() {
         (shopName.value ?: "").let {
-            navigationState.value = SettingsNavigationState.OpenStringSettings(it, DataStoreRepository.SHOP_NAME,"Edit shop name", "")
+            navigationState.value = SettingsNavigationState.OpenStringSettings(it, ShopPreferenceSettingsRepository.SHOP_NAME,"Edit shop name", "")
 //            _dataState.value = DataState.ShowEditShopName(it)
         }
     }
@@ -42,7 +44,7 @@ constructor(
 
     fun showEditAddress() {
         (address.value ?: "").let {
-            navigationState.value = SettingsNavigationState.OpenStringSettings(it, DataStoreRepository.ADDRESS,"Edit shop address", "")
+            navigationState.value = SettingsNavigationState.OpenStringSettings(it, ShopPreferenceSettingsRepository.ADDRESS,"Edit shop address", "")
 //            _dataState.value = DataState.ShowEditAddress(it)
         }
     }
@@ -55,7 +57,7 @@ constructor(
 
     fun showEditContactNumber() {
         (contactNumber.value ?: "").let {
-            navigationState.value = SettingsNavigationState.OpenStringSettings(it, DataStoreRepository.CONTACT_NUMBER,"Edit shop contact number", "")
+            navigationState.value = SettingsNavigationState.OpenStringSettings(it, ShopPreferenceSettingsRepository.CONTACT_NUMBER,"Edit shop contact number", "")
 //            _dataState.value = DataState.ShowEditContactNumber(it)
         }
     }
@@ -68,7 +70,7 @@ constructor(
 
     fun showEditEmail() {
         (email.value ?: "").let {
-            navigationState.value = SettingsNavigationState.OpenStringSettings(it, DataStoreRepository.EMAIL,"Edit shop email", "")
+            navigationState.value = SettingsNavigationState.OpenStringSettings(it, ShopPreferenceSettingsRepository.EMAIL,"Edit shop email", "")
 //            _dataState.value = DataState.ShowEditEmail(it)
         }
     }

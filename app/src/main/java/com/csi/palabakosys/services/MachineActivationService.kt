@@ -12,6 +12,7 @@ import com.csi.palabakosys.model.MachineConnectionStatus
 import com.csi.palabakosys.preferences.AppPreferenceRepository
 import com.csi.palabakosys.room.entities.*
 import com.csi.palabakosys.room.repository.*
+import com.csi.palabakosys.settings.DeveloperSettingsRepository
 import com.csi.palabakosys.util.MachineActivationBus
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -45,7 +46,7 @@ class MachineActivationService : Service() {
     lateinit var queues: MachineActivationBus
 
     @Inject
-    lateinit var dataStoreRepository: DataStoreRepository
+    lateinit var dataStoreRepository: DeveloperSettingsRepository
 
     companion object {
         const val MACHINE_ACTIVATION = "machine_activation"
@@ -197,7 +198,7 @@ class MachineActivationService : Service() {
     }
 
     private suspend fun client(): OkHttpClient {
-        val timeout = dataStoreRepository.getLongValue(DataStoreRepository.MACHINE_ACTIVATION_TIMEOUT)
+        val timeout = dataStoreRepository.getTimeout()
         return OkHttpClient.Builder()
             .cache(null)
             .connectTimeout(timeout, TimeUnit.SECONDS)
@@ -297,9 +298,9 @@ class MachineActivationService : Service() {
     }
 
     private suspend fun connect(machine: EntityMachine, jobOrderService: EntityJobOrderService) : Boolean {
-        val fakeConnectOn = dataStoreRepository.getBooleanValue(DataStoreRepository.DEVELOPER_FAKE_CONNECTION_MODE_ON)
+        val fakeConnectOn = dataStoreRepository.getFakeConnectionModeOn()
         if(fakeConnectOn) {
-            val fakeDelay = dataStoreRepository.getLongValue(DataStoreRepository.DEVELOPER_ACTIVATION_DELAY)
+            val fakeDelay = dataStoreRepository.getFakeConnectionDelay()
             delay(fakeDelay)
             finishQueue(machine.id, MachineConnectionStatus.SUCCESS, "${machine.machineName()} Test Activation success")
             return true
@@ -308,9 +309,9 @@ class MachineActivationService : Service() {
         val token = "${jobOrderService.id}-${(jobOrderService.quantity - jobOrderService.used)}"
         val pulse = jobOrderService.serviceRef.pulse()
 
-        val endpoint = dataStoreRepository.getStringValue(DataStoreRepository.MACHINE_ACTIVATION_ENDPOINT)
-        val prefix = dataStoreRepository.getStringValue(DataStoreRepository.MACHINE_IP_PREFIX)
-        val subnet = dataStoreRepository.getStringValue(DataStoreRepository.MACHINE_IP_SUBNET_MASK)
+        val endpoint = dataStoreRepository.getEndpoint()
+        val prefix = dataStoreRepository.getPrefix()
+        val subnet = dataStoreRepository.getSubnet()
         val ipAddress = "$prefix.$subnet.${machine.ipEnd}" //appPreferences.ipSettings.toString(machine.ipEnd)
         val url = "http://$ipAddress/$endpoint" //appPreferences.urlSettings.toString(ipAddress)
 

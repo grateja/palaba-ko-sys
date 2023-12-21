@@ -1,15 +1,14 @@
 package com.csi.palabakosys.app.joborders.print
 
-import androidx.datastore.dataStore
 import androidx.lifecycle.*
 import com.csi.palabakosys.app.app_settings.printer.browser.PrinterDevice
-import com.csi.palabakosys.model.EnumDiscountType
 import com.csi.palabakosys.model.EnumPaymentMethod
 import com.csi.palabakosys.model.EnumPrintState
 import com.csi.palabakosys.model.PrintItem
-import com.csi.palabakosys.preferences.PrinterSettings
-import com.csi.palabakosys.room.repository.DataStoreRepository
+//import com.csi.palabakosys.room.repository.DataStoreRepository
 import com.csi.palabakosys.room.repository.JobOrderRepository
+import com.csi.palabakosys.settings.PrinterSettingsRepository
+import com.csi.palabakosys.settings.ShopPreferenceSettingsRepository
 import com.csi.palabakosys.util.toShort
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -22,10 +21,12 @@ class JobOrderPrintViewModel
 @Inject
 constructor(
     private val jobOrderRepository: JobOrderRepository,
-    private val dataStoreRepository: DataStoreRepository
+    private val shopPrefRepository: ShopPreferenceSettingsRepository,
+    private val printerSettings: PrinterSettingsRepository
 ) : ViewModel() {
     val bluetoothEnabled = MutableLiveData(false)
-    val printerSettings = dataStoreRepository.printerSettings
+    val printerName = printerSettings.printerName
+//    val printerSettings = dataStoreRepository.printerSettings
     private val _printState = MutableLiveData(EnumPrintState.READY)
     val printState: LiveData<EnumPrintState> = _printState
     val buttonText = MediatorLiveData<String>().apply {
@@ -59,11 +60,11 @@ constructor(
     val jobOrderWithItems = _jobOrderId.switchMap { jobOrderRepository.getJobOrderWithItemsAsLiveData(it) }
     val unpaidJobOrders = jobOrderWithItems.switchMap { jobOrderRepository.getAllUnpaidByCustomerIdAsLiveData(it?.customer?.id) }
 
-    val shopName = dataStoreRepository.shopName
-    val address = dataStoreRepository.address
-    val contactNumber = dataStoreRepository.contactNumber
-    val email = dataStoreRepository.email
-    val disclaimer = dataStoreRepository.jobOrderDisclaimer
+    val shopName = shopPrefRepository.shopName
+    val address = shopPrefRepository.address
+    val contactNumber = shopPrefRepository.contactNumber
+    val email = shopPrefRepository.email
+    val disclaimer = printerSettings.jobOrderDisclaimer
 
     val joDetails = MediatorLiveData<List<PrintItem>>().apply {
         fun update() {
@@ -380,8 +381,6 @@ constructor(
 
         println(formattedText)
 
-        val settings = printerSettings.value
-
          _dataState.value = DataState.Submit(formattedText)
     }
 
@@ -395,8 +394,8 @@ constructor(
 
     fun setDevice(device: PrinterDevice?) {
         viewModelScope.launch {
-            dataStoreRepository.updatePrinterName(device?.deviceName)
-            dataStoreRepository.updatePrinterAddress(device?.macAddress)
+            printerSettings.update(device?.deviceName, PrinterSettingsRepository.PRINTER_NAME)
+            printerSettings.update(device?.macAddress, PrinterSettingsRepository.PRINTER_ADDRESS)
         }
     }
 

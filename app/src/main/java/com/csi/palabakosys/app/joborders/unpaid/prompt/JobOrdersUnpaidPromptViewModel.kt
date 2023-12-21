@@ -3,8 +3,9 @@ package com.csi.palabakosys.app.joborders.unpaid.prompt
 import androidx.lifecycle.*
 import com.csi.palabakosys.app.customers.CustomerMinimal
 import com.csi.palabakosys.room.repository.CustomerRepository
-import com.csi.palabakosys.room.repository.DataStoreRepository
+//import com.csi.palabakosys.room.repository.DataStoreRepository
 import com.csi.palabakosys.room.repository.JobOrderRepository
+import com.csi.palabakosys.settings.JobOrderSettingsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.*
 import javax.inject.Inject
@@ -15,7 +16,7 @@ class JobOrdersUnpaidPromptViewModel
 @Inject
 constructor(
     private val repository: JobOrderRepository,
-    private val dataStoreRepository: DataStoreRepository,
+    private val dataStoreRepository: JobOrderSettingsRepository,
     private val customerRepository: CustomerRepository
 ) : ViewModel() {
     private val _dataState = MutableLiveData<DataState>()
@@ -27,7 +28,7 @@ constructor(
     // private val _jobOrders = MutableLiveData<List<JobOrderPaymentMinimal>>()
     val jobOrders = _customer.switchMap { repository.getAllUnpaidByCustomerIdAsLiveData(it.id) } //: LiveData<List<JobOrderPaymentMinimal>> = _jobOrders
 
-    private val maxUnpaidJobOrder = dataStoreRepository.jobOrderSettingsMaxUnpaid
+    private val maxUnpaidJobOrder = dataStoreRepository.maxUnpaidJobOrderLimit
     private val argument = MediatorLiveData<Pair<UUID, Int>>().apply {
         fun update() {
             val customerId = _customer.value?.id

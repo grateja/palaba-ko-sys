@@ -7,7 +7,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
 import com.csi.palabakosys.databinding.ActivityDeveloperSettingsBinding
-import com.csi.palabakosys.room.repository.DataStoreRepository
+import com.csi.palabakosys.settings.DeveloperSettingsRepository
+//import com.csi.palabakosys.room.repository.DataStoreRepository
 import com.csi.palabakosys.util.SettingsNavigationState
 import com.csi.palabakosys.util.showTextInputDialog
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,7 +31,7 @@ class DeveloperSettingsActivity : AppCompatActivity() {
             viewModel.openConnectionDelayDialog()
         }
         binding.checkboxFakeConnectionModeOn.setOnCheckedChangeListener { _, checked ->
-            viewModel.update(checked, DataStoreRepository.DEVELOPER_FAKE_CONNECTION_MODE_ON)
+            viewModel.update(checked, DeveloperSettingsRepository.DEVELOPER_FAKE_CONNECTION_MODE_ON)
         }
     }
 

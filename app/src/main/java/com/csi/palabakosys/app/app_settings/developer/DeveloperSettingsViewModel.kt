@@ -1,7 +1,9 @@
 package com.csi.palabakosys.app.app_settings.developer
 
 import com.csi.palabakosys.app.app_settings.SettingsViewModel
-import com.csi.palabakosys.room.repository.DataStoreRepository
+//import com.csi.palabakosys.room.repository.DataStoreRepository
+import com.csi.palabakosys.settings.BaseSettingsRepository
+import com.csi.palabakosys.settings.DeveloperSettingsRepository
 import com.csi.palabakosys.util.SettingsNavigationState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -10,10 +12,10 @@ import javax.inject.Inject
 class DeveloperSettingsViewModel
 @Inject
 constructor(
-    private val repository: DataStoreRepository
+    private val repository: DeveloperSettingsRepository
 ): SettingsViewModel(repository) {
-    val fakeConnectionMode = repository.getBooleanAsLiveData(DataStoreRepository.DEVELOPER_FAKE_CONNECTION_MODE_ON, false)
-    val fakeConnectionDelay = repository.getLongAsLiveData(DataStoreRepository.DEVELOPER_ACTIVATION_DELAY, 3000) //MutableLiveData(appPreferenceRepository.testFakeDelay())
+    val fakeConnectionMode = repository.fakeConnectionMode
+    val fakeConnectionDelay = repository.fakeConnectionDelay
 
 //    fun updateFakeConnectionMode() {
 //        val fakeModeOn = fakeConnectionMode.value ?: false
@@ -32,7 +34,7 @@ constructor(
         val msDelay = fakeConnectionDelay.value ?: 1000
         navigationState.value = SettingsNavigationState.OpenLongSettings(
             msDelay,
-            DataStoreRepository.DEVELOPER_ACTIVATION_DELAY,
+            DeveloperSettingsRepository.DEVELOPER_ACTIVATION_DELAY,
             "Activation Delay", "Delay intervals in milliseconds")
     }
 //

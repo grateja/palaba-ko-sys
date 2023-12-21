@@ -14,7 +14,8 @@ import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.csi.palabakosys.R
 import com.csi.palabakosys.model.EnumPrintState
-import com.csi.palabakosys.room.repository.DataStoreRepository
+import com.csi.palabakosys.settings.PrinterSettingsRepository
+//import com.csi.palabakosys.room.repository.DataStoreRepository
 import com.dantsu.escposprinter.EscPosPrinter
 import com.dantsu.escposprinter.connection.bluetooth.BluetoothConnection
 import dagger.hilt.android.AndroidEntryPoint
@@ -49,7 +50,7 @@ class PrinterService : Service() {
 //    lateinit var appPreferenceRepository: AppPreferenceRepository
 
     @Inject
-    lateinit var dataStoreRepository: DataStoreRepository
+    lateinit var dataStoreRepository: PrinterSettingsRepository
 
     var printer: EscPosPrinter? = null
     private var thread: Thread? = null
@@ -129,50 +130,53 @@ class PrinterService : Service() {
     }
 
     private fun startPrint(text: String) {
-        thread = Thread(Runnable {
-            try {
+        val context = this
+        thread = Thread {
+            runBlocking {
+                try {
 
-                val intent = Intent(PRINT_ACTION).apply {
-                    putExtra(PRINT_STATE, EnumPrintState.STARTED as Parcelable)
+                    val intent = Intent(PRINT_ACTION).apply {
+                        putExtra(PRINT_STATE, EnumPrintState.STARTED as Parcelable)
+                    }
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
+
+                    val address = dataStoreRepository.getPrinterAddress()
+                    val device = bluetoothAdapter.getRemoteDevice(address)
+                    val connection = BluetoothConnection(device)
+
+                    val width = dataStoreRepository.getPrinterWidth()
+                    val characterLength = dataStoreRepository.getPrinterCharacters()
+
+                    println("create printer")
+                    printer = EscPosPrinter(connection, 203, width, characterLength)
+
+                    if(Thread.interrupted()) {
+                        return@runBlocking
+                    }
+
+                    println("start print")
+                    printer?.printFormattedTextAndCut(text)
+
+                    println("disconnect")
+                    printer?.disconnectPrinter()
+
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    val intent = Intent(PRINT_ACTION).apply {
+                        putExtra(PRINT_STATE, EnumPrintState.ERROR as Parcelable)
+                        putExtra(MESSAGE, e.message)
+                    }
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
+                } finally {
+                    printer?.disconnectPrinter()
+                    val intent = Intent(PRINT_ACTION).apply {
+                        putExtra(PRINT_STATE, EnumPrintState.FINISHED as Parcelable)
+                    }
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
+                    safeStop()
                 }
-                LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
-
-                val address = dataStoreRepository.printerAddress.value
-                val device = bluetoothAdapter.getRemoteDevice(address)
-                val connection = BluetoothConnection(device)
-
-                val width = dataStoreRepository.printerWidth.value ?: 58f
-                val characterLength = dataStoreRepository.printerCharactersPerLine.value ?: 32
-
-                println("create printer")
-                printer = EscPosPrinter(connection, 203, width, characterLength)
-
-                if(Thread.interrupted()) {
-                    return@Runnable
-                }
-
-                println("start print")
-                printer?.printFormattedTextAndCut(text)
-
-                println("disconnect")
-                printer?.disconnectPrinter()
-
-            } catch (e: Exception) {
-                e.printStackTrace()
-                val intent = Intent(PRINT_ACTION).apply {
-                    putExtra(PRINT_STATE, EnumPrintState.ERROR as Parcelable)
-                    putExtra(MESSAGE, e.message)
-                }
-                LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
-            } finally {
-                printer?.disconnectPrinter()
-                val intent = Intent(PRINT_ACTION).apply {
-                    putExtra(PRINT_STATE, EnumPrintState.FINISHED as Parcelable)
-                }
-                LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
-                safeStop()
             }
-        })
+        }
         thread?.start()
     }
 

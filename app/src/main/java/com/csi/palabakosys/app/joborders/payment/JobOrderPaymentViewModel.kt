@@ -8,9 +8,10 @@ import com.csi.palabakosys.room.entities.EntityCashless
 //import com.csi.palabakosys.room.entities.EntityCashlessProvider
 import com.csi.palabakosys.room.entities.EntityJobOrderPayment
 import com.csi.palabakosys.room.repository.CustomerRepository
-import com.csi.palabakosys.room.repository.DataStoreRepository
+//import com.csi.palabakosys.room.repository.DataStoreRepository
 import com.csi.palabakosys.room.repository.JobOrderRepository
 import com.csi.palabakosys.room.repository.PaymentRepository
+import com.csi.palabakosys.settings.JobOrderSettingsRepository
 import com.csi.palabakosys.util.InputValidation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -25,9 +26,9 @@ class JobOrderPaymentViewModel
 constructor(
     private val jobOrderRepository: JobOrderRepository,
     private val paymentRepository: PaymentRepository,
-    private val appPreferenceRepository: AppPreferenceRepository,
+//    private val appPreferenceRepository: AppPreferenceRepository,
     private val customerRepository: CustomerRepository,
-    private val dataStoreRepository: DataStoreRepository
+    private val dataStoreRepository: JobOrderSettingsRepository
 ) : ViewModel() {
     sealed class DataState {
         object StateLess : DataState()
@@ -39,7 +40,7 @@ constructor(
         object ValidationPassed: DataState()
     }
 
-    val requireOrNumber = dataStoreRepository.getBooleanAsLiveData(DataStoreRepository.JOB_ORDER_REQUIRE_OR_NUMBER, false)
+    val requireOrNumber = dataStoreRepository.getAsLiveData(JobOrderSettingsRepository.JOB_ORDER_REQUIRE_OR_NUMBER, false)
     val paymentMethod = MutableLiveData(EnumPaymentMethod.CASH)
     val cashReceived = MutableLiveData("")
     val cashlessAmount = MutableLiveData("")
