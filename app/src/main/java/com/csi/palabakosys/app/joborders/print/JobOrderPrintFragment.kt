@@ -42,9 +42,9 @@ class JobOrderPrintFragment : BaseModalFragment() {
             viewModel.setJobOrderId(it)
         }
 
-        binding.printItemsServices.items.adapter = servicesAdapter
-        binding.printItemsProducts.items.adapter = productsAdapter
-        binding.printItemsExtras.items.adapter = extrasAdapter
+//        binding.printItemsServices.items.adapter = servicesAdapter
+//        binding.printItemsProducts.items.adapter = productsAdapter
+//        binding.printItemsExtras.items.adapter = extrasAdapter
 
         return binding.root
     }

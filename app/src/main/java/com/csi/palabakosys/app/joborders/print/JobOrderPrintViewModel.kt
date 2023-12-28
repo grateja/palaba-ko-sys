@@ -2,6 +2,8 @@ package com.csi.palabakosys.app.joborders.print
 
 import androidx.lifecycle.*
 import com.csi.palabakosys.app.app_settings.printer.browser.PrinterDevice
+import com.csi.palabakosys.app.joborders.print.JobOrderPrintActivity.Companion.TAB_CLAIM_STUB
+import com.csi.palabakosys.app.joborders.print.JobOrderPrintActivity.Companion.TAB_JOB_ORDER
 import com.csi.palabakosys.model.EnumPaymentMethod
 import com.csi.palabakosys.model.EnumPrintState
 import com.csi.palabakosys.model.PrintItem
@@ -24,20 +26,25 @@ constructor(
     private val shopPrefRepository: ShopPreferenceSettingsRepository,
     private val printerSettings: PrinterSettingsRepository
 ) : ViewModel() {
+    val showJoItemized = printerSettings.showJoItemized
+    val showJoPrices = printerSettings.showJoPrices
+    val showClaimStubItemized = printerSettings.showClaimStubItemized
+    val showClaimStubItemPrice = printerSettings.showClaimStubJoPrices
+    val showDisclaimer = printerSettings.showDisclaimer
+    val characterLength = printerSettings.printerCharactersPerLine
+
     val bluetoothEnabled = MutableLiveData(false)
     val printerName = printerSettings.printerName
 //    val printerSettings = dataStoreRepository.printerSettings
     private val _printState = MutableLiveData(EnumPrintState.READY)
     val printState: LiveData<EnumPrintState> = _printState
-    val buttonText = MediatorLiveData<String>().apply {
+    val buttonPrimaryAction = MediatorLiveData<String>().apply {
         addSource(_printState) {
             value = _printState.value?.let {
-                if(it == EnumPrintState.STARTED) {
-                    "CANCEL"
-                } else if(it == EnumPrintState.ERROR) {
-                    "RETRY"
-                } else {
-                    "CONTINUE"
+                when (it) {
+                    EnumPrintState.STARTED -> "CANCEL"
+                    EnumPrintState.ERROR -> "RETRY"
+                    else -> "CONTINUE"
                 }
             } ?: "CONTINUE"
         }
@@ -48,7 +55,7 @@ constructor(
     private val _dataState = MutableLiveData<DataState>()
     val dataState: LiveData<DataState> = _dataState
 
-    private val _selectedTab = MutableLiveData<String>()
+    private val _selectedTab = MutableLiveData(TAB_CLAIM_STUB)
     val selectedTab: LiveData<String> = _selectedTab
 
     fun selectTab(tab: String) {
@@ -66,49 +73,62 @@ constructor(
     val email = shopPrefRepository.email
     val disclaimer = printerSettings.jobOrderDisclaimer
 
-    val joDetails = MediatorLiveData<List<PrintItem>>().apply {
+//    val joDetails = MediatorLiveData<List<PrintItem>>().apply {
+//        fun update() {
+//            val jobOrder = jobOrderWithItems.value
+//            value = listOf(
+//                PrintItem("       DATE", jobOrder?.jobOrder?.createdAt?.toShort()),
+//                PrintItem("        JO#", jobOrder?.jobOrder?.jobOrderNumber),
+//                PrintItem("   CUSTOMER", jobOrder?.customer?.name),
+//                PrintItem("PREPARED BY", jobOrder?.user?.name),
+//            )
+//        }
+//        addSource(jobOrderWithItems) {update()}
+//    }
+
+    val items = MediatorLiveData<List<PrintItem>>().apply {
         fun update() {
+            val tab = _selectedTab.value
+            val itemizedJo = showJoItemized.value
+            val itemizedClaimStub = showClaimStubItemized.value
+            val characters = characterLength.value ?: 32
+            val singleLine = PrintItem.singleLine(characters)
             val jobOrder = jobOrderWithItems.value
-            value = listOf(
+
+            val items = mutableListOf(
                 PrintItem("       DATE", jobOrder?.jobOrder?.createdAt?.toShort()),
                 PrintItem("        JO#", jobOrder?.jobOrder?.jobOrderNumber),
                 PrintItem("   CUSTOMER", jobOrder?.customer?.name),
                 PrintItem("PREPARED BY", jobOrder?.user?.name),
             )
-        }
-        addSource(jobOrderWithItems) {update()}
-    }
 
-    val items = MediatorLiveData<List<PrintItem>>().apply {
-        addSource(jobOrderWithItems) {
-            val jobOrder = jobOrderWithItems.value
-
-            val services = jobOrder?.services?.takeIf { it.isNotEmpty() }?.map {
-                PrintItem(it.quantity, it.serviceName, it.price * it.quantity)
-            }?.let { listOf(PrintItem("SERVICES")) + it } ?: emptyList()
-
-            val products = jobOrder?.products?.takeIf { it.isNotEmpty() } ?.map {
-                PrintItem(it.quantity, it.productName, it.price * it.quantity)
-            }?.let { listOf(PrintItem("PRODUCTS")) + it } ?: emptyList()
-
-            val extras = jobOrder?.extras?.takeIf { it.isNotEmpty() }?.map {
-                PrintItem(it.quantity, it.extrasName, it.price * it.quantity)
-            }?.let { listOf(PrintItem("EXTRAS")) + it } ?: emptyList()
-
-            val delivery = jobOrder?.deliveryCharge?.let {
-                listOf(
-                    PrintItem(it.deliveryOption.value),
-                    PrintItem(null, "(${it.distance}KM)${it.vehicle.value}", it.price)
+            if((itemizedJo == true && tab == TAB_JOB_ORDER) || (itemizedClaimStub == true && tab == TAB_CLAIM_STUB)) {
+                items.add(singleLine)
+                items.addAll(
+                    jobOrder?.services?.takeIf { it.isNotEmpty() }?.map {
+                        PrintItem(it.quantity, it.serviceName, it.price * it.quantity, characters)
+                    }?.let { listOf(PrintItem("SERVICES")) + it } ?: emptyList()
                 )
-            } ?: emptyList()
-
-            value = services + products + extras + delivery
-        }
-    }
-
-    val summary = MediatorLiveData<List<PrintItem>>().apply {
-        addSource(jobOrderWithItems) {
-            val jobOrder = jobOrderWithItems.value
+                items.addAll(
+                    jobOrder?.products?.takeIf { it.isNotEmpty() } ?.map {
+                        PrintItem(it.quantity, it.productName, it.price * it.quantity, characters)
+                    }?.let { listOf(PrintItem("PRODUCTS")) + it } ?: emptyList()
+                )
+                items.addAll(
+                    jobOrder?.extras?.takeIf { it.isNotEmpty() }?.map {
+                        PrintItem(it.quantity, it.extrasName, it.price * it.quantity, characters)
+                    }?.let { listOf(PrintItem("EXTRAS")) + it } ?: emptyList()
+                )
+                items.addAll(
+                    jobOrder?.deliveryCharge?.let {
+                        listOf(
+                            PrintItem(it.deliveryOption.value, characterLength = characters),
+                            PrintItem(null, "(${it.distance}KM)${it.vehicle.value}", it.price, characters)
+                        )
+                    } ?: emptyList()
+                )
+            }
+            items.add(singleLine)
 
             val subtotal = jobOrder?.subtotal() ?: 0.0f
             val discountInPeso = jobOrder?.discountInPeso() ?: 0.0f
@@ -116,127 +136,196 @@ constructor(
             val discount = jobOrder?.discount?.let { discount ->
                 PrintItem(null, "${discount.name} discount", discountInPeso)
             }
-
-            val items = mutableListOf<PrintItem>()
             if(discount != null) {
                 items.add(PrintItem(null, "SUBTOTAL" , subtotal))
                 items.add(discount)
             }
 
             items.add(PrintItem(null, "TOTAL", subtotal - discountInPeso))
+            items.add(singleLine)
 
-            value = items
-        }
-    }
+            jobOrder?.paymentWithUser?.payment.let {
+                if(it != null && jobOrder != null) {
+                    items.add(PrintItem("  DATE PAID", it.createdAt.toShort()))
+                    items.add(PrintItem("PMT. METHOD", it.method()))
+                    if (it.paymentMethod == EnumPaymentMethod.CASHLESS) {
+                        items.add(PrintItem("       REF#", it.entityCashless?.refNumber))
+                    }
 
-    val totalAmountDue = MediatorLiveData<PrintItem>().apply {
-        addSource(jobOrderWithItems) {
-            val subtotal = jobOrderWithItems.value?.subtotal() ?: 0.0f
-            val discountInPeso = jobOrderWithItems.value?.discountInPeso() ?: 0.0f
+                    it.orNumber?.takeIf { it.isNotBlank() }?.let {
+                        items.add(PrintItem("  OR NUMBER", it))
+                    }
 
-            val title = if (discountInPeso > 0) "DISCOUNTED AMOUNT" else "TOTAL"
-            val total = subtotal - discountInPeso
-
-            value = PrintItem(null, title, total)
-        }
-    }
-
-    val services = MediatorLiveData<List<PrintItem>>().apply {
-        fun update() {
-            val items = jobOrderWithItems.value?.services?.map {
-                PrintItem(
-                    it.quantity, it.serviceName, it.price * it.quantity
-                )
+                    items.add(PrintItem("RECEIVED BY", jobOrder.paymentWithUser?.user?.name))
+                } else {
+                    items.add(PrintItem("UNPAID"))
+                }
+                items.add(singleLine)
             }
-            if(!items.isNullOrEmpty()) {
-                value = listOf(PrintItem("SERVICES")) + items
-            }
-        }
-        addSource(jobOrderWithItems){update()}
-    }
 
-    val products = MediatorLiveData<List<PrintItem>>().apply {
-        fun update() {
-            val items = jobOrderWithItems.value?.products?.map {
-                PrintItem(
-                    it.quantity, it.productName, it.price * it.quantity
-                )
-            }
-            if(!items.isNullOrEmpty()) {
-                value = listOf(PrintItem("PRODUCTS")) + items
-            }
-        }
-        addSource(jobOrderWithItems){update()}
-    }
 
-    val extras = MediatorLiveData<List<PrintItem>?>().apply {
-        fun update() {
-            val items = jobOrderWithItems.value?.extras?.map {
-                PrintItem(
-                    it.quantity, it.extrasName, it.price * it.quantity
-                )
-            }
-            if(!items.isNullOrEmpty()) {
-                value = listOf(PrintItem("EXTRAS")) + items
-            }
-        }
-        addSource(jobOrderWithItems){update()}
-    }
 
-    val unpaid = MediatorLiveData<List<PrintItem>?>().apply {
-        fun update() {
-            val jobOrderId = _jobOrderId.value
+//            val services = jobOrder?.services?.takeIf { it.isNotEmpty() }?.map {
+//                PrintItem(it.quantity, it.serviceName, it.price * it.quantity, characters)
+//            }?.let { listOf(PrintItem("SERVICES")) + it } ?: emptyList()
 
-            value = listOf(PrintItem("UNPAID JOB ORDERS")) + (unpaidJobOrders.value?.filter {
-                it.id != jobOrderId
-            }?.map {
-                PrintItem(null, it.jobOrderNumber, it.discountedAmount)
-            } ?: emptyList())
-        }
-        addSource(unpaidJobOrders) {update()}
-    }
+//            val products = jobOrder?.products?.takeIf { it.isNotEmpty() } ?.map {
+//                PrintItem(it.quantity, it.productName, it.price * it.quantity, characters)
+//            }?.let { listOf(PrintItem("PRODUCTS")) + it } ?: emptyList()
 
-    val hasServices = MediatorLiveData<Boolean>().apply {
-        fun update() {
-            value = jobOrderWithItems.value?.services?.isNotEmpty()
+//            val extras = jobOrder?.extras?.takeIf { it.isNotEmpty() }?.map {
+//                PrintItem(it.quantity, it.extrasName, it.price * it.quantity, characters)
+//            }?.let { listOf(PrintItem("EXTRAS")) + it } ?: emptyList()
+
+//            val delivery = jobOrder?.deliveryCharge?.let {
+//                listOf(
+//                    PrintItem(it.deliveryOption.value, characterLength = characters),
+//                    PrintItem(null, "(${it.distance}KM)${it.vehicle.value}", it.price, characters)
+//                )
+//            } ?: emptyList()
+
+            value = items // details + services + products + extras + delivery
         }
+
         addSource(jobOrderWithItems) {update()}
+        addSource(_selectedTab) {update()}
+        addSource(showJoItemized) {update()}
+        addSource(showJoPrices) {update()}
+        addSource(showClaimStubItemized) {update()}
+        addSource(showClaimStubItemPrice) {update()}
     }
 
-    val hasProducts = MediatorLiveData<Boolean>().apply {
-        fun update() {
-            value = jobOrderWithItems.value?.products?.isNotEmpty()
-        }
-        addSource(jobOrderWithItems) {update()}
-    }
+//    val summary = MediatorLiveData<List<PrintItem>>().apply {
+//        addSource(jobOrderWithItems) {
+//            val jobOrder = jobOrderWithItems.value
+//
+//            val subtotal = jobOrder?.subtotal() ?: 0.0f
+//            val discountInPeso = jobOrder?.discountInPeso() ?: 0.0f
+//
+//            val discount = jobOrder?.discount?.let { discount ->
+//                PrintItem(null, "${discount.name} discount", discountInPeso)
+//            }
+//
+//            val items = mutableListOf<PrintItem>()
+//            if(discount != null) {
+//                items.add(PrintItem(null, "SUBTOTAL" , subtotal))
+//                items.add(discount)
+//            }
+//
+//            items.add(PrintItem(null, "TOTAL", subtotal - discountInPeso))
+//
+//            value = items
+//        }
+//    }
 
-    val hasExtras = MediatorLiveData<Boolean>().apply {
-        fun update() {
-            value = jobOrderWithItems.value?.extras?.isNotEmpty()
-        }
-        addSource(jobOrderWithItems) {update()}
-    }
+//    val totalAmountDue = MediatorLiveData<PrintItem>().apply {
+//        addSource(jobOrderWithItems) {
+//            val subtotal = jobOrderWithItems.value?.subtotal() ?: 0.0f
+//            val discountInPeso = jobOrderWithItems.value?.discountInPeso() ?: 0.0f
+//
+//            val title = if (discountInPeso > 0) "DISCOUNTED AMOUNT" else "TOTAL"
+//            val total = subtotal - discountInPeso
+//
+//            value = PrintItem(null, title, total)
+//        }
+//    }
 
-    val hasPickupAndDelivery = MediatorLiveData<Boolean>().apply {
-        fun update() {
-            value = jobOrderWithItems.value?.deliveryCharge != null
-        }
-        addSource(jobOrderWithItems) {update()}
-    }
+//    val services = MediatorLiveData<List<PrintItem>>().apply {
+//        fun update() {
+//            val items = jobOrderWithItems.value?.services?.map {
+//                PrintItem(
+//                    it.quantity, it.serviceName, it.price * it.quantity
+//                )
+//            }
+//            if(!items.isNullOrEmpty()) {
+//                value = listOf(PrintItem("SERVICES")) + items
+//            }
+//        }
+//        addSource(jobOrderWithItems){update()}
+//    }
 
-    val hasPayment = MediatorLiveData<Boolean>().apply {
-        fun update() {
-            value = jobOrderWithItems.value?.paymentWithUser != null
-        }
-        addSource(jobOrderWithItems) {update()}
-    }
+//    val products = MediatorLiveData<List<PrintItem>>().apply {
+//        fun update() {
+//            val items = jobOrderWithItems.value?.products?.map {
+//                PrintItem(
+//                    it.quantity, it.productName, it.price * it.quantity
+//                )
+//            }
+//            if(!items.isNullOrEmpty()) {
+//                value = listOf(PrintItem("PRODUCTS")) + items
+//            }
+//        }
+//        addSource(jobOrderWithItems){update()}
+//    }
+//
+//    val extras = MediatorLiveData<List<PrintItem>?>().apply {
+//        fun update() {
+//            val items = jobOrderWithItems.value?.extras?.map {
+//                PrintItem(
+//                    it.quantity, it.extrasName, it.price * it.quantity
+//                )
+//            }
+//            if(!items.isNullOrEmpty()) {
+//                value = listOf(PrintItem("EXTRAS")) + items
+//            }
+//        }
+//        addSource(jobOrderWithItems){update()}
+//    }
 
-    val hasUnpaidJobOrders = MediatorLiveData<Boolean>().apply {
-        fun update() {
-            value = unpaid.value?.isNotEmpty()
-        }
-        addSource(unpaid) {update()}
-    }
+//    val unpaid = MediatorLiveData<List<PrintItem>?>().apply {
+//        fun update() {
+//            val jobOrderId = _jobOrderId.value
+//
+//            value = listOf(PrintItem("UNPAID JOB ORDERS")) + (unpaidJobOrders.value?.filter {
+//                it.id != jobOrderId
+//            }?.map {
+//                PrintItem(null, it.jobOrderNumber, it.discountedAmount)
+//            } ?: emptyList())
+//        }
+//        addSource(unpaidJobOrders) {update()}
+//    }
+//
+//    val hasServices = MediatorLiveData<Boolean>().apply {
+//        fun update() {
+//            value = jobOrderWithItems.value?.services?.isNotEmpty()
+//        }
+//        addSource(jobOrderWithItems) {update()}
+//    }
+//
+//    val hasProducts = MediatorLiveData<Boolean>().apply {
+//        fun update() {
+//            value = jobOrderWithItems.value?.products?.isNotEmpty()
+//        }
+//        addSource(jobOrderWithItems) {update()}
+//    }
+//
+//    val hasExtras = MediatorLiveData<Boolean>().apply {
+//        fun update() {
+//            value = jobOrderWithItems.value?.extras?.isNotEmpty()
+//        }
+//        addSource(jobOrderWithItems) {update()}
+//    }
+//
+//    val hasPickupAndDelivery = MediatorLiveData<Boolean>().apply {
+//        fun update() {
+//            value = jobOrderWithItems.value?.deliveryCharge != null
+//        }
+//        addSource(jobOrderWithItems) {update()}
+//    }
+
+//    val hasPayment = MediatorLiveData<Boolean>().apply {
+//        fun update() {
+//            value = jobOrderWithItems.value?.paymentWithUser != null
+//        }
+//        addSource(jobOrderWithItems) {update()}
+//    }
+
+//    val hasUnpaidJobOrders = MediatorLiveData<Boolean>().apply {
+//        fun update() {
+//            value = unpaid.value?.isNotEmpty()
+//        }
+//        addSource(unpaid) {update()}
+//    }
 
     val contactInfo = MediatorLiveData<String>().apply {
         fun update() {
@@ -249,56 +338,56 @@ constructor(
         addSource(email) {update()}
     }
 
-    val deliveryOption = MediatorLiveData<String>().apply {
-        fun update() {
-            value = jobOrderWithItems.value?.deliveryCharge?.deliveryOption?.value
-        }
+//    val deliveryOption = MediatorLiveData<String>().apply {
+//        fun update() {
+//            value = jobOrderWithItems.value?.deliveryCharge?.deliveryOption?.value
+//        }
+//
+//        addSource(jobOrderWithItems){update()}
+//    }
 
-        addSource(jobOrderWithItems){update()}
-    }
+//    val currentAmountDue = MediatorLiveData<String>().apply {
+//        fun update() {
+//            val jobOrder = jobOrderWithItems.value
+//            value = jobOrder?.discount?.let {
+//                // subtotal
+//                // discounted amount
+//                "[L]SUBTOTAL[R]${jobOrder.subtotal()}\n" +
+//                "[L]DISCOUNTED AMOUNT[R]"
+//            } ?: "keme"
+//        }
+//        addSource(jobOrderWithItems) {jobOrderWithItems}
+//    }
 
-    val currentAmountDue = MediatorLiveData<String>().apply {
-        fun update() {
-            val jobOrder = jobOrderWithItems.value
-            value = jobOrder?.discount?.let {
-                // subtotal
-                // discounted amount
-                "[L]SUBTOTAL[R]${jobOrder.subtotal()}\n" +
-                "[L]DISCOUNTED AMOUNT[R]"
-            } ?: "keme"
-        }
-        addSource(jobOrderWithItems) {jobOrderWithItems}
-    }
-
-    val paymentDetails = MediatorLiveData<List<PrintItem>>().apply {
-        fun update() {
-            val items = mutableListOf<PrintItem>()
-            val jobOrder = jobOrderWithItems.value
-            val payment = jobOrder?.paymentWithUser?.payment
-
-            payment.let {
-                if(it != null && jobOrder != null) {
-                    items.add(PrintItem("  DATE PAID", it.createdAt.toShort()))
-                    items.add(PrintItem("PMT. METHOD", it.method()))
-                    if (it.paymentMethod == EnumPaymentMethod.CASHLESS) {
-                        items.add(PrintItem("       REF#", it.entityCashless?.refNumber))
-                    }
-
-                    it.orNumber?.let { orNumber ->
-                        items.add(PrintItem("  OR NUMBER", orNumber))
-                    }
-
-                    items.add(PrintItem("RECEIVED BY", jobOrder.paymentWithUser?.user?.name))
-                } else {
-                    items.add(PrintItem("UNPAID"))
-                }
-            }
-
-            value = items
-        }
-
-        addSource(jobOrderWithItems) { update() }
-    }
+//    val paymentDetails = MediatorLiveData<List<PrintItem>>().apply {
+//        fun update() {
+//            val items = mutableListOf<PrintItem>()
+//            val jobOrder = jobOrderWithItems.value
+//            val payment = jobOrder?.paymentWithUser?.payment
+//
+//            payment.let {
+//                if(it != null && jobOrder != null) {
+//                    items.add(PrintItem("  DATE PAID", it.createdAt.toShort()))
+//                    items.add(PrintItem("PMT. METHOD", it.method()))
+//                    if (it.paymentMethod == EnumPaymentMethod.CASHLESS) {
+//                        items.add(PrintItem("       REF#", it.entityCashless?.refNumber))
+//                    }
+//
+//                    it.orNumber?.let { orNumber ->
+//                        items.add(PrintItem("  OR NUMBER", orNumber))
+//                    }
+//
+//                    items.add(PrintItem("RECEIVED BY", jobOrder.paymentWithUser?.user?.name))
+//                } else {
+//                    items.add(PrintItem("UNPAID"))
+//                }
+//            }
+//
+//            value = items
+//        }
+//
+//        addSource(jobOrderWithItems) { update() }
+//    }
 
 
 //    val paymentDetails = MediatorLiveData<List<PrintItem>>().apply {
@@ -338,7 +427,10 @@ constructor(
             return
         }
 
-        val singleLine = "-".repeat(32) + "\n"
+        val characterLength = characterLength.value ?: 32
+
+        val singleLine = PrintItem.singleLine(characterLength)
+
         val header = "[C]<font size='tall'><b>*** $tab ***</b></font>\n"
 
         val shopName = shopName.value.let { "[C]<font size='big'><b>$it</b></font>\n" }
@@ -353,31 +445,34 @@ constructor(
             else -> ""
         }
 
-        val joDetails = joDetails.value?.takeIf { it.isNotEmpty() }?.let {
-            it.joinToString("") { it.formattedString() }
-        }
+//        val joDetails = joDetails.value?.takeIf { it.isNotEmpty() }?.let {
+//            it.joinToString("") { it.formattedString() }
+//        }
 
         val items = items.value.let {
             it?.joinToString ("") { it.formattedString() }
         }
 
-        val summary = summary.value.let {
-            it?.joinToString("") { it.formattedString() }
-        }
+//        val summary = summary.value.let {
+//            it?.joinToString("") { it.formattedString() }
+//        }
+//
+//        val paymentDetails = paymentDetails.value?.takeIf { it.isNotEmpty() }?.let {
+//            it.joinToString("") { it.formattedString() }
+//        } ?: ""
 
-        val paymentDetails = paymentDetails.value?.takeIf { it.isNotEmpty() }?.let {
-            it.joinToString("") { it.formattedString() }
-        } ?: ""
+        val disclaimer =  PrintItem(disclaimer.value).formattedString()
 
         val formattedText = "$shopName$address$contactInfo" +
-                header +
-                joDetails +
-                singleLine +
-                items +
-                singleLine +
-                summary +
-                singleLine +
-                paymentDetails
+//                header +
+//                joDetails +
+//                singleLine +
+                items// +
+//                singleLine +
+//                summary +
+//                singleLine +
+//                paymentDetails +
+//                disclaimer
 
         println(formattedText)
 

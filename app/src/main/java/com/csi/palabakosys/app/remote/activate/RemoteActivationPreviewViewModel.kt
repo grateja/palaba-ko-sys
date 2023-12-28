@@ -11,6 +11,7 @@ import com.csi.palabakosys.room.repository.CustomerRepository
 import com.csi.palabakosys.room.repository.JobOrderQueuesRepository
 import com.csi.palabakosys.room.repository.MachineRepository
 import com.csi.palabakosys.room.repository.RemoteRepository
+import com.csi.palabakosys.settings.DeveloperSettingsRepository
 import com.csi.palabakosys.util.MachineActivationBus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -25,8 +26,11 @@ constructor(
     private val machineRepository: MachineRepository,
     private val customerRepository: CustomerRepository,
     private val jobOrderQueuesRepository: JobOrderQueuesRepository,
-    private val remoteRepository: RemoteRepository
+    private val remoteRepository: RemoteRepository,
+    private val settingsRepository: DeveloperSettingsRepository
 ): ViewModel() {
+    val fakeActivationOn = settingsRepository.fakeConnectionMode
+
     private val _validationMessage = MutableLiveData<String?>()
     val validationMessage: LiveData<String?> = _validationMessage
 

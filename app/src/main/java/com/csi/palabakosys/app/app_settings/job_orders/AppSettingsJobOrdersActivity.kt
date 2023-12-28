@@ -30,7 +30,7 @@ class AppSettingsJobOrdersActivity : AppCompatActivity() {
         binding.cardMaxUnpaidJo.card.setOnClickListener {
             viewModel.showMaxUnpaidJobOrder()
         }
-        binding.checkboxRequireOrNumber.setOnCheckedChangeListener { _, checked ->
+        binding.switchRequireOrNumber.setOnCheckedChangeListener { _, checked ->
             viewModel.updateRequireOrNumber(checked)
         }
     }

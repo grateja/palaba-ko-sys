@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <androidx.appcompat.widget.Toolbar
-                app:title="Create Job Order"
+                app:title="@{viewModel.saved ? `Create Job Order` : `*Create New Job Order`}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_scrollFlags="noScroll"/>
@@ -311,7 +311,7 @@
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/save" />
+                    android:text="@{viewModel.confirmStr }" />
                 <Button
                     style="@style/RoundButtonPrimary"
                     android:visibility="@{viewModel.saved &amp;&amp; viewModel.payment == null &amp;&amp; !viewModel.deleted}"
@@ -333,7 +333,6 @@
                     android:layout_height="wrap_content"
                     android:text="@string/delete"/>
             </LinearLayout>
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

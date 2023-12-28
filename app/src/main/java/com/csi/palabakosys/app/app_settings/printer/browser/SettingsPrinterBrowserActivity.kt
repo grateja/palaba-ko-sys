@@ -36,7 +36,7 @@ class SettingsPrinterBrowserActivity : AppCompatActivity() {
 //    private val bluetoothHelper = BluetoothPermissionHelper(this)
 //    private val locationHelper = LocationPermissionHelper(this)
 
-    private val bluetoothStateLauncher = ActivityLauncher(this)
+//    private val bluetoothStateLauncher = ActivityLauncher(this)
     private val permissionLauncher = ActivityContractsLauncher(this)
 
     private val foundDeviceAdapter = Adapter<PrinterDevice>(R.layout.recycler_item_printer_device)
@@ -66,28 +66,28 @@ class SettingsPrinterBrowserActivity : AppCompatActivity() {
 //        permissions.toTypedArray()
 //    }
 
-    private val  locationPermissions: Array<String> by lazy {
-        val permissions = mutableListOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-        )
-        permissions.toTypedArray()
-    }
-
-    private fun hasPermissions(permissions: Array<String>) : Boolean {
-        for (permission in permissions) {
-            if (ContextCompat.checkSelfPermission(this, permission)
-                != PackageManager.PERMISSION_GRANTED
-            ) {
-                println("Permission not granted")
-                println(permission)
-                return false
-            }
-            println("permission granted")
-            println(permission)
-        }
-        return true
-    }
+//    private val  locationPermissions: Array<String> by lazy {
+//        val permissions = mutableListOf(
+//            Manifest.permission.ACCESS_FINE_LOCATION,
+//            Manifest.permission.ACCESS_COARSE_LOCATION,
+//        )
+//        permissions.toTypedArray()
+//    }
+//
+//    private fun hasPermissions(permissions: Array<String>) : Boolean {
+//        for (permission in permissions) {
+//            if (ContextCompat.checkSelfPermission(this, permission)
+//                != PackageManager.PERMISSION_GRANTED
+//            ) {
+//                println("Permission not granted")
+//                println(permission)
+//                return false
+//            }
+//            println("permission granted")
+//            println(permission)
+//        }
+//        return true
+//    }
 
 //    private fun hasBluetoothPermissions(): Boolean {
 //        return (ContextCompat.checkSelfPermission(
@@ -155,8 +155,8 @@ class SettingsPrinterBrowserActivity : AppCompatActivity() {
 //        viewModel.setBluetoothState(bluetoothAdapter.isEnabled)
     }
 
-    override fun onStart() {
-        super.onStart()
+//    override fun onStart() {
+//        super.onStart()
 
 //        registerRece
 
@@ -173,7 +173,7 @@ class SettingsPrinterBrowserActivity : AppCompatActivity() {
 //            updateBluetoothView(it)
 //        }
 //        updateLocationView(isGPSEnabled())
-    }
+//    }
 
     override fun onPause() {
         super.onPause()
@@ -224,6 +224,9 @@ class SettingsPrinterBrowserActivity : AppCompatActivity() {
             helper.enableBluetooth()
 //            bluetoothHelper.enableBluetooth()
 //            toggleBluetoothState()
+        }
+        binding.checkboxBluetoothState.setOnClickListener {
+            helper.enableBluetooth()
         }
 
         binding.buttonLocationServiceToggle.setOnClickListener {
@@ -301,16 +304,16 @@ class SettingsPrinterBrowserActivity : AppCompatActivity() {
 //        bluetoothStateLauncher.launch(intentBluetooth)
 //    }
 
-    private fun isGPSEnabled() : Boolean {
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-    }
+//    private fun isGPSEnabled() : Boolean {
+//        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+//    }
+//
+//    private fun launchPermission(permissions: Array<String>) {
+//        permissionLauncher.launch(permissions)
+//    }
 
-    private fun launchPermission(permissions: Array<String>) {
-        permissionLauncher.launch(permissions)
-    }
-
-    @SuppressLint("MissingPermission")
-    private fun getSavedDevices() {
+//    @SuppressLint("MissingPermission")
+//    private fun getSavedDevices() {
 //        if(hasPermissions(bluetoothPermissions)) {
 //            if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) && ActivityCompat.checkSelfPermission(
 //                    this,
@@ -327,7 +330,7 @@ class SettingsPrinterBrowserActivity : AppCompatActivity() {
 //                savedDeviceAdapter.setData(items)
 //            }
 //        }
-    }
+//    }
 
 //    private fun getNearbyDevices() {
 //        val permissions = locationPermissions + bluetoothPermissions
@@ -362,60 +365,60 @@ class SettingsPrinterBrowserActivity : AppCompatActivity() {
 ////        bluetoothAdapter.startDiscovery()
 //    }
 
-    private val receiver = object: BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            when(intent?.action) {
-                BluetoothAdapter.ACTION_STATE_CHANGED -> {
-                    val state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1)
-                }
-                BluetoothDevice.ACTION_FOUND -> {
-                    val device: BluetoothDevice? =
-                        intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
-                    device?.let {
-//                        if (ActivityCompat.checkSelfPermission(
-//                                applicationContext,
-//                                Manifest.permission.BLUETOOTH_CONNECT
-//                            ) != PackageManager.PERMISSION_GRANTED
-//                        ) {
-//                            // TODO: Consider calling
-//                            //    ActivityCompat#requestPermissions
-//                            // here to request the missing permissions, and then overriding
-//                            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-//                            //                                          int[] grantResults)
-//                            // to handle the case where the user grants the permission. See the documentation
-//                            // for ActivityCompat#requestPermissions for more details.
-//                            return
-//                        }
-//                        viewModel.addFoundDevice(
-//                            PrinterDevice(
-//                                it.name,
-//                                it.address
-//                            )
-//                        )
-                    }
-
-
-                    println("device found")
-                    println(device?.address)
-//                    val deviceName = device?.name
-                    val deviceHardwareAddress = device?.address // MAC address
-                    device?.let {
-//                        devicesAdapter.add(it)
-                    }
-                }
-                LocationManager.MODE_CHANGED_ACTION -> {
-                    val locationState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                        intent.getBooleanExtra(LocationManager.EXTRA_LOCATION_ENABLED, false)
-                    } else {
-                        false
-                    }
-//                    updateLocationView(locationState)
-                    println("Location settings changed")
-                    println(locationState)
-                }
-            }
-        }
-    }
+//    private val receiver = object: BroadcastReceiver() {
+//        override fun onReceive(context: Context?, intent: Intent?) {
+//            when(intent?.action) {
+//                BluetoothAdapter.ACTION_STATE_CHANGED -> {
+//                    val state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1)
+//                }
+//                BluetoothDevice.ACTION_FOUND -> {
+//                    val device: BluetoothDevice? =
+//                        intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
+//                    device?.let {
+////                        if (ActivityCompat.checkSelfPermission(
+////                                applicationContext,
+////                                Manifest.permission.BLUETOOTH_CONNECT
+////                            ) != PackageManager.PERMISSION_GRANTED
+////                        ) {
+////                            // TODO: Consider calling
+////                            //    ActivityCompat#requestPermissions
+////                            // here to request the missing permissions, and then overriding
+////                            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+////                            //                                          int[] grantResults)
+////                            // to handle the case where the user grants the permission. See the documentation
+////                            // for ActivityCompat#requestPermissions for more details.
+////                            return
+////                        }
+////                        viewModel.addFoundDevice(
+////                            PrinterDevice(
+////                                it.name,
+////                                it.address
+////                            )
+////                        )
+//                    }
+//
+//
+//                    println("device found")
+//                    println(device?.address)
+////                    val deviceName = device?.name
+//                    val deviceHardwareAddress = device?.address // MAC address
+//                    device?.let {
+////                        devicesAdapter.add(it)
+//                    }
+//                }
+//                LocationManager.MODE_CHANGED_ACTION -> {
+//                    val locationState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//                        intent.getBooleanExtra(LocationManager.EXTRA_LOCATION_ENABLED, false)
+//                    } else {
+//                        false
+//                    }
+////                    updateLocationView(locationState)
+//                    println("Location settings changed")
+//                    println(locationState)
+//                }
+//            }
+//        }
+//    }
 
 //    private fun enableLocationServices() {
 //        val locationRequest = LocationRequest.Builder(10000L)

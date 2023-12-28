@@ -20,8 +20,9 @@ import com.csi.palabakosys.room.repository.ProductRepository
 import com.csi.palabakosys.util.isToday
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.text.NumberFormat
 import java.time.Instant
-import java.util.UUID
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -216,6 +217,16 @@ constructor(
             value = extrasSubTotal()
         }
         addSource(jobOrderExtras) { update() }
+    }
+    val confirmStr = MediatorLiveData<String>().apply {
+        fun update() {
+            val amount = discountedAmount.value ?: 0f
+
+             val str = "P %s".format(NumberFormat.getNumberInstance(Locale.US).format(amount))
+
+            value = "$str CONFIRM"
+        }
+        addSource(discountedAmount) {update()}
     }
 
     /** endregion mediator live data */

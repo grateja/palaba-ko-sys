@@ -8,11 +8,17 @@ data class PrintItem(
     val definition: String? = null,
     val header: String? = null
 ) {
-    constructor(header: String?) : this(null, null, null, header = header)
+    constructor(header: String?, characterLength: Int = 32) : this(null, null, null, header = header, characterLength = characterLength)
     constructor(title: String?, definition: String?, characterLength: Int = 32): this(null, title, null, characterLength, definition)
+    companion object {
+        fun singleLine(characterLength: Int) : PrintItem {
+            return PrintItem("-".repeat(characterLength))
+        }
+    }
+
     override fun toString(): String {
         val countStr = count?.let { "(*$it)" } ?: ""
-        val titleStr = title?.let { "$title " } ?: ""
+        val titleStr = title?.let { "$title" } ?: ""
         val priceStr = price?.let { String.format("P%.2f", it) } ?: ""
         val totalLength = countStr.length + titleStr.length + priceStr.length
         val separatorLength = characterLength - totalLength
@@ -37,9 +43,9 @@ data class PrintItem(
 //        val separatorLength = characterLength - totalLength
 
         return when {
-            header != null -> "[L]<b>${header}</b>"
-            definition != null -> "[L]$titleStr:${definition}"
-            price != null -> "[L]$countStr$titleStr[R]${priceStr}"
+            header != null -> "[L]<b>${header}</b>\n"
+            definition != null -> "[L]$titleStr:${definition}\n"
+            price != null -> "[L]$countStr$titleStr[R]${priceStr}\n"
 //            totalLength <= characterLength -> "$countStr$titleStr${" ".repeat(separatorLength)}$priceStr"
             else -> {
                 ""

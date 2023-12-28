@@ -2,6 +2,7 @@ package com.csi.palabakosys.util
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -9,6 +10,7 @@ import android.os.Build
 import android.provider.MediaStore
 import android.text.InputType
 import android.util.Size
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -403,4 +405,12 @@ fun Instant.toShort() : String {
     val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm a")
         .withZone(ZoneId.systemDefault())
     return formatter.format(this)
+}
+
+fun Float.spToPx(): Float {
+    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, this, Resources.getSystem().displayMetrics)
+}
+
+fun Float.dpToPx(): Float {
+    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this, Resources.getSystem().displayMetrics)
 }

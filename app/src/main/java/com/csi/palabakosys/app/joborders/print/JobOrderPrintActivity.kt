@@ -4,9 +4,14 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import androidx.appcompat.app.AppCompatActivity
+import android.content.res.Resources
+import android.graphics.Paint
+import android.graphics.Typeface
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -15,51 +20,74 @@ import com.csi.palabakosys.adapters.Adapter
 import com.csi.palabakosys.app.app_settings.printer.SettingsPrinterActivity
 import com.csi.palabakosys.app.app_settings.printer.SettingsPrinterActivity.Companion.PRINTER_DEVICE_EXTRA
 import com.csi.palabakosys.app.app_settings.printer.browser.PrinterDevice
-import com.csi.palabakosys.app.app_settings.printer.browser.SettingsPrinterBrowserActivity
 import com.csi.palabakosys.databinding.ActivityJobOrderPrintBinding
 import com.csi.palabakosys.model.EnumPrintState
 import com.csi.palabakosys.model.PrintItem
 import com.csi.palabakosys.services.PrinterService
-import com.csi.palabakosys.util.ActivityLauncher
-import com.csi.palabakosys.util.BluetoothPrinterHelper
-import com.csi.palabakosys.util.Constants
-import com.csi.palabakosys.util.toUUID
-import com.google.android.material.tabs.TabLayout
+import com.csi.palabakosys.util.*
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import java.lang.Float.min
 
 @AndroidEntryPoint
 class JobOrderPrintActivity : AppCompatActivity() {
+
+    companion object {
+        const val TAB_CLAIM_STUB = "Claim Stub"
+        const val TAB_JOB_ORDER = "Job Order"
+        const val TAB_MACHINE_STUB = "Machine Stub"
+    }
+
     private val viewModel: JobOrderPrintViewModel by viewModels()
     private lateinit var binding: ActivityJobOrderPrintBinding
-
     private val helper = BluetoothPrinterHelper(this)
-
-    private val joDetailsAdapter = Adapter<PrintItem>(R.layout.recycler_item_print_item)
     private val itemsAdapter = Adapter<PrintItem>(R.layout.recycler_item_print_item)
-    private val summaryAdapter = Adapter<PrintItem>(R.layout.recycler_item_print_item)
-    private val paymentAdapter = Adapter<PrintItem>(R.layout.recycler_item_print_item)
-
     private val launcher = ActivityLauncher(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_job_order_print)
-        binding.viewModel = viewModel
-        binding.lifecycleOwner = this
+
+        setSupportActionBar(binding.toolbar)
+
+        binding.apply {
+            viewModel = this@JobOrderPrintActivity.viewModel
+            lifecycleOwner = this@JobOrderPrintActivity
+            recyclerItems.adapter = itemsAdapter
+        }
 
         subscribeEvents()
         subscribeListeners()
 
-        setupTab()
+        intent.getStringExtra(Constants.ID)?.toUUID()?.let(viewModel::setJobOrderId)
+    }
 
-        intent.getStringExtra(Constants.ID)?.toUUID()?.let {
-            viewModel.setJobOrderId(it)
+    private fun getWidth(charactersPerLine: Int): Int {
+        val screenWidth = Resources.getSystem().displayMetrics.widthPixels.toFloat()
+        val characterWidthInDp = 18f
+        val paint = Paint().apply {
+            textSize = characterWidthInDp.spToPx()
+            typeface = Typeface.MONOSPACE
         }
+        val textWidth = paint.measureText("w".repeat(charactersPerLine))
+        return min(textWidth, screenWidth).toInt()
+    }
 
-        binding.recyclerJoDetails.adapter = joDetailsAdapter
-        binding.recyclerItems.adapter = itemsAdapter
-        binding.recyclerSummary.adapter = summaryAdapter
-        binding.recyclerPayment.adapter = paymentAdapter
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.tools_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.menu_options) {
+            openPrinterSettings()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun openPrinterSettings() {
+        val intent = Intent(this, SettingsPrinterActivity::class.java)
+        startActivity(intent)
     }
 
     override fun onResume() {
@@ -77,47 +105,31 @@ class JobOrderPrintActivity : AppCompatActivity() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver)
     }
 
-    private fun setupTab() {
-        binding.printTab.apply {
-            addTab(newTab().setText("CLAIM STUB"))
-            addTab(newTab().setText("MACHINE STUB"))
-            addTab(newTab().setText("JOB ORDER"))
-        }
-    }
-
     private fun subscribeEvents() {
-        binding.buttonPrint.setOnClickListener {
-            viewModel.print(binding.printTab.getTabAt(binding.printTab.selectedTabPosition)?.text.toString())
-        }
-        binding.printTab.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                viewModel.selectTab(tab?.text.toString())
+        binding.bottomNavigation.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.menu_claim_stub -> {
+                    viewModel.selectTab(TAB_CLAIM_STUB)
+                    true
+                }
+                R.id.menu_job_order -> {
+                    viewModel.selectTab(TAB_JOB_ORDER)
+                    true
+                }
+                R.id.menu_machine_stub -> {
+                    viewModel.selectTab(TAB_MACHINE_STUB)
+                    true
+                }
+                else -> false
             }
+        }
 
-            override fun onTabUnselected(tab: TabLayout.Tab?) { }
+        helper.setOnBluetoothStateChanged {
+            viewModel.setBluetoothState(it)
+        }
 
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-                viewModel.selectTab(tab?.text.toString())
-            }
-        })
-        helper.apply {
-            setOnBluetoothStateChanged {
-                viewModel.setBluetoothState(it)
-            }
-        }
-        binding.buttonEnableBluetooth.setOnClickListener {
-            helper.enableBluetooth()
-        }
-        binding.controls.setOnClickListener {
-            val intent = Intent(this, SettingsPrinterBrowserActivity::class.java).apply {
-                action = SettingsPrinterActivity.ACTION_BROWSE_PRINTER_DEVICES
-            }
-            launcher.launch(intent)
-        }
         launcher.onOk = {
-            it.data?.getParcelableExtra<PrinterDevice>(PRINTER_DEVICE_EXTRA)?.let {
-                viewModel.setDevice(it)
-            }
+            it.data?.getParcelableExtra<PrinterDevice>(PRINTER_DEVICE_EXTRA)?.let(viewModel::setDevice)
         }
     }
 
@@ -137,7 +149,7 @@ class JobOrderPrintActivity : AppCompatActivity() {
 
     private fun subscribeListeners() {
         viewModel.dataState.observe(this, Observer {
-            when(it) {
+            when (it) {
                 is JobOrderPrintViewModel.DataState.Submit -> {
                     print(it.formattedText)
                     viewModel.resetState()
@@ -148,35 +160,37 @@ class JobOrderPrintActivity : AppCompatActivity() {
                 }
             }
         })
-        viewModel.joDetails.observe(this, Observer {
-            joDetailsAdapter.setData(it)
+
+        viewModel.characterLength.observe(this, Observer {
+            binding.wrapper.layoutParams.width = getWidth(it)
         })
+
         viewModel.items.observe(this, Observer {
             itemsAdapter.setData(it)
-        })
-        viewModel.summary.observe(this, Observer {
-            summaryAdapter.setData(it)
-        })
-        viewModel.paymentDetails.observe(this, Observer {
-            paymentAdapter.setData(it)
         })
     }
 
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            when(intent?.action) {
-                PrinterService.PRINT_ACTION -> {
-                    intent.getParcelableExtra<EnumPrintState>(PrinterService.PRINT_STATE)?.let {
-                        viewModel.setPrintState(it)
-                    }
-                }
-//                PrinterService.PRINT_STARTED_ACTION -> {
-//                    binding.buttonPrint.setText(R.string.cancel)
-//                }
-//                PrinterService.PRINT_FINISHED_ACTION -> {
-//                    binding.buttonPrint.setText(R.string.Continue)
-//                }
+            when (intent?.action) {
+                PrinterService.PRINT_ACTION -> handlePrintAction(intent)
             }
         }
+    }
+
+    private fun handlePrintAction(intent: Intent) {
+        intent.getParcelableExtra<EnumPrintState>(PrinterService.PRINT_STATE)?.let { printState ->
+            viewModel.setPrintState(printState)
+
+            if (printState == EnumPrintState.ERROR) {
+                intent.getStringExtra(PrinterService.MESSAGE)?.let { errorMessage ->
+                    showErrorMessage(errorMessage)
+                }
+            }
+        }
+    }
+
+    private fun showErrorMessage(errorMessage: String) {
+        binding.root.showSnackBar(errorMessage, Snackbar.LENGTH_SHORT)
     }
 }

@@ -12,7 +12,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.csi.palabakosys.R
 import com.csi.palabakosys.app.app_settings.printer.browser.PrinterDevice
 import com.csi.palabakosys.app.app_settings.printer.browser.SettingsPrinterBrowserActivity
-import com.csi.palabakosys.databinding.ActivitySettingsPrinterBinding
+import com.csi.palabakosys.databinding.ActivityAppSettingsPrinterBinding
 import com.csi.palabakosys.model.EnumPrintState
 import com.csi.palabakosys.services.PrinterService
 import com.csi.palabakosys.services.PrinterService.Companion.CANCEL_PRINT_ACTION
@@ -40,13 +40,13 @@ class SettingsPrinterActivity : AppCompatActivity() {
     private val viewModel: PrinterSettingsViewModel by viewModels()
 
 
-    private lateinit var binding: ActivitySettingsPrinterBinding
+    private lateinit var binding: ActivityAppSettingsPrinterBinding
 
     private val launcher = ActivityLauncher(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_settings_printer)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_app_settings_printer)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
@@ -57,15 +57,15 @@ class SettingsPrinterActivity : AppCompatActivity() {
     private val receiver = object: BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val state = intent?.getParcelableExtra<EnumPrintState>(PRINT_STATE)
-            if(state == EnumPrintState.STARTED) {
-                binding.buttonTest.visibility = View.GONE
-            } else if(state == EnumPrintState.FINISHED) {
-                binding.buttonTest.visibility = View.VISIBLE
-            } else if(state == EnumPrintState.ERROR) {
-                binding.buttonTest.visibility = View.VISIBLE
-                val message = intent.getStringExtra(PrinterService.MESSAGE) ?: "Something went wrong"
-                Toast.makeText(context, message, Toast.LENGTH_LONG).show()
-            }
+//            if(state == EnumPrintState.STARTED) {
+//                binding.buttonTest.visibility = View.GONE
+//            } else if(state == EnumPrintState.FINISHED) {
+//                binding.buttonTest.visibility = View.VISIBLE
+//            } else if(state == EnumPrintState.ERROR) {
+//                binding.buttonTest.visibility = View.VISIBLE
+//                val message = intent.getStringExtra(PrinterService.MESSAGE) ?: "Something went wrong"
+//                Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+//            }
         }
     }
 
@@ -82,7 +82,6 @@ class SettingsPrinterActivity : AppCompatActivity() {
     }
 
     private fun subscribeEvents() {
-
         binding.cardPrinter.card.setOnClickListener {
             viewModel.openPrinterBrowser()
         }
@@ -101,9 +100,27 @@ class SettingsPrinterActivity : AppCompatActivity() {
                 }
             }
         }
-        binding.buttonTest.setOnClickListener {
-            viewModel.testPrint()
+        binding.switchJobOrderItemized.setOnCheckedChangeListener { _, checked ->
+            viewModel.updateJobOrderItemized(checked)
         }
+        binding.switchJobOrderShowItemPrice.setOnCheckedChangeListener { _, checked ->
+            viewModel.updateJobOrderShowItemPrice(checked)
+        }
+        binding.switchClaimStubItemized.setOnCheckedChangeListener { _, checked ->
+            viewModel.updateClaimStubItemized(checked)
+        }
+        binding.switchClaimStubShowItemPrice.setOnCheckedChangeListener { _, checked ->
+            viewModel.updateClaimStubShowItemPrice(checked)
+        }
+        binding.cardDisclaimer.setOnClickListener {
+            viewModel.openDisclaimer()
+        }
+        binding.switchShowDisclaimer.setOnCheckedChangeListener { _, checked ->
+            viewModel.updateShowDisclaimer(checked)
+        }
+//        binding.buttonTest.setOnClickListener {
+//            viewModel.testPrint()
+//        }
 //        binding.buttonSave.setOnClickListener {
 //            viewModel.update()
 //        }
@@ -135,6 +152,12 @@ class SettingsPrinterActivity : AppCompatActivity() {
                         }
                     }
                     viewModel.resetState()
+                    viewModel.resetState()
+                }
+                is PrinterSettingsViewModel.DataState.OpenDisclaimer -> {
+                    showTextInputDialog("Disclaimer", null, it.text) { result ->
+                        viewModel.updateDisclaimer(result)
+                    }
                     viewModel.resetState()
                 }
                 is PrinterSettingsViewModel.DataState.Save -> {

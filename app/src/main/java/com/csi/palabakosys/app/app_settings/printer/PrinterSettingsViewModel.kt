@@ -28,8 +28,8 @@ constructor(
 //    private val preferenceRepository: AppPreferenceRepository,
     @ApplicationContext context: Context
 ) : SettingsViewModel(repository) {
-    private val MY_UUID: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB") // UUID for SPP (Serial Port Profile)
-    val validation = MutableLiveData(InputValidation())
+//    private val MY_UUID: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB") // UUID for SPP (Serial Port Profile)
+//    val validation = MutableLiveData(InputValidation())
 
 //    private val currentSettings = preferenceRepository.printerSettings()
     private val _dataState = MutableLiveData<DataState>()
@@ -40,11 +40,43 @@ constructor(
 //    val dpi = MutableLiveData(currentSettings.dpi.toString())
     val width = repository.printerWidth //MutableLiveData(currentSettings.width.toString())
     val charactersPerLine = repository.printerCharactersPerLine //MutableLiveData(currentSettings.character.toString())
-    val sampleText = MutableLiveData("Sample text")
+//    val sampleText = MutableLiveData("Sample text")
 
-    fun clearError(key: String = "") {
-        validation.value = validation.value?.removeError(key)
+    val jobOrderItemized = repository.showJoItemized
+    val jobOrderShowItemPrice = repository.showJoPrices
+    val claimStubItemized = repository.showClaimStubItemized
+    val claimStubShowItemPrice = repository.showClaimStubJoPrices
+
+    val showDisclaimer = repository.showDisclaimer
+    val disclaimerText = repository.jobOrderDisclaimer
+
+    fun updateJobOrderItemized(checked: Boolean) {
+        viewModelScope.launch {
+            repository.updateJobOrderItemized(checked)
+        }
     }
+
+    fun updateJobOrderShowItemPrice(checked: Boolean) {
+        viewModelScope.launch {
+            repository.updateJobOrderShowItemPrice(checked)
+        }
+    }
+
+    fun updateClaimStubItemized(checked: Boolean) {
+        viewModelScope.launch {
+            repository.updateClaimStubItemized(checked)
+        }
+    }
+
+    fun updateClaimStubShowItemPrice(checked: Boolean) {
+        viewModelScope.launch {
+            repository.updateClaimStubShowItemPrice(checked)
+        }
+    }
+
+//    fun clearError(key: String = "") {
+//        validation.value = validation.value?.removeError(key)
+//    }
 
     fun openPrinterBrowser() {
         _dataState.value = DataState.OpenPrinterBrowser(
@@ -54,38 +86,38 @@ constructor(
         )
     }
 
-    fun update() {
-        val name = printerName.value
-        val address = macAddress.value
-//        val dpi = dpi.value
-        val width = width.value
-//        val charactersPerLine = charactersPerLine.value
-
-
-        val _validation = InputValidation().apply {
-            addRule("printerName", name, arrayOf(Rule.Required))
-            addRule("macAddress", address, arrayOf(Rule.Required))
-//            addRule("dpi", dpi, arrayOf(Rule.Required, Rule.IsNumeric))
-            addRule("width", width, arrayOf(Rule.Required, Rule.IsNumeric))
-//            addRule("charactersPerLine", charactersPerLine, arrayOf(Rule.Required, Rule.IsNumeric))
-        }
-
-        validation.value = _validation
-
-        if(_validation.isInvalid()) {
-            return
-        }
-
-//        val currentPrinter = PrinterSettings(
-//            printerName.value,
-//            macAddress.value,
-//            dpi?.toInt() ?: 203,
-//            width?.toFloat() ?: 58f,
-//            charactersPerLine?.toInt() ?: 32
-//        )
-//        preferenceRepository.setCurrentPrinter(currentPrinter)
-//        _dataState.value = DataState.Save
-    }
+//    fun update() {
+//        val name = printerName.value
+//        val address = macAddress.value
+////        val dpi = dpi.value
+//        val width = width.value
+////        val charactersPerLine = charactersPerLine.value
+//
+//
+//        val _validation = InputValidation().apply {
+//            addRule("printerName", name, arrayOf(Rule.Required))
+//            addRule("macAddress", address, arrayOf(Rule.Required))
+////            addRule("dpi", dpi, arrayOf(Rule.Required, Rule.IsNumeric))
+//            addRule("width", width, arrayOf(Rule.Required, Rule.IsNumeric))
+////            addRule("charactersPerLine", charactersPerLine, arrayOf(Rule.Required, Rule.IsNumeric))
+//        }
+//
+//        validation.value = _validation
+//
+//        if(_validation.isInvalid()) {
+//            return
+//        }
+//
+////        val currentPrinter = PrinterSettings(
+////            printerName.value,
+////            macAddress.value,
+////            dpi?.toInt() ?: 203,
+////            width?.toFloat() ?: 58f,
+////            charactersPerLine?.toInt() ?: 32
+////        )
+////        preferenceRepository.setCurrentPrinter(currentPrinter)
+////        _dataState.value = DataState.Save
+//    }
 
     fun setPrinterDevice(printerDevice: PrinterDevice) {
         viewModelScope.launch {
@@ -96,29 +128,29 @@ constructor(
 //        macAddress.value = printerDevice.macAddress
     }
 
-    private val bluetoothManager: BluetoothManager by lazy {
-        context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-    }
-
-    private val bluetoothAdapter: BluetoothAdapter by lazy {
-        bluetoothManager.adapter
-    }
-
-    private lateinit var printer: EscPosPrinter
-    fun testPrint() {
-//        val settings = PrinterSettings(
-//            printerName.value,
-//            macAddress.value,
-//            dpi.value?.toInt() ?: 203,
-//            width.value?.toFloat() ?: 58f,
-//            charactersPerLine.value?.toInt() ?: 32
-//        )
-        val text = sampleText.value ?: "Sample text"
-//        val address = macAddress.value
-//        val width = width.value
-//        val charactersPerLine = charactersPerLine.value
-        _dataState.value = DataState.StartTestPrint(text)
-    }
+//    private val bluetoothManager: BluetoothManager by lazy {
+//        context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+//    }
+//
+//    private val bluetoothAdapter: BluetoothAdapter by lazy {
+//        bluetoothManager.adapter
+//    }
+//
+//    private lateinit var printer: EscPosPrinter
+//    fun testPrint() {
+////        val settings = PrinterSettings(
+////            printerName.value,
+////            macAddress.value,
+////            dpi.value?.toInt() ?: 203,
+////            width.value?.toFloat() ?: 58f,
+////            charactersPerLine.value?.toInt() ?: 32
+////        )
+//        val text = sampleText.value ?: "Sample text"
+////        val address = macAddress.value
+////        val width = width.value
+////        val charactersPerLine = charactersPerLine.value
+//        _dataState.value = DataState.StartTestPrint(text)
+//    }
 
     fun openPrinterWidth() {
         val width = width.value ?: 32f
@@ -142,11 +174,34 @@ constructor(
         }
     }
 
+    fun openDisclaimer() {
+        (disclaimerText.value ?: "").let {
+            _dataState.value = DataState.OpenDisclaimer(it)
+        }
+    }
+
+    fun updateDisclaimer(disclaimer: String?) {
+        viewModelScope.launch {
+            if(disclaimer == null) {
+                repository.updateShowDisclaimer(false)
+            } else {
+                repository.updateDisclaimer(disclaimer)
+            }
+        }
+    }
+
+    fun updateShowDisclaimer(checked: Boolean) {
+        viewModelScope.launch {
+            repository.updateShowDisclaimer(checked)
+        }
+    }
+
     sealed class DataState {
         object StateLess: DataState()
         data class OpenPrinterBrowser(val currentPrinter: PrinterDevice) : DataState()
         data class OpenPrinterWidth(val width: Float): DataState()
         data class OpenPrinterCharactersPerLine(val charactersPerLine: Int?): DataState()
+        data class OpenDisclaimer(val text: String): DataState()
         data class StartTestPrint(val payload: String): DataState()
         object Save: DataState()
     }

@@ -162,10 +162,10 @@ class MainActivity : EndingActivity() {
                         SettingsPrinterActivity::class.java,
 //                        permissions = listOf(EnumActionPermission.MODIFY_SETTINGS_PRINTERS),
                         menuItems = listOf(
+                            MenuItem("Printer Profile", "Configure printer device settings", SettingsPrinterActivity::class.java),
                             MenuItem("Job Orders", "Configure Job Order format", null),
                             MenuItem("Claim Stub", "Configure Claim stub format", null),
                             MenuItem("Machine Activation Stub", "Configure Machine activation stub format", null),
-                            MenuItem("Printer Profile", "", SettingsPrinterActivity::class.java)
                         )
                     ),
                     MenuItem(

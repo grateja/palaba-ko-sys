@@ -95,14 +95,16 @@ constructor(@ApplicationContext private val context: Context) {
     }
 
     suspend fun <T> update(value: T, key: String) {
-        when (value!!::class) {
-            Int::class -> writeData(intPreferencesKey(key), value as Int)
-            Long::class -> writeData(longPreferencesKey(key), value as Long)
-            Float::class -> writeData(floatPreferencesKey(key), value as Float)
-            Double::class -> writeData(doublePreferencesKey(key), value as Double)
-            Boolean::class -> writeData(booleanPreferencesKey(key), value as Boolean)
-            String::class -> writeData(stringPreferencesKey(key), value as String)
-            else -> throw IllegalArgumentException("Unsupported type")
+        if(value != null) {
+            when (value!!::class) {
+                Int::class -> writeData(intPreferencesKey(key), value as Int)
+                Long::class -> writeData(longPreferencesKey(key), value as Long)
+                Float::class -> writeData(floatPreferencesKey(key), value as Float)
+                Double::class -> writeData(doublePreferencesKey(key), value as Double)
+                Boolean::class -> writeData(booleanPreferencesKey(key), value as Boolean)
+                String::class -> writeData(stringPreferencesKey(key), value as String)
+                else -> throw IllegalArgumentException("Unsupported type")
+            }
         }
     }
 

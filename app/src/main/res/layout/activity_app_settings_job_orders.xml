@@ -22,11 +22,13 @@
             <com.google.android.material.divider.MaterialDivider
                 android:layout_width="match_parent"
                 android:layout_height="1dp"/>
-            <CheckBox
-                android:id="@+id/checkbox_require_or_number"
-                android:layout_width="wrap_content"
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_require_or_number"
+                android:layout_marginHorizontal="16dp"
+                android:text="Require OR Number"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:checked="@{viewModel.requireOrNumber}"/>
+                android:checked="@{viewModel.requireOrNumber}" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </layout>

@@ -85,29 +85,29 @@
                         android:textAlignment="center"
                         android:text="@string/print_single_line"/>
 
-                    <include
-                        android:id="@+id/print_items_services"
-                        android:visibility="@{viewModel.hasServices}"
-                        layout="@layout/incl_print_items"
-                        app:header="@{`SERVICES`}"/>
+<!--                    <include-->
+<!--                        android:id="@+id/print_items_services"-->
+<!--                        android:visibility="@{viewModel.hasServices}"-->
+<!--                        layout="@layout/incl_print_items"-->
+<!--                        app:header="@{`SERVICES`}"/>-->
 
-                    <include
-                        android:id="@+id/print_items_products"
-                        android:visibility="@{viewModel.hasProducts}"
-                        layout="@layout/incl_print_items"
-                        app:header="@{`PRODUCTS`}"/>
+<!--                    <include-->
+<!--                        android:id="@+id/print_items_products"-->
+<!--                        android:visibility="@{viewModel.hasProducts}"-->
+<!--                        layout="@layout/incl_print_items"-->
+<!--                        app:header="@{`PRODUCTS`}"/>-->
 
-                    <include
-                        android:id="@+id/print_items_extras"
-                        android:visibility="@{viewModel.hasExtras}"
-                        layout="@layout/incl_print_items"
-                        app:header="@{`EXTRAS`}"/>
+<!--                    <include-->
+<!--                        android:id="@+id/print_items_extras"-->
+<!--                        android:visibility="@{viewModel.hasExtras}"-->
+<!--                        layout="@layout/incl_print_items"-->
+<!--                        app:header="@{`EXTRAS`}"/>-->
 
-                    <include
-                        android:id="@+id/print_items_delivery"
-                        android:visibility="@{viewModel.hasPickupAndDelivery}"
-                        layout="@layout/incl_print_items"
-                        app:header="@{`PICKUP &amp; DELIVERY`}"/>
+<!--                    <include-->
+<!--                        android:id="@+id/print_items_delivery"-->
+<!--                        android:visibility="@{viewModel.hasPickupAndDelivery}"-->
+<!--                        layout="@layout/incl_print_items"-->
+<!--                        app:header="@{`PICKUP &amp; DELIVERY`}"/>-->
 
                     <TextView
                         style="@style/Print.Header"
