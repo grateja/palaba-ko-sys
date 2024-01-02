@@ -31,11 +31,14 @@ import com.csi.palabakosys.app.services.ServicesActivity
 import com.csi.palabakosys.app.shop_preferences.ShopPreferencesActivity
 import com.csi.palabakosys.databinding.ActivityMainBinding
 import com.csi.palabakosys.model.EnumActionPermission
+import com.csi.palabakosys.model.PrinterItem
 import com.csi.palabakosys.util.ActivityLauncher
 import com.csi.palabakosys.util.calculateSpanCount
+import com.csi.palabakosys.util.toShort
 import com.csi.palabakosys.viewmodels.MainViewModel
 //import com.csi.palabakosys.worker.RemoteWorker
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.Instant
 
 @AndroidEntryPoint
 class MainActivity : EndingActivity() {

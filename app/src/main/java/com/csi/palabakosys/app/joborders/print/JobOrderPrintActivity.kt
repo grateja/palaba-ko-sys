@@ -22,7 +22,8 @@ import com.csi.palabakosys.app.app_settings.printer.SettingsPrinterActivity.Comp
 import com.csi.palabakosys.app.app_settings.printer.browser.PrinterDevice
 import com.csi.palabakosys.databinding.ActivityJobOrderPrintBinding
 import com.csi.palabakosys.model.EnumPrintState
-import com.csi.palabakosys.model.PrintItem
+import com.csi.palabakosys.model.PrinterItem
+//import com.csi.palabakosys.model.PrintItem
 import com.csi.palabakosys.services.PrinterService
 import com.csi.palabakosys.util.*
 import com.google.android.material.snackbar.Snackbar
@@ -35,13 +36,13 @@ class JobOrderPrintActivity : AppCompatActivity() {
     companion object {
         const val TAB_CLAIM_STUB = "Claim Stub"
         const val TAB_JOB_ORDER = "Job Order"
-        const val TAB_MACHINE_STUB = "Machine Stub"
+        const val TAB_MACHINE_STUB = "Machine Activation Stub"
     }
 
     private val viewModel: JobOrderPrintViewModel by viewModels()
     private lateinit var binding: ActivityJobOrderPrintBinding
     private val helper = BluetoothPrinterHelper(this)
-    private val itemsAdapter = Adapter<PrintItem>(R.layout.recycler_item_print_item)
+    private val itemsAdapter = PrinterAdapter()
     private val launcher = ActivityLauncher(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,14 +64,12 @@ class JobOrderPrintActivity : AppCompatActivity() {
     }
 
     private fun getWidth(charactersPerLine: Int): Int {
-        val screenWidth = Resources.getSystem().displayMetrics.widthPixels.toFloat()
         val characterWidthInDp = 18f
         val paint = Paint().apply {
             textSize = characterWidthInDp.spToPx()
             typeface = Typeface.MONOSPACE
         }
-        val textWidth = paint.measureText("w".repeat(charactersPerLine))
-        return min(textWidth, screenWidth).toInt()
+        return paint.measureText("w".repeat(charactersPerLine)).toInt()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -128,8 +127,19 @@ class JobOrderPrintActivity : AppCompatActivity() {
             viewModel.setBluetoothState(it)
         }
 
+        helper.setOnBluetoothAvailabilityChanged {
+            viewModel.setBluetoothAvailability(it)
+        }
+
         launcher.onOk = {
             it.data?.getParcelableExtra<PrinterDevice>(PRINTER_DEVICE_EXTRA)?.let(viewModel::setDevice)
+        }
+
+        binding.buttonPrint.setOnClickListener {
+            viewModel.print()
+        }
+        binding.buttonEnableBluetooth.setOnClickListener {
+            helper.enableBluetooth()
         }
     }
 
@@ -167,6 +177,12 @@ class JobOrderPrintActivity : AppCompatActivity() {
 
         viewModel.items.observe(this, Observer {
             itemsAdapter.setData(it)
+            println("data set changed")
+            println(
+                it.joinToString("\n") {
+                    it.formattedString()
+                }
+            )
         })
     }
 

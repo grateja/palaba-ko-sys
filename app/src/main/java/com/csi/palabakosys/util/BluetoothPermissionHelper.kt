@@ -54,7 +54,7 @@ class BluetoothPermissionHelper(private val activity: AppCompatActivity) : Permi
         activity.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
     }
 
-    private val bluetoothAdapter: BluetoothAdapter by lazy {
+    private val bluetoothAdapter: BluetoothAdapter? by lazy {
         bluetoothManager.adapter
     }
 
@@ -67,7 +67,7 @@ class BluetoothPermissionHelper(private val activity: AppCompatActivity) : Permi
     fun startDiscovery() {
         if(hasPermissions()) {
             println("Start discovery")
-            bluetoothAdapter.startDiscovery()
+            bluetoothAdapter?.startDiscovery()
         } else {
             println("permission not granted")
         }
@@ -89,9 +89,9 @@ class BluetoothPermissionHelper(private val activity: AppCompatActivity) : Permi
     @SuppressLint("MissingPermission")
     fun getBondedDevices(): List<PrinterDevice> {
         return try {
-            bluetoothAdapter.bondedDevices.map { device ->
+            bluetoothAdapter?.bondedDevices?.map { device ->
                 PrinterDevice(device.name, device.address)
-            }.toList()
+            }?.toList() ?: emptyList()
         } catch (e: Exception) {
             e.printStackTrace()
             emptyList()
@@ -104,7 +104,11 @@ class BluetoothPermissionHelper(private val activity: AppCompatActivity) : Permi
 //    }
 
     fun isEnabled(): Boolean {
-        return bluetoothAdapter.isEnabled && hasPermissions()
+        return bluetoothAdapter?.isEnabled == true && hasPermissions()
+    }
+
+    fun isBluetoothSupported(): Boolean {
+        return bluetoothAdapter != null
     }
 
 //    private val receiver = object : BroadcastReceiver() {

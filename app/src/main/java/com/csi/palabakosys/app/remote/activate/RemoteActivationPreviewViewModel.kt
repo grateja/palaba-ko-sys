@@ -31,6 +31,15 @@ constructor(
 ): ViewModel() {
     val fakeActivationOn = settingsRepository.fakeConnectionMode
 
+    val activateButton = MediatorLiveData<String>().apply {
+        fun update() {
+            value = fakeActivationOn.value?.let {
+                if(it) "Test activate" else "Activate"
+            }
+        }
+        addSource(fakeActivationOn) {update()}
+    }
+
     private val _validationMessage = MutableLiveData<String?>()
     val validationMessage: LiveData<String?> = _validationMessage
 

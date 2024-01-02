@@ -9,6 +9,7 @@ import androidx.lifecycle.asLiveData
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -60,38 +61,72 @@ constructor(@ApplicationContext private val context: Context) {
     }
 
     fun getAsLiveData(key: String, defaultValue: String) : LiveData<String> {
+        val prefKey = stringPreferencesKey(key)
+
+        setDefaultValueIfNotExists(prefKey, defaultValue)
+
         val flow = context.dataStore.data.map { preferences ->
-            preferences[stringPreferencesKey(key)] ?: defaultValue
+            preferences[prefKey] ?: defaultValue
         }
         return flow.asLiveData()
     }
 
     fun getAsLiveData(key: String, defaultValue: Boolean) : LiveData<Boolean> {
+        val prefKey = booleanPreferencesKey(key)
+
+        setDefaultValueIfNotExists(prefKey, defaultValue)
+
         val flow = context.dataStore.data.map { preferences ->
-            preferences[booleanPreferencesKey(key)] ?: defaultValue
+            preferences[prefKey] ?: defaultValue
         }
         return flow.asLiveData()
     }
 
     fun getAsLiveData(key: String, defaultValue: Int) : LiveData<Int> {
+        val prefKey = intPreferencesKey(key)
+
+        setDefaultValueIfNotExists(prefKey, defaultValue)
+
         val flow = context.dataStore.data.map { preferences ->
-            preferences[intPreferencesKey(key)] ?: defaultValue
+            preferences[prefKey] ?: defaultValue
         }
         return flow.asLiveData()
     }
 
     fun getAsLiveData(key: String, defaultValue: Float) : LiveData<Float> {
+        val prefKey = floatPreferencesKey(key)
+
+        setDefaultValueIfNotExists(prefKey, defaultValue)
+
         val flow = context.dataStore.data.map { preferences ->
-            preferences[floatPreferencesKey(key)] ?: defaultValue
+            preferences[prefKey] ?: defaultValue
         }
         return flow.asLiveData()
     }
 
     fun getAsLiveData(key: String, defaultValue: Long) : LiveData<Long> {
+        return getAsLiveData(
+            longPreferencesKey(key),
+            defaultValue
+        )
+    }
+
+    private inline fun <reified T>getAsLiveData(key: Preferences.Key<T>, defaultValue: T): LiveData<T> {
+        setDefaultValueIfNotExists(key, defaultValue)
         val flow = context.dataStore.data.map { preferences ->
-            preferences[longPreferencesKey(key)] ?: defaultValue
+            preferences[key] ?: defaultValue
         }
         return flow.asLiveData()
+    }
+
+    private fun <T>setDefaultValueIfNotExists(key: Preferences.Key<T>, defaultValue: T) {
+        runBlocking {
+            context.dataStore.edit { preferences ->
+                if (!preferences.contains(key)) {
+                    preferences[key] = defaultValue
+                }
+            }
+        }
     }
 
     suspend fun <T> update(value: T, key: String) {
@@ -108,7 +143,7 @@ constructor(@ApplicationContext private val context: Context) {
         }
     }
 
-    suspend fun  <T>writeData(key: Preferences.Key<T>, value: T) {
+    private suspend fun  <T>writeData(key: Preferences.Key<T>, value: T) {
         context.dataStore.edit { preferences ->
             preferences[key] = value
         }

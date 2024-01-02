@@ -86,13 +86,16 @@
         <item name="android:fontFamily">monospace</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">18sp</item>
-<!--        <item name="android:maxLines">1</item>-->
     </style>
-    <style name="Print.Double" parent="Print">
+    <style name="Print.Center" parent="Print">
+        <item name="android:textAlignment">center</item>
+    </style>
+    <style name="Print.Double" parent="Print.Center">
         <item name="android:textSize">36sp</item>
     </style>
     <style name="Print.Header" parent="Print">
         <item name="android:textFontWeight">900</item>
+        <item name="android:textAlignment">center</item>
     </style>
     <style name="Settings">
         <item name="android:layout_marginTop">18dp</item>

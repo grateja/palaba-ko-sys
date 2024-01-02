@@ -24,10 +24,18 @@ class BluetoothPrinterHelper(private val activity: AppCompatActivity) {
         }
     }
 
+    private var _onBluetoothAvailabilityChanged: ((Boolean) -> Unit)? = null
     private var _onBluetoothEnabled: ((Boolean) -> Unit)? = null
     private var _onBondedDeviceLoaded: ((List<PrinterDevice>) -> Unit)? = null
     private var _onDeviceFound: ((PrinterDevice) -> Unit)? = null
     private var _onLocationStateChanged: ((Boolean) -> Unit)? = null
+
+    fun setOnBluetoothAvailabilityChanged(event: (Boolean) -> Unit) {
+        _onBluetoothAvailabilityChanged = event
+        bluetoothHelper.isBluetoothSupported().let {
+            _onBluetoothAvailabilityChanged?.invoke(it)
+        }
+    }
 
     fun setOnBluetoothStateChanged(event: (Boolean) -> Unit) {
         _onBluetoothEnabled = event

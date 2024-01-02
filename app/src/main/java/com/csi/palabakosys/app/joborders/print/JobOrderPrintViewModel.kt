@@ -1,12 +1,16 @@
 package com.csi.palabakosys.app.joborders.print
 
+import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.*
 import com.csi.palabakosys.app.app_settings.printer.browser.PrinterDevice
 import com.csi.palabakosys.app.joborders.print.JobOrderPrintActivity.Companion.TAB_CLAIM_STUB
 import com.csi.palabakosys.app.joborders.print.JobOrderPrintActivity.Companion.TAB_JOB_ORDER
+import com.csi.palabakosys.app.joborders.print.JobOrderPrintActivity.Companion.TAB_MACHINE_STUB
 import com.csi.palabakosys.model.EnumPaymentMethod
 import com.csi.palabakosys.model.EnumPrintState
-import com.csi.palabakosys.model.PrintItem
+import com.csi.palabakosys.model.PrinterItem
+//import com.csi.palabakosys.model.PrintItem
 //import com.csi.palabakosys.room.repository.DataStoreRepository
 import com.csi.palabakosys.room.repository.JobOrderRepository
 import com.csi.palabakosys.settings.PrinterSettingsRepository
@@ -23,16 +27,17 @@ class JobOrderPrintViewModel
 @Inject
 constructor(
     private val jobOrderRepository: JobOrderRepository,
-    private val shopPrefRepository: ShopPreferenceSettingsRepository,
+    shopPrefRepository: ShopPreferenceSettingsRepository,
     private val printerSettings: PrinterSettingsRepository
 ) : ViewModel() {
-    val showJoItemized = printerSettings.showJoItemized
-    val showJoPrices = printerSettings.showJoPrices
-    val showClaimStubItemized = printerSettings.showClaimStubItemized
-    val showClaimStubItemPrice = printerSettings.showClaimStubJoPrices
-    val showDisclaimer = printerSettings.showDisclaimer
+    private val showJoItemized = printerSettings.showJoItemized
+    private val showJoPrices = printerSettings.showJoPrices
+    private val showClaimStubItemized = printerSettings.showClaimStubItemized
+    private val showClaimStubItemPrice = printerSettings.showClaimStubJoPrices
+    private val showDisclaimer = printerSettings.showDisclaimer
     val characterLength = printerSettings.printerCharactersPerLine
 
+    val isBluetoothAvailable = MutableLiveData<Boolean>()
     val bluetoothEnabled = MutableLiveData(false)
     val printerName = printerSettings.printerName
 //    val printerSettings = dataStoreRepository.printerSettings
@@ -71,7 +76,7 @@ constructor(
     val address = shopPrefRepository.address
     val contactNumber = shopPrefRepository.contactNumber
     val email = shopPrefRepository.email
-    val disclaimer = printerSettings.jobOrderDisclaimer
+    private val disclaimer = printerSettings.jobOrderDisclaimer
 
 //    val joDetails = MediatorLiveData<List<PrintItem>>().apply {
 //        fun update() {
@@ -86,113 +91,161 @@ constructor(
 //        addSource(jobOrderWithItems) {update()}
 //    }
 
-    val items = MediatorLiveData<List<PrintItem>>().apply {
+    val contactInfo = MediatorLiveData<String?>().apply {
+        fun update() {
+            val email = email.value?.takeIf { it.isNotBlank() }
+            val contactNumber = contactNumber.value?.takeIf { it.isNotBlank() }
+
+            value = when {
+                (email != null && contactNumber != null) -> "$contactNumber / $email"
+                (email == null && contactNumber != null) -> contactNumber
+                (email != null) -> email
+                else -> ""
+            }.takeIf { it.isNotBlank() }
+        }
+        addSource(contactNumber) {update()}
+        addSource(email) {update()}
+    }
+
+
+    val items = MediatorLiveData<List<PrinterItem>>().apply {
+        val handler = Handler(Looper.getMainLooper())
         fun update() {
             val tab = _selectedTab.value
             val itemizedJo = showJoItemized.value
             val itemizedClaimStub = showClaimStubItemized.value
             val characters = characterLength.value ?: 32
-            val singleLine = PrintItem.singleLine(characters)
+            val singleLine = PrinterItem.SingleLine(characters)
             val jobOrder = jobOrderWithItems.value
 
-            val items = mutableListOf(
-                PrintItem("       DATE", jobOrder?.jobOrder?.createdAt?.toShort()),
-                PrintItem("        JO#", jobOrder?.jobOrder?.jobOrderNumber),
-                PrintItem("   CUSTOMER", jobOrder?.customer?.name),
-                PrintItem("PREPARED BY", jobOrder?.user?.name),
-            )
+            val items = mutableListOf<PrinterItem>()
 
-            if((itemizedJo == true && tab == TAB_JOB_ORDER) || (itemizedClaimStub == true && tab == TAB_CLAIM_STUB)) {
-                items.add(singleLine)
-                items.addAll(
-                    jobOrder?.services?.takeIf { it.isNotEmpty() }?.map {
-                        PrintItem(it.quantity, it.serviceName, it.price * it.quantity, characters)
-                    }?.let { listOf(PrintItem("SERVICES")) + it } ?: emptyList()
-                )
-                items.addAll(
-                    jobOrder?.products?.takeIf { it.isNotEmpty() } ?.map {
-                        PrintItem(it.quantity, it.productName, it.price * it.quantity, characters)
-                    }?.let { listOf(PrintItem("PRODUCTS")) + it } ?: emptyList()
-                )
-                items.addAll(
-                    jobOrder?.extras?.takeIf { it.isNotEmpty() }?.map {
-                        PrintItem(it.quantity, it.extrasName, it.price * it.quantity, characters)
-                    }?.let { listOf(PrintItem("EXTRAS")) + it } ?: emptyList()
-                )
-                items.addAll(
-                    jobOrder?.deliveryCharge?.let {
-                        listOf(
-                            PrintItem(it.deliveryOption.value, characterLength = characters),
-                            PrintItem(null, "(${it.distance}KM)${it.vehicle.value}", it.price, characters)
-                        )
-                    } ?: emptyList()
-                )
-            }
-            items.add(singleLine)
-
-            val subtotal = jobOrder?.subtotal() ?: 0.0f
-            val discountInPeso = jobOrder?.discountInPeso() ?: 0.0f
-
-            val discount = jobOrder?.discount?.let { discount ->
-                PrintItem(null, "${discount.name} discount", discountInPeso)
-            }
-            if(discount != null) {
-                items.add(PrintItem(null, "SUBTOTAL" , subtotal))
-                items.add(discount)
-            }
-
-            items.add(PrintItem(null, "TOTAL", subtotal - discountInPeso))
-            items.add(singleLine)
-
-            jobOrder?.paymentWithUser?.payment.let {
-                if(it != null && jobOrder != null) {
-                    items.add(PrintItem("  DATE PAID", it.createdAt.toShort()))
-                    items.add(PrintItem("PMT. METHOD", it.method()))
-                    if (it.paymentMethod == EnumPaymentMethod.CASHLESS) {
-                        items.add(PrintItem("       REF#", it.entityCashless?.refNumber))
+            if(tab == TAB_MACHINE_STUB) {
+                jobOrder?.services?.forEach { service ->
+                    for(i in 1..service.quantity) {
+                        items.add(PrinterItem.TextCenter("DATE: ${jobOrder.jobOrder.createdAt.toShort()}"))
+                        items.add(PrinterItem.HeaderDoubleCenter("JO#: ${jobOrder.jobOrder.jobOrderNumber}"))
+                        items.add(PrinterItem.TextCenterTall(jobOrder.customer?.name))
+                        if(i <= service.quantity) {
+                            items.add(PrinterItem.Cutter(characters))
+                        }
                     }
-
-                    it.orNumber?.takeIf { it.isNotBlank() }?.let {
-                        items.add(PrintItem("  OR NUMBER", it))
-                    }
-
-                    items.add(PrintItem("RECEIVED BY", jobOrder.paymentWithUser?.user?.name))
-                } else {
-                    items.add(PrintItem("UNPAID"))
                 }
-                items.add(singleLine)
+            } else {
+                val showPrice = showJoPrices.value == true && tab == TAB_JOB_ORDER || showClaimStubItemPrice.value == true && tab == TAB_CLAIM_STUB
+
+                shopName.value?.takeIf { it.isNotBlank() }?.let {
+                    items.add(PrinterItem.HeaderDoubleCenter(it))
+                }
+
+                address.value?.takeIf { it.isNotBlank() }?.let {
+                    items.add(PrinterItem.TextCenter(it))
+                }
+
+                contactInfo.value?.takeIf { it.isNotBlank() }?.let {
+                    items.add(PrinterItem.TextCenter(it))
+                }
+
+                items.apply {
+                    add(singleLine)
+                    add(PrinterItem.TextCenterTall("*** $tab ***"))
+                    add(PrinterItem.SingleLine(characters))
+                    add(PrinterItem.DefinitionTerm(
+                        characters,
+                        "DATE",
+                        jobOrder?.jobOrder?.createdAt?.toShort())
+                    )
+                    add(PrinterItem.DefinitionTerm(characters, "JO#", jobOrder?.jobOrder?.jobOrderNumber))
+                    add(PrinterItem.DefinitionTerm(characters, "CUSTOMER", jobOrder?.customer?.name))
+                    add(PrinterItem.DefinitionTerm(characters, "PREPARED BY", jobOrder?.user?.name))
+                    add(singleLine)
+                }
+
+                if((itemizedJo == true && tab == TAB_JOB_ORDER) || (itemizedClaimStub == true && tab == TAB_CLAIM_STUB)) {
+                    items.addAll(
+                        jobOrder?.services?.takeIf { it.isNotEmpty() }?.map {
+                            PrinterItem.ListItem(characters, showPrice, it.quantity.toFloat(), it.serviceName, it.price * it.quantity)
+                        }?.let { listOf(PrinterItem.Header("SERVICES")) + it } ?: emptyList()
+                    )
+                    items.addAll(
+                        jobOrder?.products?.takeIf { it.isNotEmpty() } ?.map {
+                            PrinterItem.ListItem(characters, showPrice, it.quantity.toFloat(), it.productName, it.price * it.quantity)
+                        }?.let { listOf(PrinterItem.Header("PRODUCTS")) + it } ?: emptyList()
+                    )
+                    items.addAll(
+                        jobOrder?.extras?.takeIf { it.isNotEmpty() }?.map {
+                            PrinterItem.ListItem(characters, showPrice, it.quantity.toFloat(), it.extrasName, it.price * it.quantity)
+                        }?.let { listOf(PrinterItem.Header("EXTRAS")) + it } ?: emptyList()
+                    )
+                    items.addAll(
+                        jobOrder?.deliveryCharge?.let {
+                            listOf(
+                                PrinterItem.Header(it.deliveryOption.value),
+                                PrinterItem.ListItem(characters, showPrice, it.distance, "KM${it.vehicle.value}", it.price)
+                            )
+                        } ?: emptyList()
+                    )
+                    items.add(singleLine)
+                }
+
+                val subtotal = jobOrder?.subtotal() ?: 0.0f
+                val discountInPeso = jobOrder?.discountInPeso() ?: 0.0f
+
+                val discount = jobOrder?.discount?.let { discount ->
+                    PrinterItem.ListItem(characters, true, 0f, "${discount.name} discount", discountInPeso)
+                }
+
+                if(discount != null) {
+                    items.add(PrinterItem.ListItem(characters, true,0f, "SUBTOTAL" , subtotal))
+                    items.add(discount)
+                }
+
+                items.add(PrinterItem.ListItemBold(characters, true, 0f, "TOTAL", subtotal - discountInPeso))
+
+                jobOrder?.paymentWithUser?.payment.let {
+                    items.add(singleLine)
+                    if(it != null && jobOrder != null) {
+                        items.add(PrinterItem.DefinitionTerm(characters,"DATE PAID", it.createdAt.toShort()))
+                        items.add(PrinterItem.DefinitionTerm(characters,"PMT. METHOD", it.method()))
+                        if (it.paymentMethod == EnumPaymentMethod.CASHLESS) {
+                            items.add(PrinterItem.DefinitionTerm(characters,"REF#", it.entityCashless?.refNumber))
+                        }
+
+                        it.orNumber?.takeIf { it.isNotBlank() }?.let {
+                            items.add(PrinterItem.DefinitionTerm(characters,"OR NUMBER", it))
+                        }
+
+                        items.add(PrinterItem.DefinitionTerm(characters,"RECEIVED BY", jobOrder.paymentWithUser?.user?.name))
+                    } else {
+                        items.add(PrinterItem.TextCenterTall("~ UNPAID ~"))
+                    }
+                }
+
+                if(showDisclaimer.value == true) {
+                    items.add(singleLine)
+                    items.add(
+                        PrinterItem.TextCenter(disclaimer.value)
+                    )
+                }
             }
 
-
-
-//            val services = jobOrder?.services?.takeIf { it.isNotEmpty() }?.map {
-//                PrintItem(it.quantity, it.serviceName, it.price * it.quantity, characters)
-//            }?.let { listOf(PrintItem("SERVICES")) + it } ?: emptyList()
-
-//            val products = jobOrder?.products?.takeIf { it.isNotEmpty() } ?.map {
-//                PrintItem(it.quantity, it.productName, it.price * it.quantity, characters)
-//            }?.let { listOf(PrintItem("PRODUCTS")) + it } ?: emptyList()
-
-//            val extras = jobOrder?.extras?.takeIf { it.isNotEmpty() }?.map {
-//                PrintItem(it.quantity, it.extrasName, it.price * it.quantity, characters)
-//            }?.let { listOf(PrintItem("EXTRAS")) + it } ?: emptyList()
-
-//            val delivery = jobOrder?.deliveryCharge?.let {
-//                listOf(
-//                    PrintItem(it.deliveryOption.value, characterLength = characters),
-//                    PrintItem(null, "(${it.distance}KM)${it.vehicle.value}", it.price, characters)
-//                )
-//            } ?: emptyList()
-
-            value = items // details + services + products + extras + delivery
+            handler.removeCallbacksAndMessages(null)
+            handler.postDelayed({
+                value = items // details + services + products + extras + delivery
+            }, 500)
         }
 
+        addSource(shopName) {update()}
+        addSource(address) {update()}
+        addSource(contactInfo) {update()}
         addSource(jobOrderWithItems) {update()}
         addSource(_selectedTab) {update()}
         addSource(showJoItemized) {update()}
         addSource(showJoPrices) {update()}
         addSource(showClaimStubItemized) {update()}
         addSource(showClaimStubItemPrice) {update()}
+        addSource(showDisclaimer) {update()}
+        addSource(disclaimer) {update()}
     }
 
 //    val summary = MediatorLiveData<List<PrintItem>>().apply {
@@ -327,16 +380,6 @@ constructor(
 //        addSource(unpaid) {update()}
 //    }
 
-    val contactInfo = MediatorLiveData<String>().apply {
-        fun update() {
-            val email = email.value
-            val contactNumber = contactNumber.value
-
-            value = "$contactNumber / $email"
-        }
-        addSource(contactNumber) {update()}
-        addSource(email) {update()}
-    }
 
 //    val deliveryOption = MediatorLiveData<String>().apply {
 //        fun update() {
@@ -421,7 +464,7 @@ constructor(
         _jobOrderId.value = id
     }
 
-    fun print(tab: String) {
+    fun print() {
         if(_printState.value == EnumPrintState.STARTED) {
             _dataState.value = DataState.Cancel
             return
@@ -429,9 +472,9 @@ constructor(
 
         val characterLength = characterLength.value ?: 32
 
-        val singleLine = PrintItem.singleLine(characterLength)
+        val singleLine = PrinterItem.SingleLine(characterLength)
 
-        val header = "[C]<font size='tall'><b>*** $tab ***</b></font>\n"
+        val header = "[C]<font size='tall'><b>*** ${_selectedTab.value} ***</b></font>\n"
 
         val shopName = shopName.value.let { "[C]<font size='big'><b>$it</b></font>\n" }
         val address = address.value?.let { "[C]<font size='small'>$it</font>\n" } ?: ""
@@ -450,7 +493,7 @@ constructor(
 //        }
 
         val items = items.value.let {
-            it?.joinToString ("") { it.formattedString() }
+            it?.joinToString ("\n") { it.formattedString() }
         }
 
 //        val summary = summary.value.let {
@@ -461,13 +504,13 @@ constructor(
 //            it.joinToString("") { it.formattedString() }
 //        } ?: ""
 
-        val disclaimer =  PrintItem(disclaimer.value).formattedString()
+        val disclaimer =  PrinterItem.Header(disclaimer.value).formattedString()
 
-        val formattedText = "$shopName$address$contactInfo" +
+        val formattedText = items?:"" //"$shopName$address$contactInfo" +
 //                header +
 //                joDetails +
 //                singleLine +
-                items// +
+//                items// +
 //                singleLine +
 //                summary +
 //                singleLine +
@@ -496,6 +539,10 @@ constructor(
 
     fun setPrintState(printState: EnumPrintState) {
         _printState.value = printState
+    }
+
+    fun setBluetoothAvailability(available: Boolean) {
+        isBluetoothAvailable.value = available
     }
 
     sealed class DataState {
