@@ -1,32 +1,25 @@
 package com.csi.palabakosys.app.gallery.picture_browser
 
 import android.Manifest
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.icu.text.SimpleDateFormat
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.camera.core.*
-import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.LifecycleCameraController
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.work.await
 import com.bumptech.glide.Glide
 import com.csi.palabakosys.R
 import com.csi.palabakosys.databinding.ActivityPictureCaptureBinding
 import com.csi.palabakosys.util.Constants.Companion.PICTURES_DIR
-import com.csi.palabakosys.util.DataState
 import com.csi.palabakosys.util.showDeleteConfirmationDialog
-import com.csi.palabakosys.util.showSnackBar
+import com.csi.palabakosys.util.showDialog
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.util.*
@@ -145,7 +138,7 @@ class PictureCaptureActivity : AppCompatActivity() {
             if(it.key in REQUIRED_PERMISSIONS && !it.value) permissionGranted = true
         }
         if(!permissionGranted) {
-            binding.root.showSnackBar("Camera permission denied")
+            showDialog("Camera permission denied")
         } else {
             startCameraController()
 //            lifecycleScope.launch {

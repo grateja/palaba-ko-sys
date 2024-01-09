@@ -8,10 +8,10 @@ import com.csi.palabakosys.room.entities.EntityUser
 class UsersSeeder(private val daoUser: DaoUser) : EntitySeederImpl<EntityUser>(daoUser) {
     override fun items(): List<EntityUser> {
         return listOf(
-            EntityUser(Role.DEVELOPER, "Developer", "developer@dev.com", "123",
-                listOf(EnumActionPermission.ALL), "",
-                arrayListOf(4)
-            ),
+//            EntityUser(Role.DEVELOPER, "Developer", "developer@dev.com", "123",
+//                listOf(EnumActionPermission.ALL), "",
+//                arrayListOf(4)
+//            ),
             EntityUser(Role.ADMIN, "Admin", "admin@dev.com", "123",
                 listOf(
                     EnumActionPermission.ALL,

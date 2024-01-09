@@ -22,12 +22,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
 import com.csi.palabakosys.R
+import com.csi.palabakosys.databinding.AlertDialogBinding
 import com.csi.palabakosys.databinding.AlertDialogTextInputBinding
 import com.csi.palabakosys.model.EnumDiscountType
 import com.csi.palabakosys.model.EnumPaymentMethod
 import com.csi.palabakosys.model.EnumProductType
 import com.csi.palabakosys.model.EnumWashType
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import java.text.NumberFormat
@@ -37,7 +37,6 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
-import kotlin.reflect.typeOf
 
 @BindingAdapter("app:errorText")
 fun setErrorText(view: TextInputLayout, errorMessage: String) {
@@ -335,16 +334,35 @@ inline fun <reified T> Context.showTextInputDialog(
 }
 
 
-fun View.showSnackBar(message: String, duration: Int = Snackbar.LENGTH_SHORT, actionText: String? = null, actionCallback: (() -> Unit)? = null) {
-    val snackBar = Snackbar.make(this, message, duration)
+//fun View.showDialog(message: String, duration: Int = Snackbar.LENGTH_SHORT, actionText: String? = null, actionCallback: (() -> Unit)? = null) {
+//    val snackBar = Snackbar.make(this, message, duration)
+//
+//    actionText?.let {
+//        snackBar.setAction(actionText) {
+//            actionCallback?.invoke()
+//        }
+//    }
+//
+//    snackBar.show()
+//}
 
-    actionText?.let {
-        snackBar.setAction(actionText) {
-            actionCallback?.invoke()
+fun Context.showDialog(title: String, message: String? = null, callback: (() -> Unit)? = null) {
+    val binding: AlertDialogBinding = DataBindingUtil.inflate(
+        LayoutInflater.from(this),
+        R.layout.alert_dialog,
+        null,
+        false
+    )
+    binding.textMessage.text = message
+
+    AlertDialog.Builder(this).apply {
+        setTitle(title)
+        setView(binding.root)
+        setPositiveButton("Ok") { _, _ ->
+            callback?.invoke()
         }
-    }
-
-    snackBar.show()
+        create()
+    }.show()
 }
 
 fun Context.loadThumbnailOrBitmap(uri: Uri, dimension: Int): Bitmap? {

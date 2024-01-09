@@ -88,7 +88,7 @@ constructor(
         _dataState.value = DataState.StateLess
     }
 
-    private val jobOrderId = MutableLiveData<UUID>()
+    val jobOrderId = MutableLiveData<UUID>()
     val createdAt = MutableLiveData<Instant>()
     val jobOrderNumber = MutableLiveData("")
     val currentCustomer = _customerId.switchMap { customerRepository.getCustomerAsLiveData(it) } //MutableLiveData<CustomerMinimal>()
@@ -519,6 +519,11 @@ constructor(
             val found = this.find { it.serviceRefId == id }
 
             if(found != null) {
+                if(found.used > 0) {
+                    _dataState.value = DataState.InvalidOperation("Cannot remove used service")
+                    return@apply
+                }
+
                 if(found.joServiceItemId != null) {
                     found.deletedAt = Instant.now()
                     jobOrderServices.value = this
@@ -735,7 +740,7 @@ constructor(
             val discountInPeso = discountInPeso.value ?: 0f
             val discountedAmount = subtotal - discountInPeso
             val createdAt = createdAt.value!!
-            val jobOrderId = jobOrderId.value!!
+            val jobOrderId = jobOrderId.value ?: UUID.randomUUID()
             val paymentId = payment.value?.payment?.id
 
             val jobOrderServices = jobOrderServices.value

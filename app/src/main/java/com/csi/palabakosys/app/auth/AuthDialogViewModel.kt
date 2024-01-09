@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.csi.palabakosys.app.app_settings.user.AuthRepository
 import com.csi.palabakosys.model.EnumActionPermission
 import com.csi.palabakosys.model.EnumAuthMethod
+import com.csi.palabakosys.model.Role
 import com.csi.palabakosys.model.Rule
 import com.csi.palabakosys.room.repository.UserRepository
 import com.csi.palabakosys.util.DataState
@@ -39,6 +40,9 @@ constructor(
 
     private val _permissions = MutableLiveData<List<EnumActionPermission>>()
     val permissions: LiveData<List<EnumActionPermission>> = _permissions
+
+    private val _roles = MutableLiveData<List<Role>>()
+    val roles: LiveData<List<Role>> = _roles
 
     val emails = userRepository.getAllEmails()
 
@@ -75,6 +79,7 @@ constructor(
             InputValidation().apply {
                 val password = password.value
                 val email = userName.value
+                val roles = _roles.value
 
                 this.addRule("userName", email, arrayOf(Rule.Required, Rule.IsEmail))
                 if(method is AuthMethod.AuthByPassword) {
@@ -96,7 +101,9 @@ constructor(
                     user.let {
                         if(it != null) {
                             val deniedPermissions = checkPermissions(it.permissions)
-                            if(deniedPermissions.isNotEmpty()) {
+                            val hasRole = roles?.contains(it.role)
+
+                            if(deniedPermissions.isNotEmpty() || (hasRole != null && hasRole == false)) {
                                 _dataState.value = DataState.Invalidate("You do not have the necessary permissions to perform this action.")
                             } else {
                                 _dataState.value = DataState.SaveSuccess(
@@ -112,6 +119,10 @@ constructor(
                 _inputValidation.value = this
             }
         }
+    }
+
+    fun setRoles(roles: ArrayList<Role>) {
+        _roles.value = roles
     }
 
     sealed class AuthMethod {

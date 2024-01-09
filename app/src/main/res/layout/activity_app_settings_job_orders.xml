@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <include layout="@layout/incl_shop_preference_params"
+            <include layout="@layout/incl_settings_params"
                 android:id="@+id/card_max_unpaid_jo"
                 app:label="@{`Maximum number of unpaid job order per customer`}"
                 app:value="@{viewModel.jobOrderMaxUnpaid.toString()}"/>

@@ -9,14 +9,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.csi.palabakosys.R
 import com.csi.palabakosys.adapters.Adapter
 import com.csi.palabakosys.app.EndingActivity
-import com.csi.palabakosys.app.app_settings.developer.DeveloperSettingsActivity
+import com.csi.palabakosys.app.app_settings.developer.NetworkSettingsActivity
 import com.csi.palabakosys.app.customers.list.CustomersActivity
 import com.csi.palabakosys.app.discounts.DiscountsActivity
 import com.csi.palabakosys.app.expenses.ExpensesActivity
 import com.csi.palabakosys.app.extras.ExtrasActivity
 import com.csi.palabakosys.app.joborders.list.JobOrderListActivity
 import com.csi.palabakosys.app.packages.PackagesActivity
-import com.csi.palabakosys.app.app_settings.ip.SettingsIPAddressActivity
 import com.csi.palabakosys.app.app_settings.job_orders.AppSettingsJobOrdersActivity
 import com.csi.palabakosys.app.app_settings.printer.SettingsPrinterActivity
 import com.csi.palabakosys.app.app_settings.user.AppSettingsUserAccountsActivity
@@ -31,14 +30,11 @@ import com.csi.palabakosys.app.services.ServicesActivity
 import com.csi.palabakosys.app.shop_preferences.ShopPreferencesActivity
 import com.csi.palabakosys.databinding.ActivityMainBinding
 import com.csi.palabakosys.model.EnumActionPermission
-import com.csi.palabakosys.model.PrinterItem
 import com.csi.palabakosys.util.ActivityLauncher
 import com.csi.palabakosys.util.calculateSpanCount
-import com.csi.palabakosys.util.toShort
 import com.csi.palabakosys.viewmodels.MainViewModel
 //import com.csi.palabakosys.worker.RemoteWorker
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.Instant
 
 @AndroidEntryPoint
 class MainActivity : EndingActivity() {
@@ -101,7 +97,7 @@ class MainActivity : EndingActivity() {
                 null,
                 R.drawable.icon_shop_preferences,
                 null,
-                arrayListOf(
+                menuItems = arrayListOf(
                     MenuItem(
                         "Shop information",
                         "Give some description for your shop.",
@@ -143,16 +139,6 @@ class MainActivity : EndingActivity() {
                         DiscountsActivity::class.java,
                         permissions = listOf(EnumActionPermission.MODIFY_DISCOUNTS)
                     ),
-                ),
-                backgroundColor = resources.getColor(R.color.color_code_shop_preferences, null)
-            ),
-            MenuItem(
-                "App Settings",
-                "Configure application settings.",
-                null,
-                R.drawable.icon_app_settings,
-                null,
-                arrayListOf(
                     MenuItem(
                         "Job Orders",
                         "Customize job order settings.",
@@ -163,13 +149,6 @@ class MainActivity : EndingActivity() {
                         "Printer",
                         "Configure printer settings.",
                         SettingsPrinterActivity::class.java,
-//                        permissions = listOf(EnumActionPermission.MODIFY_SETTINGS_PRINTERS),
-                        menuItems = listOf(
-                            MenuItem("Printer Profile", "Configure printer device settings", SettingsPrinterActivity::class.java),
-                            MenuItem("Job Orders", "Configure Job Order format", null),
-                            MenuItem("Claim Stub", "Configure Claim stub format", null),
-                            MenuItem("Machine Activation Stub", "Configure Machine activation stub format", null),
-                        )
                     ),
                     MenuItem(
                         "User Accounts",
@@ -179,19 +158,42 @@ class MainActivity : EndingActivity() {
                     ),
                     MenuItem(
                         "Network",
-                        "Configure network and IP address settings.",
-                        SettingsIPAddressActivity::class.java,
-                        permissions = listOf(EnumActionPermission.MODIFY_SETTINGS_IPADDRESS)
-                    ),
-                    MenuItem(
-                        "Developer",
                         "Technical properties and settings of the shop. Do not modify unless adviced.",
-                        DeveloperSettingsActivity::class.java,
-                        permissions = listOf(EnumActionPermission.MODIFY_SETTINGS_IPADDRESS)
+                        NetworkSettingsActivity::class.java,
+                        permissions = listOf(EnumActionPermission.MODIFY_SETTINGS_IPADDRESS),
                     ),
                 ),
-                backgroundColor = resources.getColor(R.color.color_code_app_settings, null)
+                backgroundColor = resources.getColor(R.color.color_code_shop_preferences, null)
             ),
+//            MenuItem(
+//                "App Settings",
+//                "Configure application settings.",
+//                null,
+//                R.drawable.icon_app_settings,
+//                null,
+//                menuItems = arrayListOf(
+//                    MenuItem(
+//                        "User Accounts",
+//                        "Manage user accounts.",
+//                        AppSettingsUserAccountsActivity::class.java,
+//                        permissions = listOf(EnumActionPermission.MODIFY_USERS)
+//                    ),
+////                    MenuItem(
+////                        "Network",
+////                        "Configure network and IP address settings.",
+////                        SettingsIPAddressActivity::class.java,
+////                        permissions = listOf(EnumActionPermission.MODIFY_SETTINGS_IPADDRESS)
+////                    ),
+//                    MenuItem(
+//                        "Developer",
+//                        "Technical properties and settings of the shop. Do not modify unless adviced.",
+//                        NetworkSettingsActivity::class.java,
+//                        permissions = listOf(EnumActionPermission.MODIFY_SETTINGS_IPADDRESS),
+////                        roles = listOf(Role.DEVELOPER)
+//                    ),
+//                ),
+//                backgroundColor = resources.getColor(R.color.color_code_app_settings, null)
+//            ),
         )
     }
 
@@ -235,6 +237,8 @@ class MainActivity : EndingActivity() {
             }
         }
         adapter.onItemClick = {
+            println("menu item")
+            println(it)
             mainViewModel.openMenu(it)
         }
     }
@@ -245,6 +249,9 @@ class MainActivity : EndingActivity() {
             menuItem.permissions?.let {
                 putParcelableArrayListExtra(AuthActionDialogActivity.PERMISSIONS_EXTRA, ArrayList(it))
             }
+//            menuItem.roles?.let {
+//                putParcelableArrayListExtra(AuthActionDialogActivity.ROLES_EXTRA, ArrayList(it))
+//            }
         }
         authLauncher.launch(intent)
     }

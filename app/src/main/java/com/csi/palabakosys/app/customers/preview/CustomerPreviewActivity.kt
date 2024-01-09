@@ -3,8 +3,6 @@ package com.csi.palabakosys.app.customers.preview
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil

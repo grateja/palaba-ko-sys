@@ -103,6 +103,14 @@
         <item name="android:layout_marginStart">12dp</item>
         <item name="android:textFontWeight">900</item>
     </style>
+    <style name="Settings.ItemTerm" parent="TextItemTitle">
+        <item name="android:layout_marginHorizontal">18dp</item>
+    </style>
+    <style name="Settings.Card">
+        <item name="cardCornerRadius">20dp</item>
+        <item name="android:layout_margin">8dp</item>
+        <item name="background">@color/white</item>
+    </style>
 
 <!--    Not real beyond this line-->
 

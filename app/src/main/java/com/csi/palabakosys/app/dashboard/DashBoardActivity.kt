@@ -3,15 +3,9 @@ package com.csi.palabakosys.app.dashboard
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.os.Parcelable
-import android.view.View
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.viewpager2.widget.ViewPager2
-import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.csi.palabakosys.R
 import com.csi.palabakosys.adapters.Adapter
 import com.csi.palabakosys.app.customers.list.CustomersActivity
@@ -20,19 +14,14 @@ import com.csi.palabakosys.app.expenses.ExpensesActivity
 import com.csi.palabakosys.app.joborders.list.JobOrderListActivity
 import com.csi.palabakosys.app.machines.usage.MachineUsageActivity
 import com.csi.palabakosys.app.payment_list.PaymentListActivity
-import com.csi.palabakosys.app.shared_ui.BottomSheetDateRangePickerFragment
 import com.csi.palabakosys.databinding.ActivityDashboardBinding
 import com.csi.palabakosys.model.EnumJoFilterBy
 import com.csi.palabakosys.model.JobOrderAdvancedFilter
 import com.csi.palabakosys.room.entities.*
 import com.csi.palabakosys.util.Constants
-import com.csi.palabakosys.util.DatePicker
-import com.csi.palabakosys.util.showSnackBar
-import com.google.android.material.appbar.AppBarLayout
+import com.csi.palabakosys.util.showDialog
 import com.sangcomz.fishbun.util.setStatusBarColor
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.LocalDate
-import kotlin.math.abs
 
 @AndroidEntryPoint
 class DashBoardActivity : AppCompatActivity() {
@@ -150,7 +139,7 @@ class DashBoardActivity : AppCompatActivity() {
                     viewModel.resetState()
                 }
                 is DashboardViewModel.NavigationState.Invalidate -> {
-                    binding.root.showSnackBar(it.message)
+                    showDialog(it.message)
                     viewModel.resetState()
                 }
             }

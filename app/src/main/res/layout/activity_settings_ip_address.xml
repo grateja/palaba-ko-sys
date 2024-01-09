@@ -15,22 +15,22 @@
         android:orientation="vertical">
         <include
             android:id="@+id/card_prefix"
-            layout="@layout/incl_shop_preference_params"
+            layout="@layout/incl_settings_params"
             app:label="@{`Network Prefix`}"
             app:value="@{viewModel.prefix}"/>
         <include
             android:id="@+id/card_subnet"
-            layout="@layout/incl_shop_preference_params"
+            layout="@layout/incl_settings_params"
             app:label="@{`Subnet Mask`}"
             app:value="@{viewModel.subnet}"/>
         <include
             android:id="@+id/card_endpoint"
-            layout="@layout/incl_shop_preference_params"
+            layout="@layout/incl_settings_params"
             app:label="@{`Endpoint`}"
             app:value="@{viewModel.endpoint}"/>
         <include
             android:id="@+id/card_timeout"
-            layout="@layout/incl_shop_preference_params"
+            layout="@layout/incl_settings_params"
             app:label="@{`Connection Timeout`}"
             app:value="@{viewModel.timeout.toString()}"/>
 

@@ -77,6 +77,9 @@ class SubMenuActivity : AppCompatActivity() {
             menuItem.permissions?.let {
                 putParcelableArrayListExtra(AuthActionDialogActivity.PERMISSIONS_EXTRA, ArrayList(it))
             }
+//            menuItem.roles?.let {
+//                putParcelableArrayListExtra(AuthActionDialogActivity.ROLES_EXTRA, ArrayList(it))
+//            }
         }
         authLauncher.launch(intent)
     }

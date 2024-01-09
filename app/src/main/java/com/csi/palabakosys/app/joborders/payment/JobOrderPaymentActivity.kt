@@ -4,7 +4,6 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -132,16 +131,16 @@ class JobOrderPaymentActivity : AppCompatActivity() {
                     viewModel.resetState()
                 }
                 is JobOrderPaymentViewModel.DataState.PaymentSuccess -> {
-                    viewModel.resetState()
                     setResult(RESULT_OK, Intent().apply {
                         action = intent.action
                         putExtra(PAYMENT_ID, it.payment.id.toString())
                         putExtra(SELECTED_JOB_ORDER_IDS, it.jobOrderIds)
                     })
+                    viewModel.resetState()
                     finish()
                 }
                 is JobOrderPaymentViewModel.DataState.InvalidOperation -> {
-                    binding.root.showSnackBar(it.message)
+                    showDialog(it.message)
 //                    Toast.makeText(applicationContext, it.message, Toast.LENGTH_LONG).show()
                     viewModel.resetState()
                 }

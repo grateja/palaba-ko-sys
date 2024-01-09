@@ -17,18 +17,34 @@ constructor(
     val fakeConnectionMode = repository.fakeConnectionMode
     val fakeConnectionDelay = repository.fakeConnectionDelay
 
-//    fun updateFakeConnectionMode() {
-//        val fakeModeOn = fakeConnectionMode.value ?: false
-//        appPreferenceRepository.setFakeConnectionMode(fakeModeOn)
-//    }
+    val prefix = repository.prefix
+    val subnet = repository.subnet
+    val endpoint = repository.endpoint
+    val timeout = repository.timeout
 
-//    fun updateFakeConnectionDelay(msDelay: Long) {
-//        appPreferenceRepository.setFakeConnectionDelay(msDelay)
-//    }
+    fun showEditPrefix() {
+        (prefix.value ?: "").let {
+            navigationState.value = SettingsNavigationState.OpenStringSettings(it, DeveloperSettingsRepository.MACHINE_IP_PREFIX, "IP Address Prefix", null)
+        }
+    }
 
-//    fun clearState() {
-//        _navigationState.value = SettingsNavigationState.StateLess
-//    }
+    fun showEditSubnetMask() {
+        (subnet.value ?: "").let {
+            navigationState.value = SettingsNavigationState.OpenStringSettings(it, DeveloperSettingsRepository.MACHINE_IP_SUBNET_MASK, "IP Address Subnet Mask", null)
+        }
+    }
+
+    fun showEditEndpoint() {
+        (endpoint.value ?: "").let {
+            navigationState.value = SettingsNavigationState.OpenStringSettings(it, DeveloperSettingsRepository.MACHINE_ACTIVATION_ENDPOINT, "Machine activation end point", null)
+        }
+    }
+
+    fun showEditTimeout() {
+        (timeout.value ?: 15L).let {
+            navigationState.value = SettingsNavigationState.OpenLongSettings(it, DeveloperSettingsRepository.MACHINE_ACTIVATION_TIMEOUT, "Machine activation timeout", null)
+        }
+    }
 
     fun openConnectionDelayDialog() {
         val msDelay = fakeConnectionDelay.value ?: 1000
@@ -37,9 +53,4 @@ constructor(
             DeveloperSettingsRepository.DEVELOPER_ACTIVATION_DELAY,
             "Activation Delay", "Delay intervals in milliseconds")
     }
-//
-//    sealed class NavigationState {
-//        object StateLess : NavigationState()
-//        data class OpenConnectionDelay(val msDelay: Long): NavigationState()
-//    }
 }

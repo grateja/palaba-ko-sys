@@ -4,24 +4,18 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
-import android.widget.PopupWindow
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.RecyclerView
 import com.csi.palabakosys.R
 import com.csi.palabakosys.adapters.Adapter
 import com.csi.palabakosys.databinding.ActivityAuthActionDialogBinding
 import com.csi.palabakosys.model.EnumActionPermission
 import com.csi.palabakosys.model.EnumAuthMethod
+import com.csi.palabakosys.model.Role
 import com.csi.palabakosys.util.DataState
-import com.csi.palabakosys.util.showSnackBar
-import com.google.android.material.textfield.MaterialAutoCompleteTextView
+import com.csi.palabakosys.util.showDialog
 import com.itsxtt.patternlock.PatternLockView
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.ArrayList
@@ -33,6 +27,7 @@ class AuthActionDialogActivity : AppCompatActivity() {
 
         const val MESSAGE = "message"
         const val PERMISSIONS_EXTRA = "permissions"
+        const val ROLES_EXTRA = "roles"
 
         @SuppressLint("Returns Login Credentials if Authentication succeeded")
         const val RESULT = "LoginCredential"
@@ -57,7 +52,14 @@ class AuthActionDialogActivity : AppCompatActivity() {
         super.onResume()
 
         intent.getParcelableArrayListExtra<EnumActionPermission>(PERMISSIONS_EXTRA)?.let {
+            println("permissions")
+            println(it)
             viewModel.setPermissions(it)
+        }
+        intent.getParcelableArrayListExtra<Role>(ROLES_EXTRA)?.let {
+            println("roles")
+            println(it)
+            viewModel.setRoles(it)
         }
     }
 
@@ -116,7 +118,7 @@ class AuthActionDialogActivity : AppCompatActivity() {
                     finish()
                 }
                 is DataState.Invalidate -> {
-                    binding.root.showSnackBar(it.message)
+                    showDialog(it.message)
                 }
             }
         })

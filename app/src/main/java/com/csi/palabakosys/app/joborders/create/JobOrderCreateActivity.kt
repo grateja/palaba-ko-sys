@@ -14,6 +14,7 @@ import com.csi.palabakosys.app.auth.AuthActionDialogActivity
 import com.csi.palabakosys.app.auth.LoginCredentials
 import com.csi.palabakosys.app.customers.create.AddEditCustomerFragment
 import com.csi.palabakosys.app.joborders.cancel.JobOrderCancelActivity
+import com.csi.palabakosys.app.joborders.create.customer.SelectCustomerActivity
 import com.csi.palabakosys.app.joborders.create.delivery.DeliveryCharge
 import com.csi.palabakosys.app.joborders.create.delivery.JOSelectDeliveryActivity
 import com.csi.palabakosys.app.joborders.create.discount.JOSelectDiscountActivity
@@ -33,7 +34,6 @@ import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentActivity
 import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentMinimal
 import com.csi.palabakosys.app.joborders.payment.preview.PaymentPreviewActivity
 import com.csi.palabakosys.app.joborders.print.JobOrderPrintActivity
-import com.csi.palabakosys.app.joborders.print.JobOrderPrintFragment
 import com.csi.palabakosys.databinding.ActivityJobOrderCreateBinding
 import com.csi.palabakosys.util.*
 import com.csi.palabakosys.util.Constants.Companion.ID
@@ -52,6 +52,7 @@ class JobOrderCreateActivity : BaseActivity() {
         const val PAYLOAD_EXTRA = "payload"
         const val ITEM_PRESET_EXTRA = "itemPreset"
 
+        const val ACTION_SELECT_CUSTOMER = "selectCustomer"
         const val ACTION_MODIFY_DATETIME = "modifyDateTime"
         const val ACTION_REQUEST_UNLOCK = "requestUnlock"
         const val ACTION_SYNC_PACKAGE = "package"
@@ -367,12 +368,12 @@ class JobOrderCreateActivity : BaseActivity() {
                     viewModel.resetState()
                 }
                 is CreateJobOrderViewModel.DataState.InvalidOperation -> {
-                    binding.root.showSnackBar(it.message)
+                    showDialog(it.message)
 //                    Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
                     viewModel.resetState()
                 }
                 is CreateJobOrderViewModel.DataState.SaveSuccess -> {
-                    binding.root.showSnackBar("Job Order saved successfully!")
+                    showDialog("Job Order saved successfully!")
 //                    Toast.makeText(this, "Job Order saved successfully!", Toast.LENGTH_LONG).show()
 //                    previewJobOrder(it.jobOrderId, it.customerId)
                     viewModel.resetState()

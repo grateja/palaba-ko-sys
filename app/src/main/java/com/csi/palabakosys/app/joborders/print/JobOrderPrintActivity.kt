@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.res.Resources
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.os.Bundle
@@ -16,19 +15,16 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.csi.palabakosys.R
-import com.csi.palabakosys.adapters.Adapter
 import com.csi.palabakosys.app.app_settings.printer.SettingsPrinterActivity
 import com.csi.palabakosys.app.app_settings.printer.SettingsPrinterActivity.Companion.PRINTER_DEVICE_EXTRA
 import com.csi.palabakosys.app.app_settings.printer.browser.PrinterDevice
 import com.csi.palabakosys.databinding.ActivityJobOrderPrintBinding
 import com.csi.palabakosys.model.EnumPrintState
-import com.csi.palabakosys.model.PrinterItem
 //import com.csi.palabakosys.model.PrintItem
 import com.csi.palabakosys.services.PrinterService
 import com.csi.palabakosys.util.*
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import java.lang.Float.min
 
 @AndroidEntryPoint
 class JobOrderPrintActivity : AppCompatActivity() {
@@ -207,6 +203,6 @@ class JobOrderPrintActivity : AppCompatActivity() {
     }
 
     private fun showErrorMessage(errorMessage: String) {
-        binding.root.showSnackBar(errorMessage, Snackbar.LENGTH_SHORT)
+        showDialog(errorMessage)
     }
 }

@@ -1,9 +1,13 @@
 package com.csi.palabakosys.model
 
-enum class Role(val value: String) {
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+enum class Role(val value: String) : Parcelable {
     STAFF("staff"),
-    ADMIN("admin"),
-    DEVELOPER("developer");
+    ADMIN("admin");
+//    DEVELOPER("developer");
 
     override fun toString(): String {
         return value

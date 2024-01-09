@@ -50,7 +50,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".app.app_settings.developer.DeveloperSettingsActivity"
+            android:name=".app.app_settings.developer.NetworkSettingsActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -104,13 +104,6 @@
         </activity>
         <activity
             android:name=".app.main_menu.SubMenuActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".app.app_settings.AppSettingsActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

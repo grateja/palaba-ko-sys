@@ -71,7 +71,7 @@
                         android:layout_height="wrap_content"/>
 
                     <Button
-                        android:visibility="@{!viewModel.locked}"
+                        android:visibility="@{!viewModel.saved}"
                         android:id="@+id/button_packages"
                         style="@style/RoundButtonNeutral.Small"
                         android:text="Packages"
