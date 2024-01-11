@@ -11,12 +11,14 @@ import com.csi.palabakosys.R
 import com.csi.palabakosys.app.customers.CustomerMinimal
 import com.csi.palabakosys.app.customers.create.AddEditCustomerFragment
 import com.csi.palabakosys.app.joborders.create.JobOrderCreateActivity
+import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentActivity.Companion.CUSTOMER_ID
 import com.csi.palabakosys.app.joborders.unpaid.prompt.JobOrdersUnpaidPromptActivity
 import com.csi.palabakosys.databinding.ActivitySelectCustomerBinding
 import com.csi.palabakosys.util.FilterActivity
 import com.csi.palabakosys.util.isToday
 import com.csi.palabakosys.viewmodels.ListViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
 
 @AndroidEntryPoint
 class SelectCustomerActivity : FilterActivity() {
@@ -62,23 +64,32 @@ class SelectCustomerActivity : FilterActivity() {
     }
 
     private fun subscribeEvents() {
-        binding.buttonCreateNew.setOnClickListener {
-            editCustomer(null)
+//        binding.buttonCreateNew.setOnClickListener {
+//            editCustomer(null)
 //            customerModal = AddEditCustomerFragment.getInstance(null)
 //            customerModal.show(supportFragmentManager, "KEME")
 //            customerModal.onOk = {
 //                openCreateJobOrderActivity(it!!)
 //            }
-        }
+//        }
         customersAdapter.onItemClick = {
-            open(it)
+            selectCustomer(it.id)
+//            open(it)
         }
         customersAdapter.onEdit = {
-            editCustomer(it.id.toString())
+            editCustomer(it.id)
         }
         customersAdapter.onScrollAtTheBottom = {
             viewModel.loadMore()
         }
+    }
+
+    private fun selectCustomer(customerId: UUID) {
+        setResult(RESULT_OK, Intent().apply {
+            action = intent.action
+            putExtra(CUSTOMER_ID, customerId.toString())
+        })
+        finish()
     }
 
     private fun open(customer: CustomerMinimal) {
@@ -89,8 +100,8 @@ class SelectCustomerActivity : FilterActivity() {
         }
     }
 
-    private fun editCustomer(customerId: String?) {
-        customerModal = AddEditCustomerFragment.getInstance(customerId, searchBar?.query.toString())
+    private fun editCustomer(customerId: UUID?) {
+        customerModal = AddEditCustomerFragment.getInstance(customerId, searchBar?.query.toString(), false)
         customerModal.show(supportFragmentManager, "KEME")
         customerModal.onOk = {
             open(it!!)

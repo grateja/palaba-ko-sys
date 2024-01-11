@@ -108,11 +108,17 @@ class JobOrderListActivity : FilterActivity() {
             viewModel.loadMore()
         }
         binding.cardAddNew.setOnClickListener {
-            selectCustomer()
+            createNewJo()
+//            selectCustomer()
         }
         binding.statusBar.setOnClickListener {
             viewModel.showAdvancedFilter()
         }
+    }
+
+    private fun createNewJo() {
+        val intent = Intent(this, JobOrderCreateActivity::class.java)
+        startActivity(intent)
     }
 
     private fun selectCustomer() {

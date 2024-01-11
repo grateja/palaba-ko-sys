@@ -14,6 +14,9 @@ data class CustomerMinimal(
     var address: String?,
     var unpaid: Int?,
 
+    @ColumnInfo(name ="has_unpaid_jo_today")
+    var hasUnpaidJoToday: Boolean,
+
     @ColumnInfo(name = "last_job_order")
     var lastJobOrder: Instant?,
 ) : Parcelable

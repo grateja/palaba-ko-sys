@@ -53,9 +53,15 @@ class CreateJobOrderInfoFragment : Fragment() {
         binding.cardCreatedAt.setOnClickListener {
             openAuthRequestModifyDateTime()
         }
-        binding.cardCustomer.setOnClickListener {
-            viewModel.editCustomer()
+        binding.cardButtonSelectCustomer.setOnClickListener {
+            viewModel.pickCustomer()
         }
+//        binding.buttonEdit.setOnClickListener {
+//            viewModel.editCustomer()
+//        }
+//        binding.buttonSearch.setOnClickListener {
+//            viewModel.searchCustomer()
+//        }
         dateTimePicker.setOnDateTimeSelectedListener {
             viewModel.applyDateTime(it)
         }

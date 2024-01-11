@@ -20,12 +20,21 @@
             app:behavior_peekHeight="1000dp"
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
             android:orientation="vertical">
+
+            <TextView
+                style="@style/TileTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="18dp"
+                android:textAlignment="center"
+                android:text="@{viewModel.crudActionEnum.toString(` Customer`)}"
+                tools:text="Edit customer"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:gravity="center">
-
 
                 <Button
                     android:id="@+id/buttonSave"
@@ -46,19 +55,36 @@
                     android:layout_height="wrap_content" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/textFormTitle"
-                style="@style/TileTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Create New Customer"/>
-
             <ProgressBar
                 android:id="@+id/progressBarSaving"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="invisible" />
+
+<!--            <com.google.android.material.card.MaterialCardView-->
+<!--                android:id="@+id/card_button_search"-->
+<!--                android:visibility="@{viewModel.showSearchButton}"-->
+<!--                style="@style/CardRoundButton"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="24dp">-->
+<!--                <LinearLayout-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="horizontal"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:gravity="center">-->
+<!--                    <ImageView-->
+<!--                        android:layout_width="30dp"-->
+<!--                        android:layout_height="30dp"-->
+<!--                        android:src="@drawable/ic_search_black_24dp"/>-->
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="Search customer"/>-->
+<!--                </LinearLayout>-->
+<!--            </com.google.android.material.card.MaterialCardView>-->
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/labelCRN"

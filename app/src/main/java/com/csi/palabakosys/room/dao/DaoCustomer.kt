@@ -23,7 +23,14 @@ interface DaoCustomer : BaseDao<EntityCustomer> {
     suspend fun getLastCRN() : String?
 
 //    @Query("SELECT id, crn, name, address, (SELECT COUNT(*) FROM job_orders WHERE payment_id IS NULL AND customer_id = customers.id AND job_orders.deleted_at IS NULL and job_orders.void_date IS NULL) as unpaid FROM customers WHERE name LIKE '%' || :keyword || '%' OR crn like '%' || :keyword || '%' AND deleted_at IS NULL ORDER BY unpaid DESC, name ASC  LIMIT :itemPerPage OFFSET :offset")
-    @Query("SELECT c.id, c.crn, c.name, c.address, COUNT(jo.id) AS unpaid, MAX(jo.created_at) AS last_job_order FROM customers c LEFT JOIN job_orders jo ON jo.payment_id IS NULL AND jo.customer_id = c.id AND jo.deleted_at IS NULL AND jo.void_date IS NULL WHERE c.name LIKE '%' || :keyword || '%' OR c.crn LIKE '%' || :keyword || '%' AND c.deleted_at IS NULL GROUP BY c.id, c.crn, c.name, c.address ORDER BY unpaid DESC, c.name ASC LIMIT :itemPerPage OFFSET :offset")
+    @Query("SELECT c.id, c.crn, c.name, c.address, COUNT(jo.id) AS unpaid, MAX(jo.created_at) AS last_job_order, MAX(CASE WHEN jo.payment_id IS NULL AND strftime('%Y-%m-%d', jo.created_at / 1000, 'unixepoch') = DATE('now') THEN 1 ELSE 0 END) AS has_unpaid_jo_today " +
+            " FROM customers c" +
+            " LEFT JOIN job_orders jo ON jo.payment_id IS NULL AND jo.customer_id = c.id AND jo.deleted_at IS NULL AND jo.void_date IS NULL" +
+            " WHERE c.name LIKE '%' || :keyword || '%'" +
+            "    OR c.crn LIKE '%' || :keyword || '%'" +
+            "    AND c.deleted_at IS NULL" +
+            " GROUP BY c.id, c.crn, c.name, c.address" +
+            " ORDER BY unpaid DESC, c.name ASC LIMIT :itemPerPage OFFSET :offset")
     suspend fun getCustomersMinimal(keyword: String?, itemPerPage: Int, offset: Int): List<CustomerMinimal>
 
     @Query("SELECT cu.*, " +
@@ -66,7 +73,7 @@ interface DaoCustomer : BaseDao<EntityCustomer> {
     @Query("SELECT EXISTS(SELECT * FROM customers WHERE name LIKE :name AND deleted_at IS NULL)")
     suspend fun checkName(name: String?): Boolean
 
-    @Query("SELECT * FROM customers WHERE crn LIKE :crn AND deleted_at IS NULL LIMIT 1")
+    @Query("SELECT *, 0 as has_unpaid_jo_today FROM customers WHERE crn LIKE :crn AND deleted_at IS NULL LIMIT 1")
     suspend fun getCustomerMinimalByCRN(crn: String?): CustomerMinimal?
 
     @Query("SELECT COUNT(*) FROM customers WHERE strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') = :dateFrom OR ( :dateTo IS NOT NULL AND strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo )")

@@ -84,7 +84,7 @@ class CustomerPreviewActivity : AppCompatActivity() {
         viewModel.navigationState.observe(this, Observer {
             when(it) {
                 is CustomerPreviewViewModel.NavigationState.EditCustomer -> {
-                    val edit = AddEditCustomerFragment.getInstance(it.customerId.toString(), null)
+                    val edit = AddEditCustomerFragment.getInstance(it.customerId, null, false)
                     edit.show(supportFragmentManager, null)
                     viewModel.resetState()
                 }

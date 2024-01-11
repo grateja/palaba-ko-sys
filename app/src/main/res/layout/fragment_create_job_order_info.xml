@@ -23,13 +23,13 @@
                 app:term="@{`JOB ORDER NUMBER`}"
                 app:definition="@{viewModel.jobOrderNumber}"/>
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_customer"
-                app:cardElevation="0dp"
+                android:id="@+id/card_button_select_customer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
                 <include layout="@layout/incl_legend"
                     app:term="@{`CUSTOMER NAME`}"
-                    app:definition="@{viewModel.currentCustomer.name}"/>
+                    app:definition="@{viewModel.currentCustomer == null ? `Select customer` : viewModel.currentCustomer.name}"/>
             </com.google.android.material.card.MaterialCardView>
             <com.google.android.material.card.MaterialCardView
                 android:layout_margin="4dp"

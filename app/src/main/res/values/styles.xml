@@ -32,9 +32,10 @@
         <item name="android:textColor">@color/teal_700</item>
     </style>
     <style name="TileTitle">
-        <item name="android:fontFamily">sans-serif-black</item>
+        <item name="android:fontFamily">sans-serif-condensed-light</item>
         <item name="android:textSize">24sp</item>
         <item name="android:textColor">@color/black</item>
+        <item name="android:fontWeight">900</item>
     </style>
     <style name="Bold">
         <item name="android:textStyle">bold</item>
@@ -146,6 +147,13 @@
         <item name="backgroundTint">@color/neutral</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:padding">0dp</item>
+    </style>
+
+    <style name="CardRoundButton">
+        <item name="contentPadding">8dp</item>
+        <item name="cardElevation">4dp</item>
+        <item name="cardCornerRadius">40dp</item>
+        <item name="cardBackgroundColor">@color/neutral</item>
     </style>
 
     <style name="CardPrimary">

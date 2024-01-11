@@ -1,5 +1,6 @@
 package com.csi.palabakosys.app.customers.create
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,17 +9,22 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.csi.palabakosys.app.customers.CustomerMinimal
+import com.csi.palabakosys.app.joborders.create.customer.SelectCustomerActivity
+import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentActivity.Companion.CUSTOMER_ID
 import com.csi.palabakosys.databinding.FragmentAddEditCustomerBinding
 import com.csi.palabakosys.fragments.ModalFragment
 import com.csi.palabakosys.util.DataState
+import com.csi.palabakosys.util.FragmentLauncher
 import com.csi.palabakosys.util.hideKeyboard
 import com.csi.palabakosys.util.toUUID
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
 
 @AndroidEntryPoint
 class AddEditCustomerFragment : ModalFragment<CustomerMinimal?>() {
     private val viewModel: AddEditCustomerViewModel by viewModels()
     private lateinit var binding: FragmentAddEditCustomerBinding
+    private val launcher = FragmentLauncher(this)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,6 +44,9 @@ class AddEditCustomerFragment : ModalFragment<CustomerMinimal?>() {
             val name = arguments?.getString("name")
             viewModel.get(it.toUUID(), name)
         }
+        arguments?.getBoolean("showSearchButton")?.let {
+            viewModel.toggleSearchVisibility(it)
+        }
         return binding.root
     }
 
@@ -49,6 +58,15 @@ class AddEditCustomerFragment : ModalFragment<CustomerMinimal?>() {
             binding.progressBarSaving.visibility = View.VISIBLE
             it.hideKeyboard()
             viewModel.validate()
+        }
+//        binding.cardButtonSearch.setOnClickListener {
+//            val intent = Intent(context, SelectCustomerActivity::class.java)
+//            launcher.launch(intent)
+//        }
+        launcher.onOk = {
+            it?.getStringExtra(CUSTOMER_ID).toUUID()?.let {
+                viewModel.replace(it)
+            }
         }
     }
 
@@ -65,6 +83,7 @@ class AddEditCustomerFragment : ModalFragment<CustomerMinimal?>() {
                         it.data.crn!!,
                         it.data.address,
                         null,
+                        false,
                         null
                     ))
                     viewModel.resetState()
@@ -99,12 +118,13 @@ class AddEditCustomerFragment : ModalFragment<CustomerMinimal?>() {
     companion object {
         const val CUSTOMER_ID_EXTRA = "data"
         var instance: AddEditCustomerFragment? = null
-        fun getInstance(model: String?, presetName: String?) : AddEditCustomerFragment {
+        fun getInstance(customerId: UUID?, presetName: String?, showSearchButton: Boolean) : AddEditCustomerFragment {
             if(instance == null || instance?.dismissed == true) {
                 instance = AddEditCustomerFragment().apply {
                     arguments = Bundle().apply {
-                        putString("data", model)
+                        putString("data", customerId.toString())
                         putString("name", presetName)
+                        putBoolean("showSearchButton", showSearchButton)
                     }
                 }
             }

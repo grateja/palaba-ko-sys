@@ -15,6 +15,7 @@ import com.csi.palabakosys.app.auth.LoginCredentials
 import com.csi.palabakosys.app.customers.create.AddEditCustomerFragment
 import com.csi.palabakosys.app.joborders.cancel.JobOrderCancelActivity
 import com.csi.palabakosys.app.joborders.create.customer.SelectCustomerActivity
+import com.csi.palabakosys.app.joborders.create.customer.SelectCustomerOptionsFragment
 import com.csi.palabakosys.app.joborders.create.delivery.DeliveryCharge
 import com.csi.palabakosys.app.joborders.create.delivery.JOSelectDeliveryActivity
 import com.csi.palabakosys.app.joborders.create.discount.JOSelectDiscountActivity
@@ -31,6 +32,7 @@ import com.csi.palabakosys.app.joborders.create.services.JOSelectWashDryActivity
 import com.csi.palabakosys.app.joborders.create.services.JobOrderServiceItemAdapter
 import com.csi.palabakosys.app.joborders.create.services.MenuServiceItem
 import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentActivity
+import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentActivity.Companion.CUSTOMER_ID
 import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentMinimal
 import com.csi.palabakosys.app.joborders.payment.preview.PaymentPreviewActivity
 import com.csi.palabakosys.app.joborders.print.JobOrderPrintActivity
@@ -52,7 +54,7 @@ class JobOrderCreateActivity : BaseActivity() {
         const val PAYLOAD_EXTRA = "payload"
         const val ITEM_PRESET_EXTRA = "itemPreset"
 
-        const val ACTION_SELECT_CUSTOMER = "selectCustomer"
+        const val ACTION_SEARCH_CUSTOMER = "searchCustomer"
         const val ACTION_MODIFY_DATETIME = "modifyDateTime"
         const val ACTION_REQUEST_UNLOCK = "requestUnlock"
         const val ACTION_SYNC_PACKAGE = "package"
@@ -99,15 +101,18 @@ class JobOrderCreateActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        if(intent.action == ACTION_LOAD_BY_JOB_ORDER_ID) {
-            intent.getStringExtra(JOB_ORDER_ID).toUUID()?.let {
-                viewModel.setJobOrder(it)
-            }
-        } else if(intent.action == ACTION_LOAD_BY_CUSTOMER_ID) {
-            intent.getStringExtra(CUSTOMER_EXTRA)?.toUUID()?.let {
-                viewModel.setCustomerId(it)
-            }
+//        if(intent.action == ACTION_LOAD_BY_JOB_ORDER_ID) {
+        intent.getStringExtra(JOB_ORDER_ID).toUUID().let {
+            viewModel.setJobOrder(it)
         }
+        intent.getStringExtra(CUSTOMER_EXTRA)?.toUUID()?.let {
+            viewModel.loadByCustomer(it)
+        }
+//        } else if(intent.action == ACTION_LOAD_BY_CUSTOMER_ID) {
+//            intent.getStringExtra(CUSTOMER_EXTRA)?.toUUID()?.let {
+//                viewModel.setCustomerId(it)
+//            }
+//        }
     }
 
 //    private fun showDateTimePickerDialog(currentDateTime: Instant) {
@@ -194,6 +199,11 @@ class JobOrderCreateActivity : BaseActivity() {
 //                ACTION_MODIFY_DATETIME -> {
 //                    viewModel.requestModifyDateTime()
 //                }
+                ACTION_SEARCH_CUSTOMER -> {
+                    data.getStringExtra(CUSTOMER_ID).toUUID()?.let {
+                        viewModel.setCustomerId(it)
+                    }
+                }
                 ACTION_SYNC_SERVICES -> {
                     data.getParcelableArrayListExtra<MenuServiceItem>(PAYLOAD_EXTRA)?.toList().let {
                         viewModel.syncServices(it)
@@ -394,6 +404,10 @@ class JobOrderCreateActivity : BaseActivity() {
                     confirmExit(it.canExit, it.resultCode, it.jobOrderId)
                     viewModel.resetState()
                 }
+                is CreateJobOrderViewModel.DataState.PickCustomer -> {
+                    SelectCustomerOptionsFragment().show(supportFragmentManager, null)
+                    viewModel.resetState()
+                }
                 is CreateJobOrderViewModel.DataState.EditCustomer -> {
 //                    if(callingActivity?.className == CustomerPreviewActivity::class.java.name) {
 //                        finish()
@@ -403,8 +417,22 @@ class JobOrderCreateActivity : BaseActivity() {
 //                        }
 //                        launcher.launch(intent)
 //                    }
-                    AddEditCustomerFragment.getInstance(it.customerId.toString(), null)
+                    AddEditCustomerFragment.getInstance(it.customerId, null, true)
+                        .apply {
+                            onOk = {
+                                it?.let {
+                                    viewModel.setCustomerId(it.id)
+                                }
+                            }
+                        }
                         .show(supportFragmentManager, null)
+                    viewModel.resetState()
+                }
+                is CreateJobOrderViewModel.DataState.SearchCustomer -> {
+                    val intent = Intent(this, SelectCustomerActivity::class.java).apply {
+                        action = ACTION_SEARCH_CUSTOMER
+                    }
+                    launcher.launch(intent)
                     viewModel.resetState()
                 }
                 is CreateJobOrderViewModel.DataState.OpenPrinter -> {
@@ -420,6 +448,28 @@ class JobOrderCreateActivity : BaseActivity() {
             }
         })
     }
+
+//    private fun pickCustomer(actionPayload: String, customerId: UUID?) {
+//        when(actionPayload) {
+//            SelectCustomerOptionsFragment.ACTION_CREATE_NEW, SelectCustomerOptionsFragment.ACTION_EDIT -> {
+//                AddEditCustomerFragment.getInstance(customerId, null, true)
+//                    .apply {
+//                        onOk = {
+//                            it?.let {
+//                                viewModel.setCustomerId(it.id)
+//                            }
+//                        }
+//                    }
+//                    .show(supportFragmentManager, null)
+//            }
+//            SelectCustomerOptionsFragment.ACTION_SEARCH -> {
+//                val intent = Intent(this, SelectCustomerActivity::class.java).apply {
+//                    action = ACTION_SEARCH_CUSTOMER
+//                }
+//                launcher.launch(intent)
+//            }
+//        }
+//    }
 
     private fun prepareSubmit() {
         val intent = Intent(this, AuthActionDialogActivity::class.java).apply {

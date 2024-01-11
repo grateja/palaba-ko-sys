@@ -45,13 +45,15 @@ constructor(
         data class OpenDelivery(val deliveryCharge: DeliveryCharge?): DataState()
         data class OpenDiscount(val discount: MenuDiscount?): DataState()
         data class OpenPayment(val customerId: UUID, val paymentId: UUID?) : DataState()
-        data class InvalidOperation(val message: String): DataState()
+        data class InvalidOperation(val message: String, val errorCode: String? = null): DataState()
         data class RequestExit(val canExit: Boolean, val resultCode: Int, val jobOrderId: UUID?) : DataState()
         data class RequestCancel(val jobOrderId: UUID?) : DataState()
         data class ModifyDateTime(val createdAt: Instant) : DataState()
         data class OpenCamera(val jobOrderId: UUID) : DataState()
         data class OpenPictures(val ids: List<PhotoItem>, val position: Int) : DataState()
-        data class EditCustomer(val customerId: UUID) : DataState()
+        data class EditCustomer(val customerId: UUID?) : DataState()
+        data class PickCustomer(val customerId: UUID?) : DataState()
+        object SearchCustomer : DataState()
         data class OpenPrinter(val jobOrderId: UUID) : DataState()
         object ProceedToSaveJO: DataState()
     }
@@ -108,6 +110,12 @@ constructor(
 
     private val _payment = MutableLiveData<EntityJobOrderPaymentFull>()
     val payment: LiveData<EntityJobOrderPaymentFull> = _payment
+
+    val cannotSwitchCustomer = MediatorLiveData<Boolean>().apply {
+        addSource(jobOrderServices) {
+            value = it.find { it.used > 0 } != null
+        }
+    }
 
     /** region mediator live data */
 
@@ -391,8 +399,9 @@ constructor(
         _deleted.value = jobOrder.jobOrder.deletedAt != null || jobOrder.jobOrder.entityJobOrderVoid != null
     }
 
-    fun setJobOrder(joId: UUID) {
-        if(currentCustomer.value != null) return
+    fun setJobOrder(joId: UUID?) {
+        // if(currentCustomer.value != null) return
+        if(jobOrderId.value != null) return
         viewModelScope.launch {
             jobOrderRepository.getJobOrderWithItems(joId).let {
                 _customerId.value = it?.jobOrder?.customerId
@@ -406,29 +415,50 @@ constructor(
                     prepare(it)
 //                    loadUnpaidJobOrders(it.customer?.id!!/*, it.jobOrder.id*/)
                 } else {
-                    _dataState.value = DataState.InvalidOperation("Job Order maybe deleted")
+                    jobOrderId.value = UUID.randomUUID()
+                    createdAt.value = Instant.now()
+                    jobOrderNumber.value = jobOrderRepository.getNextJONumber()
+//                    _dataState.value = DataState.InvalidOperation("Job Order maybe deleted")
                 }
             }
         }
     }
 
-    fun setCustomerId(customerId: UUID) {
-        if(currentCustomer.value != null) return
+    fun loadByCustomer(customerId: UUID) {
         _customerId.value = customerId
-//        currentCustomer.value = customer
         viewModelScope.launch {
-            jobOrderRepository.getCurrentJobOrder(customerId).let { jobOrderWithItems ->
-                jobOrderId.value = jobOrderWithItems?.jobOrder?.id ?: UUID.randomUUID()
-                createdAt.value = jobOrderWithItems?.jobOrder?.createdAt ?: Instant.now()
-                jobOrderNumber.value = jobOrderWithItems?.jobOrder?.jobOrderNumber ?: jobOrderRepository.getNextJONumber()
+            jobOrderRepository.getCurrentJobOrder(customerId)?.let { jobOrderWithItems ->
+                jobOrderId.value = jobOrderWithItems.jobOrder.id
+                createdAt.value = jobOrderWithItems.jobOrder.createdAt
+                jobOrderNumber.value = jobOrderWithItems.jobOrder.jobOrderNumber
 //                loadUnpaidJobOrders(customerId)
-                if(jobOrderWithItems != null) {
-                    prepare(jobOrderWithItems)
-                }// else {
+//                if(jobOrderWithItems != null) {
+                prepare(jobOrderWithItems)
+//                }// else {
 //                    _dataState.value = DataState.OpenPackages
 //                }
             }
         }
+    }
+
+    fun setCustomerId(customerId: UUID) {
+//        if(currentCustomer.value != null) return
+        _customerId.value = customerId
+        _saved.value = false
+//        currentCustomer.value = customer
+//        viewModelScope.launch {
+//            jobOrderRepository.getCurrentJobOrder(customerId)?.let { jobOrderWithItems ->
+//                jobOrderId.value = jobOrderWithItems?.jobOrder?.id ?: UUID.randomUUID()
+//                createdAt.value = jobOrderWithItems?.jobOrder?.createdAt ?: Instant.now()
+//                jobOrderNumber.value = jobOrderWithItems?.jobOrder?.jobOrderNumber ?: jobOrderRepository.getNextJONumber()
+//                loadUnpaidJobOrders(customerId)
+//                if(jobOrderWithItems != null) {
+//                    prepare(jobOrderWithItems)
+//                }// else {
+//                    _dataState.value = DataState.OpenPackages
+//                }
+//            }
+//        }
     }
 
     fun syncPackages(packages: List<MenuJobOrderPackage>?) {
@@ -669,6 +699,11 @@ constructor(
 //    }
 
     fun validate() {
+        if(currentCustomer.value == null) {
+            _dataState.value = DataState.InvalidOperation("Select customer first!", "customer")
+            return
+        }
+
         if(hasAny.value != true) {
             _dataState.value = DataState.InvalidOperation("Your Job Order is empty!")
             return
@@ -883,10 +918,26 @@ constructor(
         }
     }
 
-    fun editCustomer() {
-        currentCustomer.value?.id?.let {
-            _dataState.value = DataState.EditCustomer(it)
-        }
+    fun pickCustomer() {
+        if(isLocked()) return
+        val customerId = currentCustomer.value?.id
+        _dataState.value = DataState.PickCustomer(customerId)
+//        currentCustomer.value?.id?.let {
+//            _dataState.value = DataState.PickCustomer(it)
+//        }
+    }
+
+    fun searchCustomer() {
+        _dataState.value = DataState.SearchCustomer
+    }
+
+    fun editCustomer(new: Boolean) {
+        if(isLocked()) return
+        val customerId = if (new) null else currentCustomer.value?.id
+        _dataState.value = DataState.EditCustomer(customerId)
+//        currentCustomer.value?.id?.let {
+//            _dataState.value = DataState.EditCustomer(it)
+//        }
     }
 
     fun openPrinterOptions() {

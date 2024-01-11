@@ -1,6 +1,9 @@
 package com.csi.palabakosys.app.customers.create
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.csi.palabakosys.model.CRUDActionEnum
 import com.csi.palabakosys.model.Rule
 import com.csi.palabakosys.room.entities.EntityCustomer
 import com.csi.palabakosys.room.repository.CustomerRepository
@@ -18,16 +21,32 @@ constructor(
     private val repository: CustomerRepository
 ) : CreateViewModel<EntityCustomer>(repository)
 {
+    private var _showSearchButton = MutableLiveData<Boolean>()
+    var showSearchButton: LiveData<Boolean> = _showSearchButton
     private var originalName: String? = null
     private var originalCRN: String? = null
     fun get(id: UUID?, presetName: String?) {
         model.value.let {
             if(it != null) return
+            println("not returned")
             viewModelScope.launch {
                 val crn = repository.getNextJONumber()
                 super.get(id, EntityCustomer(crn, presetName)).let { customer ->
                     originalName = customer.name
                     originalCRN = customer.crn
+                }
+            }
+        }
+    }
+
+    fun replace(id: UUID) {
+        viewModelScope.launch {
+            repository.get(id).let {
+                model.value = it
+                originalName = it?.name
+                originalCRN = it?.crn
+                if(it != null) {
+                    crudActionEnum.value = CRUDActionEnum.UPDATE
                 }
             }
         }
@@ -56,6 +75,10 @@ constructor(
 
     fun presetCustomerName(name: String?) {
 
+    }
+
+    fun toggleSearchVisibility(value: Boolean) {
+        _showSearchButton.value = value
     }
 
 //    override fun save() {
