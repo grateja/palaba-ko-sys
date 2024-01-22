@@ -25,7 +25,7 @@ constructor(
     private val jobOrderRepository: JobOrderRepository
 ) : ListViewModel<JobOrderListItem, JobOrderAdvancedFilter>() {
 //    val paymentStatus = MutableLiveData(EnumPaymentStatus.ALL)
-    val total = MutableLiveData<JobOrderResultSummary?>()
+    val total = MutableLiveData(JobOrderResultSummary())
 //    val hideDeleted = MutableLiveData(true)
     val customerId = MutableLiveData<UUID?>()
     val nonVoidOnly = MutableLiveData(true)

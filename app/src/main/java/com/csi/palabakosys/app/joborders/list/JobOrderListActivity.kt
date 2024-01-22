@@ -111,9 +111,6 @@ class JobOrderListActivity : FilterActivity() {
             createNewJo()
 //            selectCustomer()
         }
-        binding.statusBar.setOnClickListener {
-            viewModel.showAdvancedFilter()
-        }
     }
 
     private fun createNewJo() {
@@ -135,6 +132,9 @@ class JobOrderListActivity : FilterActivity() {
     }
 
     private fun subscribeListeners() {
+        viewModel.total.observe(this, Observer {
+            println(it)
+        })
         viewModel.dataState.observe(this, Observer {
             when(it) {
                 is ListViewModel.DataState.LoadItems -> {

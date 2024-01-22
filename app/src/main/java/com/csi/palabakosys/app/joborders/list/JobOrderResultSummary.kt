@@ -1,10 +1,10 @@
 package com.csi.palabakosys.app.joborders.list
 
 data class JobOrderResultSummary(
-    val paidCount: Int,
-    val unpaidCount: Int,
-    val totalResultCount: Int,
-    val paidSum: Float,
-    val unpaidSum: Float,
-    val totalSum: Float,
+    val paidCount: Int = 0,
+    val unpaidCount: Int = 0,
+    val totalResultCount: Int = 0,
+    val paidSum: Float = 0f,
+    val unpaidSum: Float = 0f,
+    val totalSum: Float = 0f,
 )
