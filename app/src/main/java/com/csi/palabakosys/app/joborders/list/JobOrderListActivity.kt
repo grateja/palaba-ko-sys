@@ -111,6 +111,12 @@ class JobOrderListActivity : FilterActivity() {
             createNewJo()
 //            selectCustomer()
         }
+        binding.cardAdvancedOptions.setOnClickListener {
+            viewModel.showAdvancedFilter()
+        }
+        binding.swipeRefresh.setOnRefreshListener {
+            viewModel.filter(true)
+        }
     }
 
     private fun createNewJo() {
@@ -143,6 +149,7 @@ class JobOrderListActivity : FilterActivity() {
                     } else {
                         adapter.addItems(it.items)
                     }
+                    binding.swipeRefresh.isRefreshing = false
                     viewModel.clearState()
                 }
             }

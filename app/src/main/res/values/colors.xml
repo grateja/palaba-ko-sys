@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="transparent">#0fff</color>
-    <color name="secondary_background">#f9f9f9</color>
+    <color name="secondary_background">#F1F1F1</color>
     <color name="primary_background">#03A9F4</color>
     <color name="darker_background">#d8d8d8</color>
     <color name="span_background">#EDEDED</color>
@@ -24,7 +24,7 @@
     <color name="fill_primary">#FFEB3B</color>
     <color name="text_warning">#F66539</color>
     <color name="jo_paid">#1443FF00</color>
-    <color name="jo_not_paid">#1AF80025</color>
+    <color name="dark_caption">#1AF80025</color>
     <color name="jo_void">#858585</color>
     <color name="color_code_dashboard">#E75263</color>
     <color name="color_code_job_order">#F46D43</color>

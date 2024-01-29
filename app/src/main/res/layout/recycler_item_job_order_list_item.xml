@@ -8,11 +8,7 @@
             type="com.csi.palabakosys.app.joborders.list.JobOrderListItem" />
     </data>
     <com.google.android.material.card.MaterialCardView
-        app:cardBackgroundColor="@color/secondary_background"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="0dp"
-        app:strokeWidth="1dp"
-        android:layout_margin="8dp"
+        style="@style/CardItemList.FullWidth"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -34,12 +30,12 @@
 
             <TextView
                 android:id="@+id/labelCustomer"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:text="@{viewModel.customerName}"
-                android:textColor="@color/black"
                 android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@+id/labelJobOrderNumber"
+                app:layout_constraintEnd_toStartOf="@+id/labelDiscountedAmount"
                 app:layout_constraintStart_toEndOf="@+id/labelJobOrderNumber"
                 app:layout_constraintTop_toTopOf="@+id/labelJobOrderNumber"
                 tools:text="Tony Stark" />
@@ -79,7 +75,7 @@
                 android:textColor='@{viewModel.datePaid != null ? @android:color/holo_blue_dark : @android:color/holo_red_dark}'
                 android:textFontWeight="900"
                 app:layout_constraintEnd_toEndOf="@id/labelDatePaid"
-                app:layout_constraintTop_toBottomOf="@id/labelDiscountedAmount"
+                app:layout_constraintTop_toBottomOf="@+id/labelCustomer"
                 tools:text="PAID" />
 
             <TextView
