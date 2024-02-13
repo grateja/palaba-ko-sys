@@ -24,4 +24,8 @@ data class CustomerListItem(
     fun jobOrdersCountStr() : String {
         return "$paidJo / $totalJo Paid Job Orders"
     }
+
+    fun paidAll() : Boolean {
+        return totalJo != null && totalJo > 0 && totalJo == paidJo
+    }
 }

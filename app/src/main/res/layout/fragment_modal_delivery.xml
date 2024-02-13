@@ -13,77 +13,103 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <FrameLayout
-            android:id="@+id/fragmentDeliveryModal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:padding="18dp"
             app:behavior_peekHeight="500dp"
-            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
-            <com.google.android.material.card.MaterialCardView
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@drawable/divider_20"
+            android:showDividers="middle"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/labelTitle"
+                style="@style/TextTitleFragment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.label}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Regular Keme" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/icon"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/icon_delivery_motorcycle"
+                app:imageResource="@{viewModel.profile.vehicle.icon}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/labelTitle" />
+
+            <NumberPicker
+                android:id="@+id/quantity"
+                android:layout_width="wrap_content"
+                android:layout_height="130dp"
+                android:value="@={viewModel.distance}"
+                app:layout_constraintBottom_toTopOf="@id/recyclerDeliveryOptions"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/icon"
+                app:layout_constraintTop_toBottomOf="@+id/labelTitle" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Km"
+                app:layout_constraintStart_toEndOf="@id/quantity"
+                app:layout_constraintTop_toTopOf="@id/quantity"
+                app:layout_constraintBottom_toBottomOf="@id/quantity"/>
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:divider="@drawable/divider_10"-->
+<!--                android:showDividers="middle">-->
+<!--                <Button-->
+<!--                    android:id="@+id/buttonMinus"-->
+<!--                    android:layout_width="40dp"-->
+<!--                    android:layout_height="52dp"-->
+<!--                    app:cornerRadius="50dp"-->
+<!--                    app:backgroundTint="@color/neutral"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:padding="0dp"-->
+<!--                    android:text="-" />-->
+<!--                <com.google.android.material.textfield.TextInputLayout-->
+<!--                    android:id="@+id/labelQuantity"-->
+<!--                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    app:errorEnabled="true">-->
+
+<!--                    <com.google.android.material.textfield.TextInputEditText-->
+<!--                        android:id="@+id/textQuantity"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="@={viewModel.distance}"-->
+<!--                        android:hint="Quantity"-->
+<!--                        android:inputType="numberDecimal"-->
+<!--                        android:maxLines="1" />-->
+<!--                </com.google.android.material.textfield.TextInputLayout>-->
+<!--                <Button-->
+<!--                    android:id="@+id/buttonAdd"-->
+<!--                    android:layout_width="40dp"-->
+<!--                    android:layout_height="52dp"-->
+<!--                    app:cornerRadius="50dp"-->
+<!--                    app:backgroundTint="@color/neutral"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:padding="0dp"-->
+<!--                    android:text="+" />-->
+<!--            </LinearLayout>-->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerDeliveryOptions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:contentPadding="24dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:divider="@drawable/divider_20"
-                    android:showDividers="middle"
-                    android:orientation="vertical">
-                    <TextView
-                        android:id="@+id/labelTitle"
-                        style="@style/TextItemTitle"
-                        android:text="@{viewModel.label}"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:text="Regular Keme"/>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:divider="@drawable/divider_10"
-                        android:showDividers="middle">
-                        <Button
-                            android:id="@+id/buttonMinus"
-                            android:layout_width="40dp"
-                            android:layout_height="52dp"
-                            app:cornerRadius="50dp"
-                            app:backgroundTint="@color/neutral"
-                            android:textColor="@color/black"
-                            android:padding="0dp"
-                            android:text="-" />
-                        <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/labelQuantity"
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                            android:layout_weight="1"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            app:errorEnabled="true">
-
-                            <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/textQuantity"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="@={viewModel.distance}"
-                                android:hint="Quantity"
-                                android:inputType="numberDecimal"
-                                android:maxLines="1" />
-                        </com.google.android.material.textfield.TextInputLayout>
-                        <Button
-                            android:id="@+id/buttonAdd"
-                            android:layout_width="40dp"
-                            android:layout_height="52dp"
-                            app:cornerRadius="50dp"
-                            app:backgroundTint="@color/neutral"
-                            android:textColor="@color/black"
-                            android:padding="0dp"
-                            android:text="+" />
-                    </LinearLayout>
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyclerDeliveryOptions"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toTopOf="@id/controls"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/icon" />
 <!--                    <RadioGroup-->
 <!--                        android:id="@+id/radioDeliveryOption"-->
 <!--                        android:layout_width="match_parent"-->
@@ -104,29 +130,33 @@
 <!--                            android:layout_width="wrap_content"-->
 <!--                            android:layout_height="wrap_content"/>-->
 <!--                    </RadioGroup>-->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:divider="@drawable/divider_20"
-                        android:showDividers="middle"
-                        android:gravity="start">
-                        <Button
-                            android:id="@+id/buttonCancel"
-                            style="@style/RoundButtonNeutral"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/cancel" />
-
-                        <Button
-                            android:id="@+id/buttonConfirm"
-                            style="@style/RoundButtonPrimary"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/confirm" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-        </FrameLayout>
+            <LinearLayout
+                android:id="@+id/controls"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:divider="@drawable/divider_20"
+                android:showDividers="middle"
+                android:gravity="start">
+                <Button
+                    android:id="@+id/buttonCancel"
+                    style="@style/RoundButtonNeutral"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/cancel" />
+                <Button
+                    android:id="@+id/buttonConfirm"
+                    style="@style/RoundButtonPrimary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@{`Confirm (P` + viewModel.price + `)`}"
+                    tools:text="Confirm (P 120.0)"/>
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

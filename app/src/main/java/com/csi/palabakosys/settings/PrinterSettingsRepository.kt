@@ -23,7 +23,7 @@ constructor(
         const val SHOW_CLAIM_STUB_ITEMIZED = "showClaimStubItemized"
         const val SHOW_CLAIM_STUB_PRICES = "showClaimStubPrices"
     }
-    val printerName = getAsLiveData(PRINTER_NAME, "Not set")
+    val printerName = getAsLiveData(PRINTER_NAME, "No printer selected")
     val printerAddress = getAsLiveData(PRINTER_ADDRESS, "Not set")
     val printerWidth = getAsLiveData(PRINTER_WIDTH, 58f)
     val printerCharactersPerLine = getAsLiveData(

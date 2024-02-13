@@ -2,10 +2,6 @@ package com.csi.palabakosys.app.joborders.list
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import android.widget.AdapterView
-import android.widget.AdapterView.OnItemSelectedListener
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
@@ -15,17 +11,12 @@ import com.csi.palabakosys.adapters.Adapter
 import com.csi.palabakosys.app.dashboard.data.DateFilter
 import com.csi.palabakosys.app.joborders.create.JobOrderCreateActivity
 import com.csi.palabakosys.app.joborders.create.customer.SelectCustomerActivity
-import com.csi.palabakosys.app.shared_ui.AdvancedSearchDialogActivity
 import com.csi.palabakosys.app.shared_ui.BottomSheetDateRangePickerFragment
 import com.csi.palabakosys.databinding.ActivityJobOrderListBinding
-import com.csi.palabakosys.model.EnumJoFilterBy
-import com.csi.palabakosys.model.EnumPaymentStatus
 import com.csi.palabakosys.model.JobOrderAdvancedFilter
-import com.csi.palabakosys.util.Constants
 import com.csi.palabakosys.util.FilterActivity
 import com.csi.palabakosys.viewmodels.ListViewModel
 import com.google.android.material.tabs.TabLayout
-import com.sangcomz.fishbun.util.setStatusBarColor
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -138,7 +129,7 @@ class JobOrderListActivity : FilterActivity() {
     }
 
     private fun subscribeListeners() {
-        viewModel.total.observe(this, Observer {
+        viewModel.result.observe(this, Observer {
             println(it)
         })
         viewModel.dataState.observe(this, Observer {

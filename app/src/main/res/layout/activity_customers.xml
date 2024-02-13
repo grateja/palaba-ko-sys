@@ -20,6 +20,7 @@
             android:fitsSystemWindows="true">
 
             <androidx.appcompat.widget.Toolbar
+                app:title="Customers"
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"

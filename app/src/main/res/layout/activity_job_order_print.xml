@@ -23,15 +23,10 @@
                 android:layout_height="wrap_content"/>
         </com.google.android.material.appbar.AppBarLayout>
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:background="@color/jo_void"
+            android:background="@color/text_grey"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
-<!--            <com.google.android.material.tabs.TabLayout-->
-<!--                android:id="@+id/print_tab"-->
-<!--                app:layout_constraintTop_toTopOf="parent"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content" />-->
             <androidx.core.widget.NestedScrollView
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
@@ -56,56 +51,6 @@
                         android:orientation="vertical"
                         android:paddingTop="36dp">
 
-<!--                        <TextView-->
-<!--                            style="@style/Print.Double"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:text="@{viewModel.shopName}"-->
-<!--                            android:textAlignment="center"-->
-<!--                            tools:text="Lagoon CTCC KEME" />-->
-
-<!--                        <TextView-->
-<!--                            style="@style/Print"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:text="@{viewModel.address}"-->
-<!--                            android:textAlignment="center"-->
-<!--                            tools:text="Blk 1 Lot 1 Buenmar Ave Cainta Rizal" />-->
-
-<!--                        <TextView-->
-<!--                            style="@style/Print"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:text="@{viewModel.contactInfo}"-->
-<!--                            android:textAlignment="center"-->
-<!--                            tools:text="09171790031/lagoon@csi.com" />-->
-
-<!--                        <TextView-->
-<!--                            style="@style/Print.Header"-->
-<!--                            android:textAlignment="center"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:text="@{`*** ` + viewModel.selectedTab + ` ***`}"/>-->
-
-<!--                        <TextView-->
-<!--                            style="@style/Print"-->
-<!--                            android:text="@string/print_single_line"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"/>-->
-
-<!--                        <androidx.recyclerview.widget.RecyclerView-->
-<!--                            android:id="@+id/recycler_jo_details"-->
-<!--                            android:nestedScrollingEnabled="false"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>-->
-
-<!--                        <TextView-->
-<!--                            style="@style/Print"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:textAlignment="center"-->
-<!--                            android:text="@string/print_single_line"/>-->
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/recycler_items"
@@ -114,106 +59,77 @@
                             android:layout_height="wrap_content"
                             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
-<!--                        <TextView-->
-<!--                            style="@style/Print"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:textAlignment="center"-->
-<!--                            android:text="@string/print_single_line"/>-->
-
-<!--                        <androidx.recyclerview.widget.RecyclerView-->
-<!--                            android:id="@+id/recycler_summary"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>-->
-
-<!--                        <TextView-->
-<!--                            style="@style/Print"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:textAlignment="center"-->
-<!--                            android:text="@string/print_single_line"/>-->
-
-<!--                        <androidx.recyclerview.widget.RecyclerView-->
-<!--                            android:visibility="@{viewModel.hasPayment}"-->
-<!--                            android:id="@+id/recycler_payment"-->
-<!--                            android:nestedScrollingEnabled="false"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>-->
-
-<!--                        <TextView-->
-<!--                            style="@style/Print"-->
-<!--                            android:visibility="@{viewModel.hasPayment}"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:textAlignment="center"-->
-<!--                            android:text="@string/print_single_line"/>-->
-
-<!--                        <TextView-->
-<!--                            android:visibility="@{viewModel.showDisclaimer}"-->
-<!--                            style="@style/Print.Header"-->
-<!--                            android:textAlignment="center"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:text="@{viewModel.disclaimer}"/>-->
-<!--                        <com.google.android.material.divider.MaterialDivider-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_marginVertical="16dp" />-->
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </androidx.core.widget.NestedScrollView>
-            <com.google.android.material.card.MaterialCardView
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:background="@color/white"
                 android:id="@+id/controls"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
+                app:layout_constraintStart_toStartOf="parent"
+                android:padding="16dp">
+                <Button
+                    android:id="@+id/button_enable_bluetooth"
+                    style="@style/RoundButtonNeutral.Small"
+                    android:visibility="@{!viewModel.bluetoothEnabled}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Turn On Bluetooth"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+                <androidx.constraintlayout.widget.Group
+                    android:visibility="@{viewModel.bluetoothEnabled}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:constraint_referenced_ids="text_title,print_options,text_printer_name"/>
                 <TextView
-                    android:visibility="@{!viewModel.isBluetoothAvailable}"
-                    android:text="Bluetooth is not supported on this device!"
-                    android:layout_margin="24dp"
+                    android:id="@+id/text_title"
+                    style="@style/TextItemTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/what_do_you_want_to_print"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    app:layout_constraintTop_toBottomOf="@id/text_title"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginTop="18dp"
+                    android:id="@+id/print_options"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
-                <LinearLayout
-                    android:visibility="@{viewModel.isBluetoothAvailable}"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
+                <TextView
+                    app:layout_constraintTop_toBottomOf="@id/print_options"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:gravity="center|center_vertical">
-                    <TextView
-                        android:layout_margin="18dp"
-                        android:text="@{viewModel.printerName}"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"/>
-                    <Button
-                        android:id="@+id/button_print"
-                        android:visibility="@{viewModel.bluetoothEnabled}"
-                        style="@style/RoundButtonNeutral.Small"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@{viewModel.buttonPrimaryAction}"
-                        android:layout_gravity="center"/>
-                    <Button
-                        android:id="@+id/button_enable_bluetooth"
-                        style="@style/RoundButtonNeutral.Small"
-                        android:visibility="@{!viewModel.bluetoothEnabled}"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Turn On Bluetooth"/>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-            <com.google.android.material.bottomnavigation.BottomNavigationView
-                android:id="@+id/bottom_navigation"
-                app:menu="@menu/bottom_menu_print_job_order"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                    android:id="@+id/text_printer_name"
+                    android:layout_margin="18dp"
+                    android:text="@{viewModel.printerName}"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    tools:text="JP-58H"/>
+                <Button
+                    android:id="@+id/button_print"
+                    android:visibility="@{viewModel.canPrint}"
+                    style="@style/RoundButtonPrimary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{viewModel.buttonPrimaryAction}"
+                    android:layout_gravity="center"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/print_options"/>
+<!--                <TextView-->
+<!--                    app:layout_constraintTop_toTopOf="parent"-->
+<!--                    android:visibility="@{!viewModel.isBluetoothAvailable}"-->
+<!--                    android:text="Bluetooth is not supported on this device!"-->
+<!--                    android:layout_margin="24dp"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"/>-->
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

@@ -19,9 +19,5 @@ data class EntityJobOrderPaymentFull(
         entityColumn = "payment_id",
         entity = EntityJobOrder::class
     )
-    val jobOrders: List<EntityJobOrder>
-) {
-//    fun jobOrderReferences() : String {
-//        return jobOrders.map { it.jobOrder.jobOrderNumber }.joinToString(",")
-//    }
-}
+    val jobOrders: List<EntityJobOrder>,
+)

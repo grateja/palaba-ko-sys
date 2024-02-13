@@ -17,66 +17,79 @@
             type="Boolean" />
     </data>
     <com.google.android.material.card.MaterialCardView
-        android:layout_marginVertical="10dp"
-        android:layout_marginHorizontal="20dp"
-        app:cardBackgroundColor="@color/white"
-        app:contentPadding="16dp"
+        style="@style/CardTransparent"
         android:id="@+id/cardLegend"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="20dp"
-        android:visibility="@{hasItems || (!hasItems &amp;&amp; !locked)}"
-        android:shadowColor="@color/teal_700"
-        app:cardElevation="0dp">
+        android:layout_height="wrap_content">
         <LinearLayout
+            android:layout_marginVertical="10dp"
+            android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <TextView
-                    android:id="@+id/textLegendTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@{title}"
-                    tools:text="SOME TITLE"
-                    style="@style/Caption.Term"
-                    android:layout_gravity="center"/>
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
-
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="20dp"
-                    android:src="@{locked ? @android:drawable/ic_lock_lock : @drawable/browse_right}"
-                    android:layout_gravity="center"/>
-            </LinearLayout>
-
-            <com.google.android.material.divider.MaterialDivider
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:dividerColor="@color/border_primary" />
-
+            android:visibility="@{hasItems || (!hasItems &amp;&amp; !locked)}"
+            android:orientation="vertical"
+            tools:background="#ddd">
             <TextView
-                style="@style/Caption.Definition.Warning"
+                android:id="@+id/textLegendTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{@string/symbol_bullet + ` ` + prompt}"
+                android:text="@{title}"
+                style="@style/CardTitle"
+                tools:text="SOME TITLE"/>
+            <com.google.android.material.card.MaterialCardView
                 android:visibility="@{!hasItems}"
-                tools:text="No data" />
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler"
-                android:visibility="@{hasItems}"
+                style="@style/CardItemWrapper"
+                app:cardBackgroundColor="@color/secondary_background"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:nestedScrollingEnabled="false"
-                android:orientation="vertical"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                android:layout_height="wrap_content">
+                <TextView
+                    android:textColor="@color/text_grey"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="24dp"
+                    android:layout_marginStart="24dp"
+                    android:textStyle="italic|bold"
+                    android:text="@{@string/symbol_bullet + ` ` + prompt}"
+                    android:visibility="@{!hasItems}"
+                    tools:text="No data" />
+            </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.card.MaterialCardView
+                app:strokeColor="@color/neutral"
+                app:strokeWidth="1dp"
+                android:visibility="@{hasItems}"
+                style="@style/CardItemWrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <!--                <LinearLayout-->
+                    <!--                    android:layout_width="match_parent"-->
+                    <!--                    android:layout_height="wrap_content"-->
+                    <!--                    android:orientation="horizontal">-->
+                    <!--                    <Space-->
+                    <!--                        android:layout_width="0dp"-->
+                    <!--                        android:layout_height="wrap_content"-->
+                    <!--                        android:layout_weight="1"/>-->
+
+                    <!--                    <ImageView-->
+                    <!--                        android:layout_width="30dp"-->
+                    <!--                        android:layout_height="20dp"-->
+                    <!--                        android:src="@{locked ? @android:drawable/ic_lock_lock : @drawable/browse_right}"-->
+                    <!--                        android:layout_gravity="center"/>-->
+                    <!--                </LinearLayout>-->
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clipToPadding="false"
+                        android:nestedScrollingEnabled="false"
+                        android:orientation="vertical"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 </layout>

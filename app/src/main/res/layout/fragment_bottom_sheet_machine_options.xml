@@ -24,10 +24,11 @@
                 android:divider="@drawable/divider_20"
                 android:showDividers="middle">
                 <TextView
-                    style="@style/TextMenuItemTitle"
+                    style="@style/TextTitleFragment"
                     android:text="@{viewModel.machine.machineName()}"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    tools:text="Machine options"/>
                 <com.google.android.material.divider.MaterialDivider
                     android:layout_width="match_parent"
                     android:layout_height="1dp"/>

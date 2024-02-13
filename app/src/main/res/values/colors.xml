@@ -14,7 +14,7 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="primary">#6200ee</color>
+    <color name="primary">#009688</color>
     <color name="primary_variant">#3700b3</color>
     <color name="secondary">#03dac6</color>
     <color name="secondary_variant">#018786</color>
@@ -25,13 +25,16 @@
     <color name="text_warning">#F66539</color>
     <color name="jo_paid">#1443FF00</color>
     <color name="dark_caption">#1AF80025</color>
-    <color name="jo_void">#858585</color>
+    <color name="text_grey">#B6B6B6</color>
+    <color name="text_dark_grey">#505050</color>
     <color name="color_code_dashboard">#E75263</color>
     <color name="color_code_job_order">#F46D43</color>
+    <color name="darker_color_code_job_order_darker">#C43205</color>
     <color name="color_code_machines">#FDAE61</color>
     <color name="color_code_payments">#FEE08B</color>
-    <color name="color_code_customers">#E6F598</color>
+    <color name="color_code_customers">#D6E585</color>
     <color name="color_code_expenses">#ABDDA4</color>
     <color name="color_code_shop_preferences">#66C2A5</color>
     <color name="color_code_app_settings">#3288BD</color>
+    <color name="color_code_payments_highlight">#FCFAF5</color>
 </resources>

@@ -22,11 +22,9 @@
             android:orientation="vertical">
 
             <TextView
-                style="@style/TileTitle"
+                style="@style/TextTitleFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="18dp"
-                android:textAlignment="center"
                 android:text="@{viewModel.crudActionEnum.toString(` Customer`)}"
                 tools:text="Edit customer"/>
 

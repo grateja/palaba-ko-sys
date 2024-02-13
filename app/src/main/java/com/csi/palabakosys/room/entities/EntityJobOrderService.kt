@@ -31,7 +31,8 @@ data class EntityJobOrderService(
 
     @PrimaryKey(autoGenerate = false)
     override var id: UUID,
-) : BaseEntity(id)/* {
-    constructor(jobOrderId: UUID?, serviceId: UUID, serviceName: String, price: Float, quantity: Int, used: Int, isPackage: Boolean, serviceRef: EntityServiceRef) :
-            this(jobOrderId, serviceId, serviceName, price, quantity, used, isPackage, serviceRef, null)
-}*/
+) : BaseEntity(id) {
+    fun label() : String {
+        return "$serviceName (${serviceRef.minutes} mins.)"
+    }
+}

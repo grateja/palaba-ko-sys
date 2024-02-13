@@ -61,6 +61,9 @@ class AuthActionDialogActivity : AppCompatActivity() {
             println(it)
             viewModel.setRoles(it)
         }
+        intent.getStringExtra(MESSAGE)?.let {
+            viewModel.setMessage(it)
+        }
     }
 
     private fun subscribeEvents() {

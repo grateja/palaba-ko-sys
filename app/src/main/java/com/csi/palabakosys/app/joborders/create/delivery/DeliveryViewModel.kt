@@ -22,8 +22,21 @@ constructor(
 {
     var deliveryProfiles = MutableLiveData<List<MenuDeliveryProfile>>()
     val deliveryOption = MutableLiveData(EnumDeliveryOption.PICKUP_AND_DELIVERY)
-    val distance = MutableLiveData("1")
+    val distance = MutableLiveData(1)
     val profile = MutableLiveData<MenuDeliveryProfile>()
+
+    val price = MediatorLiveData<Float>().apply {
+        fun update() {
+            val baseFare = profile.value?.baseFare ?: 0f
+            val pricePerKm = profile.value?.pricePerKm ?: 0f
+            val distance = distance.value ?: 0
+            val option = deliveryOption.value?.charge ?: 0
+
+            value = (distance * pricePerKm * option) + baseFare
+        }
+        addSource(distance) { update()}
+        addSource(deliveryOption) { update() }
+    }
 
     private val _dataState = MutableLiveData<DataState<DeliveryCharge>>()
     val dataState: LiveData<DataState<DeliveryCharge>> = _dataState
@@ -83,7 +96,7 @@ constructor(
     fun setDeliveryCharge(deliveryCharge: DeliveryCharge) {
         this.setDeliveryOption(deliveryCharge.deliveryOption)
         this.setDeliveryProfile(deliveryCharge.deliveryProfileId)
-        this.distance.value = deliveryCharge.distance.toString()
+        this.distance.value = deliveryCharge.distance.toInt()
     }
 
     init {

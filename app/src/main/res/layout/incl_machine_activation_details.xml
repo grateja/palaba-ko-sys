@@ -18,40 +18,27 @@
         android:layout_marginVertical="@dimen/activity_vertical_margin"
         android:orientation="vertical">
         <TextView
-            android:text="MACHINE NAME"
-            style="@style/Caption.Term"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CUSTOMER"/>
+        <TextView
+            style="@style/TextAppearance.AppCompat.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="MACHINE NAME"/>
+            tools:text="Tony Stark"
+            android:text="@{customerName}"/>
         <TextView
-            style="@style/Caption.Definition"
-            android:layout_width="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="@string/regular_washer"
-            android:text="@{machineName}"/>
+            android:text="SERVICE"/>
         <TextView
-            android:text="CUSTOMER NAME"
-            style="@style/Caption.Term"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="CUSTOMER NAME"/>
-        <TextView
-            style="@style/Caption.Definition"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{customerName}"
-            tools:text="Tony Parker"/>
-        <TextView
-            android:text="SERVICE NAME"
-            style="@style/Caption.Term"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="SERVICE NAME"/>
-        <TextView
-            style="@style/Caption.Definition"
+            android:textSize="24dp"
+            android:fontFamily="sans-serif-thin"
+            android:textFontWeight="300"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{serviceName}"
-            tools:text="Regular Wash"/>
+            tools:text="Regular Wash (40 Mins)"/>
     </LinearLayout>
 </layout>

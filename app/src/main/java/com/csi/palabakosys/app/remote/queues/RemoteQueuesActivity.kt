@@ -17,6 +17,7 @@ import com.csi.palabakosys.util.ActivityLauncher
 import com.csi.palabakosys.util.Constants
 import com.csi.palabakosys.util.Constants.Companion.CASCADE_CLOSE
 import com.csi.palabakosys.util.toUUID
+import com.sangcomz.fishbun.util.setStatusBarColor
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -44,6 +45,8 @@ class RemoteQueuesActivity : AppCompatActivity() {
         intent.getStringExtra(Constants.MACHINE_ID_EXTRA).toUUID()?.let {
             viewModel.setMachineId(it)
         }
+
+        setStatusBarColor(resources.getColor(R.color.color_code_machines, null))
     }
 
     private fun subscribeEvents() {

@@ -19,6 +19,11 @@
             app:behavior_peekHeight="1000dp"
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
             android:orientation="vertical">
+            <TextView
+                style="@style/TextTitleFragment"
+                android:text="Select customer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
             <com.google.android.material.card.MaterialCardView
                 android:visibility="@{!viewModel.cannotSwitchCustomer}"
                 android:id="@+id/card_search"

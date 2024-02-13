@@ -19,6 +19,11 @@
     <style name="Theme.LMS2022.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@drawable/background_gradient_secondary</item>
+    </style>
+
+    <style name="LightActionBar" parent="Theme.LMS2022.NoActionBar">
+        <item name="android:windowLightStatusBar">true</item> <!-- Set to true to use light status bar text -->
     </style>
 
 <!--    <style name="Theme.LMS2022.NoActionBar.Dashboard" parent="Theme.LMS2022.NoActionBar">-->

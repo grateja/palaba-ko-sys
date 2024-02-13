@@ -26,4 +26,7 @@ data class EntityCustomerQueueService (
 
     @ColumnInfo(name = "latest_job_order")
     val latestJobOrderDate: Instant?,
+
+    @ColumnInfo(name = "available")
+    val available: Int?
 ) : Parcelable

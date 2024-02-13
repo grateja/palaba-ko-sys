@@ -2,19 +2,29 @@ package com.csi.palabakosys.app.joborders.payment
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.csi.palabakosys.databinding.RecyclerItemJobOrderMinimalBinding
 
-class JobOrderListPaymentAdapter : RecyclerView.Adapter<JobOrderListPaymentAdapter.ViewHolder>() {
+class JobOrderListPaymentAdapter(val readOnly: Boolean) : RecyclerView.Adapter<JobOrderListPaymentAdapter.ViewHolder>() {
     inner class ViewHolder(private val binding: RecyclerItemJobOrderMinimalBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(jobOrder: JobOrderPaymentMinimal) {
+        fun bind(jobOrder: JobOrderPaymentMinimal, index: Int) {
             binding.viewModel = jobOrder
-            binding.checkboxSelected.setOnClickListener {
+
+            binding.checkbox.setOnClickListener {
+                jobOrder.selected = !jobOrder.selected
                 onSelectionChange?.invoke(jobOrder)
             }
             binding.card.setOnClickListener {
                 onItemClick?.invoke(jobOrder)
+//                notifyItemChanged(index)
+            }
+
+            if(readOnly) {
+                binding.checkbox.visibility = View.GONE
+            } else {
+                binding.checkbox.visibility = View.VISIBLE
             }
         }
     }
@@ -38,7 +48,7 @@ class JobOrderListPaymentAdapter : RecyclerView.Adapter<JobOrderListPaymentAdapt
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position]
-        holder.bind(item)
+        holder.bind(item, position)
     }
 
     override fun getItemCount(): Int {

@@ -36,43 +36,47 @@
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="8dp">
                     <TableRow
-                        style="@style/DefinitionTermRow">
+                        style="@style/DefinitionTermRow.Center">
                         <TextView
                             style="@style/TextTermDark.TableRow"
                             android:text="Order by:"/>
                         <TextView
-                            style="@style/TextDefinitionDark"
+                            android:layout_weight="3"
+                            style="@style/TextDefinition.Dark"
                             android:text="@{viewModel.filterParams.orderBy}"
                             tools:text="Date created"/>
                     </TableRow>
                     <TableRow
-                        style="@style/DefinitionTermRow">
+                        style="@style/DefinitionTermRow.Center">
                         <TextView
                             style="@style/TextTermDark.TableRow"
                             android:text="Sort direction:"/>
                         <TextView
-                            style="@style/TextDefinitionDark"
+                            android:layout_weight="3"
+                            style="@style/TextDefinition.Dark"
                             android:text="@{viewModel.filterParams.sortDirection.toString()}"
                             tools:text="DESC"/>
                     </TableRow>
                     <TableRow
-                        style="@style/DefinitionTermRow">
+                        style="@style/DefinitionTermRow.Center">
                         <TextView
                             style="@style/TextTermDark.TableRow"
                             android:text="Payment Status:"/>
                         <TextView
-                            style="@style/TextDefinitionDark"
+                            android:layout_weight="3"
+                            style="@style/TextDefinition.Dark"
                             android:text="@{viewModel.filterParams.paymentStatus.toString()}"
                             tools:text="Paid and Unpaid"/>
                     </TableRow>
                     <TableRow
                         android:visibility="@{viewModel.filterParams.dateFilter != null}"
-                        style="@style/DefinitionTermRow">
+                        style="@style/DefinitionTermRow.Center">
                         <TextView
                             style="@style/TextTermDark.TableRow"
                             android:text="Date range:"/>
                         <TextView
-                            style="@style/TextDefinitionDark"
+                            android:layout_weight="3"
+                            style="@style/TextDefinition.Dark"
                             android:text="@{viewModel.filterParams.dateFilter.toString()}"
                             tools:text="Jan 1, 2024"/>
                     </TableRow>

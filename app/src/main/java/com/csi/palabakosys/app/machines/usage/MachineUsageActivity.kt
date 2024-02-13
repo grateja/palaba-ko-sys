@@ -1,5 +1,6 @@
 package com.csi.palabakosys.app.machines.usage
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
@@ -11,10 +12,12 @@ import com.csi.palabakosys.app.dashboard.data.DateFilter
 import com.csi.palabakosys.app.shared_ui.BottomSheetDateRangePickerFragment
 import com.csi.palabakosys.databinding.ActivityMachineUsageBinding
 import com.csi.palabakosys.room.entities.EntityMachineUsageDetails
+import com.csi.palabakosys.util.ActivityLauncher
 import com.csi.palabakosys.util.Constants
 import com.csi.palabakosys.util.FilterActivity
 import com.csi.palabakosys.util.toUUID
 import com.csi.palabakosys.viewmodels.ListViewModel
+import com.sangcomz.fishbun.util.setStatusBarColor
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,6 +26,7 @@ class MachineUsageActivity : FilterActivity() {
     private lateinit var binding: ActivityMachineUsageBinding
     private val adapter = Adapter<EntityMachineUsageDetails>(R.layout.recycler_item_machine_usage_details)
     private lateinit var dateRangeDialog: BottomSheetDateRangePickerFragment
+    private val machineUsageFragment = MachineUsagePreviewFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_machine_usage)
@@ -35,6 +39,8 @@ class MachineUsageActivity : FilterActivity() {
 
         subscribeEvents()
         subscribeListeners()
+
+        setStatusBarColor(resources.getColor(R.color.color_code_machines, null))
     }
 
     override fun onResume() {
@@ -69,6 +75,10 @@ class MachineUsageActivity : FilterActivity() {
     private fun subscribeEvents() {
         adapter.onScrollAtTheBottom = {
             viewModel.loadMore()
+        }
+        adapter.onItemClick = {
+            viewModel.setCurrentItem(it)
+            machineUsageFragment.show(supportFragmentManager, null)
         }
         binding.cardDateRange.setOnClickListener {
             viewModel.showDatePicker()

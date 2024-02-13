@@ -13,47 +13,81 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <com.google.android.material.card.MaterialCardView
-            style="@style/CardPrimary"
+            app:cardCornerRadius="0dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@color/color_code_customers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <LinearLayout
+                style="@style/CardItemList.FullWidth"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <TextView
-                    style="@style/Caption.Term.Parent"
-                    android:text="CUSTOMER DETAILS"
+                    android:layout_marginTop="18dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <LinearLayout
-                    style="@style/Caption.Definition.Parent"
-                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                    <include layout="@layout/incl_legend"
-                        app:term="@{`NAME`}"
-                        app:definition="@{viewModel.customer.name}"/>
-                    <include layout="@layout/incl_legend"
-                        app:term="@{`CRN`}"
-                        app:definition="@{viewModel.customer.crn}"/>
-                    <include layout="@layout/incl_legend"
-                        android:visibility="@{viewModel.customer.contactNumber != null}"
-                        app:term="@{`CONTACT NUMBER`}"
-                        app:definition="@{viewModel.customer.contactNumber}"/>
-                    <include layout="@layout/incl_legend"
-                        android:visibility="@{viewModel.customer.address != null}"
-                        app:term="@{`ADDRESS`}"
-                        app:definition="@{viewModel.customer.address}"/>
-                    <include layout="@layout/incl_legend"
-                        android:visibility="@{viewModel.customer.email != null}"
-                        app:term="@{`EMAIL`}"
-                        app:definition="@{viewModel.customer.email}"/>
-                    <include layout="@layout/incl_legend"
-                        android:visibility="@{viewModel.customer.remarks != null}"
-                        app:term="@{`REMARKS`}"
-                        app:definition="@{viewModel.customer.remarks}"/>
-                </LinearLayout>
+                    android:text="CUSTOMER"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/TextDefinition.Light"
+                    android:text="@{viewModel.customer.name}"
+                    tools:text="Tony Stark"/>
+                <TextView
+                    android:layout_marginTop="18dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CRN"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/TextDefinition.Light"
+                    android:text="@{viewModel.customer.crn}"
+                    tools:text="129184"/>
+                <TextView
+                    android:visibility="@{viewModel.customer.contactNumber != null}"
+                    android:layout_marginTop="18dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Contact number"/>
+                <TextView
+                    android:visibility="@{viewModel.customer.contactNumber != null}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/TextDefinition.Light"
+                    android:text="@{viewModel.customer.contactNumber}"
+                    tools:text="09171790031"/>
+                <TextView
+                    android:visibility="@{viewModel.customer.address != null}"
+                    android:layout_marginTop="18dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Address"/>
+                <TextView
+                    android:visibility="@{viewModel.customer.address != null}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/TextDefinition.Light"
+                    android:text="@{viewModel.customer.address}"
+                    tools:text="Blk 1 Lot 1 Phase 90"/>
+                <TextView
+                    android:visibility="@{viewModel.customer.email != null}"
+                    android:layout_marginTop="18dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Email"/>
+                <TextView
+                    android:visibility="@{viewModel.customer.email != null}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/TextDefinition.Light"
+                    android:text="@{viewModel.customer.email}"
+                    tools:text="stark@avengers.com"/>
+
+
                 <LinearLayout
+                    android:layout_marginTop="18dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:divider="@drawable/divider_10"

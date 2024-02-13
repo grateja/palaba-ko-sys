@@ -9,10 +9,12 @@ import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
 import com.csi.palabakosys.adapters.Adapter
 import com.csi.palabakosys.app.joborders.create.JobOrderCreateActivity
+import com.csi.palabakosys.app.joborders.payment.JobOrderListPaymentAdapter
 import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentActivity.Companion.PAYMENT_ID
 import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentMinimal
 import com.csi.palabakosys.databinding.ActivityPaymentPreviewBinding
 import com.csi.palabakosys.util.toUUID
+import com.sangcomz.fishbun.util.setStatusBarColor
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
@@ -20,7 +22,7 @@ import java.util.*
 class PaymentPreviewActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPaymentPreviewBinding
     private val viewModel: PaymentPreviewViewModel by viewModels()
-    private val adapter = Adapter<JobOrderPaymentMinimal>(R.layout.recycler_item_job_order_read_only)
+    private val adapter = JobOrderListPaymentAdapter(true) //Adapter<JobOrderPaymentMinimal>(R.layout.recycler_item_job_order_read_only)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,7 +31,7 @@ class PaymentPreviewActivity : AppCompatActivity() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
-        binding.recyclerJobOrderList.adapter = adapter
+        binding.recyclerJobOrderPaymentMinimal.adapter = adapter
 
         intent.getStringExtra(PAYMENT_ID)?.toUUID()?.let {
             viewModel.setPaymentId(it)
@@ -37,6 +39,8 @@ class PaymentPreviewActivity : AppCompatActivity() {
 
         subscribeListeners()
         subscribeEvents()
+
+        setStatusBarColor(resources.getColor(R.color.color_code_payments, null))
     }
 
     private fun openJobOrder(jobOrderId: UUID) {

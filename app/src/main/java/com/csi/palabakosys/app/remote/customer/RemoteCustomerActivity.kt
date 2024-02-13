@@ -15,6 +15,7 @@ import com.csi.palabakosys.services.MachineActivationService
 import com.csi.palabakosys.util.ActivityLauncher
 import com.csi.palabakosys.util.Constants
 import com.csi.palabakosys.util.toUUID
+import com.sangcomz.fishbun.util.setStatusBarColor
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -35,6 +36,8 @@ class RemoteCustomerActivity : AppCompatActivity() {
         intent.getStringExtra(Constants.MACHINE_ID_EXTRA).toUUID()?.let {
             viewModel.setMachineId(it)
         }
+
+        setStatusBarColor(resources.getColor(R.color.color_code_machines, null))
     }
 
     private fun subscribeEvents() {
@@ -52,7 +55,7 @@ class RemoteCustomerActivity : AppCompatActivity() {
 
     private fun subscribeListeners() {
         viewModel.machine.observe(this, Observer {
-            title = "Select customer for  ${it?.machineName()}"
+//            title = "Select customer for  ${it?.machineName()}"
             if(it?.activationRef?.running() == true) {
                 finish()
             }

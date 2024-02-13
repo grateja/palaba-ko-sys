@@ -24,6 +24,10 @@ open class BaseModalFragment: BottomSheetDialogFragment() {
         dismissed = true
     }
     override fun show(manager: FragmentManager, tag: String?) {
+        dialog?.let {
+            val sheet = it as BottomSheetDialog
+            sheet.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
         if(dismissed) {
             super.show(manager, tag)
         }

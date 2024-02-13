@@ -14,7 +14,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.recyclerview.widget.GridLayoutManager
 import com.csi.palabakosys.R
+import com.csi.palabakosys.adapters.OptionsAdapter
 import com.csi.palabakosys.app.app_settings.printer.SettingsPrinterActivity
 import com.csi.palabakosys.app.app_settings.printer.SettingsPrinterActivity.Companion.PRINTER_DEVICE_EXTRA
 import com.csi.palabakosys.app.app_settings.printer.browser.PrinterDevice
@@ -40,6 +42,10 @@ class JobOrderPrintActivity : AppCompatActivity() {
     private val helper = BluetoothPrinterHelper(this)
     private val itemsAdapter = PrinterAdapter()
     private val launcher = ActivityLauncher(this)
+    private val printOptions = OptionsAdapter(
+        R.layout.recycler_item_print_option,
+        arrayOf(TAB_CLAIM_STUB, TAB_JOB_ORDER, TAB_MACHINE_STUB)
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,11 +53,11 @@ class JobOrderPrintActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
 
-        binding.apply {
-            viewModel = this@JobOrderPrintActivity.viewModel
-            lifecycleOwner = this@JobOrderPrintActivity
-            recyclerItems.adapter = itemsAdapter
-        }
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+        binding.recyclerItems.adapter = itemsAdapter
+        binding.printOptions.adapter = printOptions
+        binding.printOptions.layoutManager = GridLayoutManager(applicationContext, 3)
 
         subscribeEvents()
         subscribeListeners()
@@ -101,23 +107,27 @@ class JobOrderPrintActivity : AppCompatActivity() {
     }
 
     private fun subscribeEvents() {
-        binding.bottomNavigation.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.menu_claim_stub -> {
-                    viewModel.selectTab(TAB_CLAIM_STUB)
-                    true
-                }
-                R.id.menu_job_order -> {
-                    viewModel.selectTab(TAB_JOB_ORDER)
-                    true
-                }
-                R.id.menu_machine_stub -> {
-                    viewModel.selectTab(TAB_MACHINE_STUB)
-                    true
-                }
-                else -> false
-            }
+        printOptions.onSelect = {
+            viewModel.selectTab(it)
         }
+
+//        binding.bottomNavigation.setOnItemSelectedListener { item ->
+//            when (item.itemId) {
+//                R.id.menu_claim_stub -> {
+//                    viewModel.selectTab(TAB_CLAIM_STUB)
+//                    true
+//                }
+//                R.id.menu_job_order -> {
+//                    viewModel.selectTab(TAB_JOB_ORDER)
+//                    true
+//                }
+//                R.id.menu_machine_stub -> {
+//                    viewModel.selectTab(TAB_MACHINE_STUB)
+//                    true
+//                }
+//                else -> false
+//            }
+//        }
 
         helper.setOnBluetoothStateChanged {
             viewModel.setBluetoothState(it)
@@ -136,6 +146,9 @@ class JobOrderPrintActivity : AppCompatActivity() {
         }
         binding.buttonEnableBluetooth.setOnClickListener {
             helper.enableBluetooth()
+        }
+        binding.textPrinterName.setOnClickListener {
+            openPrinterSettings()
         }
     }
 
@@ -165,6 +178,10 @@ class JobOrderPrintActivity : AppCompatActivity() {
                     viewModel.resetState()
                 }
             }
+        })
+
+        viewModel.selectedTab.observe(this, Observer {
+            printOptions.selectOption(it)
         })
 
         viewModel.characterLength.observe(this, Observer {

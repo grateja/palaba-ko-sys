@@ -73,12 +73,17 @@ class PaymentListActivity : FilterActivity() {
         adapter.onItemClick = {
             openPayment(it.id)
         }
-        binding.cardDateRange.setOnClickListener {
-            viewModel.showDatePicker()
-        }
-        binding.buttonClearDateFilter.setOnClickListener {
-            viewModel.clearDates()
-        }
+//        binding.cardDateRange.setOnClickListener {
+//            viewModel.showDatePicker()
+//        }
+//        binding.buttonClearDateFilter.setOnClickListener {
+//            viewModel.clearDates()
+//        }
+    }
+
+    override fun onAdvancedSearchClick() {
+        super.onAdvancedSearchClick()
+        viewModel.showDatePicker()
     }
 
     private fun subscribeListeners() {

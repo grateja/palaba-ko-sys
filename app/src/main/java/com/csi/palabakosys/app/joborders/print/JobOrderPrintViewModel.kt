@@ -40,7 +40,7 @@ constructor(
     val isBluetoothAvailable = MutableLiveData<Boolean>()
     val bluetoothEnabled = MutableLiveData(false)
     val printerName = printerSettings.printerName
-//    val printerSettings = dataStoreRepository.printerSettings
+
     private val _printState = MutableLiveData(EnumPrintState.READY)
     val printState: LiveData<EnumPrintState> = _printState
     val buttonPrimaryAction = MediatorLiveData<String>().apply {
@@ -53,6 +53,18 @@ constructor(
                 }
             } ?: "CONTINUE"
         }
+    }
+
+    val canPrint = MediatorLiveData<Boolean>().apply {
+        fun update() {
+            val enabled = bluetoothEnabled.value ?: false
+            val printState = _printState.value != EnumPrintState.STARTED
+            val printerName = printerName.value != "Not set"
+            value = enabled && printState && printerName
+        }
+        addSource(bluetoothEnabled) {update()}
+        addSource(_printState) {update()}
+        addSource(printerName) {update()}
     }
 //    val printerName = dataStoreRepository.printerName
 //    val printerAddress = dataStoreRepository.printerAddress

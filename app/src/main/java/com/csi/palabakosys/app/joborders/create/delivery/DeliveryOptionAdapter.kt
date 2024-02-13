@@ -2,6 +2,7 @@ package com.csi.palabakosys.app.joborders.create.delivery
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
@@ -85,13 +86,18 @@ class DeliveryOptionAdapter : RecyclerView.Adapter<DeliveryOptionAdapter.ViewHol
         }
         holder.itemView.apply {
             val selected = r.selected
+            findViewById<TextView>(R.id.textTitle).also {
+                if(selected) {
+                    it.setTextColor(context.getColor(R.color.primary))
+                } else {
+                    it.setTextColor(context.getColor(R.color.text_dark_grey))
+                }
+            }
             findViewById<MaterialCardView>(R.id.cardDeliveryOption).also {
                 if(selected) {
-                    it.strokeColor = context.getColor(R.color.card_selected)
-                    it.setCardBackgroundColor(context.getColor(R.color.span_background_selected))
+                    it.strokeColor = context.getColor(R.color.primary)
                 } else {
-                    it.strokeColor = context.getColor(R.color.border_primary)
-                    it.setCardBackgroundColor(context.getColor(R.color.white))
+                    it.strokeColor = context.getColor(R.color.regularColor)
                 }
             }
 //            println("selected" + r.value)

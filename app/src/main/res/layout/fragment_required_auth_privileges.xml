@@ -22,7 +22,7 @@
             android:orientation="vertical">
             <TextView
                 android:id="@+id/textFormTitle"
-                style="@style/TextItemTitle"
+                style="@style/TextTitleFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/privilege_prompt"/>

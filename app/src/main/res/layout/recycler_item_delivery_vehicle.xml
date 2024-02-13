@@ -8,11 +8,15 @@
             type="com.csi.palabakosys.app.joborders.create.delivery.MenuDeliveryProfile" />
     </data>
     <com.google.android.material.card.MaterialCardView
-        style="@style/CardMenuItem"
+        style="@style/CardItemWrapper"
+        android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+        android:layout_marginVertical="8dp"
         android:id="@+id/cardVehicle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+            android:layout_marginVertical="12dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:divider="@drawable/divider_10"
@@ -27,7 +31,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
             <TextView
-                style="@style/TileSubTitle"
+                style="@style/TextItemTitle"
                 android:id="@+id/textTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -36,33 +40,34 @@
                 android:text="@{viewModel.vehicle.toString()}"
                 app:layout_constraintTop_toTopOf="@id/icon"
                 app:layout_constraintStart_toEndOf="@id/icon"/>
-            <TextView
-                android:id="@+id/text_base_price"
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardPrice"
+                style="@style/CardSpan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                app:layout_constraintStart_toStartOf="@id/text_description"
-                app:layout_constraintTop_toBottomOf="@id/text_description"
-                tools:text="P20.P Base Price"
-                android:text="@{`P ` + viewModel.baseFare + ` Base fare`}"/>
-            <TextView
-                android:id="@+id/text_price_per_km"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/text_description"
-                tools:text="P20.P Addtl./KM"
-                android:text="@{`P ` + viewModel.baseFare + ` Addtl charge every KM`}"/>
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    style="@style/TextPrimary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:peso="@{viewModel.baseFare}"
+                    android:textSize="20sp"
+                    tools:text="P 70.00" />
+            </com.google.android.material.card.MaterialCardView>
+
             <TextView
-                android:fontFamily="sans-serif-thin"
                 android:id="@+id/text_description"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                tools:text="Some description"
                 android:text="@{viewModel.vehicle.description}"
+                app:layout_constraintEnd_toStartOf="@+id/cardPrice"
+                app:layout_constraintStart_toStartOf="@id/textTitle"
                 app:layout_constraintTop_toBottomOf="@id/textTitle"
-                app:layout_constraintStart_toStartOf="@id/textTitle"/>
+                tools:text="Some description" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 </layout>

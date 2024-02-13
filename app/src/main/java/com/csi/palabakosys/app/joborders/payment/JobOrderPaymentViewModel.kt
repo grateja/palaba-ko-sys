@@ -41,7 +41,7 @@ constructor(
     }
 
     val requireOrNumber = dataStoreRepository.getAsLiveData(JobOrderSettingsRepository.JOB_ORDER_REQUIRE_OR_NUMBER, false)
-    val paymentMethod = MutableLiveData(EnumPaymentMethod.CASH)
+    val paymentMethod = MutableLiveData<EnumPaymentMethod>()
     val cashReceived = MutableLiveData("")
     val cashlessAmount = MutableLiveData("")
     val cashlessRefNumber = MutableLiveData("")
@@ -65,6 +65,14 @@ constructor(
 
     private val _payableJobOrders = MutableLiveData<List<JobOrderPaymentMinimal>>()
     val payableJobOrders: LiveData<List<JobOrderPaymentMinimal>> = _payableJobOrders
+
+    val selectedJobOrders = MediatorLiveData<Int>().apply {
+        fun update() {
+            val items = _payableJobOrders.value
+            value = items?.filter { it.selected }?.size
+        }
+        addSource(_payableJobOrders) {update()}
+    }
 
     val payableAmount = MediatorLiveData<Float>().apply {
         fun update() {
@@ -153,7 +161,10 @@ constructor(
             }
         }
 
-        validation.addRule("datePaid", datePaid.value, arrayOf(Rule.Required, Rule.NotAfter(Instant.now())))
+        validation.addRule("datePaid", datePaid.value, arrayOf(
+            Rule.Required,
+            Rule.NotAfter(Instant.now())
+        ))
 
         if(paymentMethod.value == EnumPaymentMethod.CASH) {
             validation.addRule(
@@ -190,6 +201,10 @@ constructor(
                     Rule.Required
                 )
             )
+        } else {
+//            validation.addError("paymentMethod", "Please select payment option!")
+            _dataState.value = DataState.InvalidOperation("Please select payment option!")
+            return
         }
 
 
@@ -266,5 +281,9 @@ constructor(
         datePaid.value?.let {
             _dataState.value = DataState.RequestModifyDateTime(it)
         }
+    }
+
+    fun setPaymentMethod(method: EnumPaymentMethod) {
+        paymentMethod.value = method
     }
 }

@@ -35,10 +35,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LMS2022">
         <activity
+            android:name=".app.machines.usage.MachineUsagePreviewActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MaterialComponents.Light.Dialog" />
+        <activity
             android:name=".app.joborders.print.JobOrderPrintActivity"
             android:exported="false"
             android:theme="@style/Theme.LMS2022.NoActionBar">
-        <meta-data
+            <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
@@ -60,7 +64,7 @@
             android:name=".app.payment_list.PaymentListActivity"
             android:exported="false"
             android:label="Payments"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
+            android:theme="@style/LightActionBar">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -68,7 +72,8 @@
         <activity
             android:name=".app.joborders.payment.preview.PaymentPreviewActivity"
             android:exported="false"
-            android:label="Payment">
+            android:label="Payment"
+            android:theme="@style/LightActionBar">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -76,7 +81,7 @@
         <activity
             android:name=".app.machines.usage.MachineUsageActivity"
             android:exported="false"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar.Bridge">
+            android:theme="@style/LightActionBar">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -143,7 +148,8 @@
         <activity
             android:name=".app.remote.queues.RemoteQueuesActivity"
             android:exported="false"
-            android:label="Select Service">
+            android:label="Select Service"
+            android:theme="@style/LightActionBar">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -151,7 +157,8 @@
         <activity
             android:name=".app.remote.customer.RemoteCustomerActivity"
             android:exported="false"
-            android:label="Select customer">
+            android:label="Select customer"
+            android:theme="@style/LightActionBar">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -209,7 +216,7 @@
             android:name=".app.customers.preview.CustomerPreviewActivity"
             android:exported="false"
             android:label="Customer Details"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
+            android:theme="@style/LightActionBar">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -227,7 +234,7 @@
             android:name=".app.customers.list.CustomersActivity"
             android:exported="false"
             android:label="Customers"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
+            android:theme="@style/LightActionBar">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -302,7 +309,8 @@
         <activity
             android:name=".app.expenses.edit.ExpenseAddEditActivity"
             android:exported="false"
-            android:label="Expenses">
+            android:label="Expenses"
+            android:theme="@style/LightActionBar">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -311,7 +319,7 @@
             android:name=".app.expenses.ExpensesActivity"
             android:exported="false"
             android:label="Expenses"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
+            android:theme="@style/LightActionBar">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -345,7 +353,8 @@
         <activity
             android:name=".app.remote.running.RemoteRunningActivity"
             android:exported="false"
-            android:label="Remote Panel">
+            android:label="Remote Panel"
+            android:theme="@style/Theme.MaterialComponents.Light.Dialog">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -403,7 +412,8 @@
         <activity
             android:name=".app.joborders.payment.JobOrderPaymentActivity"
             android:exported="false"
-            android:label="Payment">
+            android:label="Payment"
+            android:theme="@style/LightActionBar">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -501,8 +511,8 @@
         <activity
             android:name=".app.joborders.create.JobOrderCreateActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustPan"
-            android:theme="@style/Theme.LMS2022.NoActionBar">
+            android:theme="@style/Theme.LMS2022.NoActionBar"
+            android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -519,6 +529,7 @@
             android:theme="@style/Theme.LMS2022.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

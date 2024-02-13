@@ -36,6 +36,12 @@ class InputValidation {
         return this
     }
 
+    fun has(key: String) : Boolean {
+        return errorList.any {
+            it.key == key
+        }
+    }
+
     fun get(key: String) : String {
         val error = errorList.find {
             key == it.key

@@ -8,29 +8,42 @@
             type="com.csi.palabakosys.room.entities.EntityMachineUsageDetails" />
     </data>
     <com.google.android.material.card.MaterialCardView
+        style="@style/CardItemList.FullWidth"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/label_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.customerName}"
+                app:layout_constraintEnd_toStartOf="@+id/text_activated"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Tony Parker" />
+
             <TextView
                 android:id="@+id/text_activated"
-                android:layout_margin="8dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{viewModel.activated}"
                 tools:text="Jan 1, 2023 10:20 AM"
-                android:layout_weight="1"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintEnd_toEndOf="parent"/>
 
             <TextView
-                android:text="@{viewModel.customerName}"
+                android:id="@+id/text_service_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="Tony Parker"
-                app:layout_constraintStart_toStartOf="@id/text_activated"
-                app:layout_constraintTop_toBottomOf="@id/text_activated"/>
+                android:text="@{viewModel.serviceLabel()}"
+                style="@style/TextAppearance.AppCompat.Title"
+                tools:text="Regular Wash (40 mins.)"
+                app:layout_constraintTop_toBottomOf="@id/label_name"
+                app:layout_constraintStart_toStartOf="parent"/>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 </layout>

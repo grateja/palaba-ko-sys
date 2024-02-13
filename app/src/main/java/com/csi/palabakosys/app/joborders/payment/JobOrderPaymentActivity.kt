@@ -7,13 +7,17 @@ import android.widget.ArrayAdapter
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.GridLayoutManager
 import com.csi.palabakosys.R
+import com.csi.palabakosys.adapters.OptionsAdapter
 import com.csi.palabakosys.app.auth.AuthActionDialogActivity
 import com.csi.palabakosys.app.auth.LoginCredentials
 import com.csi.palabakosys.app.joborders.create.JobOrderCreateActivity
 import com.csi.palabakosys.app.joborders.payment.cashless.PaymentJoCashlessModalFragment
 import com.csi.palabakosys.databinding.ActivityJobOrderPaymentBinding
+import com.csi.palabakosys.model.EnumPaymentMethod
 import com.csi.palabakosys.util.*
+import com.sangcomz.fishbun.util.setStatusBarColor
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,8 +33,15 @@ class JobOrderPaymentActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityJobOrderPaymentBinding
     private val viewModel: JobOrderPaymentViewModel by viewModels()
-    private lateinit var cashlessModalFragment: PaymentJoCashlessModalFragment
-    private val adapter = JobOrderListPaymentAdapter()
+    private val fragment = BottomSheetJobOrderPaymentFragment()
+//    private lateinit var cashlessModalFragment: PaymentJoCashlessModalFragment
+    private val adapter = JobOrderListPaymentAdapter(false)
+
+//    private val paymentMethodAdapter = OptionsAdapter(
+//        R.layout.recycler_item_payment_method_option,
+//        EnumPaymentMethod.values(),
+//        R.color.color_code_payments
+//    )
 
     private val authLauncher = ActivityLauncher(this)
     private val dateTimePicker: DateTimePicker by lazy {
@@ -44,6 +55,8 @@ class JobOrderPaymentActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         binding.recyclerJobOrderPaymentMinimal.adapter = adapter
 
+        setStatusBarColor(resources.getColor(R.color.color_code_payments, null))
+
         subscribeEvents()
         subscribeListeners()
 
@@ -56,17 +69,36 @@ class JobOrderPaymentActivity : AppCompatActivity() {
             viewModel.getUnpaidByCustomerId(customerId)
         }
 
-        binding.textInputCashReceived.selectAllOnFocus()
+//        binding.textInputCashReceived.selectAllOnFocus()
+
+//        binding.recyclerOptionPaymentMethod.layoutManager = GridLayoutManager(this, 2)
+//        binding.recyclerOptionPaymentMethod.adapter = paymentMethodAdapter
     }
 
-    private fun auth(action: String) {
+    private fun auth(action: String, message: String) {
         val intent = Intent(this, AuthActionDialogActivity::class.java).apply {
             this.action = action
+            putExtra(AuthActionDialogActivity.MESSAGE, message)
         }
         authLauncher.launch(intent)
     }
 
     private fun subscribeEvents() {
+        binding.cardPaymentOptionCash.setOnClickListener {
+            viewModel.setPaymentMethod(EnumPaymentMethod.CASH)
+            fragment.show(supportFragmentManager, null)
+        }
+        binding.cardPaymentOptionCashless.setOnClickListener {
+            viewModel.setPaymentMethod(EnumPaymentMethod.CASHLESS)
+            fragment.show(supportFragmentManager, null)
+        }
+        binding.cardDatePaid.setOnClickListener {
+            auth(AUTH_REQUEST_MODIFY_DATE_ACTION, "Modification of date paid requires authentication!")
+        }
+//        paymentMethodAdapter.onSelect = {
+//            viewModel.setPaymentMethod(it)
+//            BottomSheetJobOrderPaymentFragment().show(supportFragmentManager, null)
+//        }
         adapter.onSelectionChange = {
             viewModel.selectItem(it)
         }
@@ -80,9 +112,9 @@ class JobOrderPaymentActivity : AppCompatActivity() {
         binding.buttonSave.setOnClickListener {
             viewModel.validate()
         }
-        binding.textDatePaid.setOnClickListener {
-            auth(AUTH_REQUEST_MODIFY_DATE_ACTION)
-        }
+//        binding.textDatePaid.setOnClickListener {
+//            auth(AUTH_REQUEST_MODIFY_DATE_ACTION)
+//        }
         dateTimePicker.setOnDateTimeSelectedListener {
             viewModel.setDateTime(it)
         }
@@ -101,19 +133,18 @@ class JobOrderPaymentActivity : AppCompatActivity() {
     }
 
     private fun subscribeListeners() {
+//        viewModel.paymentMethod.observe(this, Observer {
+//            paymentMethodAdapter.selectOption(it)
+//        })
         viewModel.customer.observe(this, Observer {
             title = "${it.name} - [${it.crn}]"
-        })
-        viewModel.cashlessProviders.observe(this, Observer {
-            val adapter = ArrayAdapter(applicationContext, android.R.layout.simple_dropdown_item_1line, it)
-            binding.textInputCashlessProvider.setAdapter(adapter)
         })
         viewModel.payableJobOrders.observe(this, Observer {
             adapter.setData(it)
         })
         viewModel.amountToPay.observe(this, Observer {
-            binding.textInputCashReceived.setText(it.toString())
-            binding.textInputCashlessAmount.setText(it.toString())
+//            binding.textInputCashReceived.setText(it.toString())
+//            binding.textInputCashlessAmount.setText(it.toString())
         })
 
         viewModel.dataState.observe(this, Observer {
@@ -127,7 +158,7 @@ class JobOrderPaymentActivity : AppCompatActivity() {
 //                    viewModel.resetState()
 //                }
                 is JobOrderPaymentViewModel.DataState.ValidationPassed -> {
-                    auth(AUTH_REQUEST_SAVE)
+                    auth(AUTH_REQUEST_SAVE, "Saving job order requires authentication!")
                     viewModel.resetState()
                 }
                 is JobOrderPaymentViewModel.DataState.PaymentSuccess -> {
@@ -142,6 +173,10 @@ class JobOrderPaymentActivity : AppCompatActivity() {
                 is JobOrderPaymentViewModel.DataState.InvalidOperation -> {
                     showDialog(it.message)
 //                    Toast.makeText(applicationContext, it.message, Toast.LENGTH_LONG).show()
+                    viewModel.resetState()
+                }
+                is JobOrderPaymentViewModel.DataState.InvalidInput -> {
+                    fragment.show(supportFragmentManager, null)
                     viewModel.resetState()
                 }
                 is JobOrderPaymentViewModel.DataState.RequestModifyDateTime -> {

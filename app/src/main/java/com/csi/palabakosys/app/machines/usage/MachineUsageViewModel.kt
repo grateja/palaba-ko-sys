@@ -28,6 +28,9 @@ constructor(
     private val _navigationState = MutableLiveData<NavigationState>()
     val navigationState: LiveData<NavigationState> = _navigationState
 
+    private val _machineUsage = MutableLiveData<EntityMachineUsageDetails>()
+    val machineUsage: LiveData<EntityMachineUsageDetails> = _machineUsage
+
     fun setMachineId(machineId: UUID) {
         _machineId.value = machineId
     }
@@ -73,6 +76,10 @@ constructor(
     override fun clearState() {
         _navigationState.value = NavigationState.StateLess
         super.clearState()
+    }
+
+    fun setCurrentItem(machineUsage: EntityMachineUsageDetails) {
+        _machineUsage.value = machineUsage
     }
 
     sealed class NavigationState {

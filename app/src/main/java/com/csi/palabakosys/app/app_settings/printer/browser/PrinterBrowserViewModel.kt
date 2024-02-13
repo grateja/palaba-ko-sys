@@ -49,14 +49,18 @@ constructor(
 //        this.devices.value = devices
 //    }
     fun addFoundDevice(device: PrinterDevice) {
-        devices.value = (devices.value.orEmpty().toMutableList().apply {
-            find { it.macAddress == device.macAddress }?.inRange = true
-            if (find { it.macAddress == device.macAddress } == null) {
-                add(device)
-            }
-        })
-    }
+        val currentDevices = devices.value.orEmpty().toMutableList()
+        val existingDevice = currentDevices.find { it.macAddress == device.macAddress }
 
+        if (existingDevice != null) {
+            existingDevice.inRange = true
+        } else {
+            device.inRange = true
+            currentDevices.add(device)
+        }
+
+        devices.value = currentDevices
+    }
     fun setLocationState(state: Boolean) {
         locationEnabled.value = state
     }

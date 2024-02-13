@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="CardItemList">
-        <item name="cardBackgroundColor">@color/white</item>
+    <style name="RoundCard">
         <item name="cardCornerRadius">20dp</item>
+    </style>
+    <style name="RoundCard.RecyclerItem">
+        <item name="contentPadding">8dp</item>
+        <item name="strokeColor">@color/white</item>
         <item name="cardElevation">0dp</item>
     </style>
-    <style name="CardItemList.FullWidth" parent="CardItemList">
+    <style name="CardItemWrapper" parent="RoundCard">
+        <item name="cardBackgroundColor">@color/white</item>
+        <item name="cardElevation">0dp</item>
+    </style>
+    <style name="CardItemList.FullWidth" parent="CardItemWrapper">
         <item name="android:layout_marginHorizontal">@dimen/activity_horizontal_margin</item>
         <item name="android:layout_marginVertical">4dp</item>
+        <item name="contentPadding">20dp</item>
     </style>
     <style name="DefinitionTermRow">
+        <item name="android:layout_marginVertical">8dp</item>
+    </style>
+    <style name="DefinitionTermRow.Center" parent="DefinitionTermRow">
         <item name="android:gravity">center</item>
-        <item name="android:layout_marginVertical">4dp</item>
     </style>
     <style name="TextTermDark">
         <item name="android:layout_weight">1</item>
@@ -22,15 +32,36 @@
     <style name="TextTermDark.TableRow">
         <item name="android:textAlignment">textEnd</item>
     </style>
-    <style name="TextDefinitionDark">
-        <item name="android:layout_weight">3</item>
+    <style name="TextDefinition">
+<!--        <item name="android:layout_weight">3</item>-->
         <item name="android:fontFamily">sans-serif</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@color/neutral</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:textFontWeight">900</item>
     </style>
+    <style name="TextDefinition.Dark" parent="TextDefinition">
+        <item name="android:textColor">@color/neutral</item>
+    </style>
+    <style name="TextDefinition.Light">
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <style name="CardTitle">
+        <item name="android:layout_marginVertical">8dp</item>
+        <item name="android:textFontWeight">900</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+    <style name="CardTransparent">
+        <item name="cardBackgroundColor">@color/transparent</item>
+        <item name="cardElevation">0dp</item>
+    </style>
+    <style name="RoundButtonPrimary.JobOrder">
+        <item name="backgroundTint">@color/color_code_job_order</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+    <style name="RoundButtonNeutral.JobOrder">
+        <item name="backgroundTint">@color/white</item>
+        <item name="android:textColor">@color/darker_color_code_job_order_darker</item>
+    </style>
 
-    
     
     <style name="TextPadding1">
         <item name="android:layout_margin">4dp</item>
@@ -40,6 +71,12 @@
         <item name="cardCornerRadius">5dp</item>
         <item name="contentPaddingLeft">5dp</item>
         <item name="contentPaddingRight">5dp</item>
+    </style>
+    <style name="TextTitleFragment">
+        <item name="android:textSize">24sp</item>
+        <item name="android:fontFamily">sans-serif-thin</item>
+        <item name="android:textFontWeight">300</item>
+        <item name="android:layout_marginVertical">18dp</item>
     </style>
     <style name="TextItemTitle">
         <item name="android:textColor">@color/black</item>
@@ -83,6 +120,9 @@
     </style>
     <style name="Bold">
         <item name="android:textStyle">bold</item>
+    </style>
+    <style name="Bold.Black" parent="Bold">
+        <item name="android:textColor">@color/black</item>
     </style>
     <style name="CardItem" parent="Widget.MaterialComponents.CardView">
         <item name="cardCornerRadius">10dp</item>
@@ -175,6 +215,10 @@
         <item name="android:padding">12dp</item>
         <item name="android:paddingEnd">24dp</item>
         <item name="android:paddingStart">24dp</item>
+    </style>
+    <style name="RoundButton.White" parent="RoundButton">
+        <item name="backgroundTint">@color/white</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="RoundButtonPrimary" parent="RoundButton">

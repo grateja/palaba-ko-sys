@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <com.google.android.material.appbar.AppBarLayout
-            android:background="@color/secondary_background"
+            android:background="@color/color_code_machines"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:theme="@style/Theme.MaterialComponents.Light"
@@ -21,9 +21,9 @@
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
+                app:title="@{viewModel.machineUsage.machineName() + ` usage history`}"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@color/teal_700"
                 android:animateLayoutChanges="true"
                 app:layout_scrollFlags="scroll|enterAlways|snap" />
             <com.google.android.material.card.MaterialCardView

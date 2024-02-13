@@ -9,6 +9,7 @@
             type="com.csi.palabakosys.app.app_settings.printer.browser.PrinterBrowserViewModel" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:background="@drawable/background_gradient_secondary"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -66,16 +67,17 @@
             android:text="Turn on location services to search nearby devices"/>
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh"
+            android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:visibility="@{viewModel.bluetoothEnabled}"
             app:layout_constraintTop_toBottomOf="@id/button_location_service_toggle"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent">
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/devices"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="@{viewModel.bluetoothEnabled}"
+                android:orientation="vertical"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

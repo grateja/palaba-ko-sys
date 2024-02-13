@@ -16,6 +16,8 @@ import com.csi.palabakosys.app.joborders.list.JobOrderListItem
 import com.csi.palabakosys.app.joborders.list.JobOrderListViewModel
 import com.csi.palabakosys.databinding.ActivityCustomerPreviewBinding
 import com.csi.palabakosys.util.ActivityLauncher
+import com.csi.palabakosys.util.remove
+import com.csi.palabakosys.util.show
 import com.csi.palabakosys.util.toUUID
 import com.csi.palabakosys.viewmodels.ListViewModel
 import com.google.android.material.appbar.AppBarLayout

@@ -24,7 +24,7 @@
                 android:divider="@drawable/divider_5"
                 android:showDividers="middle">
                 <TextView
-                    style="@style/TextMenuItemTitle"
+                    style="@style/TextTitleFragment"
                     android:text="Select dates"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>

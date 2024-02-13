@@ -9,6 +9,10 @@ import java.util.*
 
 data class JobOrderPaymentMinimal(
     val id: UUID,
+
+    @ColumnInfo(name = "customer_id")
+    val customerId: UUID,
+
     @ColumnInfo(name = "job_order_number")
     val jobOrderNumber: String?,
 

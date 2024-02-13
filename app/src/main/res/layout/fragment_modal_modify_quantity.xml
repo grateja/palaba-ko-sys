@@ -31,7 +31,7 @@
                     android:orientation="vertical">
                     <TextView
                         android:id="@+id/labelTitle"
-                        style="@style/TextItemTitle"
+                        style="@style/TextTitleFragment"
                         android:text="@{viewModel.name}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

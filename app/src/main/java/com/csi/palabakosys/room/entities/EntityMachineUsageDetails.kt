@@ -38,8 +38,15 @@ data class EntityMachineUsageDetails(
 
     @ColumnInfo("customer_name")
     val customerName: String,
+
+    @ColumnInfo("price")
+    val price: Float
 ) {
     fun machineName () : String {
         return machineType.abbr + " " + machineNumber
+    }
+
+    fun serviceLabel() : String {
+        return "$serviceName ($minutes mins.)"
     }
 }

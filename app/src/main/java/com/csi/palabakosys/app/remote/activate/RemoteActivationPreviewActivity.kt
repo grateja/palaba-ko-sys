@@ -65,6 +65,9 @@ class RemoteActivationPreviewActivity : AppCompatActivity() {
     }
 
     private fun subscribeObservers() {
+        viewModel.machine.observe(this, Observer{
+            title = "Activate ${it?.machineName()}"
+        })
         viewModel.machineActivationQueue.observe(this, Observer {
             setFinishOnTouchOutside(it.status != MachineConnectionStatus.CONNECTING)
         })

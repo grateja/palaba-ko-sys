@@ -8,7 +8,9 @@
             type="com.csi.palabakosys.app.app_settings.printer.browser.PrinterDevice" />
     </data>
     <com.google.android.material.card.MaterialCardView
-        style="@style/CardItem"
+        style="@style/CardItemList.FullWidth"
+        app:strokeColor="@{viewModel.selected ? @color/primary_background : @color/neutral}"
+        app:strokeWidth="1dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,14 +26,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 tools:text="JP-58EF32"/>
             <TextView
-                android:id="@+id/text_in_range"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{viewModel.inRange + ``}"
-                app:layout_constraintStart_toEndOf="@id/textTitle"
-                app:layout_constraintTop_toTopOf="@id/textTitle"
-                app:layout_constraintBottom_toBottomOf="@id/textTitle"/>
-            <TextView
                 android:id="@+id/textDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -41,14 +35,13 @@
                 tools:text="EF:32:12:FA:23:54"/>
 
             <ImageView
-                android:visibility="@{viewModel.selected}"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@color/card_selected"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="?android:attr/listChoiceIndicatorSingle"
+                android:src="@{viewModel.inRange ? @drawable/icon_within_range : @drawable/icon_out_of_range}"
+                tools:src="@drawable/icon_within_range"
                 tools:visibility="visible"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>

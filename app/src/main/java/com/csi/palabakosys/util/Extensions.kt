@@ -97,6 +97,15 @@ fun setDate(view: TextView, dateTime: Instant?) {
     }
 }
 
+@BindingAdapter("android:dateTime")
+fun setDateTime(view: TextView, dateTime: Instant?) {
+    if(dateTime != null) {
+        val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy m:d a")
+            .withZone(ZoneId.systemDefault())
+        view.text = formatter.format(dateTime)
+    }
+}
+
 @BindingAdapter("android:localDate")
 fun setDate(view: TextView, date: LocalDate?) {
     try {
@@ -123,9 +132,13 @@ fun setTime(view: TextView, dateTime: Instant?) {
 
 @BindingAdapter("android:peso")
 fun setPeso(view: TextView, value: Float?) {
-    if(value != null) {
-        view.text = "P %s".format(NumberFormat.getNumberInstance(Locale.US).format(value))
-    }
+    val amount = value ?: 0f
+    view.text = "P %s".format(NumberFormat.getNumberInstance(Locale.US).format(amount))
+}
+@BindingAdapter("android:peso")
+fun setPeso(view: TextView, value: String?) {
+    val amount = value?.toFloatOrNull() ?: 0f
+    view.text = "P %s".format(NumberFormat.getNumberInstance(Locale("en", "PH")).format(amount))
 }
 
 fun View.hideKeyboard() : Boolean {
@@ -160,26 +173,26 @@ fun Instant.isToday(): Boolean {
 }
 
 
-@BindingAdapter("app:selectedPaymentMethod")
-fun setPaymentMethod(radioGroup: RadioGroup, paymentMethod: EnumPaymentMethod?) {
-    val selectedId = when (paymentMethod) {
-        EnumPaymentMethod.CASH -> R.id.radio_cash
-        EnumPaymentMethod.CASHLESS -> R.id.radio_cashless
-        else -> View.NO_ID
-    }
-    if (radioGroup.checkedRadioButtonId != selectedId) {
-        radioGroup.check(selectedId)
-    }
-}
-
-@InverseBindingAdapter(attribute = "app:selectedPaymentMethod", event = "android:checkedButtonAttrChanged")
-fun getPaymentMethod(radioGroup: RadioGroup): EnumPaymentMethod? {
-    return when (radioGroup.checkedRadioButtonId) {
-        R.id.radio_cash -> EnumPaymentMethod.CASH
-        R.id.radio_cashless -> EnumPaymentMethod.CASHLESS
-        else -> null
-    }
-}
+//@BindingAdapter("app:selectedPaymentMethod")
+//fun setPaymentMethod(radioGroup: RadioGroup, paymentMethod: EnumPaymentMethod?) {
+//    val selectedId = when (paymentMethod) {
+//        EnumPaymentMethod.CASH -> R.id.radio_cash
+//        EnumPaymentMethod.CASHLESS -> R.id.radio_cashless
+//        else -> View.NO_ID
+//    }
+//    if (radioGroup.checkedRadioButtonId != selectedId) {
+//        radioGroup.check(selectedId)
+//    }
+//}
+//
+//@InverseBindingAdapter(attribute = "app:selectedPaymentMethod", event = "android:checkedButtonAttrChanged")
+//fun getPaymentMethod(radioGroup: RadioGroup): EnumPaymentMethod? {
+//    return when (radioGroup.checkedRadioButtonId) {
+//        R.id.radio_cash -> EnumPaymentMethod.CASH
+//        R.id.radio_cashless -> EnumPaymentMethod.CASHLESS
+//        else -> null
+//    }
+//}
 
 @BindingAdapter("app:selectedDiscountType")
 fun setDiscountType(radioGroup: RadioGroup, discountType: EnumDiscountType?) {
@@ -431,4 +444,14 @@ fun Float.spToPx(): Float {
 
 fun Float.dpToPx(): Float {
     return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this, Resources.getSystem().displayMetrics)
+}
+
+fun View.show() {
+    this.visibility = View.VISIBLE
+}
+fun View.hide() {
+    this.visibility = View.INVISIBLE
+}
+fun View.remove() {
+    this.visibility = View.GONE
 }

@@ -6,14 +6,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.GridLayoutManager
+import com.csi.palabakosys.R
+import com.csi.palabakosys.adapters.OptionsAdapter
 import com.csi.palabakosys.databinding.FragmentModalDeliveryBinding
 import com.csi.palabakosys.fragments.BaseModalFragment
+import com.csi.palabakosys.model.EnumDeliveryOption
 import com.csi.palabakosys.util.DataState
 
 class DeliveryModalFragment : BaseModalFragment() {
     private lateinit var binding: FragmentModalDeliveryBinding
     private val viewModel: DeliveryViewModel by activityViewModels()
-    private val deliveryOptionAdapter = DeliveryOptionAdapter()
+    private val deliveryOptionAdapter = OptionsAdapter<EnumDeliveryOption>(
+        R.layout.recycler_item_delivery_option,
+        EnumDeliveryOption.values()
+    ) //DeliveryOptionAdapter()
 
     var onOk: (() -> Unit) ? = null
 
@@ -26,20 +33,24 @@ class DeliveryModalFragment : BaseModalFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
 
         viewModel.deliveryOption.observe(viewLifecycleOwner, Observer {
-            deliveryOptionAdapter.selectDeliveryOption(it)
+            deliveryOptionAdapter.selectOption(it)
         })
 
         binding.recyclerDeliveryOptions.adapter = deliveryOptionAdapter
+        binding.quantity.maxValue = 100
+        binding.quantity.minValue = 1
+
+        binding.recyclerDeliveryOptions.layoutManager = GridLayoutManager(context, 3)
 
         binding.buttonConfirm.setOnClickListener {
-            try {
-                val distance = binding.textQuantity.text.toString()
-                if(distance.toFloat() == 0f) {
-                    binding.textQuantity.setText("1")
-                }
-            } catch (e: Exception) {
-                binding.textQuantity.setText("1")
-            }
+//            try {
+//                val distance = binding.textQuantity.text.toString()
+//                if(distance.toFloat() == 0f) {
+//                    binding.textQuantity.setText("1")
+//                }
+//            } catch (e: Exception) {
+//                binding.textQuantity.setText("1")
+//            }
             onOk?.invoke()
         }
 
@@ -47,24 +58,24 @@ class DeliveryModalFragment : BaseModalFragment() {
             dismiss()
         }
 
-        binding.buttonMinus.setOnClickListener {
-            binding.textQuantity.apply {
-                setText(
-                    (text.toString().toFloat().minus(1).also {
-                        binding.buttonMinus.isEnabled = it > 1
-                    }).toString()
-                )
-            }
-        }
+//        binding.buttonMinus.setOnClickListener {
+//            binding.textQuantity.apply {
+//                setText(
+//                    (text.toString().toFloat().minus(1).also {
+//                        binding.buttonMinus.isEnabled = it > 1
+//                    }).toString()
+//                )
+//            }
+//        }
 
-        binding.buttonAdd.setOnClickListener {
-            binding.buttonMinus.isEnabled = true
-            binding.textQuantity.apply {
-                setText(
-                    (text.toString().toFloat().plus(1)).toString()
-                )
-            }
-        }
+//        binding.buttonAdd.setOnClickListener {
+//            binding.buttonMinus.isEnabled = true
+//            binding.textQuantity.apply {
+//                setText(
+//                    (text.toString().toFloat().plus(1)).toString()
+//                )
+//            }
+//        }
         deliveryOptionAdapter.onSelect = {
             viewModel.setDeliveryOption(it)
         }

@@ -14,7 +14,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
             app:behavior_peekHeight="1000dp"
-            android:background="@color/jo_void"
+            android:background="@color/text_grey"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <com.google.android.material.tabs.TabLayout

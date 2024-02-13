@@ -5,15 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.csi.palabakosys.app.dashboard.data.DateFilter
 import com.csi.palabakosys.model.EnumJoFilterBy
-import com.csi.palabakosys.model.EnumPaymentStatus
 import com.csi.palabakosys.model.JobOrderAdvancedFilter
 import com.csi.palabakosys.room.repository.JobOrderRepository
-import com.csi.palabakosys.util.EnumSortDirection
 import com.csi.palabakosys.viewmodels.ListViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import java.util.*
 import javax.inject.Inject
 
@@ -25,7 +22,7 @@ constructor(
     private val jobOrderRepository: JobOrderRepository
 ) : ListViewModel<JobOrderListItem, JobOrderAdvancedFilter>() {
 //    val paymentStatus = MutableLiveData(EnumPaymentStatus.ALL)
-    val total = MutableLiveData(JobOrderResultSummary())
+    val result = MutableLiveData(JobOrderResultSummary())
 //    val hideDeleted = MutableLiveData(true)
     val customerId = MutableLiveData<UUID?>()
     val nonVoidOnly = MutableLiveData(true)
@@ -77,7 +74,7 @@ constructor(
 
             val result = jobOrderRepository.load(keyword, filterParams, page, customerId, nonVoidOnly)
 
-            total.value = result.count
+            this@JobOrderListViewModel.result.value = result.count
 
             _dataState.value = DataState.LoadItems(result.items, reset)
         }

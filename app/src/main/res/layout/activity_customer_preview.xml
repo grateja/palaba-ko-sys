@@ -16,10 +16,9 @@
         android:layout_height="match_parent">
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/app_bar"
-            android:background="@color/secondary_background"
+            android:background="@color/color_code_customers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"
             app:elevation="24dp"
             android:fitsSystemWindows="true">
 <!--            <androidx.appcompat.widget.Toolbar-->
@@ -42,8 +41,39 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
-            <androidx.recyclerview.widget.RecyclerView
+            <com.google.android.material.card.MaterialCardView
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:cardBackgroundColor="@color/color_code_customers"
+                app:cardElevation="20dp"
+                app:cardCornerRadius="0dp"
+                app:contentPadding="12dp"
+                tools:visibility="visible"
+                android:visibility="invisible"
+                android:id="@+id/card_customer_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    style="@style/TextMenuItemTitle"
+                    tools:text="Chris Pratt"
+                    android:text="@{viewModel.customer.name}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </com.google.android.material.card.MaterialCardView>
+            <TextView
+                android:visibility="@{jobOrderViewModel.result.totalResultCount > 0}"
+                style="@style/CardTitle"
+                android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+                android:layout_marginVertical="18dp"
+                android:id="@+id/label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/card_customer_name"
+                app:layout_constraintStart_toStartOf="parent"
+                android:text="JOB ORDERS"/>
+            <androidx.recyclerview.widget.RecyclerView
+                app:layout_constraintTop_toBottomOf="@id/label"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toTopOf="@+id/text_total"
@@ -57,30 +87,9 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:text="@{jobOrderViewModel.total + ` Total Job Orders`}"
+                android:text="@{jobOrderViewModel.result + ` Total Job Orders`}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
-            <com.google.android.material.card.MaterialCardView
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:cardBackgroundColor="@color/secondary_variant"
-                app:cardElevation="20dp"
-                app:cardCornerRadius="0dp"
-                app:contentPadding="12dp"
-                tools:visibility="visible"
-                android:visibility="invisible"
-                android:id="@+id/card_customer_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    style="@style/TextMenuItemTitle"
-                    android:textColor="@color/white"
-                    tools:text="Chris Pratt"
-                    android:text="@{viewModel.customer.name}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </com.google.android.material.card.MaterialCardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
