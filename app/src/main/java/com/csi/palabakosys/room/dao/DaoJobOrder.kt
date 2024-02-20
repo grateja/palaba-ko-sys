@@ -100,35 +100,6 @@ interface DaoJobOrder {
     @Query("SELECT * FROM job_orders WHERE customer_id = :customerId AND payment_id IS NULL AND deleted_at IS NULL AND void_date IS NULL")
     suspend fun getUnpaidByCustomerId(customerId: UUID): List<JobOrderPaymentMinimal>
 
-//    @Query("SELECT jo.id, jo.job_order_number, jo.discounted_amount, jo.payment_id, jo.customer_id, jo.created_at, cu.name, cu.crn, pa.created_at as date_paid, pa.cashless_provider" +
-//        " FROM job_orders jo JOIN customers cu ON jo.customer_id = cu.id LEFT JOIN job_order_payments pa ON jo.payment_id = pa.id " +
-//        " WHERE " +
-//        " (cu.name LIKE '%' || :keyword || '%'" +
-//        "       OR jo.job_order_number LIKE '%' || :keyword || '%'" +
-//        "       OR cu.crn LIKE '%' || :keyword || '%') " +
-//        " AND ((:paymentStatus = 0 AND pa.created_at IS NOT NULL) OR" +
-//        "      (:paymentStatus = 1 AND pa.created_at IS NULL) OR" +
-//        "      (:paymentStatus = 2))" +
-//        " AND (jo.deleted_at IS NULL " +
-//        " AND ((:includeVoid = 1) OR " +
-//        "      (:includeVoid = 0 AND jo.void_date IS NULL))) " +
-//        " AND (:customerId IS NULL OR cu.id = :customerId)" +
-//        " AND ((:dateFrom IS NULL AND :dateTo IS NULL) OR " +
-//        " (:filterBy = 'created' AND :dateFrom IS NOT NULL AND :dateTo IS NULL AND strftime('%Y-%m-%d', jo.created_at / 1000, 'unixepoch') = :dateFrom) OR " +
-//        " (:filterBy = 'created' AND :dateFrom IS NOT NULL AND :dateTo IS NOT NULL AND strftime('%Y-%m-%d', jo.created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo) OR" +
-//        " (:filterBy = 'paid' AND :dateFrom IS NOT NULL AND :dateTo IS NULL AND strftime('%Y-%m-%d', pa.created_at / 1000, 'unixepoch') = :dateFrom) OR" +
-//        " (:filterBy = 'paid' AND :dateFrom IS NOT NULL AND :dateTo IS NOT NULL AND strftime('%Y-%m-%d', pa.created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo)) " +
-//        " ORDER BY " +
-//        " CASE WHEN :orderBy = 'Date Created' AND :sortDirection = 'ASC' THEN jo.created_at END ASC, " +
-//        " CASE WHEN :orderBy = 'Date Paid' AND :sortDirection = 'ASC' THEN pa.created_at END ASC, " +
-//        " CASE WHEN :orderBy = 'Customer Name' AND :sortDirection = 'ASC' THEN cu.name END ASC, " +
-//        " CASE WHEN :orderBy = 'Job Order Number' AND :sortDirection = 'ASC' THEN jo.job_order_number END ASC, " +
-//        " CASE WHEN :orderBy = 'Date Created' AND :sortDirection = 'DESC' THEN jo.created_at END DESC, " +
-//        " CASE WHEN :orderBy = 'Date Paid' AND :sortDirection = 'DESC' THEN pa.created_at END DESC, " +
-//        " CASE WHEN :orderBy = 'Customer Name' AND :sortDirection = 'DESC' THEN cu.name END DESC, " +
-//        " CASE WHEN :orderBy = 'Job Order Number' AND :sortDirection = 'DESC' THEN jo.job_order_number END DESC " +
-//        " LIMIT 20 OFFSET :offset")
-//    fun load(keyword: String?, orderBy: String?, sortDirection: EnumSortDirection?, offset: Int, paymentStatus: EnumPaymentStatus?, customerId: UUID?, filterBy: EnumJoFilterBy?, includeVoid: Boolean, dateFrom: LocalDate?, dateTo: LocalDate?): List<JobOrderListItem>
     @Query("SELECT jo.id, jo.job_order_number, jo.discounted_amount, jo.payment_id, jo.customer_id, jo.created_at, cu.name, cu.crn, pa.created_at as date_paid, pa.cashless_provider" +
             " FROM job_orders jo JOIN customers cu ON jo.customer_id = cu.id LEFT JOIN job_order_payments pa ON jo.payment_id = pa.id " +
             " WHERE " +
@@ -142,10 +113,10 @@ interface DaoJobOrder {
             " AND (:nonVoidOnly = 1 AND jo.void_date IS NULL OR :nonVoidOnly = 0 AND jo.void_date IS NOT NULL)) " +
             " AND (:customerId IS NULL OR cu.id = :customerId)" +
             " AND ((:dateFrom IS NULL AND :dateTo IS NULL) OR " +
-            " (:filterBy = 'created' AND :dateFrom IS NOT NULL AND :dateTo IS NULL AND strftime('%Y-%m-%d', jo.created_at / 1000, 'unixepoch') = :dateFrom) OR " +
-            " (:filterBy = 'created' AND :dateFrom IS NOT NULL AND :dateTo IS NOT NULL AND strftime('%Y-%m-%d', jo.created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo) OR" +
-            " (:filterBy = 'paid' AND :dateFrom IS NOT NULL AND :dateTo IS NULL AND strftime('%Y-%m-%d', pa.created_at / 1000, 'unixepoch') = :dateFrom) OR" +
-            " (:filterBy = 'paid' AND :dateFrom IS NOT NULL AND :dateTo IS NOT NULL AND strftime('%Y-%m-%d', pa.created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo)) " +
+            " (:filterBy = 'created' AND :dateFrom IS NOT NULL AND :dateTo IS NULL AND date(jo.created_at / 1000, 'unixepoch', 'localtime') = :dateFrom) OR " +
+            " (:filterBy = 'created' AND :dateFrom IS NOT NULL AND :dateTo IS NOT NULL AND date(jo.created_at / 1000, 'unixepoch', 'localtime') BETWEEN :dateFrom AND :dateTo) OR" +
+            " (:filterBy = 'paid' AND :dateFrom IS NOT NULL AND :dateTo IS NULL AND date(pa.created_at / 1000, 'unixepoch', 'localtime') = :dateFrom) OR" +
+            " (:filterBy = 'paid' AND :dateFrom IS NOT NULL AND :dateTo IS NOT NULL AND date(pa.created_at / 1000, 'unixepoch', 'localtime') BETWEEN :dateFrom AND :dateTo)) " +
             " ORDER BY " +
             " CASE WHEN :orderBy = 'Date Created' AND :sortDirection = 'ASC' THEN jo.created_at END ASC, " +
             " CASE WHEN :orderBy = 'Date Paid' AND :sortDirection = 'ASC' THEN pa.created_at END ASC, " +
@@ -177,10 +148,10 @@ interface DaoJobOrder {
             " AND (jo.deleted_at IS NULL) " +
             " AND (:customerId IS NULL OR cu.id = :customerId)" +
             " AND ((:dateFrom IS NULL AND :dateTo IS NULL) OR " +
-            " (:filterBy = 'created' AND :dateFrom IS NOT NULL AND :dateTo IS NULL AND strftime('%Y-%m-%d', jo.created_at / 1000, 'unixepoch') = :dateFrom) OR " +
-            " (:filterBy = 'created' AND :dateFrom IS NOT NULL AND :dateTo IS NOT NULL AND strftime('%Y-%m-%d', jo.created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo) OR" +
-            " (:filterBy = 'paid' AND :dateFrom IS NOT NULL AND :dateTo IS NULL AND strftime('%Y-%m-%d', pa.created_at / 1000, 'unixepoch') = :dateFrom) OR" +
-            " (:filterBy = 'paid' AND :dateFrom IS NOT NULL AND :dateTo IS NOT NULL AND strftime('%Y-%m-%d', pa.created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo)) "
+            " (:filterBy = 'created' AND :dateFrom IS NOT NULL AND :dateTo IS NULL AND date(jo.created_at / 1000, 'unixepoch', 'localtime') = :dateFrom) OR " +
+            " (:filterBy = 'created' AND :dateFrom IS NOT NULL AND :dateTo IS NOT NULL AND date(jo.created_at / 1000, 'unixepoch', 'localtime') BETWEEN :dateFrom AND :dateTo) OR" +
+            " (:filterBy = 'paid' AND :dateFrom IS NOT NULL AND :dateTo IS NULL AND date(pa.created_at / 1000, 'unixepoch', 'localtime') = :dateFrom) OR" +
+            " (:filterBy = 'paid' AND :dateFrom IS NOT NULL AND :dateTo IS NOT NULL AND date(pa.created_at / 1000, 'unixepoch', 'localtime') BETWEEN :dateFrom AND :dateTo)) "
     )
     fun count(keyword: String?, paymentStatus: EnumPaymentStatus?, customerId: UUID?, filterBy: EnumJoFilterBy?, nonVoidOnly: Boolean, dateFrom: LocalDate?, dateTo: LocalDate?): JobOrderResultSummary?
 
@@ -249,7 +220,7 @@ interface DaoJobOrder {
     @Query("SELECT" +
             " SUM(CASE WHEN payment_id IS NOT NULL THEN 1 ELSE 0 END) AS paid_count," +
             " SUM(CASE WHEN payment_id IS NULL THEN 1 ELSE 0 END) AS unpaid_count " +
-            "     FROM job_orders WHERE (strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') = :dateFrom " +
-            "         OR (:dateTo IS NOT NULL AND strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo)) AND deleted_at IS NULL AND void_date IS NULL")
+            "     FROM job_orders WHERE (date(created_at / 1000, 'unixepoch', 'localtime') = :dateFrom " +
+            "         OR (:dateTo IS NOT NULL AND date(created_at / 1000, 'unixepoch', 'localtime') BETWEEN :dateFrom AND :dateTo)) AND deleted_at IS NULL AND void_date IS NULL")
     fun getDashboardJobOrders(dateFrom: LocalDate, dateTo: LocalDate?): LiveData<JobOrderCounts>
 }

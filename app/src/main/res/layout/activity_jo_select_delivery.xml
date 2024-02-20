@@ -3,6 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".app.joborders.create.delivery.JOSelectDeliveryActivity">
+    <data>
+        <variable
+            name="viewModel"
+            type="com.csi.palabakosys.app.joborders.create.delivery.DeliveryViewModel" />
+    </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:background="@drawable/background_gradient_secondary"
         android:layout_width="match_parent"
@@ -44,6 +49,7 @@
                     android:text="@string/cancel"
                     android:layout_width="wrap_content" />
                 <Button
+                    android:visibility="@{viewModel.profile != null}"
                     style="@style/RoundButtonDanger"
                     android:id="@+id/buttonRemove"
                     android:layout_marginStart="4dp"

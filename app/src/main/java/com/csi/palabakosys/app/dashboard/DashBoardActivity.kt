@@ -1,9 +1,10 @@
 package com.csi.palabakosys.app.dashboard
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.CalendarView
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
@@ -19,9 +20,13 @@ import com.csi.palabakosys.model.EnumJoFilterBy
 import com.csi.palabakosys.model.JobOrderAdvancedFilter
 import com.csi.palabakosys.room.entities.*
 import com.csi.palabakosys.util.Constants
+import com.csi.palabakosys.util.FragmentsAdapter
 import com.csi.palabakosys.util.showDialog
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.sangcomz.fishbun.util.setStatusBarColor
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDate
 
 @AndroidEntryPoint
 class DashBoardActivity : AppCompatActivity() {
@@ -56,6 +61,9 @@ class DashBoardActivity : AppCompatActivity() {
     }
 
     private fun subscribeEvents() {
+        binding.calendar.setOnDateChangeListener { view, year, month, dayOfMonth ->
+            viewModel.setStartDate(LocalDate.of(year, month + 1, dayOfMonth))
+        }
         binding.cardNewCustomers.setOnClickListener {
             viewModel.openCustomers()
         }

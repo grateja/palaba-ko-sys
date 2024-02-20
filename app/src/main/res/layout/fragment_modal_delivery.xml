@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:padding="18dp"
+            android:paddingHorizontal="18dp"
             app:behavior_peekHeight="500dp"
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
             android:layout_width="match_parent"
@@ -42,74 +42,136 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/labelTitle" />
 
-            <NumberPicker
-                android:id="@+id/quantity"
-                android:layout_width="wrap_content"
-                android:layout_height="130dp"
-                android:value="@={viewModel.distance}"
-                app:layout_constraintBottom_toTopOf="@id/recyclerDeliveryOptions"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/icon"
-                app:layout_constraintTop_toBottomOf="@+id/labelTitle" />
             <TextView
+                android:id="@+id/label_km"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Km"
-                app:layout_constraintStart_toEndOf="@id/quantity"
-                app:layout_constraintTop_toTopOf="@id/quantity"
-                app:layout_constraintBottom_toBottomOf="@id/quantity"/>
-<!--            <LinearLayout-->
+                app:layout_constraintEnd_toEndOf="@id/options"
+                app:layout_constraintTop_toTopOf="@id/options"
+                app:layout_constraintBottom_toBottomOf="@id/options"
+                android:text="Km"/>
+            <LinearLayout
+                android:id="@+id/options"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@id/controls"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/icon"
+                android:layout_marginVertical="12dp"
+                android:showDividers="middle"
+                android:divider="@drawable/divider_10">
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/RoundCard"
+                    app:strokeWidth="2dp"
+                    app:strokeColor="@{viewModel.deliveryOption == com.csi.palabakosys.model.EnumDeliveryOption.PICKUP_ONLY ? @color/primary : @color/regularColor}"
+                    android:id="@+id/card_pickup_only"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_margin="12dp"
+                        android:layout_gravity="center">
+                        <TextView
+                            android:textColor="@{viewModel.deliveryOption == com.csi.palabakosys.model.EnumDeliveryOption.PICKUP_ONLY ? @color/primary : @color/text_dark_grey}"
+                            android:gravity="center"
+                            android:text="@{com.csi.palabakosys.model.EnumDeliveryOption.PICKUP_ONLY.value}"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                        <TextView
+                            style="@style/TileTitle"
+                            android:textColor="@{viewModel.deliveryOption == com.csi.palabakosys.model.EnumDeliveryOption.PICKUP_ONLY ? @color/primary : @color/text_dark_grey}"
+                            android:gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:peso="@{viewModel.profile.baseFare}"
+                            tools:text="P 40.0"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/RoundCard"
+                    app:strokeWidth="2dp"
+                    app:strokeColor="@{viewModel.deliveryOption == com.csi.palabakosys.model.EnumDeliveryOption.DELIVERY_ONLY ? @color/primary : @color/regularColor}"
+                    android:id="@+id/card_delivery_only"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_margin="12dp"
+                        android:layout_gravity="center">
+                        <TextView
+                            android:textColor="@{viewModel.deliveryOption == com.csi.palabakosys.model.EnumDeliveryOption.DELIVERY_ONLY ? @color/primary : @color/text_dark_grey}"
+                            android:gravity="center"
+                            android:text="@{com.csi.palabakosys.model.EnumDeliveryOption.DELIVERY_ONLY.value}"
+                            tools:text="Delivery"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                        <TextView
+                            style="@style/TileTitle"
+                            android:textColor="@{viewModel.deliveryOption == com.csi.palabakosys.model.EnumDeliveryOption.DELIVERY_ONLY ? @color/primary : @color/text_dark_grey}"
+                            android:gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:peso="@{viewModel.profile.baseFare}"
+                            tools:text="P 40.0"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/RoundCard"
+                    app:strokeWidth="2dp"
+                    app:strokeColor="@{viewModel.deliveryOption == com.csi.palabakosys.model.EnumDeliveryOption.PICKUP_AND_DELIVERY ? @color/primary : @color/regularColor}"
+                    android:id="@+id/card_pickup_and_delivery"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_margin="12dp"
+                        android:layout_gravity="center">
+                        <TextView
+                            android:textColor="@{viewModel.deliveryOption == com.csi.palabakosys.model.EnumDeliveryOption.PICKUP_AND_DELIVERY ? @color/primary : @color/text_dark_grey}"
+                            android:gravity="center"
+                            android:text="@{com.csi.palabakosys.model.EnumDeliveryOption.PICKUP_AND_DELIVERY.value}"
+                            tools:text="Pick up &amp; Delivery"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                        <TextView
+                            style="@style/TileTitle"
+                            android:textColor="@{viewModel.deliveryOption == com.csi.palabakosys.model.EnumDeliveryOption.PICKUP_AND_DELIVERY ? @color/primary : @color/text_dark_grey}"
+                            android:gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:peso="@{viewModel.profile.baseFare * 2}"
+                            tools:text="P 40.0"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+                <NumberPicker
+                    android:id="@+id/quantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="130dp"
+                    android:value="@={viewModel.distance}"
+                    app:layout_constraintEnd_toStartOf="@+id/label_km"
+                    app:layout_constraintTop_toBottomOf="@+id/labelTitle" />
+            </LinearLayout>
+<!--            <androidx.recyclerview.widget.RecyclerView-->
+<!--                android:visibility="gone"-->
+<!--                android:id="@+id/recyclerDeliveryOptions"-->
 <!--                android:layout_width="match_parent"-->
 <!--                android:layout_height="wrap_content"-->
 <!--                android:orientation="horizontal"-->
-<!--                android:divider="@drawable/divider_10"-->
-<!--                android:showDividers="middle">-->
-<!--                <Button-->
-<!--                    android:id="@+id/buttonMinus"-->
-<!--                    android:layout_width="40dp"-->
-<!--                    android:layout_height="52dp"-->
-<!--                    app:cornerRadius="50dp"-->
-<!--                    app:backgroundTint="@color/neutral"-->
-<!--                    android:textColor="@color/black"-->
-<!--                    android:padding="0dp"-->
-<!--                    android:text="-" />-->
-<!--                <com.google.android.material.textfield.TextInputLayout-->
-<!--                    android:id="@+id/labelQuantity"-->
-<!--                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"-->
-<!--                    android:layout_weight="1"-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    app:errorEnabled="true">-->
-
-<!--                    <com.google.android.material.textfield.TextInputEditText-->
-<!--                        android:id="@+id/textQuantity"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:text="@={viewModel.distance}"-->
-<!--                        android:hint="Quantity"-->
-<!--                        android:inputType="numberDecimal"-->
-<!--                        android:maxLines="1" />-->
-<!--                </com.google.android.material.textfield.TextInputLayout>-->
-<!--                <Button-->
-<!--                    android:id="@+id/buttonAdd"-->
-<!--                    android:layout_width="40dp"-->
-<!--                    android:layout_height="52dp"-->
-<!--                    app:cornerRadius="50dp"-->
-<!--                    app:backgroundTint="@color/neutral"-->
-<!--                    android:textColor="@color/black"-->
-<!--                    android:padding="0dp"-->
-<!--                    android:text="+" />-->
-<!--            </LinearLayout>-->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerDeliveryOptions"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toTopOf="@id/controls"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/icon" />
+<!--                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/text_price"-->
+<!--                app:layout_constraintBottom_toTopOf="@id/controls"/>-->
 <!--                    <RadioGroup-->
 <!--                        android:id="@+id/radioDeliveryOption"-->
 <!--                        android:layout_width="match_parent"-->

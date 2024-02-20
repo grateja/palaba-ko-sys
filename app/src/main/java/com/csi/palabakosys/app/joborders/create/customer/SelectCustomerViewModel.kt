@@ -1,12 +1,16 @@
 package com.csi.palabakosys.app.joborders.create.customer
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.csi.palabakosys.app.customers.CustomerMinimal
 import com.csi.palabakosys.model.BaseFilterParams
 import com.csi.palabakosys.room.repository.CustomerRepository
+import com.csi.palabakosys.settings.JobOrderSettingsRepository
 import com.csi.palabakosys.viewmodels.ListViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -14,21 +18,13 @@ class SelectCustomerViewModel
 
 @Inject
 constructor(
-    private val repository: CustomerRepository
+    private val repository: CustomerRepository,
+    private val joSettings: JobOrderSettingsRepository
 ) : ListViewModel<CustomerMinimal, BaseFilterParams>() {
-//    val items = MutableLiveData<List<CustomerMinimal>>()
+    val maxNumberOfUnpaidJobOrder = joSettings.maxUnpaidJobOrderLimit
 
-//    private val _loading = MutableLiveData(false)
-//    val loading: LiveData<Boolean> = _loading
-
-//    private var keyword: String? = ""
-
-//    fun setKeyword(keyword: String?) {
-//        this.keyword = keyword
-//        this.filter()
-//    }
-
-//    private var job: Job? = null
+    private val _customerId = MutableLiveData<UUID>()
+    val customerId: LiveData<UUID> = _customerId
     override fun filter(reset: Boolean) {
         job?.let {
             it.cancel()
@@ -46,13 +42,12 @@ constructor(
             val filterParams = filterParams.value
 
             val keyword = keyword.value
-            val orderBy = filterParams?.orderBy
-            val sortDirection = filterParams?.sortDirection
             val page = page.value ?: 1
 
             val result = repository.getCustomersMinimal(
                 keyword,
-                page
+                page,
+                _customerId.value
             )
             _dataState.value = DataState.LoadItems(
                 result,
@@ -65,5 +60,17 @@ constructor(
     fun loadMore() {
         page.value = page.value?.plus(1)
         filter(false)
+    }
+
+    fun setCurrentCustomerId(customerId: UUID) {
+        _customerId.value = customerId
+    }
+
+    fun checkIfCustomerCanCreateNewJobOrder(customer: CustomerMinimal) {
+        val maxUnpaid = maxNumberOfUnpaidJobOrder.value ?: 0
+        val currentUnpaid = customer.unpaid ?: 0
+
+        if(currentUnpaid >= maxUnpaid) {
+        }
     }
 }

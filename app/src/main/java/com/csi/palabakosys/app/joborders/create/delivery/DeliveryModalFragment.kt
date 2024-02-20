@@ -17,10 +17,10 @@ import com.csi.palabakosys.util.DataState
 class DeliveryModalFragment : BaseModalFragment() {
     private lateinit var binding: FragmentModalDeliveryBinding
     private val viewModel: DeliveryViewModel by activityViewModels()
-    private val deliveryOptionAdapter = OptionsAdapter<EnumDeliveryOption>(
-        R.layout.recycler_item_delivery_option,
-        EnumDeliveryOption.values()
-    ) //DeliveryOptionAdapter()
+//    private val deliveryOptionAdapter = OptionsAdapter<EnumDeliveryOption>(
+//        R.layout.recycler_item_delivery_option,
+//        EnumDeliveryOption.values()
+//    ) //DeliveryOptionAdapter()
 
     var onOk: (() -> Unit) ? = null
 
@@ -32,15 +32,27 @@ class DeliveryModalFragment : BaseModalFragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
-        viewModel.deliveryOption.observe(viewLifecycleOwner, Observer {
-            deliveryOptionAdapter.selectOption(it)
-        })
+//        viewModel.deliveryOption.observe(viewLifecycleOwner, Observer {
+//            deliveryOptionAdapter.selectOption(it)
+//        })
 
-        binding.recyclerDeliveryOptions.adapter = deliveryOptionAdapter
+//        binding.recyclerDeliveryOptions.adapter = deliveryOptionAdapter
         binding.quantity.maxValue = 100
         binding.quantity.minValue = 1
 
-        binding.recyclerDeliveryOptions.layoutManager = GridLayoutManager(context, 3)
+//        binding.recyclerDeliveryOptions.layoutManager = GridLayoutManager(context, 3)
+
+        binding.cardPickupOnly.setOnClickListener {
+            viewModel.setDeliveryOption(EnumDeliveryOption.PICKUP_ONLY)
+        }
+
+        binding.cardDeliveryOnly.setOnClickListener {
+            viewModel.setDeliveryOption(EnumDeliveryOption.DELIVERY_ONLY)
+        }
+
+        binding.cardPickupAndDelivery.setOnClickListener {
+            viewModel.setDeliveryOption(EnumDeliveryOption.PICKUP_AND_DELIVERY)
+        }
 
         binding.buttonConfirm.setOnClickListener {
 //            try {
@@ -76,9 +88,9 @@ class DeliveryModalFragment : BaseModalFragment() {
 //                )
 //            }
 //        }
-        deliveryOptionAdapter.onSelect = {
-            viewModel.setDeliveryOption(it)
-        }
+//        deliveryOptionAdapter.onSelect = {
+//            viewModel.setDeliveryOption(it)
+//        }
 
         return binding.root
     }

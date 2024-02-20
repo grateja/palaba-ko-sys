@@ -82,8 +82,8 @@ class AddEditCustomerFragment : ModalFragment<CustomerMinimal?>() {
                         it.data.name!!,
                         it.data.crn!!,
                         it.data.address,
+                        0,
                         null,
-                        false,
                         null
                     ))
                     viewModel.resetState()

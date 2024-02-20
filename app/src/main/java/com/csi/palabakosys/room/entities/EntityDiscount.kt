@@ -25,4 +25,11 @@ class EntityDiscount(
             it.value
         }
     }
+    override fun toString(): String {
+        return if(discountType == EnumDiscountType.PERCENTAGE) {
+            "$name ($value %)"
+        } else {
+            "$name (P $value)"
+        }
+    }
 }

@@ -23,6 +23,8 @@ class JOSelectDeliveryActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_jo_select_delivery)
         binding.lifecycleOwner = this
         binding.recyclerDeliveryVehicles.adapter = deliveryVehiclesAdapter
+        binding.viewModel = viewModel
+
         subscribeEvents()
         subscribeListeners()
     }

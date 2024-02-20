@@ -10,7 +10,6 @@ import com.csi.palabakosys.app.joborders.create.extras.MenuExtrasItem
 import com.csi.palabakosys.app.joborders.create.packages.MenuJobOrderPackage
 import com.csi.palabakosys.app.joborders.create.products.MenuProductItem
 import com.csi.palabakosys.app.joborders.create.services.MenuServiceItem
-import com.csi.palabakosys.model.EnumDiscountType
 import com.csi.palabakosys.model.EnumDiscountApplicable
 import com.csi.palabakosys.room.entities.*
 import com.csi.palabakosys.room.repository.CustomerRepository
@@ -51,9 +50,9 @@ constructor(
         data class ModifyDateTime(val createdAt: Instant) : DataState()
         data class OpenCamera(val jobOrderId: UUID) : DataState()
         data class OpenPictures(val ids: List<PhotoItem>, val position: Int) : DataState()
-        data class EditCustomer(val customerId: UUID?) : DataState()
+//        data class EditCustomer(val customerId: UUID?) : DataState()
         data class PickCustomer(val customerId: UUID?) : DataState()
-        object SearchCustomer : DataState()
+        data class SearchCustomer(val customerId: UUID?) : DataState()
         data class OpenPrinter(val jobOrderId: UUID) : DataState()
         object ProceedToSaveJO: DataState()
     }
@@ -111,11 +110,11 @@ constructor(
     private val _payment = MutableLiveData<EntityJobOrderPaymentFull>()
     val payment: LiveData<EntityJobOrderPaymentFull> = _payment
 
-    val cannotSwitchCustomer = MediatorLiveData<Boolean>().apply {
-        addSource(jobOrderServices) {
-            value = it.find { it.used > 0 } != null
-        }
-    }
+//    val cannotSwitchCustomer = MediatorLiveData<Boolean>().apply {
+//        addSource(jobOrderServices) {
+//            value = it.find { it.used > 0 } != null
+//        }
+//    }
 
     /** region mediator live data */
 
@@ -182,13 +181,13 @@ constructor(
         fun update() {
             value = discount.value?.let {
                 if(it.deletedAt != null) return@let 0f
-                if(it.discountType == EnumDiscountType.FIXED) return@let it.value
+//                if(it.discountType == EnumDiscountType.FIXED) return@let it.value
                 var total = 0f
-                total += it.getDiscount(serviceSubTotal(), EnumDiscountApplicable.WASH_DRY_SERVICES)
-                total += it.getDiscount(productSubTotal(), EnumDiscountApplicable.PRODUCTS_CHEMICALS)
-                total += it.getDiscount(extrasSubTotal(), EnumDiscountApplicable.EXTRAS)
-                total += it.getDiscount(deliveryFee(), EnumDiscountApplicable.DELIVERY)
-                total
+                total += it.calculateDiscount(serviceSubTotal(), EnumDiscountApplicable.WASH_DRY_SERVICES)
+                total += it.calculateDiscount(productSubTotal(), EnumDiscountApplicable.PRODUCTS_CHEMICALS)
+                total += it.calculateDiscount(extrasSubTotal(), EnumDiscountApplicable.EXTRAS)
+                total += it.calculateDiscount(deliveryFee(), EnumDiscountApplicable.DELIVERY)
+                maxOf(total, 0f)
             } ?: 0f
         }
         addSource(jobOrderServices) {update()}
@@ -399,9 +398,9 @@ constructor(
         _deleted.value = jobOrder.jobOrder.deletedAt != null || jobOrder.jobOrder.entityJobOrderVoid != null
     }
 
-    fun setJobOrder(joId: UUID?) {
+    fun setJobOrder(joId: UUID?, forced: Boolean) {
         // if(currentCustomer.value != null) return
-        if(jobOrderId.value != null) return
+        if(jobOrderId.value != null && !forced) return
         viewModelScope.launch {
             jobOrderRepository.getJobOrderWithItems(joId).let {
                 _customerId.value = it?.jobOrder?.customerId
@@ -921,24 +920,43 @@ constructor(
     fun pickCustomer() {
         if(isLocked()) return
         val customerId = currentCustomer.value?.id
-        _dataState.value = DataState.PickCustomer(customerId)
+        val cannotSwitchCustomer = jobOrderServices.value?.any {
+            it.used > 0
+        }
+
+        if(cannotSwitchCustomer == true) {
+            _dataState.value = DataState.InvalidOperation("Cannot change customer for a Job Order with used services")
+        } else {
+            _dataState.value = DataState.SearchCustomer(customerId)
+        }
+
+//        val canSwitchCustomer = jobOrderServices.value?.any {
+//            it.used > 0
+//        }
+//
+//        if(canSwitchCustomer != true) {
+//            _dataState.value = DataState.EditCustomer(customerId)
+//        } else {
+//            _dataState.value = DataState.PickCustomer(customerId)
+//        }
+
 //        currentCustomer.value?.id?.let {
 //            _dataState.value = DataState.PickCustomer(it)
 //        }
     }
 
-    fun searchCustomer() {
-        _dataState.value = DataState.SearchCustomer
-    }
+//    fun searchCustomer() {
+//        _dataState.value = DataState.SearchCustomer
+//    }
 
-    fun editCustomer(new: Boolean) {
-        if(isLocked()) return
-        val customerId = if (new) null else currentCustomer.value?.id
-        _dataState.value = DataState.EditCustomer(customerId)
-//        currentCustomer.value?.id?.let {
-//            _dataState.value = DataState.EditCustomer(it)
-//        }
-    }
+//    fun editCustomer(new: Boolean) {
+//        if(isLocked()) return
+//        val customerId = if (new) null else currentCustomer.value?.id
+//        _dataState.value = DataState.EditCustomer(customerId)
+////        currentCustomer.value?.id?.let {
+////            _dataState.value = DataState.EditCustomer(it)
+////        }
+//    }
 
     fun openPrinterOptions() {
         jobOrderId.value?.let {

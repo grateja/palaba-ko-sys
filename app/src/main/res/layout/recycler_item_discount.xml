@@ -8,7 +8,7 @@
             type="com.csi.palabakosys.app.joborders.create.discount.MenuDiscount" />
     </data>
     <com.google.android.material.card.MaterialCardView
-        style="@style/CardMenuItem"
+        style="@style/CardItemList.FullWidth"
         android:id="@+id/cardDiscount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -29,8 +29,8 @@
                     android:id="@+id/textTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    tools:text="Motorcycle"
-                    android:text="@{viewModel.name + ` - ` + viewModel.value + `%`}"/>
+                    tools:text="Some discount"
+                    android:text="@{viewModel.toString()}"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

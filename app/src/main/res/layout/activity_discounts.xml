@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".app.discounts.DiscountsActivity">
     <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:background="@drawable/background_gradient_secondary"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <com.google.android.material.appbar.AppBarLayout

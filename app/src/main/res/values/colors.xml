@@ -37,4 +37,6 @@
     <color name="color_code_shop_preferences">#66C2A5</color>
     <color name="color_code_app_settings">#3288BD</color>
     <color name="color_code_payments_highlight">#FCFAF5</color>
+    <color name="color_code_machines_highlight">#FFF7E0</color>
+    <color name="color_code_customers_highlight">#F5F8D2</color>
 </resources>

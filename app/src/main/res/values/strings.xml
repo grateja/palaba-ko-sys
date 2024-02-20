@@ -70,6 +70,7 @@
     <string name="prompt_no_wifi_connectivity">You are not connected to a WiFi Network</string>
     <string name="prompt_unpaid_limit_reached">This customer already hit the maximum limit for unpaid job orders. To continue, settle outstanding balances</string>
     <string name="what_do_you_want_to_print">What do you want to print?</string>
+    <string name="no_results_found">No results found!</string>
     <string-array name="jo_filter_by">
         <item>Date Paid</item>
         <item>Date Created</item>

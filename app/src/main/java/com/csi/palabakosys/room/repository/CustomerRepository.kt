@@ -37,9 +37,9 @@ constructor (
         return daoCustomer.checkName(name)
     }
 
-    suspend fun getCustomersMinimal(keyword: String?, page: Int): List<CustomerMinimal> {
+    suspend fun getCustomersMinimal(keyword: String?, page: Int, customerId: UUID?): List<CustomerMinimal> {
         val offset = (20 * page) - 20
-        return daoCustomer.getCustomersMinimal(keyword, 20, offset)
+        return daoCustomer.getCustomersMinimal(keyword, 20, offset, customerId)
     }
 
     suspend fun getListItems(keyword: String?, orderBy: String?, sortDirection: EnumSortDirection?, page: Int, hideAllWithoutJO: Boolean, dateFilter: DateFilter?): CustomerQueryResult {
@@ -47,7 +47,7 @@ constructor (
         return daoCustomer.getListItem(keyword, orderBy, sortDirection.toString(), offset, hideAllWithoutJO, dateFilter?.dateFrom, dateFilter?.dateTo)
     }
 
-    suspend fun getCustomerMinimalByCRN(crn: String?): CustomerMinimal? {
+    suspend fun getCustomerMinimalByCRN(crn: String?): EntityCustomer? {
         return daoCustomer.getCustomerMinimalByCRN(crn)
     }
 

@@ -12,6 +12,7 @@ import com.sangcomz.fishbun.util.setStatusBarColor
 abstract class FilterActivity : AppCompatActivity(), FilterActivityInterface {
     protected var searchBar: SearchView? = null
     override var enableAdvancedFilter: Boolean = true
+    override var enableAddButton: Boolean = false
 
     private lateinit var toolbar: Toolbar
     protected lateinit var addEditLauncher: ActivityLauncher
@@ -29,6 +30,7 @@ abstract class FilterActivity : AppCompatActivity(), FilterActivityInterface {
         menuInflater.inflate(R.menu.menu_search, menu)
 
         menu?.findItem(R.id.menu_advanced_option)?.isVisible = enableAdvancedFilter
+        menu?.findItem(R.id.menu_add)?.isVisible = enableAddButton
 
         searchBar = menu?.findItem(R.id.menu_search)?.actionView as SearchView
         searchBar?.apply {
@@ -63,7 +65,10 @@ abstract class FilterActivity : AppCompatActivity(), FilterActivityInterface {
             return true
         } else if(item.itemId == R.id.menu_advanced_option) {
             onAdvancedSearchClick()
-            return true;
+            return true
+        } else if(item.itemId == R.id.menu_add) {
+            onAddButtonClick()
+            return true
         }
         return super.onOptionsItemSelected(item)
     }

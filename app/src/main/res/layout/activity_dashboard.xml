@@ -15,20 +15,13 @@
             android:id="@+id/app_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/fragment_date_range_picker"
-                android:name="com.csi.palabakosys.app.dashboard.DateRangePickerFragment"
+            <CalendarView
+                android:id="@+id/calendar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:layout="@layout/fragment_date_range_picker"
-                app:layout_scrollFlags="enterAlways|snap"/>
-<!--            <androidx.viewpager2.widget.ViewPager2-->
-<!--                android:id="@+id/date_nav_view_pager"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                app:layout_scrollFlags="enterAlways|snap|scroll"/>-->
-            <com.applandeo.materialcalendarview.CalendarView
-                app:type="range_picker"
+                app:layout_scrollFlags="scroll|enterAlways|snap"/>
+            <TextView
+                android:localDate="@{viewModel.dateFilter.dateFrom}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         </com.google.android.material.appbar.AppBarLayout>

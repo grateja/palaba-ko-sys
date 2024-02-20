@@ -46,6 +46,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     layout="@layout/incl_tab_machines_simple"/>
                 <androidx.recyclerview.widget.RecyclerView
+                    android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
                     android:id="@+id/recycler"
                     android:nestedScrollingEnabled="false"
                     android:layout_width="match_parent"

@@ -25,7 +25,6 @@ import com.csi.palabakosys.R
 import com.csi.palabakosys.databinding.AlertDialogBinding
 import com.csi.palabakosys.databinding.AlertDialogTextInputBinding
 import com.csi.palabakosys.model.EnumDiscountType
-import com.csi.palabakosys.model.EnumPaymentMethod
 import com.csi.palabakosys.model.EnumProductType
 import com.csi.palabakosys.model.EnumWashType
 import com.google.android.material.textfield.TextInputEditText
@@ -35,8 +34,10 @@ import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
+
 
 @BindingAdapter("app:errorText")
 fun setErrorText(view: TextInputLayout, errorMessage: String) {
@@ -100,7 +101,7 @@ fun setDate(view: TextView, dateTime: Instant?) {
 @BindingAdapter("android:dateTime")
 fun setDateTime(view: TextView, dateTime: Instant?) {
     if(dateTime != null) {
-        val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy m:d a")
+        val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss a")
             .withZone(ZoneId.systemDefault())
         view.text = formatter.format(dateTime)
     }
@@ -290,6 +291,21 @@ fun Context.showMessageDialog(title: String?, message: String?, onOk: (() -> Uni
         create()
     }.show()
 }
+fun Context.showConfirmationDialog(title: String?, message: String?, onOk: (() -> Unit)?) {
+    AlertDialog.Builder(this).apply {
+        title?.let {
+            setTitle(it)
+        }
+        message?.let {
+            setMessage(it)
+        }
+        setNeutralButton("OK") { _, _ ->
+            onOk?.invoke()
+        }
+        setNegativeButton("Cancel") {_, _ ->}
+        create()
+    }.show()
+}
 
 inline fun <reified T> Context.showTextInputDialog(
     title: String?,
@@ -454,4 +470,9 @@ fun View.hide() {
 }
 fun View.remove() {
     this.visibility = View.GONE
+}
+fun today() : Long {
+//    return Instant.now()
+    val zonedDateTime = ZonedDateTime.now()
+    return zonedDateTime.toInstant().toEpochMilli()
 }

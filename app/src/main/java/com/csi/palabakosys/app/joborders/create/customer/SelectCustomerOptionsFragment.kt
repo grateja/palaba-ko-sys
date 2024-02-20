@@ -31,16 +31,16 @@ class SelectCustomerOptionsFragment : BaseModalFragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
-        binding.cardAddNew.setOnClickListener {
-            viewModel.editCustomer(true)
-            dismiss()
-        }
-        binding.cardEdit.setOnClickListener {
-            viewModel.editCustomer(false)
-            dismiss()
-        }
+//        binding.cardAddNew.setOnClickListener {
+//            viewModel.editCustomer(true)
+//            dismiss()
+//        }
+//        binding.cardEdit.setOnClickListener {
+//            viewModel.editCustomer(false)
+//            dismiss()
+//        }
         binding.cardSearch.setOnClickListener {
-            viewModel.searchCustomer()
+//            viewModel.searchCustomer()
             dismiss()
         }
 

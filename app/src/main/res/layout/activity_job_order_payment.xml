@@ -228,14 +228,26 @@
                             android:layout_weight="1"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content">
-                            <TextView
-                                android:id="@+id/textTitle"
-                                style="@style/TextItemTitle"
-                                android:textColor="@color/text_dark_grey"
-                                android:textAlignment="center"
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="@{com.csi.palabakosys.model.EnumPaymentMethod.CASH.value}" />
+                                android:orientation="horizontal"
+                                android:gravity="center">
+                                <TextView
+                                    style="@style/TextItemTitle"
+                                    android:textColor="@color/text_dark_grey"
+                                    android:textAlignment="center"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@{com.csi.palabakosys.model.EnumPaymentMethod.CASH.value}"
+                                    tools:text="Cash"/>
+                                <ImageView
+                                    android:visibility="@{viewModel.paymentMethod == com.csi.palabakosys.model.EnumPaymentMethod.CASH}"
+                                    android:layout_marginStart="16dp"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:src="@drawable/icon_edit"/>
+                            </LinearLayout>
                         </com.google.android.material.card.MaterialCardView>
                         <com.google.android.material.card.MaterialCardView
                             android:layout_marginStart="4dp"
@@ -246,13 +258,26 @@
                             android:layout_weight="1"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content">
-                            <TextView
-                                style="@style/TextItemTitle"
-                                android:textColor="@color/text_dark_grey"
-                                android:textAlignment="center"
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="@{com.csi.palabakosys.model.EnumPaymentMethod.CASHLESS.value}"/>
+                                android:orientation="horizontal"
+                                android:gravity="center">
+                                <TextView
+                                    style="@style/TextItemTitle"
+                                    android:textColor="@color/text_dark_grey"
+                                    android:textAlignment="center"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@{com.csi.palabakosys.model.EnumPaymentMethod.CASHLESS.value}"
+                                    tools:text="Cashless"/>
+                                <ImageView
+                                    android:visibility="@{viewModel.paymentMethod == com.csi.palabakosys.model.EnumPaymentMethod.CASHLESS}"
+                                    android:layout_marginStart="16dp"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:src="@drawable/icon_edit"/>
+                            </LinearLayout>
                         </com.google.android.material.card.MaterialCardView>
                     </LinearLayout>
                 </LinearLayout>

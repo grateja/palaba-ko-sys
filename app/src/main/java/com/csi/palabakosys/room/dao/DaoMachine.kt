@@ -31,19 +31,12 @@ abstract class DaoMachine : BaseDao<EntityMachine> {
     @Query("SELECT * FROM machines WHERE id = :id")
     abstract fun getMachineLiveData(id: UUID?) : LiveData<EntityMachine?>
 
-//    @Query("SELECT m.id AS machine_id, machine_type, machine_number, COUNT(*) as count" +
-//            " FROM machine_usages mu" +
-//            " join machines m on m.id = mu.machine_id" +
-//            " WHERE strftime('%Y-%m-%d', mu.created_at / 1000, 'unixepoch') = :dateFrom" +
-//            " OR ( :dateTo IS NOT NULL AND strftime('%Y-%m-%d', mu.created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo )" +
-//            " GROUP BY machine_number, machine_type ORDER BY machine_type, machine_number")
-//    abstract fun getDashboard(dateFrom: LocalDate, dateTo: LocalDate?) : LiveData<List<EntityMachineUsageAggrResult>>
     @Query("SELECT m.id AS machine_id, machine_type, machine_number, COUNT(*) as count" +
             " FROM machine_usages mu" +
             " join machines m on m.id = mu.machine_id" +
             " WHERE ((:dateFrom IS NULL AND :dateTo IS NULL) OR " +
-            "       (:dateFrom IS NOT NULL AND :dateTo IS NULL AND strftime('%Y-%m-%d', mu.created_at / 1000, 'unixepoch') = :dateFrom) OR " +
-            "       (:dateFrom IS NOT NULL AND :dateTo IS NOT NULL AND strftime('%Y-%m-%d', mu.created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo))" +
+            "       (:dateFrom IS NOT NULL AND :dateTo IS NULL AND date(mu.created_at / 1000, 'unixepoch', 'localtime') = :dateFrom) OR " +
+            "       (:dateFrom IS NOT NULL AND :dateTo IS NOT NULL AND date(mu.created_at / 1000, 'unixepoch', 'localtime') BETWEEN :dateFrom AND :dateTo))" +
             " GROUP BY machine_number, machine_type ORDER BY machine_type, machine_number")
     abstract fun getDashboard(dateFrom: LocalDate, dateTo: LocalDate?) : LiveData<List<EntityMachineUsageAggrResult>>
 
@@ -56,8 +49,8 @@ abstract class DaoMachine : BaseDao<EntityMachine> {
         "WHERE mu.machine_id = :machineId "+
         "AND customer_name LIKE '%' || :keyword || '%' "+
         "AND ((:dateFrom IS NULL AND :dateTo IS NULL) OR " +
-        "   (:dateFrom IS NOT NULL AND :dateTo IS NULL AND strftime('%Y-%m-%d', mu.created_at / 1000, 'unixepoch') = :dateFrom) OR " +
-        "   (:dateFrom IS NOT NULL AND :dateTo IS NOT NULL AND strftime('%Y-%m-%d', mu.created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo)) " +
+        "   (:dateFrom IS NOT NULL AND :dateTo IS NULL AND date(mu.created_at / 1000, 'unixepoch', 'localtime') = :dateFrom) OR " +
+        "   (:dateFrom IS NOT NULL AND :dateTo IS NOT NULL AND date(mu.created_at / 1000, 'unixepoch', 'localtime') BETWEEN :dateFrom AND :dateTo)) " +
         "ORDER BY activated DESC " +
         "LIMIT 20 OFFSET :offset ")
     abstract suspend fun getMachineUsage(machineId: UUID, keyword: String?, offset: Int, dateFrom: LocalDate?, dateTo: LocalDate?) : List<EntityMachineUsageDetails>

@@ -14,6 +14,7 @@ import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentActivity
 import com.csi.palabakosys.app.joborders.payment.JobOrderPaymentMinimal
 import com.csi.palabakosys.databinding.ActivityJobOrdersUnpaidPromptBinding
 import com.csi.palabakosys.util.ActivityLauncher
+import com.sangcomz.fishbun.util.setStatusBarColor
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
@@ -36,6 +37,8 @@ class JobOrdersUnpaidPromptActivity : AppCompatActivity() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
         binding.recyclerUnpaidJobOrders.adapter = adapter
+
+        setStatusBarColor(resources.getColor(R.color.color_code_payments, null))
 
         subscribeListeners()
         subscribeEvents()

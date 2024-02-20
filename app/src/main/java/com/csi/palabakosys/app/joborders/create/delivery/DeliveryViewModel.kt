@@ -32,7 +32,7 @@ constructor(
             val distance = distance.value ?: 0
             val option = deliveryOption.value?.charge ?: 0
 
-            value = (distance * pricePerKm * option) + baseFare
+            value = ((distance * pricePerKm) + baseFare) * option
         }
         addSource(distance) { update()}
         addSource(deliveryOption) { update() }
@@ -82,10 +82,10 @@ constructor(
         }
 
         val distance = this.distance.value?.toFloat()
-        val price = option!!.charge * ((profile!!.pricePerKm * distance!!) + profile.baseFare)
+        val price = price.value //option!!.charge * ((profile!!.pricePerKm * distance!!) + profile.baseFare)
         val deletedAt = if(delete) { Instant.now() } else { null }
 
-        val deliveryCharge = DeliveryCharge(profile.deliveryProfileRefId, profile.vehicle, distance, option, price, deletedAt)
+        val deliveryCharge = DeliveryCharge(profile!!.deliveryProfileRefId, profile.vehicle, distance!!, option!!, price!!, deletedAt)
         this._dataState.value = DataState.SaveSuccess(deliveryCharge)
     }
 

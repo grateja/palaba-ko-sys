@@ -58,7 +58,7 @@
                     android:layout_marginVertical="12dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Cash received"
+                    android:hint="Cash tendered"
                     app:errorEnabled="true"
                     app:errorText="@{viewModel.inputValidation.get(`cashReceived`)}">
 
@@ -92,7 +92,7 @@
                     android:layout_marginVertical="12dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Cashless Provider"
+                    android:hint="Provider"
                     app:errorEnabled="true"
                     app:errorText="@{viewModel.inputValidation.get(`cashlessProvider`)}">
 
@@ -114,7 +114,7 @@
                     android:layout_marginVertical="12dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Cashless amount"
+                    android:hint="Amount sent"
                     app:errorEnabled="true"
                     app:errorText="@{viewModel.inputValidation.get(`cashlessAmount`)}">
 
@@ -134,7 +134,7 @@
                     android:layout_marginVertical="12dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Cashless Reference number"
+                    android:hint="Reference number"
                     app:errorEnabled="true"
                     app:errorText="@{viewModel.inputValidation.get(`cashlessRefNumber`)}">
 

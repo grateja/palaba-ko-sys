@@ -21,6 +21,7 @@ class JOSelectDiscountActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_jo_select_discount)
         binding.lifecycleOwner = this
         binding.recyclerDiscounts.adapter = adapter
+        binding.viewModel = viewModel
 
         subscribeEvents()
         subscribeListeners()

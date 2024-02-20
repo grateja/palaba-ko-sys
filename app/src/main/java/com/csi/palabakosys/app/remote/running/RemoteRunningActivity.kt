@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import com.csi.palabakosys.R
 import com.csi.palabakosys.databinding.ActivityRemoteRunningBinding
 import com.csi.palabakosys.util.Constants
@@ -34,6 +35,8 @@ class RemoteRunningActivity : AppCompatActivity() {
     }
 
     private fun subscribeListeners() {
-
+        viewModel.runningMachine.observe(this, Observer {
+            title = "${it?.machine?.machineName()} running"
+        })
     }
 }

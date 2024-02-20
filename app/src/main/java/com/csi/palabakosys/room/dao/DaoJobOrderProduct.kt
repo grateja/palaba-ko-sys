@@ -17,8 +17,8 @@ abstract class DaoJobOrderProduct : BaseDao<EntityJobOrderProduct> {
             "     product_type," +
             "     measure_unit " +
             " FROM job_order_products" +
-            " WHERE (strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') = :dateFrom " +
-            "     OR ( :dateTo IS NOT NULL AND strftime('%Y-%m-%d', created_at / 1000, 'unixepoch')" +
+            " WHERE (date(created_at / 1000, 'unixepoch', 'localtime') = :dateFrom " +
+            "     OR ( :dateTo IS NOT NULL AND date(created_at / 1000, 'unixepoch', 'localtime')" +
             "         BETWEEN :dateFrom AND :dateTo)) " +
             "     AND deleted_at IS NULL" +
             "     AND (void = 0)" +

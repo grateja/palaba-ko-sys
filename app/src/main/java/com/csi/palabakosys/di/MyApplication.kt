@@ -28,7 +28,6 @@ class MyApplication : Application(), Configuration.Provider {
         val mediaDir = File(filesDir, Constants.PICTURES_DIR)
         if(!mediaDir.exists()) {
             mediaDir.mkdirs()
-            println("DIR CREATED $mediaDir")
         }
     }
 }

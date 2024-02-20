@@ -83,7 +83,7 @@
                         android:visibility="@{viewModel.hasDiscount}">
                         <TextView
                             style="@style/TextItemTitle"
-                            android:text="@{viewModel.discount.name + ` - ` + viewModel.discount.value + `%`}"
+                            android:text="@{viewModel.discount.toString()}"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             tools:text="Birthday discount - 5.0%"/>

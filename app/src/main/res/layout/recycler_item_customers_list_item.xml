@@ -48,9 +48,10 @@
                 app:layout_constraintEnd_toStartOf="@+id/labelCRN"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="Chris Hemsworth" />
+                tools:text="Chris Hemsworth"/>
             <TextView
                 android:id="@+id/label_last_job_order"
+                android:visibility="@{viewModel.lastVisit != null}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"

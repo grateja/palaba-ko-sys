@@ -46,21 +46,24 @@ data class MenuDiscount(
         }
     }
 
-    private fun compute(amount: Float) : Float {
+    private fun computePercentage(amount: Float) : Float {
         return (value / 100) * amount
     }
 
-    fun getDiscount(amount: Float, applicable: EnumDiscountApplicable) : Float {
-        if(!applicableTo.any{ it == applicable || it == EnumDiscountApplicable.TOTAL_AMOUNT}) return 0f
-
-        return compute(amount)
+    fun calculateDiscount(amount: Float, applicable: EnumDiscountApplicable) : Float {
+        return if(!applicableTo.any{ it == applicable || it == EnumDiscountApplicable.TOTAL_AMOUNT})
+            0f
+        else if(discountType == EnumDiscountType.PERCENTAGE)
+            computePercentage(amount)
+        else
+            amount
     }
 
     override fun toString(): String {
         return if(discountType == EnumDiscountType.PERCENTAGE) {
             "$name ($value %)"
         } else {
-            "$name ($value)"
+            "$name (P $value)"
         }
     }
 }

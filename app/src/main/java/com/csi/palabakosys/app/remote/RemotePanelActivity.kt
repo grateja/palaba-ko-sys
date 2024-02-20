@@ -188,7 +188,7 @@ class RemotePanelActivity : AppCompatActivity() {
     private val spanCount: Int by lazy {
 //        val columnWidth = resources.getDimensionPixelSize(R.dimen.machine_tile_width)
 //        val margin = resources.getDimension(R.dimen.activity_horizontal_margin)
-        applicationContext.calculateSpanCount(R.dimen.machine_tile_width)
+        applicationContext.calculateSpanCount(R.dimen.machine_tile_width, R.dimen.activity_horizontal_margin)
 //        val displayMetrics = resources.displayMetrics`
 //        val parentWidth = displayMetrics.widthPixels - (margin * 2).toInt()
 //

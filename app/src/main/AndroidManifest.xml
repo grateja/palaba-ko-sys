@@ -34,10 +34,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LMS2022">
-        <activity
-            android:name=".app.machines.usage.MachineUsagePreviewActivity"
-            android:exported="false"
-            android:theme="@style/Theme.MaterialComponents.Light.Dialog" />
+<!--        <activity-->
+<!--            android:name=".app.machines.usage.MachineUsagePreviewActivity"-->
+<!--            android:exported="false"-->
+<!--            android:theme="@style/Theme.MaterialComponents.Light.Dialog" />-->
         <activity
             android:name=".app.joborders.print.JobOrderPrintActivity"
             android:exported="false"
@@ -225,7 +225,7 @@
             android:name=".app.joborders.unpaid.prompt.JobOrdersUnpaidPromptActivity"
             android:exported="false"
             android:label="Unpaid Job Orders"
-            android:theme="@style/Theme.LMS2022.NoActionBar">
+            android:theme="@style/LightActionBar">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

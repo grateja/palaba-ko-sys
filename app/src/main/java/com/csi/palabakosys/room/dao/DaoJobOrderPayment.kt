@@ -52,7 +52,7 @@ interface DaoJobOrderPayment {
     @Query("SELECT jop.* FROM job_order_payments jop JOIN job_orders jo ON jop.id = jo.payment_id WHERE jo.id = :jobOrderId AND jo.deleted_at IS NULL")
     suspend fun getByJobOrderId(jobOrderId: UUID?) : EntityJobOrderPaymentFull?
 
-    @Query("SELECT SUM(amount_due) FROM job_order_payments WHERE payment_method = 1 AND deleted_at IS NULL AND void_date IS NULL AND strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') = :dateFrom OR ( :dateTo IS NOT NULL AND strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo )")
+    @Query("SELECT SUM(amount_due) FROM job_order_payments WHERE payment_method = 1 AND deleted_at IS NULL AND void_date IS NULL AND date(created_at / 1000, 'unixepoch', 'localtime') = :dateFrom OR ( :dateTo IS NOT NULL AND date(created_at / 1000, 'unixepoch', 'localtime') BETWEEN :dateFrom AND :dateTo )")
     fun getCashCollections(dateFrom: LocalDate, dateTo: LocalDate?) : LiveData<Float>
 
     @Query("SELECT cashless_provider, COUNT(*) as count, SUM(cashless_amount) as amount " +
@@ -60,9 +60,9 @@ interface DaoJobOrderPayment {
             "WHERE payment_method = 2 " +
             "    AND deleted_at IS NULL " +
             "    AND void_date IS NULL " +
-            "    AND (strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') = :dateFrom " +
+            "    AND (date(created_at / 1000, 'unixepoch', 'localtime') = :dateFrom " +
             "    OR (:dateTo IS NOT NULL " +
-            "    AND strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo)) " +
+            "    AND date(created_at / 1000, 'unixepoch', 'localtime') BETWEEN :dateFrom AND :dateTo)) " +
             "GROUP BY cashless_provider " +
             "UNION " +
             "SELECT 'Total', COUNT(*), SUM(cashless_amount) " +
@@ -70,9 +70,9 @@ interface DaoJobOrderPayment {
             "WHERE payment_method = 2 " +
             "    AND deleted_at IS NULL " +
             "    AND void_date IS NULL " +
-            "    AND (strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') = :dateFrom " +
+            "    AND (date(created_at / 1000, 'unixepoch', 'localtime') = :dateFrom " +
             "    OR (:dateTo IS NOT NULL " +
-            "    AND strftime('%Y-%m-%d', created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo))")
+            "    AND date(created_at / 1000, 'unixepoch', 'localtime') BETWEEN :dateFrom AND :dateTo))")
     fun getCashlessPayments(dateFrom: LocalDate, dateTo: LocalDate?): LiveData<List<EntityCashlessPaymentAggrResult>>
 
     @Query("SELECT * FROM job_orders WHERE payment_id = :paymentId AND deleted_at IS NULL ORDER BY created_at DESC")
@@ -87,8 +87,8 @@ interface DaoJobOrderPayment {
             "WHERE (or_number LIKE '%' || :keyword || '%' OR c.name LIKE '%' || :keyword || '%' OR jo.job_order_number LIKE '%' || :keyword || '%')" +
             " AND p.void_remarks IS NULL "+
             "AND ((:dateFrom IS NULL AND :dateTo IS NULL) OR " +
-            "(:dateFrom IS NOT NULL AND :dateTo IS NULL AND strftime('%Y-%m-%d', p.created_at / 1000, 'unixepoch') = :dateFrom) OR " +
-            "(:dateFrom IS NOT NULL AND :dateTo IS NOT NULL AND strftime('%Y-%m-%d', p.created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo)) " +
+            "(:dateFrom IS NOT NULL AND :dateTo IS NULL AND date(p.created_at / 1000, 'unixepoch', 'localtime') = :dateFrom) OR " +
+            "(:dateFrom IS NOT NULL AND :dateTo IS NOT NULL AND date(p.created_at / 1000, 'unixepoch', 'localtime') BETWEEN :dateFrom AND :dateTo)) " +
             "GROUP BY p.id " +
             "ORDER BY p.created_at DESC " +
             " LIMIT 20 OFFSET :offset ")
@@ -102,8 +102,8 @@ interface DaoJobOrderPayment {
             "WHERE (or_number LIKE '%' || :keyword || '%' OR c.name LIKE '%' || :keyword || '%')" +
             "AND p.void_remarks IS NULL " +
             "AND ((:dateFrom IS NULL AND :dateTo IS NULL) OR " +
-            "(:dateFrom IS NOT NULL AND :dateTo IS NULL AND strftime('%Y-%m-%d', p.created_at / 1000, 'unixepoch') = :dateFrom) OR " +
-            "(:dateFrom IS NOT NULL AND :dateTo IS NOT NULL AND strftime('%Y-%m-%d', p.created_at / 1000, 'unixepoch') BETWEEN :dateFrom AND :dateTo)) ")
+            "(:dateFrom IS NOT NULL AND :dateTo IS NULL AND date(p.created_at / 1000, 'unixepoch', 'localtime') = :dateFrom) OR " +
+            "(:dateFrom IS NOT NULL AND :dateTo IS NOT NULL AND date(p.created_at / 1000, 'unixepoch', 'localtime') BETWEEN :dateFrom AND :dateTo)) ")
     fun count(keyword: String?, dateFrom: LocalDate?, dateTo: LocalDate?): QueryAggrResult?
 
     @Transaction

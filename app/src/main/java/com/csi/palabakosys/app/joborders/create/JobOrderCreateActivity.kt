@@ -12,10 +12,10 @@ import com.csi.palabakosys.R
 import com.csi.palabakosys.adapters.Adapter
 import com.csi.palabakosys.app.auth.AuthActionDialogActivity
 import com.csi.palabakosys.app.auth.LoginCredentials
-import com.csi.palabakosys.app.customers.create.AddEditCustomerFragment
+import com.csi.palabakosys.app.customers.CustomerMinimal
 import com.csi.palabakosys.app.joborders.cancel.JobOrderCancelActivity
 import com.csi.palabakosys.app.joborders.create.customer.SelectCustomerActivity
-import com.csi.palabakosys.app.joborders.create.customer.SelectCustomerOptionsFragment
+import com.csi.palabakosys.app.joborders.create.customer.SelectCustomerActivity.Companion.CUSTOMER
 import com.csi.palabakosys.app.joborders.create.delivery.DeliveryCharge
 import com.csi.palabakosys.app.joborders.create.delivery.JOSelectDeliveryActivity
 import com.csi.palabakosys.app.joborders.create.discount.JOSelectDiscountActivity
@@ -54,7 +54,7 @@ class JobOrderCreateActivity : BaseActivity() {
         const val PAYLOAD_EXTRA = "payload"
         const val ITEM_PRESET_EXTRA = "itemPreset"
 
-        const val ACTION_SEARCH_CUSTOMER = "searchCustomer"
+        const val ACTION_SELECT_CUSTOMER = "searchCustomer"
         const val ACTION_MODIFY_DATETIME = "modifyDateTime"
         const val ACTION_REQUEST_UNLOCK = "requestUnlock"
         const val ACTION_SYNC_PACKAGE = "package"
@@ -103,7 +103,7 @@ class JobOrderCreateActivity : BaseActivity() {
         super.onResume()
 //        if(intent.action == ACTION_LOAD_BY_JOB_ORDER_ID) {
         intent.getStringExtra(JOB_ORDER_ID).toUUID().let {
-            viewModel.setJobOrder(it)
+            viewModel.setJobOrder(it, false)
         }
         intent.getStringExtra(CUSTOMER_EXTRA)?.toUUID()?.let {
             viewModel.loadByCustomer(it)
@@ -199,9 +199,14 @@ class JobOrderCreateActivity : BaseActivity() {
 //                ACTION_MODIFY_DATETIME -> {
 //                    viewModel.requestModifyDateTime()
 //                }
-                ACTION_SEARCH_CUSTOMER -> {
+                ACTION_SELECT_CUSTOMER -> {
                     data.getStringExtra(CUSTOMER_ID).toUUID()?.let {
                         viewModel.setCustomerId(it)
+                    }
+                }
+                ACTION_LOAD_BY_JOB_ORDER_ID -> {
+                    data.getStringExtra(JOB_ORDER_ID).toUUID()?.let {
+                        viewModel.setJobOrder(it, true)
                     }
                 }
                 ACTION_SYNC_SERVICES -> {
@@ -405,10 +410,11 @@ class JobOrderCreateActivity : BaseActivity() {
                     viewModel.resetState()
                 }
                 is CreateJobOrderViewModel.DataState.PickCustomer -> {
-                    SelectCustomerOptionsFragment().show(supportFragmentManager, null)
+
+                    // SelectCustomerOptionsFragment().show(supportFragmentManager, null)
                     viewModel.resetState()
                 }
-                is CreateJobOrderViewModel.DataState.EditCustomer -> {
+//                is CreateJobOrderViewModel.DataState.EditCustomer -> {
 //                    if(callingActivity?.className == CustomerPreviewActivity::class.java.name) {
 //                        finish()
 //                    } else {
@@ -417,20 +423,21 @@ class JobOrderCreateActivity : BaseActivity() {
 //                        }
 //                        launcher.launch(intent)
 //                    }
-                    AddEditCustomerFragment.getInstance(it.customerId, null, true)
-                        .apply {
-                            onOk = {
-                                it?.let {
-                                    viewModel.setCustomerId(it.id)
-                                }
-                            }
-                        }
-                        .show(supportFragmentManager, null)
-                    viewModel.resetState()
-                }
+//                    AddEditCustomerFragment.getInstance(it.customerId, null, true)
+//                        .apply {
+//                            onOk = {
+//                                it?.let {
+//                                    viewModel.setCustomerId(it.id)
+//                                }
+//                            }
+//                        }
+//                        .show(supportFragmentManager, null)
+//                    viewModel.resetState()
+//                }
                 is CreateJobOrderViewModel.DataState.SearchCustomer -> {
                     val intent = Intent(this, SelectCustomerActivity::class.java).apply {
-                        action = ACTION_SEARCH_CUSTOMER
+                        action = ACTION_SELECT_CUSTOMER
+                        putExtra(CUSTOMER_ID, it.customerId.toString())
                     }
                     launcher.launch(intent)
                     viewModel.resetState()
